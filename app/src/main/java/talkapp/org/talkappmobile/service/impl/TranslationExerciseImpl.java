@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
-import javax.inject.Inject;
-
-import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -23,17 +20,16 @@ import talkapp.org.talkappmobile.service.WordsCombinator;
  */
 public class TranslationExerciseImpl implements TranslationExercise {
 
-    @Inject
-    SentenceSelector sentenceSelector;
-    @Inject
-    WordsCombinator wordsCombinator;
+    final SentenceSelector sentenceSelector;
+    final WordsCombinator wordsCombinator;
     private Semaphore semaphore = new Semaphore(0);
     private WordSet wordSet;
     private DataSource dataSource;
     private EventHandler eventHandler;
 
-    public TranslationExerciseImpl() {
-        DIContext.get().inject(this);
+    public TranslationExerciseImpl(SentenceSelector selector, WordsCombinator combinator) {
+        this.sentenceSelector = selector;
+        this.wordsCombinator = combinator;
     }
 
     @Override

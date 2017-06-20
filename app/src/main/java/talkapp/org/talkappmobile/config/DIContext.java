@@ -6,7 +6,6 @@ import dagger.Component;
 import talkapp.org.talkappmobile.activity.ExerciseActivity;
 import talkapp.org.talkappmobile.bean.BackEndServiceModule;
 import talkapp.org.talkappmobile.bean.TranslationExerciseModule;
-import talkapp.org.talkappmobile.service.impl.TranslationExerciseImpl;
 
 @Singleton
 @Component(modules = {
@@ -28,6 +27,4 @@ public abstract class DIContext {
     }
 
     abstract public void inject(ExerciseActivity target);
-
-    abstract public void inject(TranslationExerciseImpl target);
 }

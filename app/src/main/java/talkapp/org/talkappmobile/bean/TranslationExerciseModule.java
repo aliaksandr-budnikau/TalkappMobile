@@ -24,8 +24,9 @@ public class TranslationExerciseModule {
 
     @Provides
     @Singleton
-    public TranslationExercise provideTranslationExercise() {
-        return new TranslationExerciseImpl();
+    public TranslationExercise provideTranslationExercise(SentenceSelector sentenceSelector,
+                                                          WordsCombinator wordsCombinator) {
+        return new TranslationExerciseImpl(sentenceSelector, wordsCombinator);
     }
 
     @Provides

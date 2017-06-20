@@ -19,24 +19,23 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public WordSetService provideWordSetService(@Named("retrofit") Retrofit retrofit) {
+    public WordSetService provideWordSetService(Retrofit retrofit) {
         return retrofit.create(WordSetService.class);
     }
 
     @Provides
     @Singleton
-    public RefereeService provideRefereeService(@Named("retrofit") Retrofit retrofit) {
+    public RefereeService provideRefereeService(Retrofit retrofit) {
         return retrofit.create(RefereeService.class);
     }
 
     @Provides
     @Singleton
-    public SentenceService provideSentenceService(@Named("retrofit") Retrofit retrofit) {
+    public SentenceService provideSentenceService(Retrofit retrofit) {
         return retrofit.create(SentenceService.class);
     }
 
     @Provides
-    @Named("retrofit")
     public Retrofit provideRetrofit(@Named("serverUrl") String serverUrl) {
         return new Retrofit.Builder()
                 .baseUrl(serverUrl)
