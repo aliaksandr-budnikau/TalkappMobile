@@ -7,6 +7,8 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import talkapp.org.talkappmobile.service.RefereeService;
+import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 /**
@@ -19,6 +21,18 @@ public class BackEndServiceModule {
     @Singleton
     public WordSetService provideWordSetService(@Named("retrofit") Retrofit retrofit) {
         return retrofit.create(WordSetService.class);
+    }
+
+    @Provides
+    @Singleton
+    public RefereeService provideRefereeService(@Named("retrofit") Retrofit retrofit) {
+        return retrofit.create(RefereeService.class);
+    }
+
+    @Provides
+    @Singleton
+    public SentenceService provideSentenceService(@Named("retrofit") Retrofit retrofit) {
+        return retrofit.create(SentenceService.class);
     }
 
     @Provides

@@ -5,10 +5,13 @@ import javax.inject.Singleton;
 import dagger.Component;
 import talkapp.org.talkappmobile.activity.ExerciseActivity;
 import talkapp.org.talkappmobile.bean.BackEndServiceModule;
+import talkapp.org.talkappmobile.bean.TranslationExerciseModule;
+import talkapp.org.talkappmobile.service.impl.TranslationExerciseImpl;
 
 @Singleton
 @Component(modules = {
-        BackEndServiceModule.class
+        BackEndServiceModule.class,
+        TranslationExerciseModule.class
 })
 public abstract class DIContext {
 
@@ -17,6 +20,7 @@ public abstract class DIContext {
     public static DIContext get() {
         if (instance == null) {
             instance = DaggerDIContext.builder()
+                    .translationExerciseModule(new TranslationExerciseModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .build();
         }
@@ -24,4 +28,6 @@ public abstract class DIContext {
     }
 
     abstract public void inject(ExerciseActivity target);
+
+    abstract public void inject(TranslationExerciseImpl target);
 }
