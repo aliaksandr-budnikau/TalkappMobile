@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import talkapp.org.talkappmobile.activity.ExerciseActivity;
+import talkapp.org.talkappmobile.activity.WordsSetsListActivity;
 import talkapp.org.talkappmobile.bean.BackEndServiceModule;
 import talkapp.org.talkappmobile.bean.TranslationExerciseModule;
 
@@ -27,4 +28,6 @@ public abstract class DIContext {
     }
 
     abstract public void inject(ExerciseActivity target);
+
+    abstract public void inject(WordsSetsListActivity target);
 }
