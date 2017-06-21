@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.service;
 
-
 import java.io.IOException;
 import java.util.List;
 
@@ -11,9 +10,7 @@ import talkapp.org.talkappmobile.model.WordSet;
  * @author Budnikau Aliaksandr
  */
 public interface DataSource {
-    String getWordSetId();
-
-    WordSet findWordSetById(String wordSetId) throws IOException, WordSetNotFoundException;
+    WordSet getWordSet();
 
     List<Sentence> findSentencesByWords(String words) throws SentenceNotFoundException, IOException;
 }

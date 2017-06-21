@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceNotFoundException;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.TranslationExercise;
-import talkapp.org.talkappmobile.service.WordSetNotFoundException;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 public class ExerciseActivity extends Activity {
@@ -44,12 +43,14 @@ public class ExerciseActivity extends Activity {
     private TextView originalText;
     private TextView answerText;
     private ImageButton checkButton;
+    private WordSet currentWordSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         DIContext.get().inject(this);
+        currentWordSet = (WordSet) getIntent().getSerializableExtra("wordSet");
         originalText = (TextView) findViewById(R.id.originalText);
         answerText = (TextView) findViewById(R.id.answerText);
         initCheckButton();
@@ -59,18 +60,8 @@ public class ExerciseActivity extends Activity {
     private void initTranslationExerciseLifeCycle() {
         translationExercise.setDataSource(new DataSource() {
             @Override
-            public String getWordSetId() {
-                return "qwe0";
-            }
-
-            @Override
-            public WordSet findWordSetById(String id) throws IOException, WordSetNotFoundException {
-                Response<WordSet> response = wordSetService.findById(id).execute();
-                WordSet wordSet = response.body();
-                if (wordSet == null || wordSet.getWords().isEmpty()) {
-                    throw new WordSetNotFoundException("With id " + id);
-                }
-                return wordSet;
+            public WordSet getWordSet() {
+                return currentWordSet;
             }
 
             @Override
@@ -111,7 +102,7 @@ public class ExerciseActivity extends Activity {
 
             @Override
             public void onDestroy() {
-
+                finish();
             }
 
             @Override

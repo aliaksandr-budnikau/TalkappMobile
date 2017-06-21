@@ -12,7 +12,6 @@ import talkapp.org.talkappmobile.service.EventHandler;
 import talkapp.org.talkappmobile.service.SentenceNotFoundException;
 import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.TranslationExercise;
-import talkapp.org.talkappmobile.service.WordSetNotFoundException;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 
 /**
@@ -35,14 +34,7 @@ public class TranslationExerciseImpl implements TranslationExercise {
     @Override
     public void run() {
         try {
-            String wordSetId = dataSource.getWordSetId();
-            checkWordSetId(wordSetId);
-            try {
-                wordSet = dataSource.findWordSetById(wordSetId);
-            } catch (WordSetNotFoundException e) {
-                eventHandler.onWordSetNotFound(wordSetId);
-                return;
-            }
+            wordSet = dataSource.getWordSet();
             Set<String> combinations = wordsCombinator.combineWords(wordSet.getWords());
             for (String combination : combinations) {
                 List<Sentence> sentences;
@@ -60,12 +52,6 @@ public class TranslationExerciseImpl implements TranslationExercise {
             eventHandler.onException(e);
         } finally {
             eventHandler.onDestroy();
-        }
-    }
-
-    private void checkWordSetId(String wordSetId) {
-        if (wordSetId == null || "".equals(wordSetId)) {
-            throw new IllegalStateException("The word set id cannot be empty or null");
         }
     }
 

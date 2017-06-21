@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,10 +44,7 @@ public class WordsSetsListActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        List<WordSet> wordSets = response.body();
-                        for (WordSet wordSet : wordSets) {
-                            adapter.add(wordSet);
-                        }
+                        adapter.addAll(response.body());
                     }
                 });
             }
@@ -60,7 +58,11 @@ public class WordsSetsListActivity extends Activity {
         exercisesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                WordSet wordSet = adapter.getItem(position);
 
+                Intent intent = new Intent(WordsSetsListActivity.this, ExerciseActivity.class);
+                intent.putExtra("wordSet", wordSet);
+                startActivity(intent);
             }
         });
     }

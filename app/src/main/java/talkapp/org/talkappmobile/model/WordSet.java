@@ -1,12 +1,13 @@
 package talkapp.org.talkappmobile.model;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Budnikau Aliaksandr
  */
-public class WordSet {
+public class WordSet implements Serializable {
     private String id;
 
     private List<String> words;
