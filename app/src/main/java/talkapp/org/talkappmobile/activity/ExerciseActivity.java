@@ -31,6 +31,7 @@ import talkapp.org.talkappmobile.service.TranslationExercise;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 public class ExerciseActivity extends Activity {
+    public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -50,7 +51,7 @@ public class ExerciseActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
         DIContext.get().inject(this);
-        currentWordSet = (WordSet) getIntent().getSerializableExtra("wordSet");
+        currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
         originalText = (TextView) findViewById(R.id.originalText);
         answerText = (TextView) findViewById(R.id.answerText);
         initCheckButton();
