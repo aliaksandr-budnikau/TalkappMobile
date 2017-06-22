@@ -8,24 +8,23 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.activity.adapter.GetWordSetListAsyncTask;
+import talkapp.org.talkappmobile.activity.async.GettingAllWordSetsAsyncTask;
+import talkapp.org.talkappmobile.activity.async.GettingAllWordSetsAsyncTask.OnAllWordSetsLoadingListener;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.WordSetService;
 
-public class WordsSetsListActivity extends Activity {
+public class AllWordSetsActivity extends Activity implements OnAllWordSetsLoadingListener {
     @Inject
     WordSetService wordSetService;
     @Inject
     AdaptersFactory adaptersFactory;
-    @Inject
-    GetWordSetListAsyncTask getWordSetListAsyncTask;
     private ListView exercisesList;
     private ArrayAdapter<WordSet> adapter;
 
@@ -34,29 +33,32 @@ public class WordsSetsListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_words_sets_list);
         DIContext.get().inject(this);
-        initExercisesList();
+
+        initWordSetsAdapter();
+        initWordSetsListView();
     }
 
-    private void initExercisesList() {
-        exercisesList = (ListView) findViewById(R.id.exercisesList);
+    private void initWordSetsAdapter() {
         adapter = adaptersFactory.createWordSetListAdapter(this);
+    }
+
+    private void initWordSetsListView() {
+        new GettingAllWordSetsAsyncTask(this).execute();
+        exercisesList = (ListView) findViewById(R.id.exercisesList);
         exercisesList.setAdapter(adapter);
-        try {
-            adapter.addAll(getWordSetListAsyncTask.execute().get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
         exercisesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 WordSet wordSet = adapter.getItem(position);
-
-                Intent intent = new Intent(WordsSetsListActivity.this, ExerciseActivity.class);
+                Intent intent = new Intent(AllWordSetsActivity.this, ExerciseActivity.class);
                 intent.putExtra(ExerciseActivity.WORD_SET_MAPPING, wordSet);
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onAllWordSetsLoaded(List<WordSet> wordSets) {
+        adapter.addAll(wordSets);
     }
 }
