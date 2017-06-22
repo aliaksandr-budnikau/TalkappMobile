@@ -25,7 +25,7 @@ public class AllWordSetsActivity extends Activity implements OnAllWordSetsLoadin
     WordSetService wordSetService;
     @Inject
     AdaptersFactory adaptersFactory;
-    private ListView exercisesList;
+    private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
 
     @Override
@@ -44,9 +44,9 @@ public class AllWordSetsActivity extends Activity implements OnAllWordSetsLoadin
 
     private void initWordSetsListView() {
         new GettingAllWordSetsAsyncTask(this).execute();
-        exercisesList = (ListView) findViewById(R.id.exercisesList);
-        exercisesList.setAdapter(adapter);
-        exercisesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        wordSetsListView = (ListView) findViewById(R.id.wordSetsListView);
+        wordSetsListView.setAdapter(adapter);
+        wordSetsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 WordSet wordSet = adapter.getItem(position);
