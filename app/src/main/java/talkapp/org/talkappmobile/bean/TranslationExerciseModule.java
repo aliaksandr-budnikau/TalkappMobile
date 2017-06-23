@@ -5,11 +5,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.service.SentenceSelector;
-import talkapp.org.talkappmobile.service.TranslationExercise;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 import talkapp.org.talkappmobile.service.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorImpl;
-import talkapp.org.talkappmobile.service.impl.TranslationExerciseImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -20,13 +18,6 @@ public class TranslationExerciseModule {
     @Singleton
     public SentenceSelector provideSentenceSelector() {
         return new RandomSentenceSelectorImpl();
-    }
-
-    @Provides
-    @Singleton
-    public TranslationExercise provideTranslationExercise(SentenceSelector sentenceSelector,
-                                                          WordsCombinator wordsCombinator) {
-        return new TranslationExerciseImpl(sentenceSelector, wordsCombinator);
     }
 
     @Provides

@@ -2,25 +2,27 @@ package talkapp.org.talkappmobile.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.Call;
+import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.activity.async.GettingAllWordSetsAsyncTask;
-import talkapp.org.talkappmobile.activity.async.GettingAllWordSetsAsyncTask.OnAllWordSetsLoadingListener;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.WordSetService;
 
-public class AllWordSetsActivity extends Activity implements OnAllWordSetsLoadingListener {
+public class AllWordSetsActivity extends Activity implements AdapterView.OnItemClickListener {
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -28,37 +30,45 @@ public class AllWordSetsActivity extends Activity implements OnAllWordSetsLoadin
     private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
 
+    private AsyncTask<String, Object, List<WordSet>> loadingWordSets = new AsyncTask<String, Object, List<WordSet>>() {
+        @Override
+        protected List<WordSet> doInBackground(String... params) {
+            Call<List<WordSet>> call = wordSetService.findAll();
+            Response<List<WordSet>> execute = null;
+            try {
+                execute = call.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return execute.body();
+        }
+
+        @Override
+        protected void onPostExecute(List<WordSet> wordSets) {
+            adapter.addAll(wordSets);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_words_sets_list);
+        setContentView(R.layout.activity_all_word_sets);
         DIContext.get().inject(this);
 
-        initWordSetsAdapter();
-        initWordSetsListView();
-    }
-
-    private void initWordSetsAdapter() {
         adapter = adaptersFactory.createWordSetListAdapter(this);
-    }
 
-    private void initWordSetsListView() {
-        new GettingAllWordSetsAsyncTask(this).execute();
         wordSetsListView = (ListView) findViewById(R.id.wordSetsListView);
         wordSetsListView.setAdapter(adapter);
-        wordSetsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                WordSet wordSet = adapter.getItem(position);
-                Intent intent = new Intent(AllWordSetsActivity.this, ExerciseActivity.class);
-                intent.putExtra(ExerciseActivity.WORD_SET_MAPPING, wordSet);
-                startActivity(intent);
-            }
-        });
+        wordSetsListView.setOnItemClickListener(this);
+
+        loadingWordSets.execute();
     }
 
     @Override
-    public void onAllWordSetsLoaded(List<WordSet> wordSets) {
-        adapter.addAll(wordSets);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        WordSet wordSet = adapter.getItem(position);
+        Intent intent = new Intent(AllWordSetsActivity.this, PracticeWordSetActivity.class);
+        intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
+        startActivity(intent);
     }
 }
