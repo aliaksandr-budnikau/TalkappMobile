@@ -7,10 +7,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
 
@@ -41,45 +40,32 @@ public class PracticeWordSetActivity extends Activity implements View.OnClickLis
     SentenceSelector sentenceSelector;
     @Inject
     WordsCombinator wordsCombinator;
-    private Semaphore semaphore = new Semaphore(0);
 
     private TextView originalText;
     private TextView answerText;
     private WordSet currentWordSet;
+    private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
 
-    private AsyncTask<String, Object, List<Sentence>> loadingSentences = new AsyncTask<String, Object, List<Sentence>>() {
-        @Override
-        protected List<Sentence> doInBackground(String... params) {
-            Call<List<Sentence>> call = sentenceService.findByWords(params[0]);
-            Response<List<Sentence>> execute = null;
-            try {
-                execute = call.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return execute.body();
-        }
-
-        @Override
-        protected void onPostExecute(List<Sentence> sentences) {
-            final Sentence sentence = sentenceSelector.getSentence(sentences);
-            originalText.setText(sentence.getTranslations().get("russian"));
-        }
-    };
-
-    private AsyncTask<WordSet, Object, Void> practiceExercise = new AsyncTask<WordSet, Object, Void>() {
+    private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
         @Override
         protected Void doInBackground(WordSet... words) {
             try {
                 Set<String> combinations = wordsCombinator.combineWords(words[0].getWords());
                 for (final String combination : combinations) {
-                    loadingSentences.execute(combination);
-                    semaphore.acquire();
+                    List<Sentence> sentences = sentenceService.findByWords(combination).execute().body();
+                    Sentence sentence = sentenceSelector.getSentence(sentences);
+                    this.publishProgress(sentence);
+                    sentenceBlockingQueue.put(sentence);
                 }
             } catch (Exception e) {
-                // TODO
+                e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Sentence... values) {
+            originalText.setText(values[0].getTranslations().get("russian"));
         }
     };
 
@@ -88,11 +74,12 @@ public class PracticeWordSetActivity extends Activity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_word_set);
         DIContext.get().inject(this);
+        sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
         originalText = (TextView) findViewById(R.id.originalText);
         answerText = (TextView) findViewById(R.id.answerText);
         findViewById(R.id.checkButton).setOnClickListener(this);
-        practiceExercise.execute(currentWordSet);
+        gameFlow.execute(currentWordSet);
     }
 
     @Override
@@ -100,7 +87,7 @@ public class PracticeWordSetActivity extends Activity implements View.OnClickLis
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setWordSetId(currentWordSet.getId());
         uncheckedAnswer.setText(answerText.getText().toString());
-        refereeService.checkAnswer(uncheckedAnswer).enqueue(PracticeWordSetActivity.this);
+        refereeService.checkAnswer(uncheckedAnswer).enqueue(this);
     }
 
     @Override
@@ -110,9 +97,14 @@ public class PracticeWordSetActivity extends Activity implements View.OnClickLis
             if (result.getCurrentTrainingExperience() == currentWordSet.getMaxTrainingExperience()) {
                 Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
                 finish();
+                return;
             }
             Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
-            semaphore.release();
+            try {
+                sentenceBlockingQueue.take();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
             Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
         }
