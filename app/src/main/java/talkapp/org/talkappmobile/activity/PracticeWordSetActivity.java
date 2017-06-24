@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 
-public class PracticeWordSetActivity extends Activity implements View.OnClickListener, Callback<AnswerCheckingResult> {
+public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     WordSetService wordSetService;
@@ -78,40 +78,39 @@ public class PracticeWordSetActivity extends Activity implements View.OnClickLis
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
         originalText = (TextView) findViewById(R.id.originalText);
         answerText = (TextView) findViewById(R.id.answerText);
-        findViewById(R.id.checkButton).setOnClickListener(this);
         gameFlow.execute(currentWordSet);
     }
 
-    @Override
-    public void onClick(View v) {
+    public void onCheckAnswerButtonClick(View v) {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setWordSetId(currentWordSet.getId());
         uncheckedAnswer.setText(answerText.getText().toString());
-        refereeService.checkAnswer(uncheckedAnswer).enqueue(this);
-    }
+        refereeService.checkAnswer(uncheckedAnswer).enqueue(new Callback<AnswerCheckingResult>() {
 
-    @Override
-    public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
-        AnswerCheckingResult result = response.body();
-        if (result.getErrors().isEmpty()) {
-            if (result.getCurrentTrainingExperience() == currentWordSet.getMaxTrainingExperience()) {
-                Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
-                finish();
-                return;
+            @Override
+            public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
+                AnswerCheckingResult result = response.body();
+                if (result.getErrors().isEmpty()) {
+                    if (result.getCurrentTrainingExperience() == currentWordSet.getMaxTrainingExperience()) {
+                        Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+                    Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
+                    try {
+                        sentenceBlockingQueue.take();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
+                }
             }
-            Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
-            try {
-                sentenceBlockingQueue.take();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
-        }
-    }
 
-    @Override
-    public void onFailure(Call<AnswerCheckingResult> call, Throwable t) {
-        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            @Override
+            public void onFailure(Call<AnswerCheckingResult> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
