@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +31,8 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.UnrecognizedVoice;
+import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceSelector;
@@ -199,7 +203,7 @@ public class PracticeWordSetActivity extends Activity {
         }
     }
 
-    private class RecordAudio extends AsyncTask<Void, Integer, Void> {
+    private class RecordAudio extends AsyncTask<Void, Integer, VoiceRecognitionResult> {
 
         protected void onPreExecute() {
             bytes.clear();
@@ -207,7 +211,7 @@ public class PracticeWordSetActivity extends Activity {
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected VoiceRecognitionResult doInBackground(Void... params) {
             int bufferSize = AudioRecord.getMinBufferSize(frequency,
                     channelConfiguration, audioEncoding);
             AudioRecord audioRecord = new AudioRecord(
@@ -223,12 +227,29 @@ public class PracticeWordSetActivity extends Activity {
                 }
             }
             audioRecord.stop();
-            return null;
+
+            ByteBuffer byteBuf = ByteBuffer.allocate(2 * bytes.size());
+            for (Iterator<Short> i = bytes.iterator(); i.hasNext(); ) {
+                byteBuf.putShort(i.next());
+            }
+
+            UnrecognizedVoice voice = new UnrecognizedVoice();
+            voice.setVoice(byteBuf.array());
+            try {
+                return voiceService.recognize(voice).execute().body();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new VoiceRecognitionResult();
+            }
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(VoiceRecognitionResult result) {
             isRecording = false;
+            if (result.getVariant().isEmpty()) {
+                return;
+            }
+            answerText.setText(result.getVariant().get(0));
         }
     }
 }
