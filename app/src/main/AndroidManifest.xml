@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".app.TalkappMobileApplication"
@@ -14,11 +15,11 @@
         android:supportsRtl="true">
         <!-- android:theme="@style/AppTheme"> -->
         <activity android:name=".activity.PracticeWordSetActivity">
-         <!--   <intent-filter>&lt;!&ndash;
-                <action android:name="android.intent.action.MAIN" />
+            <!--   <intent-filter>&lt;!&ndash;
+                   <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;
-            </intent-filter>-->
+                   <category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;
+               </intent-filter>-->
         </activity>
         <activity android:name=".activity.AllWordSetsActivity">
             <intent-filter>

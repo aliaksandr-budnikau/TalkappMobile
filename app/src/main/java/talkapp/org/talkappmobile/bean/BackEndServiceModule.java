@@ -9,6 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
+import talkapp.org.talkappmobile.service.VoiceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 /**
@@ -21,6 +22,12 @@ public class BackEndServiceModule {
     @Singleton
     public WordSetService provideWordSetService(Retrofit retrofit) {
         return retrofit.create(WordSetService.class);
+    }
+
+    @Provides
+    @Singleton
+    public VoiceService provideVoiceService(Retrofit retrofit) {
+        return retrofit.create(VoiceService.class);
     }
 
     @Provides
@@ -46,6 +53,6 @@ public class BackEndServiceModule {
     @Provides
     @Named("serverUrl")
     public String provideServerUrl() {
-        return "http://10.0.2.2:8080";
+        return "http://192.168.100.4:8080";
     }
 }
