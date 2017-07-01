@@ -6,14 +6,16 @@ import dagger.Component;
 import talkapp.org.talkappmobile.activity.AllWordSetsActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
-import talkapp.org.talkappmobile.bean.BackEndServiceModule;
-import talkapp.org.talkappmobile.bean.ItemsListModule;
-import talkapp.org.talkappmobile.bean.TranslationExerciseModule;
+import talkapp.org.talkappmobile.module.BackEndServiceModule;
+import talkapp.org.talkappmobile.module.ConcurrentModule;
+import talkapp.org.talkappmobile.module.GameplayModule;
+import talkapp.org.talkappmobile.module.ItemsListModule;
 
 @Singleton
 @Component(modules = {
         BackEndServiceModule.class,
-        TranslationExerciseModule.class,
+        GameplayModule.class,
+        ConcurrentModule.class,
         ItemsListModule.class
 })
 public abstract class DIContext {
@@ -23,7 +25,8 @@ public abstract class DIContext {
     public static DIContext get() {
         if (instance == null) {
             instance = DaggerDIContext.builder()
-                    .translationExerciseModule(new TranslationExerciseModule())
+                    .gameplayModule(new GameplayModule())
+                    .concurrentModule(new ConcurrentModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
                     .build();

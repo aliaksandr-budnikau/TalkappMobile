@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
@@ -50,6 +51,8 @@ public class PracticeWordSetActivity extends Activity {
     WordsCombinator wordsCombinator;
     @Inject
     VoiceService voiceService;
+    @Inject
+    Executor executor;
     int frequency = 11025, channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
     int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
     RecordAudio recordTask;
@@ -93,7 +96,7 @@ public class PracticeWordSetActivity extends Activity {
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
         originalText = findViewById(R.id.originalText);
         answerText = findViewById(R.id.answerText);
-        //gameFlow.execute(currentWordSet);
+        gameFlow.executeOnExecutor(executor, currentWordSet);
     }
 
     public void onCheckAnswerButtonClick(View v) {
@@ -147,7 +150,7 @@ public class PracticeWordSetActivity extends Activity {
 
     public void play() {
         playTask = new PlayAudio();
-        playTask.execute();
+        playTask.executeOnExecutor(executor);
     }
 
     public void stopPlaying() {
@@ -156,7 +159,7 @@ public class PracticeWordSetActivity extends Activity {
 
     public void record() {
         recordTask = new RecordAudio();
-        recordTask.execute();
+        recordTask.executeOnExecutor(executor);
     }
 
     public void stopRecording() {

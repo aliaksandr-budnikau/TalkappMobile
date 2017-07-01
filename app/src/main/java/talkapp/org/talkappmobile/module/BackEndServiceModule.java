@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.bean;
+package talkapp.org.talkappmobile.module;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
