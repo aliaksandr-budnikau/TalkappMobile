@@ -10,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +30,7 @@ import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
+import talkapp.org.talkappmobile.service.ByteUtils;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -60,6 +59,8 @@ public class PracticeWordSetActivity extends Activity {
     Executor executor;
     @Inject
     AudioStuffFactory audioStuffFactory;
+    @Inject
+    ByteUtils byteUtils;
     RecordAudio recordTask;
     PlayAudio playTask;
     private TextView originalText;
@@ -195,12 +196,7 @@ public class PracticeWordSetActivity extends Activity {
         protected Void doInBackground(Void... params) {
             AudioTrack audioTrack = audioStuffFactory.createAudioTrack();
             audioTrack.play();
-            ByteBuffer byteBuf = ByteBuffer.allocate(bytes.size());
-            for (Iterator<Byte> i = bytes.iterator(); i.hasNext(); ) {
-                byteBuf.put(i.next());
-            }
-            byte[] array = byteBuf.array();
-            audioTrack.write(array, 0, array.length);
+            audioTrack.write(byteUtils.toPrimitives(bytes), 0, bytes.size());
             return null;
         }
     }
@@ -236,13 +232,9 @@ public class PracticeWordSetActivity extends Activity {
                     }
                 }
             }
-            ByteBuffer byteBuf = ByteBuffer.allocate(bytes.size());
-            for (Iterator<Byte> i = bytes.iterator(); i.hasNext(); ) {
-                byteBuf.put(i.next());
-            }
 
             UnrecognizedVoice voice = new UnrecognizedVoice();
-            voice.setVoice(byteBuf.array());
+            voice.setVoice(byteUtils.toPrimitives(bytes));
             try {
                 return voiceService.recognize(voice).execute().body();
             } catch (IOException e) {
