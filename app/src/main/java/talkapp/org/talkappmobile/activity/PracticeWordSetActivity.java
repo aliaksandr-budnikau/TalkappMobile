@@ -1,11 +1,8 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Activity;
-import android.media.AudioFormat;
-import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
-import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +31,7 @@ import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -43,11 +41,8 @@ import talkapp.org.talkappmobile.service.WordsCombinator;
 
 public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
-    private static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
     private static final int AMPLITUDE_THRESHOLD = 1500;
-    private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private static final int SPEECH_TIMEOUT_MILLIS = 2000;
-    private static final int[] SAMPLE_RATE_CANDIDATES = new int[]{16000, 11025, 22050, 44100};
     private static final int MAX_SPEECH_LENGTH_MILLIS = 30 * 1000;
     @Inject
     WordSetService wordSetService;
@@ -63,6 +58,8 @@ public class PracticeWordSetActivity extends Activity {
     VoiceService voiceService;
     @Inject
     Executor executor;
+    @Inject
+    AudioStuffFactory audioStuffFactory;
     RecordAudio recordTask;
     PlayAudio playTask;
     private TextView originalText;
@@ -169,41 +166,6 @@ public class PracticeWordSetActivity extends Activity {
         isRecording = false;
     }
 
-    private AudioRecord createAudioRecord() {
-        for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
-            final int sizeInBytes = AudioRecord.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
-            if (sizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
-                continue;
-            }
-            final AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                    sampleRate, CHANNEL, ENCODING, sizeInBytes);
-            if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
-                buffer = new byte[sizeInBytes];
-                return audioRecord;
-            } else {
-                audioRecord.release();
-            }
-        }
-        return null;
-    }
-
-    private AudioTrack createAudioTrack() {
-        for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
-            final int sizeInBytes = AudioTrack.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
-            if (sizeInBytes == AudioTrack.ERROR_BAD_VALUE) {
-                continue;
-            }
-            final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
-                    sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, ENCODING, sizeInBytes, AudioTrack.MODE_STREAM);
-            if (audioTrack.getState() == AudioRecord.STATE_INITIALIZED) {
-                return audioTrack;
-            } else {
-                audioTrack.release();
-            }
-        }
-        return null;
-    }
-
     private void addToBytesList(int size) {
         for (int i = 0; i < size; i++) {
             bytes.add(buffer[i]);
@@ -231,7 +193,7 @@ public class PracticeWordSetActivity extends Activity {
     private class PlayAudio extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            AudioTrack audioTrack = createAudioTrack();
+            AudioTrack audioTrack = audioStuffFactory.createAudioTrack();
             audioTrack.play();
             ByteBuffer byteBuf = ByteBuffer.allocate(bytes.size());
             for (Iterator<Byte> i = bytes.iterator(); i.hasNext(); ) {
@@ -252,12 +214,9 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected VoiceRecognitionResult doInBackground(Void... params) {
-            audioRecord = createAudioRecord();
-            if (audioRecord == null) {
-                throw new RuntimeException("Cannot instantiate AudioRecord");
-            }
+            audioRecord = audioStuffFactory.createAudioRecord();
             audioRecord.startRecording();
-
+            buffer = audioStuffFactory.createBuffer();
             while (isRecording) {
                 final int size = audioRecord.read(buffer, 0, buffer.length);
                 final long now = System.currentTimeMillis();

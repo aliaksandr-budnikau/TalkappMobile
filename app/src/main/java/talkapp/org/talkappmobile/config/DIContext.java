@@ -6,6 +6,7 @@ import dagger.Component;
 import talkapp.org.talkappmobile.activity.AllWordSetsActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
+import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
@@ -16,6 +17,7 @@ import talkapp.org.talkappmobile.module.ItemsListModule;
         BackEndServiceModule.class,
         GameplayModule.class,
         ConcurrentModule.class,
+        AudioModule.class,
         ItemsListModule.class
 })
 public abstract class DIContext {
@@ -27,6 +29,7 @@ public abstract class DIContext {
             instance = DaggerDIContext.builder()
                     .gameplayModule(new GameplayModule())
                     .concurrentModule(new ConcurrentModule())
+                    .audioModule(new AudioModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
                     .build();
