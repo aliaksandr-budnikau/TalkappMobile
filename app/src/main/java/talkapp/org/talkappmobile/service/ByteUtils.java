@@ -8,4 +8,6 @@ import java.util.Collection;
 public interface ByteUtils {
 
     byte[] toPrimitives(Collection<Byte> collection);
+
+    boolean isHearingVoice(byte[] buffer, int size);
 }

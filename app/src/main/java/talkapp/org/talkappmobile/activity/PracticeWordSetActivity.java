@@ -40,7 +40,6 @@ import talkapp.org.talkappmobile.service.WordsCombinator;
 
 public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
-    private static final int AMPLITUDE_THRESHOLD = 1500;
     private static final int SPEECH_TIMEOUT_MILLIS = 2000;
     private static final int MAX_SPEECH_LENGTH_MILLIS = 30 * 1000;
     @Inject
@@ -70,8 +69,6 @@ public class PracticeWordSetActivity extends Activity {
     private boolean isRecording = false;
     private List<Byte> bytes = new LinkedList<>();
     private byte[] buffer;
-    private long lastVoiceHeardMillis = Long.MAX_VALUE;
-    private long voiceStartedMillis;
     private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
         @Override
         protected Void doInBackground(WordSet... words) {
@@ -94,7 +91,6 @@ public class PracticeWordSetActivity extends Activity {
             originalText.setText(values[0].getTranslations().get("russian"));
         }
     };
-    private AudioRecord audioRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,24 +169,6 @@ public class PracticeWordSetActivity extends Activity {
         }
     }
 
-    private boolean isHearingVoice(byte[] buffer, int size) {
-        for (int i = 0; i < size - 1; i += 2) {
-            // The buffer has LINEAR16 in little endian.
-            int s = buffer[i + 1];
-            if (s < 0) s *= -1;
-            s <<= 8;
-            s += Math.abs(buffer[i]);
-            if (s > AMPLITUDE_THRESHOLD) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void end() {
-        lastVoiceHeardMillis = Long.MAX_VALUE;
-    }
-
     private class PlayAudio extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -217,27 +195,34 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected VoiceRecognitionResult doInBackground(Void... params) {
-            audioRecord = audioStuffFactory.createAudioRecord();
-            audioRecord.startRecording();
-            buffer = audioStuffFactory.createBuffer();
-            while (isRecording) {
-                final int size = audioRecord.read(buffer, 0, buffer.length);
-                final long now = System.currentTimeMillis();
-                if (isHearingVoice(buffer, size)) {
-                    if (lastVoiceHeardMillis == Long.MAX_VALUE) {
-                        voiceStartedMillis = now;
-                    }
-                    addToBytesList(size);
-                    lastVoiceHeardMillis = now;
-                    if (now - voiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
-                        end();
-                    }
-                } else if (lastVoiceHeardMillis != Long.MAX_VALUE) {
-                    addToBytesList(size);
-                    if (now - lastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
-                        end();
+            AudioRecord audioRecord = null;
+            try {
+                audioRecord = audioStuffFactory.createAudioRecord();
+                audioRecord.startRecording();
+                buffer = audioStuffFactory.createBuffer();
+                long voiceStartedMillis = 0;
+                long lastVoiceHeardMillis = Long.MAX_VALUE;
+                while (isRecording) {
+                    final int size = audioRecord.read(buffer, 0, buffer.length);
+                    final long now = System.currentTimeMillis();
+                    if (byteUtils.isHearingVoice(buffer, size)) {
+                        if (lastVoiceHeardMillis == Long.MAX_VALUE) {
+                            voiceStartedMillis = now;
+                        }
+                        addToBytesList(size);
+                        lastVoiceHeardMillis = now;
+                        if (now - voiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
+                            lastVoiceHeardMillis = Long.MAX_VALUE;
+                        }
+                    } else if (lastVoiceHeardMillis != Long.MAX_VALUE) {
+                        addToBytesList(size);
+                        if (now - lastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
+                            lastVoiceHeardMillis = Long.MAX_VALUE;
+                        }
                     }
                 }
+            } finally {
+                audioRecord.release();
             }
 
             UnrecognizedVoice voice = new UnrecognizedVoice();
