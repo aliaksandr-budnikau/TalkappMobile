@@ -43,6 +43,12 @@ import talkapp.org.talkappmobile.service.WordsCombinator;
 
 public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
+    private static final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
+    private static final int AMPLITUDE_THRESHOLD = 1500;
+    private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT;
+    private static final int SPEECH_TIMEOUT_MILLIS = 2000;
+    private static final int[] SAMPLE_RATE_CANDIDATES = new int[]{16000, 11025, 22050, 44100};
+    private static final int MAX_SPEECH_LENGTH_MILLIS = 30 * 1000;
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -57,17 +63,17 @@ public class PracticeWordSetActivity extends Activity {
     VoiceService voiceService;
     @Inject
     Executor executor;
-    int frequency = 11025, channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
-    int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
     RecordAudio recordTask;
     PlayAudio playTask;
     private TextView originalText;
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
-    private boolean isRecording = false, isPlaying = false;
-    private List<Short> bytes = new LinkedList<>();
-
+    private boolean isRecording = false;
+    private List<Byte> bytes = new LinkedList<>();
+    private byte[] buffer;
+    private long lastVoiceHeardMillis = Long.MAX_VALUE;
+    private long voiceStartedMillis;
     private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
         @Override
         protected Void doInBackground(WordSet... words) {
@@ -90,6 +96,7 @@ public class PracticeWordSetActivity extends Activity {
             originalText.setText(values[0].getTranslations().get("russian"));
         }
     };
+    private AudioRecord audioRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,20 +152,12 @@ public class PracticeWordSetActivity extends Activity {
     }
 
     public void onHearVoiceButtonClick(View view) {
-        if (isPlaying) {
-            stopPlaying();
-        } else if (!isPlaying) {
-            play();
-        }
+        play();
     }
 
     public void play() {
         playTask = new PlayAudio();
         playTask.executeOnExecutor(executor);
-    }
-
-    public void stopPlaying() {
-        isPlaying = false;
     }
 
     public void record() {
@@ -170,36 +169,77 @@ public class PracticeWordSetActivity extends Activity {
         isRecording = false;
     }
 
+    private AudioRecord createAudioRecord() {
+        for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
+            final int sizeInBytes = AudioRecord.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
+            if (sizeInBytes == AudioRecord.ERROR_BAD_VALUE) {
+                continue;
+            }
+            final AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                    sampleRate, CHANNEL, ENCODING, sizeInBytes);
+            if (audioRecord.getState() == AudioRecord.STATE_INITIALIZED) {
+                buffer = new byte[sizeInBytes];
+                return audioRecord;
+            } else {
+                audioRecord.release();
+            }
+        }
+        return null;
+    }
+
+    private AudioTrack createAudioTrack() {
+        for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
+            final int sizeInBytes = AudioTrack.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
+            if (sizeInBytes == AudioTrack.ERROR_BAD_VALUE) {
+                continue;
+            }
+            final AudioTrack audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC,
+                    sampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO, ENCODING, sizeInBytes, AudioTrack.MODE_STREAM);
+            if (audioTrack.getState() == AudioRecord.STATE_INITIALIZED) {
+                return audioTrack;
+            } else {
+                audioTrack.release();
+            }
+        }
+        return null;
+    }
+
+    private void addToBytesList(int size) {
+        for (int i = 0; i < size; i++) {
+            bytes.add(buffer[i]);
+        }
+    }
+
+    private boolean isHearingVoice(byte[] buffer, int size) {
+        for (int i = 0; i < size - 1; i += 2) {
+            // The buffer has LINEAR16 in little endian.
+            int s = buffer[i + 1];
+            if (s < 0) s *= -1;
+            s <<= 8;
+            s += Math.abs(buffer[i]);
+            if (s > AMPLITUDE_THRESHOLD) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void end() {
+        lastVoiceHeardMillis = Long.MAX_VALUE;
+    }
+
     private class PlayAudio extends AsyncTask<Void, Integer, Void> {
         @Override
-        protected void onPreExecute() {
-            isPlaying = true;
-        }
-
-        @Override
         protected Void doInBackground(Void... params) {
-            int bufferSize = AudioTrack.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
-            short[] audiodata = new short[bufferSize / 4];
-
-            AudioTrack audioTrack = new AudioTrack(
-                    AudioManager.STREAM_MUSIC, frequency,
-                    channelConfiguration, audioEncoding, bufferSize,
-                    AudioTrack.MODE_STREAM);
-
+            AudioTrack audioTrack = createAudioTrack();
             audioTrack.play();
-            Iterator<Short> iterator = bytes.iterator();
-            while (isPlaying && iterator.hasNext()) {
-                for (int i = 0; iterator.hasNext() && i < audiodata.length; i++) {
-                    audiodata[i] = iterator.next();
-                }
-                audioTrack.write(audiodata, 0, audiodata.length);
+            ByteBuffer byteBuf = ByteBuffer.allocate(bytes.size());
+            for (Iterator<Byte> i = bytes.iterator(); i.hasNext(); ) {
+                byteBuf.put(i.next());
             }
+            byte[] array = byteBuf.array();
+            audioTrack.write(array, 0, array.length);
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            isPlaying = false;
         }
     }
 
@@ -212,25 +252,34 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected VoiceRecognitionResult doInBackground(Void... params) {
-            int bufferSize = AudioRecord.getMinBufferSize(frequency,
-                    channelConfiguration, audioEncoding);
-            AudioRecord audioRecord = new AudioRecord(
-                    MediaRecorder.AudioSource.MIC, frequency,
-                    channelConfiguration, audioEncoding, bufferSize);
-
-            short[] buffer = new short[bufferSize];
+            audioRecord = createAudioRecord();
+            if (audioRecord == null) {
+                throw new RuntimeException("Cannot instantiate AudioRecord");
+            }
             audioRecord.startRecording();
+
             while (isRecording) {
-                int bufferReadResult = audioRecord.read(buffer, 0, bufferSize);
-                for (int i = 0; i < bufferReadResult; i++) {
-                    bytes.add(buffer[i]);
+                final int size = audioRecord.read(buffer, 0, buffer.length);
+                final long now = System.currentTimeMillis();
+                if (isHearingVoice(buffer, size)) {
+                    if (lastVoiceHeardMillis == Long.MAX_VALUE) {
+                        voiceStartedMillis = now;
+                    }
+                    addToBytesList(size);
+                    lastVoiceHeardMillis = now;
+                    if (now - voiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
+                        end();
+                    }
+                } else if (lastVoiceHeardMillis != Long.MAX_VALUE) {
+                    addToBytesList(size);
+                    if (now - lastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
+                        end();
+                    }
                 }
             }
-            audioRecord.stop();
-
-            ByteBuffer byteBuf = ByteBuffer.allocate(2 * bytes.size());
-            for (Iterator<Short> i = bytes.iterator(); i.hasNext(); ) {
-                byteBuf.putShort(i.next());
+            ByteBuffer byteBuf = ByteBuffer.allocate(bytes.size());
+            for (Iterator<Byte> i = bytes.iterator(); i.hasNext(); ) {
+                byteBuf.put(i.next());
             }
 
             UnrecognizedVoice voice = new UnrecognizedVoice();
