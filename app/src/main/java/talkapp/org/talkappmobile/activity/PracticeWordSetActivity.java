@@ -194,9 +194,16 @@ public class PracticeWordSetActivity extends Activity {
     private class PlayAudio extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            AudioTrack audioTrack = audioStuffFactory.createAudioTrack();
-            audioTrack.play();
-            audioTrack.write(byteUtils.toPrimitives(bytes), 0, bytes.size());
+            AudioTrack audioTrack = null;
+            try {
+                audioTrack = audioStuffFactory.createAudioTrack();
+                audioTrack.play();
+                audioTrack.write(byteUtils.toPrimitives(bytes), 0, bytes.size());
+            } finally {
+                if (audioTrack != null) {
+                    audioTrack.release();
+                }
+            }
             return null;
         }
     }
