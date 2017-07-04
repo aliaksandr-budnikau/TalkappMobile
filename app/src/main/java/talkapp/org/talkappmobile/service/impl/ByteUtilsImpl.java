@@ -25,7 +25,6 @@ public class ByteUtilsImpl implements ByteUtils {
     @Override
     public boolean isHearingVoice(byte[] buffer, int size) {
         for (int i = 0; i < size - 1; i += 2) {
-            // The buffer has LINEAR16 in little endian.
             int s = buffer[i + 1];
             if (s < 0) s *= -1;
             s <<= 8;

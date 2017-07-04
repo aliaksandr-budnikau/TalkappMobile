@@ -11,6 +11,7 @@ import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
+import talkapp.org.talkappmobile.service.impl.RecordedTrackImpl;
 
 @Singleton
 @Component(modules = {
@@ -42,4 +43,6 @@ public abstract class DIContext {
     abstract public void inject(WordSetListAdapter target);
 
     abstract public void inject(AllWordSetsActivity target);
+
+    abstract public void inject(RecordedTrackImpl target);
 }

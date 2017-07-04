@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -31,6 +30,7 @@ import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.ByteUtils;
+import talkapp.org.talkappmobile.service.RecordedTrack;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -60,6 +60,8 @@ public class PracticeWordSetActivity extends Activity {
     AudioStuffFactory audioStuffFactory;
     @Inject
     ByteUtils byteUtils;
+    @Inject
+    RecordedTrack recordedTrackBuffer;
     RecordAudio recordTask;
     PlayAudio playTask;
     private TextView originalText;
@@ -67,8 +69,6 @@ public class PracticeWordSetActivity extends Activity {
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
     private boolean isRecording = false;
-    private List<Byte> bytes = new LinkedList<>();
-    private byte[] buffer;
     private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
         @Override
         protected Void doInBackground(WordSet... words) {
@@ -163,12 +163,6 @@ public class PracticeWordSetActivity extends Activity {
         isRecording = false;
     }
 
-    private void addToBytesList(int size) {
-        for (int i = 0; i < size; i++) {
-            bytes.add(buffer[i]);
-        }
-    }
-
     private class PlayAudio extends AsyncTask<Void, Integer, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -176,7 +170,7 @@ public class PracticeWordSetActivity extends Activity {
             try {
                 audioTrack = audioStuffFactory.createAudioTrack();
                 audioTrack.play();
-                audioTrack.write(byteUtils.toPrimitives(bytes), 0, bytes.size());
+                audioTrack.write(recordedTrackBuffer.get(), 0, recordedTrackBuffer.size());
             } finally {
                 if (audioTrack != null) {
                     audioTrack.release();
@@ -189,7 +183,7 @@ public class PracticeWordSetActivity extends Activity {
     private class RecordAudio extends AsyncTask<Void, Integer, VoiceRecognitionResult> {
 
         protected void onPreExecute() {
-            bytes.clear();
+            recordedTrackBuffer.clear();
             isRecording = true;
         }
 
@@ -199,7 +193,7 @@ public class PracticeWordSetActivity extends Activity {
             try {
                 audioRecord = audioStuffFactory.createAudioRecord();
                 audioRecord.startRecording();
-                buffer = audioStuffFactory.createBuffer();
+                byte[] buffer = audioStuffFactory.createBuffer();
                 long voiceStartedMillis = 0;
                 long lastVoiceHeardMillis = Long.MAX_VALUE;
                 while (isRecording) {
@@ -209,13 +203,13 @@ public class PracticeWordSetActivity extends Activity {
                         if (lastVoiceHeardMillis == Long.MAX_VALUE) {
                             voiceStartedMillis = now;
                         }
-                        addToBytesList(size);
+                        recordedTrackBuffer.append(buffer);
                         lastVoiceHeardMillis = now;
                         if (now - voiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
                             lastVoiceHeardMillis = Long.MAX_VALUE;
                         }
                     } else if (lastVoiceHeardMillis != Long.MAX_VALUE) {
-                        addToBytesList(size);
+                        recordedTrackBuffer.append(buffer);
                         if (now - lastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
                             lastVoiceHeardMillis = Long.MAX_VALUE;
                         }
@@ -226,7 +220,7 @@ public class PracticeWordSetActivity extends Activity {
             }
 
             UnrecognizedVoice voice = new UnrecognizedVoice();
-            voice.setVoice(byteUtils.toPrimitives(bytes));
+            voice.setVoice(recordedTrackBuffer.get());
             try {
                 return voiceService.recognize(voice).execute().body();
             } catch (IOException e) {
