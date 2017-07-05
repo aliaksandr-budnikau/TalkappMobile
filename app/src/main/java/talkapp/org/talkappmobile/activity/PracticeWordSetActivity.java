@@ -57,7 +57,6 @@ public class PracticeWordSetActivity extends Activity {
     RecordedTrack recordedTrackBuffer;
     @Inject
     AudioProcessesFactory audioProcessesFactory;
-    PlayAudio playTask;
     private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView answerText;
@@ -144,11 +143,11 @@ public class PracticeWordSetActivity extends Activity {
 
     public void onHearVoiceButtonClick(View view) {
         VoicePlayingProcess voicePlayingProcess = audioProcessesFactory.createVoicePlayingProcess(recordedTrackBuffer);
-        playTask = new PlayAudio();
+        PlayAudioAsyncTask playTask = new PlayAudioAsyncTask();
         playTask.executeOnExecutor(executor, voicePlayingProcess);
     }
 
-    private class PlayAudio extends AsyncTask<VoicePlayingProcess, Integer, Void> {
+    private class PlayAudioAsyncTask extends AsyncTask<VoicePlayingProcess, Integer, Void> {
         @Override
         protected Void doInBackground(VoicePlayingProcess... params) {
             params[0].play();
