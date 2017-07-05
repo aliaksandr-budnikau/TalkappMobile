@@ -1,8 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Activity;
-import android.media.AudioRecord;
-import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -28,8 +26,7 @@ import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
-import talkapp.org.talkappmobile.service.ByteUtils;
+import talkapp.org.talkappmobile.service.AudioProcessesFactory;
 import talkapp.org.talkappmobile.service.RecordedTrack;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceSelector;
@@ -37,11 +34,11 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.VoiceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
+import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
+import talkapp.org.talkappmobile.service.impl.VoiceRecordingProcess;
 
 public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
-    private static final int SPEECH_TIMEOUT_MILLIS = 2000;
-    private static final int MAX_SPEECH_LENGTH_MILLIS = 30 * 1000;
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -57,18 +54,15 @@ public class PracticeWordSetActivity extends Activity {
     @Inject
     Executor executor;
     @Inject
-    AudioStuffFactory audioStuffFactory;
-    @Inject
-    ByteUtils byteUtils;
-    @Inject
     RecordedTrack recordedTrackBuffer;
-    RecordAudio recordTask;
+    @Inject
+    AudioProcessesFactory audioProcessesFactory;
     PlayAudio playTask;
+    private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
-    private boolean isRecording = false;
     private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
         @Override
         protected Void doInBackground(WordSet... words) {
@@ -138,87 +132,34 @@ public class PracticeWordSetActivity extends Activity {
     }
 
     public void onRecogniseVoiceButtonClick(View view) {
-        if (isRecording) {
-            stopRecording();
-        } else if (!isRecording) {
-            record();
+        if (voiceRecordingProcess == null) {
+            voiceRecordingProcess = audioProcessesFactory.createVoiceRecordingProcess(recordedTrackBuffer);
+            RecordAudioAsyncTask recordTask = new RecordAudioAsyncTask();
+            recordTask.executeOnExecutor(executor, voiceRecordingProcess);
+        } else {
+            voiceRecordingProcess.stop();
+            voiceRecordingProcess = null;
         }
     }
 
     public void onHearVoiceButtonClick(View view) {
-        play();
-    }
-
-    public void play() {
+        VoicePlayingProcess voicePlayingProcess = audioProcessesFactory.createVoicePlayingProcess(recordedTrackBuffer);
         playTask = new PlayAudio();
-        playTask.executeOnExecutor(executor);
+        playTask.executeOnExecutor(executor, voicePlayingProcess);
     }
 
-    public void record() {
-        recordTask = new RecordAudio();
-        recordTask.executeOnExecutor(executor);
-    }
-
-    public void stopRecording() {
-        isRecording = false;
-    }
-
-    private class PlayAudio extends AsyncTask<Void, Integer, Void> {
+    private class PlayAudio extends AsyncTask<VoicePlayingProcess, Integer, Void> {
         @Override
-        protected Void doInBackground(Void... params) {
-            AudioTrack audioTrack = null;
-            try {
-                audioTrack = audioStuffFactory.createAudioTrack();
-                audioTrack.play();
-                audioTrack.write(recordedTrackBuffer.get(), 0, recordedTrackBuffer.size());
-            } finally {
-                if (audioTrack != null) {
-                    audioTrack.release();
-                }
-            }
+        protected Void doInBackground(VoicePlayingProcess... params) {
+            params[0].play();
             return null;
         }
     }
 
-    private class RecordAudio extends AsyncTask<Void, Integer, VoiceRecognitionResult> {
-
-        protected void onPreExecute() {
-            recordedTrackBuffer.clear();
-            isRecording = true;
-        }
-
+    private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Integer, VoiceRecognitionResult> {
         @Override
-        protected VoiceRecognitionResult doInBackground(Void... params) {
-            AudioRecord audioRecord = null;
-            try {
-                audioRecord = audioStuffFactory.createAudioRecord();
-                audioRecord.startRecording();
-                byte[] buffer = audioStuffFactory.createBuffer();
-                long voiceStartedMillis = 0;
-                long lastVoiceHeardMillis = Long.MAX_VALUE;
-                while (isRecording) {
-                    final int size = audioRecord.read(buffer, 0, buffer.length);
-                    final long now = System.currentTimeMillis();
-                    if (byteUtils.isHearingVoice(buffer, size)) {
-                        if (lastVoiceHeardMillis == Long.MAX_VALUE) {
-                            voiceStartedMillis = now;
-                        }
-                        recordedTrackBuffer.append(buffer);
-                        lastVoiceHeardMillis = now;
-                        if (now - voiceStartedMillis > MAX_SPEECH_LENGTH_MILLIS) {
-                            lastVoiceHeardMillis = Long.MAX_VALUE;
-                        }
-                    } else if (lastVoiceHeardMillis != Long.MAX_VALUE) {
-                        recordedTrackBuffer.append(buffer);
-                        if (now - lastVoiceHeardMillis > SPEECH_TIMEOUT_MILLIS) {
-                            lastVoiceHeardMillis = Long.MAX_VALUE;
-                        }
-                    }
-                }
-            } finally {
-                audioRecord.release();
-            }
-
+        protected VoiceRecognitionResult doInBackground(VoiceRecordingProcess... params) {
+            params[0].rec();
             UnrecognizedVoice voice = new UnrecognizedVoice();
             voice.setVoice(recordedTrackBuffer.get());
             try {
@@ -231,7 +172,6 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected void onPostExecute(VoiceRecognitionResult result) {
-            isRecording = false;
             if (result.getVariant().isEmpty()) {
                 return;
             }
