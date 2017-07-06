@@ -4,8 +4,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import talkapp.org.talkappmobile.service.GameProcessesFactory;
 import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.WordsCombinator;
+import talkapp.org.talkappmobile.service.impl.GameProcessesFactoryImpl;
 import talkapp.org.talkappmobile.service.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorImpl;
 
@@ -24,5 +26,12 @@ public class GameplayModule {
     @Singleton
     public WordsCombinator provideWordsCombinator() {
         return new RandomWordsCombinatorImpl();
+    }
+
+    @Provides
+    @Singleton
+    public GameProcessesFactory provideGameProcessesFactory(WordsCombinator wordsCombinator,
+                                                            SentenceSelector sentenceSelector) {
+        return new GameProcessesFactoryImpl(wordsCombinator, sentenceSelector);
     }
 }

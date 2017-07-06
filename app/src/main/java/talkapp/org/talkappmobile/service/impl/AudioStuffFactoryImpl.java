@@ -7,7 +7,7 @@ import android.media.AudioTrack;
 import android.media.MediaRecorder;
 
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
-import talkapp.org.talkappmobile.service.NothingCreatedException;
+import talkapp.org.talkappmobile.service.NothingGotException;
 
 /**
  * @author Budnikau Aliaksandr
@@ -20,15 +20,15 @@ public class AudioStuffFactoryImpl implements AudioStuffFactory {
     private byte[] buffer;
 
     @Override
-    public byte[] createBuffer() throws NothingCreatedException {
+    public byte[] createBuffer() throws NothingGotException {
         if (buffer == null) {
-            throw new NothingCreatedException("Cannot instantiate Buffer");
+            throw new NothingGotException("Cannot instantiate Buffer");
         }
         return buffer;
     }
 
     @Override
-    public AudioRecord createAudioRecord() throws NothingCreatedException {
+    public AudioRecord createAudioRecord() throws NothingGotException {
         try {
             for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
                 final int sizeInBytes = AudioRecord.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
@@ -45,13 +45,13 @@ public class AudioStuffFactoryImpl implements AudioStuffFactory {
                 }
             }
         } catch (Exception e) {
-            throw new NothingCreatedException("Cannot instantiate AudioRecord", e);
+            throw new NothingGotException("Cannot instantiate AudioRecord", e);
         }
-        throw new NothingCreatedException("Cannot instantiate AudioRecord");
+        throw new NothingGotException("Cannot instantiate AudioRecord");
     }
 
     @Override
-    public AudioTrack createAudioTrack() throws NothingCreatedException {
+    public AudioTrack createAudioTrack() throws NothingGotException {
         try {
             for (int sampleRate : SAMPLE_RATE_CANDIDATES) {
                 final int sizeInBytes = AudioTrack.getMinBufferSize(sampleRate, CHANNEL, ENCODING);
@@ -67,8 +67,8 @@ public class AudioStuffFactoryImpl implements AudioStuffFactory {
                 }
             }
         } catch (Exception e) {
-            throw new NothingCreatedException("Cannot instantiate AudioTrack", e);
+            throw new NothingGotException("Cannot instantiate AudioTrack", e);
         }
-        throw new NothingCreatedException("Cannot instantiate AudioTrack");
+        throw new NothingGotException("Cannot instantiate AudioTrack");
     }
 }

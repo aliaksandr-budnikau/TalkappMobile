@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,28 +26,23 @@ import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioProcessesFactory;
+import talkapp.org.talkappmobile.service.GameProcessesFactory;
+import talkapp.org.talkappmobile.service.NothingGotException;
 import talkapp.org.talkappmobile.service.RecordedTrack;
 import talkapp.org.talkappmobile.service.RefereeService;
-import talkapp.org.talkappmobile.service.SentenceSelector;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.VoiceService;
-import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordsCombinator;
+import talkapp.org.talkappmobile.service.impl.GameProcessCallback;
+import talkapp.org.talkappmobile.service.impl.GameProcesses;
 import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
 import talkapp.org.talkappmobile.service.impl.VoiceRecordingProcess;
 
 public class PracticeWordSetActivity extends Activity {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
-    WordSetService wordSetService;
-    @Inject
     RefereeService refereeService;
     @Inject
     SentenceService sentenceService;
-    @Inject
-    SentenceSelector sentenceSelector;
-    @Inject
-    WordsCombinator wordsCombinator;
     @Inject
     VoiceService voiceService;
     @Inject
@@ -57,44 +51,27 @@ public class PracticeWordSetActivity extends Activity {
     RecordedTrack recordedTrackBuffer;
     @Inject
     AudioProcessesFactory audioProcessesFactory;
+    @Inject
+    GameProcessesFactory gameProcessesFactory;
     private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
-    private AsyncTask<WordSet, Sentence, Void> gameFlow = new AsyncTask<WordSet, Sentence, Void>() {
-        @Override
-        protected Void doInBackground(WordSet... words) {
-            try {
-                Set<String> combinations = wordsCombinator.combineWords(words[0].getWords());
-                for (final String combination : combinations) {
-                    List<Sentence> sentences = sentenceService.findByWords(combination).execute().body();
-                    Sentence sentence = sentenceSelector.getSentence(sentences);
-                    this.publishProgress(sentence);
-                    sentenceBlockingQueue.put(sentence);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Sentence... values) {
-            originalText.setText(values[0].getTranslations().get("russian"));
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_word_set);
         DIContext.get().inject(this);
-        sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
-        currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
         originalText = findViewById(R.id.originalText);
         answerText = findViewById(R.id.answerText);
-        gameFlow.executeOnExecutor(executor, currentWordSet);
+
+        sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
+        currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
+        GameFlow gameFlow = new GameFlow();
+        GameProcesses gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, gameFlow);
+        gameFlow.executeOnExecutor(executor, gameProcesses);
     }
 
     public void onCheckAnswerButtonClick(View v) {
@@ -175,6 +152,39 @@ public class PracticeWordSetActivity extends Activity {
                 return;
             }
             answerText.setText(result.getVariant().get(0));
+        }
+    }
+
+    private class GameFlow extends AsyncTask<GameProcesses, Sentence, Void> implements GameProcessCallback {
+
+        @Override
+        protected Void doInBackground(GameProcesses... gameProcesses) {
+            gameProcesses[0].start();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Sentence... values) {
+            originalText.setText(values[0].getTranslations().get("russian"));
+        }
+
+        @Override
+        public void returnProgress(Sentence sentence) {
+            try {
+                sentenceBlockingQueue.put(sentence);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.publishProgress(sentence);
+        }
+
+        @Override
+        public List<Sentence> findByWords(String words) {
+            try {
+                return sentenceService.findByWords(words).execute().body();
+            } catch (IOException e) {
+                throw new NothingGotException(e);
+            }
         }
     }
 }
