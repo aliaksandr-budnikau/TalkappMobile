@@ -77,7 +77,8 @@ public class PracticeWordSetActivity extends Activity {
     public void onCheckAnswerButtonClick(View v) {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setWordSetId(currentWordSet.getId());
-        uncheckedAnswer.setText(answerText.getText().toString());
+        uncheckedAnswer.setActualAnswer(answerText.getText().toString());
+        uncheckedAnswer.setExpectedAnswer(sentenceBlockingQueue.peek().getText());
         refereeService.checkAnswer(uncheckedAnswer).enqueue(new Callback<AnswerCheckingResult>() {
 
             @Override
