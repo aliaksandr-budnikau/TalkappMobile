@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -75,9 +77,14 @@ public class PracticeWordSetActivity extends Activity {
     }
 
     public void onCheckAnswerButtonClick(View v) {
+        String actualAnswer = answerText.getText().toString();
+        if (StringUtils.isEmpty(actualAnswer)) {
+            Toast.makeText(getApplicationContext(), "Answer can't be empty.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setWordSetId(currentWordSet.getId());
-        uncheckedAnswer.setActualAnswer(answerText.getText().toString());
+        uncheckedAnswer.setActualAnswer(actualAnswer);
         uncheckedAnswer.setExpectedAnswer(sentenceBlockingQueue.peek().getText());
         refereeService.checkAnswer(uncheckedAnswer).enqueue(new Callback<AnswerCheckingResult>() {
 
@@ -120,6 +127,9 @@ public class PracticeWordSetActivity extends Activity {
     }
 
     public void onHearVoiceButtonClick(View view) {
+        if (recordedTrackBuffer.size() == 0) {
+            return;
+        }
         VoicePlayingProcess voicePlayingProcess = audioProcessesFactory.createVoicePlayingProcess(recordedTrackBuffer);
         PlayAudioAsyncTask playTask = new PlayAudioAsyncTask();
         playTask.executeOnExecutor(executor, voicePlayingProcess);
