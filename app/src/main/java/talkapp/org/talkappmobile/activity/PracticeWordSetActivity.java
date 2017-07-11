@@ -60,6 +60,7 @@ public class PracticeWordSetActivity extends Activity {
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
+    private GameFlow gameFlow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,7 @@ public class PracticeWordSetActivity extends Activity {
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
-        GameFlow gameFlow = new GameFlow();
+        gameFlow = new GameFlow();
         GameProcesses gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, gameFlow);
         gameFlow.executeOnExecutor(executor, gameProcesses);
     }
@@ -135,6 +136,12 @@ public class PracticeWordSetActivity extends Activity {
         playTask.executeOnExecutor(executor, voicePlayingProcess);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gameFlow.cancel(true);
+    }
+
     private class PlayAudioAsyncTask extends AsyncTask<VoicePlayingProcess, Integer, Void> {
         @Override
         protected Void doInBackground(VoicePlayingProcess... params) {
@@ -180,12 +187,8 @@ public class PracticeWordSetActivity extends Activity {
         }
 
         @Override
-        public void returnProgress(Sentence sentence) {
-            try {
-                sentenceBlockingQueue.put(sentence);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        public void returnProgress(Sentence sentence) throws InterruptedException {
+            sentenceBlockingQueue.put(sentence);
             this.publishProgress(sentence);
         }
 
@@ -196,6 +199,16 @@ public class PracticeWordSetActivity extends Activity {
             } catch (IOException e) {
                 throw new NothingGotException(e);
             }
+        }
+
+        @Override
+        public void onFinish() {
+            PracticeWordSetActivity.this.finish();
+        }
+
+        @Override
+        public void onInterruption() {
+            Toast.makeText(getApplicationContext(), "Interrupted", Toast.LENGTH_SHORT).show();
         }
     }
 }

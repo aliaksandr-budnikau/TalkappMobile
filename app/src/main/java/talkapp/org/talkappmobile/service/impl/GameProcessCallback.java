@@ -8,7 +8,11 @@ import talkapp.org.talkappmobile.model.Sentence;
  * @author Budnikau Aliaksandr
  */
 public interface GameProcessCallback {
-    void returnProgress(Sentence sentence);
+    void returnProgress(Sentence sentence) throws InterruptedException;
 
     List<Sentence> findByWords(String words);
+
+    void onFinish();
+
+    void onInterruption();
 }

@@ -28,10 +28,23 @@ public class GameProcesses {
 
     public void start() {
         Set<String> combinations = wordsCombinator.combineWords(wordSet.getWords());
-        for (final String combination : combinations) {
-            List<Sentence> sentences = callback.findByWords(combination);
-            Sentence sentence = sentenceSelector.getSentence(sentences);
-            callback.returnProgress(sentence);
+        try {
+            for (final String combination : combinations) {
+                List<Sentence> sentences = callback.findByWords(combination);
+                if (sentences.isEmpty()) {
+                    continue;
+                }
+                Sentence sentence = sentenceSelector.getSentence(sentences);
+                callback.returnProgress(sentence);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            if (Thread.currentThread().isInterrupted()) {
+                callback.onInterruption();
+            } else {
+                callback.onFinish();
+            }
         }
     }
 }
