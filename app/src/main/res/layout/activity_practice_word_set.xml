@@ -3,65 +3,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d3d0ed"
+    android:background="@android:color/background_light"
     tools:context="talkapp.org.talkappmobile.activity.PracticeWordSetActivity">
 
     <TextView
         android:id="@+id/originalText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50px"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="54px" />
+
+        android:layout_marginLeft="8pt"
+        android:layout_marginRight="8pt"
+        android:layout_marginTop="20pt"
+
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color.text.origin"
+        android:textSize="14pt" />
 
     <EditText
         android:id="@+id/answerText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/originalText"
+        android:layout_marginLeft="12pt"
+        android:layout_marginRight="12pt"
+        android:layout_marginTop="20pt"
+
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+
+        android:lines="4"
+
+        android:maxLines="4"
+        android:textColor="@color/color.text.answer"
+        android:textSize="13pt" />
+
+    <Button
+        android:id="@+id/hearButton"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/originalText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100px"
-        android:hint="Перевод текста"
-        android:textSize="54px" />
+        android:layout_below="@+id/answerText"
+        android:layout_marginRight="8pt"
+        android:layout_marginTop="0pt"
+        android:layout_toLeftOf="@+id/speakButton"
+        android:layout_toStartOf="@+id/speakButton"
+
+        android:background="@android:color/transparent"
+
+        android:onClick="onHearVoiceButtonClick"
+        android:text="LISTEN"
+        android:textColor="@color/color.text.answer"
+
+        android:textSize="5pt" />
+
+    <Button
+        android:id="@+id/speakButton"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/answerText"
+        android:layout_alignRight="@id/answerText"
+        android:layout_below="@+id/answerText"
+        android:layout_marginTop="0pt"
+
+        android:background="@android:color/transparent"
+
+        android:onClick="onRecogniseVoiceButtonClick"
+        android:text="BY VOICE"
+        android:textColor="@color/color.text.answer"
+
+        android:textSize="5pt" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="fill_parent"
+
+        android:layout_height="1dip"
+        android:layout_below="@+id/speakButton"
+        android:layout_marginLeft="12pt"
+        android:layout_marginRight="12pt"
+
+        android:layout_marginTop="0pt"
+        android:background="@color/color.text.answer" />
 
     <Button
         android:id="@+id/checkButton"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color.button.background"
+        android:layout_below="@+id/line"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26pt"
+        android:background="@drawable/roundedbutton"
         android:minHeight="25pt"
         android:minWidth="55pt"
         android:onClick="onCheckAnswerButtonClick"
         android:text="CHECK"
-        android:textSize="16sp"
         android:textColor="@color/color.button.text"
-        android:textStyle="bold"
-        android:layout_marginBottom="115dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <ImageButton
-        android:id="@+id/hearButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/speakButton"
-        android:layout_centerHorizontal="true"
-        android:background="@android:drawable/ic_lock_silent_mode_off"
-        android:backgroundTint="@color/colorPrimary"
-        android:minHeight="25pt"
-        android:minWidth="25pt"
-        android:onClick="onHearVoiceButtonClick" />
-
-    <ImageButton
-        android:id="@+id/speakButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/answerText"
-        android:layout_centerVertical="true"
-        android:background="@android:drawable/ic_btn_speak_now"
-        android:backgroundTint="@color/colorPrimary"
-        android:minHeight="25pt"
-        android:minWidth="25pt"
-        android:onClick="onRecogniseVoiceButtonClick" />
+        android:textSize="12sp"
+        android:textStyle="bold" />
 </RelativeLayout>
