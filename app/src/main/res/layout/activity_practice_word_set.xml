@@ -20,12 +20,27 @@
         android:textColor="@color/color.text.origin"
         android:textSize="14pt" />
 
+    <TextView
+        android:id="@+id/rightAnswer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/originalText"
+        android:layout_marginLeft="8pt"
+        android:layout_marginRight="8pt"
+        android:layout_marginTop="20pt"
+
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color.text.origin"
+        android:textSize="14pt" />
+
     <EditText
         android:id="@+id/answerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/originalText"
+        android:layout_below="@+id/rightAnswer"
         android:layout_marginLeft="12pt"
         android:layout_marginRight="12pt"
         android:layout_marginTop="20pt"

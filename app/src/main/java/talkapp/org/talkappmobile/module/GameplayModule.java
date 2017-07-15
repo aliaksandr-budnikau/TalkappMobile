@@ -6,10 +6,12 @@ import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.service.GameProcessesFactory;
 import talkapp.org.talkappmobile.service.SentenceSelector;
+import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 import talkapp.org.talkappmobile.service.impl.GameProcessesFactoryImpl;
 import talkapp.org.talkappmobile.service.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorImpl;
+import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -26,6 +28,12 @@ public class GameplayModule {
     @Singleton
     public WordsCombinator provideWordsCombinator() {
         return new RandomWordsCombinatorImpl();
+    }
+
+    @Provides
+    @Singleton
+    public TextUtils provideTextUtils() {
+        return new TextUtilsImpl("...", "a", "an", "the");
     }
 
     @Provides

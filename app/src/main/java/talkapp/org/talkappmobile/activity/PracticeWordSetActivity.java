@@ -34,6 +34,7 @@ import talkapp.org.talkappmobile.service.NothingGotException;
 import talkapp.org.talkappmobile.service.RecordedTrack;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
+import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.VoiceService;
 import talkapp.org.talkappmobile.service.impl.GameProcessCallback;
 import talkapp.org.talkappmobile.service.impl.GameProcesses;
@@ -56,8 +57,11 @@ public class PracticeWordSetActivity extends Activity {
     AudioProcessesFactory audioProcessesFactory;
     @Inject
     GameProcessesFactory gameProcessesFactory;
+    @Inject
+    TextUtils textUtils;
     private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
+    private TextView rightAnswer;
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
@@ -70,6 +74,7 @@ public class PracticeWordSetActivity extends Activity {
         setContentView(R.layout.activity_practice_word_set);
         DIContext.get().inject(this);
         originalText = findViewById(R.id.originalText);
+        rightAnswer = findViewById(R.id.rightAnswer);
         answerText = findViewById(R.id.answerText);
         recProgress = findViewById(R.id.recProgress);
 
@@ -101,12 +106,14 @@ public class PracticeWordSetActivity extends Activity {
                         finish();
                         return;
                     }
-                    Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
+                    Sentence sentence = sentenceBlockingQueue.peek();
+                    rightAnswer.setText(sentence.getText());
                     try {
                         sentenceBlockingQueue.take();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                    Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
                 }
@@ -207,6 +214,7 @@ public class PracticeWordSetActivity extends Activity {
         @Override
         protected void onProgressUpdate(Sentence... values) {
             originalText.setText(values[0].getTranslations().get("russian"));
+            rightAnswer.setText(textUtils.screenTextWith(values[0].getText()));
         }
 
         @Override
