@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import talkapp.org.talkappmobile.activity.ProgressCallback;
 import talkapp.org.talkappmobile.service.AudioProcessesFactory;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.ByteUtils;
@@ -19,8 +20,8 @@ public class AudioProcessesFactoryImpl implements AudioProcessesFactory {
     }
 
     @Override
-    public VoiceRecordingProcess createVoiceRecordingProcess(RecordedTrack recordedTrackBuffer) {
-        return new VoiceRecordingProcess(recordedTrackBuffer, audioStuffFactory, byteUtils);
+    public VoiceRecordingProcess createVoiceRecordingProcess(RecordedTrack recordedTrackBuffer, ProgressCallback progress) {
+        return new VoiceRecordingProcess(recordedTrackBuffer, audioStuffFactory, byteUtils, progress);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class PracticeWordSetActivity extends Activity {
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
     private GameFlow gameFlow;
+    private ProgressBar recProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class PracticeWordSetActivity extends Activity {
         DIContext.get().inject(this);
         originalText = findViewById(R.id.originalText);
         answerText = findViewById(R.id.answerText);
+        recProgress = findViewById(R.id.recProgress);
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
@@ -118,8 +121,8 @@ public class PracticeWordSetActivity extends Activity {
 
     public void onRecogniseVoiceButtonClick(View view) {
         if (voiceRecordingProcess == null) {
-            voiceRecordingProcess = audioProcessesFactory.createVoiceRecordingProcess(recordedTrackBuffer);
             RecordAudioAsyncTask recordTask = new RecordAudioAsyncTask();
+            voiceRecordingProcess = audioProcessesFactory.createVoiceRecordingProcess(recordedTrackBuffer, recordTask);
             recordTask.executeOnExecutor(executor, voiceRecordingProcess);
         } else {
             voiceRecordingProcess.stop();
@@ -128,7 +131,7 @@ public class PracticeWordSetActivity extends Activity {
     }
 
     public void onHearVoiceButtonClick(View view) {
-        if (recordedTrackBuffer.size() == 0) {
+        if (recordedTrackBuffer.isEmpty()) {
             return;
         }
         VoicePlayingProcess voicePlayingProcess = audioProcessesFactory.createVoicePlayingProcess(recordedTrackBuffer);
@@ -150,12 +153,17 @@ public class PracticeWordSetActivity extends Activity {
         }
     }
 
-    private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Integer, VoiceRecognitionResult> {
+    private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Long, VoiceRecognitionResult> implements ProgressCallback {
+        @Override
+        protected void onPreExecute() {
+            recProgress.setVisibility(View.VISIBLE);
+        }
+
         @Override
         protected VoiceRecognitionResult doInBackground(VoiceRecordingProcess... params) {
             params[0].rec();
             UnrecognizedVoice voice = new UnrecognizedVoice();
-            voice.setVoice(recordedTrackBuffer.get());
+            voice.setVoice(recordedTrackBuffer.getAsOneArray());
             try {
                 return voiceService.recognize(voice).execute().body();
             } catch (IOException e) {
@@ -166,10 +174,24 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected void onPostExecute(VoiceRecognitionResult result) {
+            recProgress.setVisibility(View.GONE);
+            recProgress.setProgress(0);
             if (result.getVariant().isEmpty()) {
                 return;
             }
             answerText.setText(result.getVariant().get(0));
+        }
+
+        @Override
+        protected void onProgressUpdate(Long... values) {
+            long speechLength = values[0];
+            long maxSpeechLengthMillis = values[1];
+            recProgress.setProgress((int) (speechLength / maxSpeechLengthMillis));
+        }
+
+        @Override
+        public void markProgress(long speechLength, long maxSpeechLengthMillis) {
+            publishProgress(speechLength, maxSpeechLengthMillis);
         }
     }
 

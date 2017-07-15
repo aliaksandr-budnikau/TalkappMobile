@@ -78,15 +78,30 @@
 
     <View
         android:id="@+id/line"
+
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+
+        android:layout_below="@+id/speakButton"
+        android:layout_marginLeft="12pt"
+        android:layout_marginRight="12pt"
+        android:layout_marginTop="0pt"
+
+        android:background="@color/color.split.line" />
+
+    <ProgressBar
+        android:id="@+id/recProgress"
+
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
 
-        android:layout_height="1dip"
-        android:layout_below="@+id/speakButton"
+        android:layout_height="10dip"
+        android:layout_below="@+id/line"
         android:layout_marginLeft="12pt"
         android:layout_marginRight="12pt"
 
         android:layout_marginTop="0pt"
-        android:background="@color/color.text.answer" />
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/checkButton"

@@ -12,20 +12,31 @@ import talkapp.org.talkappmobile.service.RecordedTrack;
 public class RecordedTrackImpl implements RecordedTrack {
     private ByteUtils byteUtils;
 
-    private List<Byte> track = new LinkedList<>();
+    private List<byte[]> track = new LinkedList<>();
 
     public RecordedTrackImpl(ByteUtils byteUtils) {
         this.byteUtils = byteUtils;
     }
 
     @Override
-    public byte[] get() {
-        return byteUtils.toPrimitives(track);
+    public byte[] getAsOneArray() {
+        LinkedList<Byte> result = new LinkedList<>();
+        for (byte[] bytes : track) {
+            for (int i = 0; i < bytes.length; i++) {
+                result.add(bytes[i]);
+            }
+        }
+        return byteUtils.toPrimitives(result);
     }
 
     @Override
-    public int size() {
-        return track.size();
+    public List<byte[]> get() {
+        return track;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return track.isEmpty();
     }
 
     @Override
@@ -35,8 +46,6 @@ public class RecordedTrackImpl implements RecordedTrack {
 
     @Override
     public void append(byte[] data) {
-        for (int i = 0; i < data.length; i++) {
-            track.add(data[i]);
-        }
+        track.add(data);
     }
 }

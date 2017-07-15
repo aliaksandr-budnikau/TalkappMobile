@@ -1,13 +1,17 @@
 package talkapp.org.talkappmobile.service;
 
+import java.util.List;
+
 /**
  * @author Budnikau Aliaksandr
  */
 public interface RecordedTrack {
 
-    byte[] get();
+    byte[] getAsOneArray();
 
-    int size();
+    List<byte[]> get();
+
+    boolean isEmpty();
 
     void clear();
 
