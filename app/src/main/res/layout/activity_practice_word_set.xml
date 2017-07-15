@@ -95,13 +95,14 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
 
-        android:layout_height="10dip"
+        android:layout_height="3dip"
         android:layout_below="@+id/line"
         android:layout_marginLeft="12pt"
         android:layout_marginRight="12pt"
-
         android:layout_marginTop="0pt"
-        android:visibility="gone" />
+
+        android:visibility="invisible"
+        android:progressDrawable="@drawable/progressbar" />
 
     <Button
         android:id="@+id/checkButton"

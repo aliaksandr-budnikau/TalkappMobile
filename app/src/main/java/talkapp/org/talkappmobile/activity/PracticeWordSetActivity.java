@@ -126,7 +126,6 @@ public class PracticeWordSetActivity extends Activity {
             recordTask.executeOnExecutor(executor, voiceRecordingProcess);
         } else {
             voiceRecordingProcess.stop();
-            voiceRecordingProcess = null;
         }
     }
 
@@ -156,6 +155,7 @@ public class PracticeWordSetActivity extends Activity {
     private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Long, VoiceRecognitionResult> implements ProgressCallback {
         @Override
         protected void onPreExecute() {
+            recProgress.setProgress(0);
             recProgress.setVisibility(View.VISIBLE);
         }
 
@@ -174,7 +174,8 @@ public class PracticeWordSetActivity extends Activity {
 
         @Override
         protected void onPostExecute(VoiceRecognitionResult result) {
-            recProgress.setVisibility(View.GONE);
+            voiceRecordingProcess = null;
+            recProgress.setVisibility(View.INVISIBLE);
             recProgress.setProgress(0);
             if (result.getVariant().isEmpty()) {
                 return;
