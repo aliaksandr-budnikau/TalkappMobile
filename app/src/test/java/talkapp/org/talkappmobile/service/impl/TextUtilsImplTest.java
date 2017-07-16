@@ -8,7 +8,9 @@ import static org.junit.Assert.assertEquals;
  * @author Budnikau Aliaksandr
  */
 public class TextUtilsImplTest {
-    private TextUtilsImpl utils = new TextUtilsImpl("...", "a", "an", "the");
+    String[] articles = new String[]{"a", "an", "the"};
+    String[] lastSymbols = new String[]{".", "!", "?"};
+    private TextUtilsImpl utils = new TextUtilsImpl("...", articles, lastSymbols);
 
     @Test
     public void screenTextWith_withoutChanges() throws Exception {
@@ -47,5 +49,83 @@ public class TextUtilsImplTest {
 
         // then
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void toUpperCaseFirstLetter_whenAlreadyUpperCase() throws Exception {
+        // setup
+        String text = "Safasad an fsandffa the sdf sfs s";
+        String expected = "Safasad an fsandffa the sdf sfs s";
+
+        // when
+        String actual = utils.toUpperCaseFirstLetter(text);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void toUpperCaseFirstLetter_whenNotAlreadyUpperCase() throws Exception {
+        // setup
+        String text = "safasad an fsandffa the sdf sfs s";
+        String expected = "Safasad an fsandffa the sdf sfs s";
+
+        // when
+        String actual = utils.toUpperCaseFirstLetter(text);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void appendLastSymbol_question() throws Exception {
+        // setup
+        String text = "safasad an fsandffa the sdf sfs s";
+        String translation = "safasad an fsandffa the sdf sfs s?";
+
+        // when
+        String actual = utils.appendLastSymbol(text, translation);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void appendLastSymbol_normalSentens() throws Exception {
+        // setup
+        String text = "safasad an fsandffa the sdf sfs s";
+        String translation = "safasad an fsandffa the sdf sfs s.";
+
+        // when
+        String actual = utils.appendLastSymbol(text, translation);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void appendLastSymbol_exclamation() throws Exception {
+        // setup
+        String text = "safasad an fsandffa the sdf sfs s";
+        String translation = "safasad an fsandffa the sdf sfs s!";
+
+        // when
+        String actual = utils.appendLastSymbol(text, translation);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void appendLastSymbol_alreadyAdded() throws Exception {
+        // setup
+        String text = "safasad an fsandffa the sdf sfs s!";
+        String translation = "safasad an fsandffa the sdf sfs s!";
+
+        // when
+        String actual = utils.appendLastSymbol(text, translation);
+
+        // then
+        assertEquals(translation, actual);
     }
 }

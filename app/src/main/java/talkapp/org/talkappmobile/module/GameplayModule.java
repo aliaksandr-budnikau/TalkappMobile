@@ -33,7 +33,9 @@ public class GameplayModule {
     @Provides
     @Singleton
     public TextUtils provideTextUtils() {
-        return new TextUtilsImpl("...", "a", "an", "the");
+        String[] articles = new String[]{"a", "an", "the"};
+        String[] lastSymbols = new String[]{".", "!", "?"};
+        return new TextUtilsImpl("...", articles, lastSymbols);
     }
 
     @Provides

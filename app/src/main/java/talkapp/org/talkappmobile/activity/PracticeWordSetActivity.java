@@ -198,7 +198,10 @@ public class PracticeWordSetActivity extends Activity {
             if (result.getVariant().isEmpty()) {
                 return;
             }
-            answerText.setText(result.getVariant().get(0));
+            String textWithUpper = textUtils.toUpperCaseFirstLetter(result.getVariant().get(0));
+            String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper,
+                    sentenceBlockingQueue.peek().getText());
+            answerText.setText(textWithLastSymbol);
         }
 
         @Override

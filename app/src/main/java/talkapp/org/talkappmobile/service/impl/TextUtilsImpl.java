@@ -11,22 +11,22 @@ import talkapp.org.talkappmobile.service.TextUtils;
  */
 public class TextUtilsImpl implements TextUtils {
 
-    private final String[] words;
+    private final Set<String> words;
+    private final Set<String> lastSymbols;
     private String placeholder;
 
-    public TextUtilsImpl(String placeholder, String... words) {
+    public TextUtilsImpl(String placeholder, String[] words, String[] lastSymbols) {
         this.placeholder = placeholder;
-        this.words = words;
+        this.words = new HashSet<>(Arrays.asList(words));
+        this.lastSymbols = new HashSet<>(Arrays.asList(lastSymbols));
     }
 
     @Override
     public String screenTextWith(String text) {
-        Set<String> wordsAsSet = new HashSet<>(Arrays.asList(words));
-
         String[] tokens = text.split(" ");
         StringBuilder screened = new StringBuilder();
         for (String token : tokens) {
-            if (wordsAsSet.contains(token.toLowerCase())) {
+            if (words.contains(token.toLowerCase())) {
                 screened.append(token);
             } else {
                 screened.append(placeholder);
@@ -34,5 +34,21 @@ public class TextUtilsImpl implements TextUtils {
             screened.append(" ");
         }
         return screened.toString().trim();
+    }
+
+    @Override
+    public String toUpperCaseFirstLetter(String text) {
+        StringBuilder stringBuilder = new StringBuilder(text);
+        stringBuilder.replace(0, 1, text.substring(0, 1).toUpperCase());
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public String appendLastSymbol(String text, String translation) {
+        String lastSymbol = text.substring(translation.length() - 1);
+        if (lastSymbols.contains(lastSymbol)) {
+            return text;
+        }
+        return text + translation.substring(translation.length() - 1);
     }
 }
