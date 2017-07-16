@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,8 @@ public class PracticeWordSetActivity extends Activity {
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
     private GameFlow gameFlow;
     private ProgressBar recProgress;
+    private Button nextButton;
+    private Button checkButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,8 @@ public class PracticeWordSetActivity extends Activity {
         rightAnswer = findViewById(R.id.rightAnswer);
         answerText = findViewById(R.id.answerText);
         recProgress = findViewById(R.id.recProgress);
+        nextButton = findViewById(R.id.nextButton);
+        checkButton = findViewById(R.id.checkButton);
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
@@ -108,12 +113,8 @@ public class PracticeWordSetActivity extends Activity {
                     }
                     Sentence sentence = sentenceBlockingQueue.peek();
                     rightAnswer.setText(sentence.getText());
-                    try {
-                        sentenceBlockingQueue.take();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
+                    nextButton.setVisibility(View.VISIBLE);
+                    checkButton.setVisibility(View.GONE);
                 } else {
                     Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
                 }
@@ -149,6 +150,16 @@ public class PracticeWordSetActivity extends Activity {
     protected void onStop() {
         super.onStop();
         gameFlow.cancel(true);
+    }
+
+    public void onNextButtonClick(View view) {
+        answerText.setText("");
+        try {
+            sentenceBlockingQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
     }
 
     private class PlayAudioAsyncTask extends AsyncTask<VoicePlayingProcess, Integer, Void> {

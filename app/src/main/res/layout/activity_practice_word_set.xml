@@ -116,8 +116,8 @@
         android:layout_marginRight="12pt"
         android:layout_marginTop="0pt"
 
-        android:visibility="invisible"
-        android:progressDrawable="@drawable/progressbar" />
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/checkButton"
@@ -134,5 +134,25 @@
         android:text="CHECK"
         android:textColor="@color/color.button.text"
         android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/nextButton"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26pt"
+
+        android:background="@drawable/roundedbutton"
+        android:minHeight="25pt"
+        android:minWidth="55pt"
+
+        android:onClick="onNextButtonClick"
+        android:text="NEXT"
+        android:textColor="@color/color.button.text"
+        android:textSize="12sp"
+        android:visibility="gone"
         android:textStyle="bold" />
 </RelativeLayout>
