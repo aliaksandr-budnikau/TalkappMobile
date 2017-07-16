@@ -35,4 +35,17 @@ public class TextUtilsImplTest {
         // then
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void screenTextWith_withChangesAndCase() throws Exception {
+        // setup
+        String text = "The A An sdthefsdf a safasad an fsandffa the sdf sfs s";
+        String expected = "The A An ... a ... an ... the ... ... ...";
+
+        // when
+        String actual = utils.screenTextWith(text);
+
+        // then
+        assertEquals(expected, actual);
+    }
 }

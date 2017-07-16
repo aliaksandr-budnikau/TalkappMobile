@@ -26,7 +26,7 @@ public class TextUtilsImpl implements TextUtils {
         String[] tokens = text.split(" ");
         StringBuilder screened = new StringBuilder();
         for (String token : tokens) {
-            if (wordsAsSet.contains(token)) {
+            if (wordsAsSet.contains(token.toLowerCase())) {
                 screened.append(token);
             } else {
                 screened.append(placeholder);
