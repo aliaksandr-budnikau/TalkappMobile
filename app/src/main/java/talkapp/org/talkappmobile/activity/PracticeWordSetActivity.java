@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioProcessesFactory;
+import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.GameProcessesFactory;
 import talkapp.org.talkappmobile.service.NothingGotException;
 import talkapp.org.talkappmobile.service.RecordedTrack;
@@ -60,6 +61,8 @@ public class PracticeWordSetActivity extends Activity {
     GameProcessesFactory gameProcessesFactory;
     @Inject
     TextUtils textUtils;
+    @Inject
+    AuthSign authSign;
     private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView rightAnswer;
@@ -100,7 +103,7 @@ public class PracticeWordSetActivity extends Activity {
         uncheckedAnswer.setWordSetId(currentWordSet.getId());
         uncheckedAnswer.setActualAnswer(actualAnswer);
         uncheckedAnswer.setExpectedAnswer(sentenceBlockingQueue.peek().getText());
-        refereeService.checkAnswer(uncheckedAnswer).enqueue(new Callback<AnswerCheckingResult>() {
+        refereeService.checkAnswer(uncheckedAnswer, authSign).enqueue(new Callback<AnswerCheckingResult>() {
 
             @Override
             public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
@@ -183,7 +186,7 @@ public class PracticeWordSetActivity extends Activity {
             UnrecognizedVoice voice = new UnrecognizedVoice();
             voice.setVoice(recordedTrackBuffer.getAsOneArray());
             try {
-                return voiceService.recognize(voice).execute().body();
+                return voiceService.recognize(voice, authSign).execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
                 return new VoiceRecognitionResult();
@@ -240,7 +243,7 @@ public class PracticeWordSetActivity extends Activity {
         @Override
         public List<Sentence> findByWords(String words) {
             try {
-                return sentenceService.findByWords(words).execute().body();
+                return sentenceService.findByWords(words, authSign).execute().body();
             } catch (IOException e) {
                 throw new NothingGotException(e);
             }

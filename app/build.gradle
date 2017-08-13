@@ -40,10 +40,11 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.4'
     compile 'com.google.dagger:dagger:2.4'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-jackson:2.3.0'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
+    apt 'com.google.dagger:dagger-compiler:2.4'
 }

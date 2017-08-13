@@ -20,6 +20,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 public class AllWordSetsActivity extends Activity implements AdapterView.OnItemClickListener {
@@ -27,13 +28,15 @@ public class AllWordSetsActivity extends Activity implements AdapterView.OnItemC
     WordSetService wordSetService;
     @Inject
     AdaptersFactory adaptersFactory;
+    @Inject
+    AuthSign authSign;
     private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
 
     private AsyncTask<String, Object, List<WordSet>> loadingWordSets = new AsyncTask<String, Object, List<WordSet>>() {
         @Override
         protected List<WordSet> doInBackground(String... params) {
-            Call<List<WordSet>> call = wordSetService.findAll();
+            Call<List<WordSet>> call = wordSetService.findAll(authSign);
             Response<List<WordSet>> execute = null;
             try {
                 execute = call.execute();

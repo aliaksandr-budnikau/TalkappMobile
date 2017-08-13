@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".app.TalkappMobileApplication"
         android:allowBackup="true"
@@ -14,14 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <!-- android:theme="@style/AppTheme"> -->
-        <activity android:name=".activity.PracticeWordSetActivity">
-            <!--   <intent-filter>&lt;!&ndash;
-                   <action android:name="android.intent.action.MAIN" />
-
-                   <category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;
-               </intent-filter>-->
-        </activity>
-        <activity android:name=".activity.AllWordSetsActivity">
+        <activity android:name=".activity.PracticeWordSetActivity" />
+        <activity android:name=".activity.AllWordSetsActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
