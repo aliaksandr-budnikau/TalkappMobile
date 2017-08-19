@@ -7,19 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public class WordSetListAdapter extends ArrayAdapter<WordSet> {
+    @Inject
+    WordSetExperienceUtils experienceUtils;
+
     public WordSetListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
+        DIContext.get().inject(this);
     }
 
     @NonNull
@@ -29,9 +38,13 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         convertView = inflater.inflate(R.layout.row_word_sets_list, parent, false);
-        TextView wordSetRow = (TextView) convertView.findViewById(R.id.wordSetRow);
+        TextView wordSetRow = convertView.findViewById(R.id.wordSetRow);
         String label = StringUtils.joinWith(", ", wordSet.getWords().toArray());
         wordSetRow.setText(label);
+
+        ProgressBar wordSetProgress = convertView.findViewById(R.id.wordSetProgress);
+        wordSetProgress.setProgress(experienceUtils.getProgress(wordSet.getExperience()));
+
         return convertView;
     }
 }

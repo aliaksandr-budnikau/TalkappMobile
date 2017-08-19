@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,7 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.VoiceService;
+import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.impl.GameProcessCallback;
 import talkapp.org.talkappmobile.service.impl.GameProcesses;
 import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
@@ -63,6 +65,9 @@ public class PracticeWordSetActivity extends AppCompatActivity {
     TextUtils textUtils;
     @Inject
     AuthSign authSign;
+    @Inject
+    WordSetExperienceUtils experienceUtils;
+
     private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView rightAnswer;
@@ -71,6 +76,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
     private GameFlow gameFlow;
     private ProgressBar recProgress;
+    private ProgressBar wordSetProgress;
     private Button nextButton;
     private Button checkButton;
 
@@ -83,11 +89,13 @@ public class PracticeWordSetActivity extends AppCompatActivity {
         rightAnswer = (TextView) findViewById(R.id.rightAnswer);
         answerText = (TextView) findViewById(R.id.answerText);
         recProgress = (ProgressBar) findViewById(R.id.recProgress);
+        wordSetProgress = (ProgressBar) findViewById(R.id.wordSetProgress);
         nextButton = (Button) findViewById(R.id.nextButton);
         checkButton = (Button) findViewById(R.id.checkButton);
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
+        wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience()));
         gameFlow = new GameFlow();
         GameProcesses gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, gameFlow);
         gameFlow.executeOnExecutor(executor, gameProcesses);
@@ -100,7 +108,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             return;
         }
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
-        uncheckedAnswer.setWordSetId(currentWordSet.getId());
+        uncheckedAnswer.setWordSetExperienceId(currentWordSet.getId());
         uncheckedAnswer.setActualAnswer(actualAnswer);
         uncheckedAnswer.setExpectedAnswer(sentenceBlockingQueue.peek().getText());
         refereeService.checkAnswer(uncheckedAnswer, authSign).enqueue(new Callback<AnswerCheckingResult>() {
@@ -109,9 +117,12 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
                 AnswerCheckingResult result = response.body();
                 if (result.getErrors().isEmpty()) {
+                    wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience(), result.getCurrentTrainingExperience()));
                     if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
                         Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(PracticeWordSetActivity.this, AllWordSetsActivity.class);
                         finish();
+                        startActivity(intent);
                         return;
                     }
                     Sentence sentence = sentenceBlockingQueue.peek();

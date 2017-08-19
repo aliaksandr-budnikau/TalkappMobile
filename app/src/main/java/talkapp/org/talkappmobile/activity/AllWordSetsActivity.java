@@ -97,6 +97,7 @@ public class AllWordSetsActivity extends AppCompatActivity implements AdapterVie
         WordSet wordSet = adapter.getItem(position);
         Intent intent = new Intent(AllWordSetsActivity.this, PracticeWordSetActivity.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
+        finish();
         startActivity(intent);
     }
 }

@@ -5,7 +5,19 @@
 
     <TextView
         android:id="@+id/wordSetRow"
-        android:textSize="15pt"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:textSize="15pt" />
+
+    <ProgressBar
+        android:id="@+id/wordSetProgress"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+
+        android:layout_height="3dip"
+        android:layout_below="@+id/wordSetRow"
+
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="visible" />
 </RelativeLayout>
