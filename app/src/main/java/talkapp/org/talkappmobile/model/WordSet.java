@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Budnikau Aliaksandr
@@ -12,9 +13,7 @@ public class WordSet implements Serializable {
 
     private List<String> words;
 
-    private int trainingExperience;
-
-    private int maxTrainingExperience;
+    private WordSetExperience experience;
 
     public String getId() {
         return id;
@@ -32,52 +31,36 @@ public class WordSet implements Serializable {
         this.words = words;
     }
 
-    public int getTrainingExperience() {
-        return trainingExperience;
+    public WordSetExperience getExperience() {
+        return experience;
     }
 
-    public void setTrainingExperience(int trainingExperience) {
-        this.trainingExperience = trainingExperience;
-    }
-
-    public int getMaxTrainingExperience() {
-        return maxTrainingExperience;
-    }
-
-    public void setMaxTrainingExperience(int maxTrainingExperience) {
-        this.maxTrainingExperience = maxTrainingExperience;
+    public void setExperience(WordSetExperience experience) {
+        this.experience = experience;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WordSet)) return false;
-
+        if (o == null || getClass() != o.getClass()) return false;
         WordSet wordSet = (WordSet) o;
-
-        if (getTrainingExperience() != wordSet.getTrainingExperience()) return false;
-        if (getMaxTrainingExperience() != wordSet.getMaxTrainingExperience()) return false;
-        if (!getId().equals(wordSet.getId())) return false;
-        return getWords().equals(wordSet.getWords());
-
+        return Objects.equals(id, wordSet.id) &&
+                Objects.equals(words, wordSet.words) &&
+                Objects.equals(experience, wordSet.experience);
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getWords().hashCode();
-        result = 31 * result + getTrainingExperience();
-        result = 31 * result + getMaxTrainingExperience();
-        return result;
+        return Objects.hash(id, words, experience);
     }
 
     @Override
     public String toString() {
-        return "WordSet{" +
-                "id='" + id + '\'' +
-                ", words=" + words +
-                ", trainingExperience=" + trainingExperience +
-                ", maxTrainingExperience=" + maxTrainingExperience +
-                '}';
+        final StringBuilder sb = new StringBuilder("WordSet{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", words=").append(words);
+        sb.append(", experience=").append(experience);
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -1,15 +1,16 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,12 +21,16 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.service.AuthSign;
+import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
-public class AllWordSetsActivity extends Activity implements AdapterView.OnItemClickListener {
+public class AllWordSetsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     @Inject
     WordSetService wordSetService;
+    @Inject
+    WordSetExperienceService wordSetExperienceService;
     @Inject
     AdaptersFactory adaptersFactory;
     @Inject
@@ -36,14 +41,34 @@ public class AllWordSetsActivity extends Activity implements AdapterView.OnItemC
     private AsyncTask<String, Object, List<WordSet>> loadingWordSets = new AsyncTask<String, Object, List<WordSet>>() {
         @Override
         protected List<WordSet> doInBackground(String... params) {
-            Call<List<WordSet>> call = wordSetService.findAll(authSign);
-            Response<List<WordSet>> execute = null;
+            Call<List<WordSet>> wordSetCall = wordSetService.findAll(authSign);
+            Call<List<WordSetExperience>> wordSetExperienceCall =
+                    wordSetExperienceService.findAll(authSign);
+            Response<List<WordSet>> wordSets = null;
             try {
-                execute = call.execute();
+                wordSets = wordSetCall.execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return execute.body();
+
+            Response<List<WordSetExperience>> wordSetExperiences = null;
+            try {
+                wordSetExperiences = wordSetExperienceCall.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            HashMap<String, WordSetExperience> experienceMap = new HashMap<>();
+            for (WordSetExperience experience : wordSetExperiences.body()) {
+                experienceMap.put(experience.getWordSetId(), experience);
+            }
+            List<WordSet> body = wordSets.body();
+            for (WordSet set : body) {
+                WordSetExperience experience = experienceMap.get(set.getId());
+                set.setExperience(experience);
+            }
+
+            return body;
         }
 
         @Override

@@ -19,12 +19,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
         <!-- android:theme="@style/AppTheme"> -->
-        <activity android:name=".activity.PracticeWordSetActivity" />
-        <activity android:name=".activity.AllWordSetsActivity" />
+        <activity
+            android:name=".activity.PracticeWordSetActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".activity.AllWordSetsActivity"
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".activity.LoginActivity"
-            android:theme="@style/Theme.AppCompat"
-            android:label="@string/title_activity_login">
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

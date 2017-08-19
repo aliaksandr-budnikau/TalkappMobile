@@ -1,8 +1,8 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -43,7 +43,7 @@ import talkapp.org.talkappmobile.service.impl.GameProcesses;
 import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
 import talkapp.org.talkappmobile.service.impl.VoiceRecordingProcess;
 
-public class PracticeWordSetActivity extends Activity {
+public class PracticeWordSetActivity extends AppCompatActivity {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     RefereeService refereeService;
@@ -79,12 +79,12 @@ public class PracticeWordSetActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice_word_set);
         DIContext.get().inject(this);
-        originalText = findViewById(R.id.originalText);
-        rightAnswer = findViewById(R.id.rightAnswer);
-        answerText = findViewById(R.id.answerText);
-        recProgress = findViewById(R.id.recProgress);
-        nextButton = findViewById(R.id.nextButton);
-        checkButton = findViewById(R.id.checkButton);
+        originalText = (TextView) findViewById(R.id.originalText);
+        rightAnswer = (TextView) findViewById(R.id.rightAnswer);
+        answerText = (TextView) findViewById(R.id.answerText);
+        recProgress = (ProgressBar) findViewById(R.id.recProgress);
+        nextButton = (Button) findViewById(R.id.nextButton);
+        checkButton = (Button) findViewById(R.id.checkButton);
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
@@ -109,7 +109,7 @@ public class PracticeWordSetActivity extends Activity {
             public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
                 AnswerCheckingResult result = response.body();
                 if (result.getErrors().isEmpty()) {
-                    if (result.getCurrentTrainingExperience() == currentWordSet.getMaxTrainingExperience()) {
+                    if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
                         Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
                         finish();
                         return;
