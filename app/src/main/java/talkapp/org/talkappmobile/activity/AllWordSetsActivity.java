@@ -9,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.service.AuthSign;
+import talkapp.org.talkappmobile.service.SaveSharedPreference;
 import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
@@ -35,6 +38,8 @@ public class AllWordSetsActivity extends AppCompatActivity implements AdapterVie
     AdaptersFactory adaptersFactory;
     @Inject
     AuthSign authSign;
+    @Inject
+    SaveSharedPreference saveSharedPreference;
     private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
 
@@ -82,6 +87,16 @@ public class AllWordSetsActivity extends AppCompatActivity implements AdapterVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_word_sets);
         DIContext.get().inject(this);
+
+        String headerKey = saveSharedPreference.getAuthorizationHeaderKey(AllWordSetsActivity.this);
+        if (StringUtils.isEmpty(headerKey)) {
+            Intent intent = new Intent(AllWordSetsActivity.this, LoginActivity.class);
+            finish();
+            startActivity(intent);
+            return;
+        } else {
+            authSign.put(headerKey);
+        }
 
         adapter = adaptersFactory.createWordSetListAdapter(this);
 

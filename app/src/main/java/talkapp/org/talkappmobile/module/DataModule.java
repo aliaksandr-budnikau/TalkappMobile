@@ -5,6 +5,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.service.AuthSign;
+import talkapp.org.talkappmobile.service.SaveSharedPreference;
+import talkapp.org.talkappmobile.service.impl.SaveSharedPreferenceImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -16,5 +18,11 @@ public class DataModule {
     @Singleton
     public AuthSign provideAuthSign() {
         return new AuthSign();
+    }
+
+    @Provides
+    @Singleton
+    public SaveSharedPreference provideSaveSharedPreference() {
+        return new SaveSharedPreferenceImpl();
     }
 }

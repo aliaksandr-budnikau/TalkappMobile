@@ -42,6 +42,7 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.LoginService;
+import talkapp.org.talkappmobile.service.SaveSharedPreference;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static talkapp.org.talkappmobile.service.AuthSign.AUTHORIZATION_HEADER_KEY;
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final int REQUEST_READ_CONTACTS = 0;
     @Inject
     LoginService loginService;
+    @Inject
+    SaveSharedPreference saveSharedPreference;
     @Inject
     AuthSign authSign;
     /**
@@ -324,6 +327,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
                     if (result != null && signature != null && result) {
                         authSign.put(signature);
+                        saveSharedPreference.setAuthorizationHeaderKey(LoginActivity.this, signature);
                         finish();
                         Intent intent = new Intent(LoginActivity.this, AllWordSetsActivity.class);
                         startActivity(intent);
