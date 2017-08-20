@@ -329,7 +329,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         authSign.put(signature);
                         saveSharedPreference.setAuthorizationHeaderKey(LoginActivity.this, signature);
                         finish();
-                        Intent intent = new Intent(LoginActivity.this, AllWordSetsActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
                         passwordView.setError(getString(R.string.error_incorrect_password));

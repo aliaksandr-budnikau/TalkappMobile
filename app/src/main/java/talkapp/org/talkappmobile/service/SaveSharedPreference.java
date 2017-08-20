@@ -1,15 +1,14 @@
 package talkapp.org.talkappmobile.service;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public interface SaveSharedPreference {
-    SharedPreferences getSharedPreferences(Context ctx);
-
     void setAuthorizationHeaderKey(Context ctx, String key);
+
+    void clear(Context ctx);
 
     String getAuthorizationHeaderKey(Context ctx);
 }

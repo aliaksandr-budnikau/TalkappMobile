@@ -13,8 +13,7 @@ import static talkapp.org.talkappmobile.service.AuthSign.AUTHORIZATION_HEADER_KE
  */
 public class SaveSharedPreferenceImpl implements SaveSharedPreference {
 
-    @Override
-    public SharedPreferences getSharedPreferences(Context ctx) {
+    private SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
@@ -23,6 +22,11 @@ public class SaveSharedPreferenceImpl implements SaveSharedPreference {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(AUTHORIZATION_HEADER_KEY, key);
         editor.commit();
+    }
+
+    @Override
+    public void clear(Context ctx) {
+        getSharedPreferences(ctx).edit().clear().commit();
     }
 
     @Override

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import talkapp.org.talkappmobile.activity.AllWordSetsActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
+import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
 import talkapp.org.talkappmobile.module.AudioModule;
@@ -51,4 +52,6 @@ public abstract class DIContext {
     abstract public void inject(AllWordSetsActivity target);
 
     abstract public void inject(RecordedTrackImpl target);
+
+    abstract public void inject(MainActivity mainActivity);
 }
