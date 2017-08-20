@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -94,10 +95,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        FragmentManager fragmentManager = getFragmentManager();
         if (id == R.id.word_set_practise) {
-            Intent intent = new Intent(MainActivity.this, AllWordSetsActivity.class);
-            startActivity(intent);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment()).commit();
         } else if (id == R.id.nav_manage) {
             Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_exit) {

@@ -120,7 +120,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
                     wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience(), result.getCurrentTrainingExperience()));
                     if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
                         Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(PracticeWordSetActivity.this, AllWordSetsActivity.class);
+                        Intent intent = new Intent(PracticeWordSetActivity.this, MainActivity.class);
                         finish();
                         startActivity(intent);
                         return;

@@ -1,10 +1,13 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -26,7 +29,7 @@ import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
-public class AllWordSetsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener {
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -77,27 +80,27 @@ public class AllWordSetsActivity extends AppCompatActivity implements AdapterVie
         }
     };
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_word_sets);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.all_word_sets_layout, container, false);
         DIContext.get().inject(this);
 
-        adapter = adaptersFactory.createWordSetListAdapter(this);
+        adapter = adaptersFactory.createWordSetListAdapter(this.getActivity());
 
-        wordSetsListView = (ListView) findViewById(R.id.wordSetsListView);
+        wordSetsListView = view.findViewById(R.id.wordSetsListView);
         wordSetsListView.setAdapter(adapter);
         wordSetsListView.setOnItemClickListener(this);
 
         loadingWordSets.execute();
+        return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WordSet wordSet = adapter.getItem(position);
-        Intent intent = new Intent(AllWordSetsActivity.this, PracticeWordSetActivity.class);
+        Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
-        finish();
         startActivity(intent);
     }
 }
