@@ -4,9 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="color.text.origin">#47525E</color>
-    <color name="color.text.answer">#8492A6</color>
+    <color name="color.text.answer">#47525E</color>
     <color name="color.split.line">#8492A6</color>
     <color name="color.split.line.inRec">#FFFF1500</color>
-    <color name="color.button.text">#f4ffff</color>
+    <color name="color.button.text">#47525E</color>
     <color name="color.button.background">#39c0fa</color>
 </resources>
