@@ -21,10 +21,14 @@
         <!-- android:theme="@style/AppTheme"> -->
         <activity
             android:name=".activity.PracticeWordSetActivity"
-            android:theme="@style/Theme.AppCompat" />
-        <activity
-            android:name=".activity.AllWordSetsActivity"
-            android:theme="@style/Theme.AppCompat" />
+            android:label="Используй слова"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/Theme.AppCompat">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
+        </activity>
+
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login"
