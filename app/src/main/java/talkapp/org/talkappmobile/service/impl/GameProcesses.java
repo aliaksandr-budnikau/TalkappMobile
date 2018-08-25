@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import android.util.Log;
+
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +34,7 @@ public class GameProcesses {
             for (final String combination : combinations) {
                 List<Sentence> sentences = callback.findByWords(combination);
                 if (sentences.isEmpty()) {
+                    Log.v(GameProcesses.class.getSimpleName(), "Sentences haven't been found with words '" + combination + "'. Fill the storage.");
                     continue;
                 }
                 Sentence sentence = sentenceSelector.getSentence(sentences);
