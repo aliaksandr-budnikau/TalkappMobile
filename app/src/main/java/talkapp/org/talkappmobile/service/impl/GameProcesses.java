@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.service.WordsCombinator;
  */
 public class GameProcesses {
 
+    private static final String TAG = GameProcesses.class.getSimpleName();
     private final WordsCombinator wordsCombinator;
     private final SentenceSelector sentenceSelector;
     private final WordSet wordSet;
@@ -34,7 +35,7 @@ public class GameProcesses {
             for (final String combination : combinations) {
                 List<Sentence> sentences = callback.findByWords(combination);
                 if (sentences.isEmpty()) {
-                    Log.v(GameProcesses.class.getSimpleName(), "Sentences haven't been found with words '" + combination + "'. Fill the storage.");
+                    Log.v(TAG, "Sentences haven't been found with words '" + combination + "'. Fill the storage.");
                     continue;
                 }
                 Sentence sentence = sentenceSelector.getSentence(sentences);
