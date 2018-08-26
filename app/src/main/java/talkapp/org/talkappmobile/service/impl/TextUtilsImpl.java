@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +36,11 @@ public class TextUtilsImpl implements TextUtils {
             screened.append(" ");
         }
         return screened.toString().trim();
+    }
+
+    @Override
+    public String hideText(String password) {
+        return StringUtils.isEmpty(password) ? "" : "***";
     }
 
     @Override

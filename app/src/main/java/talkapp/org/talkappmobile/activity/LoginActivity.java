@@ -15,9 +15,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,9 +42,11 @@ import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.LoginCredentials;
+import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.LoginService;
 import talkapp.org.talkappmobile.service.SaveSharedPreference;
+import talkapp.org.talkappmobile.service.AccountService;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static talkapp.org.talkappmobile.service.AuthSign.AUTHORIZATION_HEADER_KEY;
@@ -55,16 +59,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    public static final String TAG = LoginActivity.class.getSimpleName();
     @Inject
     LoginService loginService;
+    @Inject
+    AccountService accountService;
     @Inject
     SaveSharedPreference saveSharedPreference;
     @Inject
     AuthSign authSign;
+    @Inject
+    talkapp.org.talkappmobile.service.TextUtils textUtils;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask authTask = null;
+    private AsyncTask<Void, Void, Boolean> backgroundTask = null;
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText passwordView;
@@ -85,7 +94,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    String email = mEmailView.getText().toString();
+                    String password = passwordView.getText().toString();
+                    attemptSignInOrSignUp(email, password, new UserLoginTask(email, password));
                     return true;
                 }
                 return false;
@@ -96,7 +107,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                // Store values at the time of the login attempt.
+                String email = mEmailView.getText().toString();
+                String password = passwordView.getText().toString();
+                attemptSignInOrSignUp(email, password, new UserLoginTask(email, password));
+            }
+        });
+
+        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
+        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Store values at the time of the login attempt.
+                String email = mEmailView.getText().toString();
+                String password = passwordView.getText().toString();
+                attemptSignInOrSignUp(email, password, new RegisterAccountTask(email, password));
             }
         });
 
@@ -152,9 +177,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
+     * @param email
+     * @param password
      */
-    private void attemptLogin() {
-        if (authTask != null) {
+    private void attemptSignInOrSignUp(String email, String password, AsyncTask<Void, Void, Boolean> newBackgroundTask) {
+        if (backgroundTask != null) {
             return;
         }
 
@@ -162,42 +189,40 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setError(null);
         passwordView.setError(null);
 
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = passwordView.getText().toString();
+        View focusViewWithError = validateFields(email, password);
 
-        boolean cancel = false;
-        View focusView = null;
+        if (focusViewWithError != null) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusViewWithError.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            backgroundTask = newBackgroundTask;
+            backgroundTask.execute((Void) null);
+        }
+    }
+
+    @Nullable
+    private View validateFields(String email, String password) {
+        View focusViewWithError = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             passwordView.setError(getString(R.string.error_invalid_password));
-            focusView = passwordView;
-            cancel = true;
+            focusViewWithError = passwordView;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
+            focusViewWithError = mEmailView;
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+            focusViewWithError = mEmailView;
         }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            authTask = new UserLoginTask(email, password);
-            authTask.execute((Void) null);
-        }
+        return focusViewWithError;
     }
 
     private boolean isEmailValid(String email) {
@@ -317,6 +342,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            Log.i(TAG, "Attempt " + email + " " + textUtils.hideText(password) + " authentication against a network service");
             LoginCredentials credentials = new LoginCredentials();
             credentials.setEmail(email);
             credentials.setPassword(password);
@@ -325,13 +351,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                     Boolean result = response.body();
                     String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
+                    Log.i(TAG, "Login " + textUtils.hideText(signature) + " is being checked");
                     if (result != null && signature != null && result) {
+                        Log.i(TAG, "Login " + email + " is done!");
                         authSign.put(signature);
                         saveSharedPreference.setAuthorizationHeaderKey(LoginActivity.this, signature);
                         finish();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
+                        Log.e(TAG, "Login failed");
                         passwordView.setError(getString(R.string.error_incorrect_password));
                         passwordView.requestFocus();
                     }
@@ -339,6 +368,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 @Override
                 public void onFailure(Call<Boolean> call, Throwable t) {
+                    Log.e(TAG, "Login failed", t);
                     Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -349,13 +379,58 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            authTask = null;
+            backgroundTask = null;
             showProgress(false);
         }
 
         @Override
         protected void onCancelled() {
-            authTask = null;
+            backgroundTask = null;
+            showProgress(false);
+        }
+    }
+
+    public class RegisterAccountTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String email;
+        private final String password;
+
+        RegisterAccountTask(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Log.i(TAG, "Attempt " + email + " " + textUtils.hideText(password) + " registration against a network service");
+            Account account = new Account();
+            account.setEmail(email);
+            account.setPassword(password);
+            accountService.register(account).enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    Log.i(TAG, "Registration " + email + " is done!");
+                    attemptSignInOrSignUp(email, password, new UserLoginTask(email, password));
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    Log.e(TAG, "Registration failed", t);
+                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            backgroundTask = null;
+            showProgress(false);
+        }
+
+        @Override
+        protected void onCancelled() {
+            backgroundTask = null;
             showProgress(false);
         }
     }

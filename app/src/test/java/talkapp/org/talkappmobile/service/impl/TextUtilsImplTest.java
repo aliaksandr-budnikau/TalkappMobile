@@ -128,4 +128,56 @@ public class TextUtilsImplTest {
         // then
         assertEquals(translation, actual);
     }
+
+    @Test
+    public void hidePassword_whenNull() {
+        // setup
+        String text = null;
+        String translation = "";
+
+        // when
+        String actual = utils.hideText(text);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void hidePassword_whenEmpty() {
+        // setup
+        String text = "";
+        String translation = "";
+
+        // when
+        String actual = utils.hideText(text);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void hidePassword_whenOneSymbol() {
+        // setup
+        String text = "1";
+        String translation = "***";
+
+        // when
+        String actual = utils.hideText(text);
+
+        // then
+        assertEquals(translation, actual);
+    }
+
+    @Test
+    public void hidePassword_whenOrdinaryText() {
+        // setup
+        String text = "dsfsdfs fsdf sdf dsfsdf ff 3223 232 21";
+        String translation = "***";
+
+        // when
+        String actual = utils.hideText(text);
+
+        // then
+        assertEquals(translation, actual);
+    }
 }
