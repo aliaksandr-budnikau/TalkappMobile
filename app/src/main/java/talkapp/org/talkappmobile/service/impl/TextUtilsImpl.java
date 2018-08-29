@@ -52,7 +52,7 @@ public class TextUtilsImpl implements TextUtils {
 
     @Override
     public String appendLastSymbol(String text, String translation) {
-        String lastSymbol = text.substring(translation.length() - 1);
+        String lastSymbol = text.substring(text.length() - 1);
         if (lastSymbols.contains(lastSymbol)) {
             return text;
         }

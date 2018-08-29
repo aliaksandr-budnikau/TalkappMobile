@@ -129,6 +129,20 @@ public class TextUtilsImplTest {
         assertEquals(translation, actual);
     }
 
+
+    @Test
+    public void appendLastSymbol_diffInLength() throws Exception {
+        // setup
+        String text = "safasad an the sdf sfs s";
+        String translation = "safasad an fsandffa the sdf sfs s!";
+
+        // when
+        String actual = utils.appendLastSymbol(text, translation);
+
+        // then
+        assertEquals(text + "!", actual);
+    }
+
     @Test
     public void hidePassword_whenNull() {
         // setup

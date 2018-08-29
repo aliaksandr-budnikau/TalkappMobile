@@ -11,5 +11,5 @@ import talkapp.org.talkappmobile.model.Account;
 public interface AccountService {
 
     @POST("/account")
-    Call<Boolean> register(@Body Account account);
+    Call<Void> register(@Body Account account);
 }
