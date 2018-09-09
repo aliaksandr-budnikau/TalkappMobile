@@ -254,7 +254,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
         @Override
         public List<Sentence> findByWords(String words) {
             try {
-                return sentenceService.findByWords(words, authSign).execute().body();
+                return sentenceService.findByWords(words, 10, authSign).execute().body();
             } catch (IOException e) {
                 throw new NothingGotException(e);
             }

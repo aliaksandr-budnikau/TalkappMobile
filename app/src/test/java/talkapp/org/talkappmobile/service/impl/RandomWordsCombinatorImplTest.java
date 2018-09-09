@@ -40,32 +40,38 @@ public class RandomWordsCombinatorImplTest {
     public void combineWords_count2() throws Exception {
         // setup
         ArrayList<String> words = new ArrayList<>();
-        words.add("word1");
-        words.add("word2");
+        String word1 = "word1";
+        String word2 = "word2";
+        words.add(word1);
+        words.add(word2);
 
         // when
         Set<String> set = combinator.combineWords(words);
 
         // then
-        assertEquals(words.get(0) + " " + words.get(1), set.iterator().next());
+        assertEquals(2, set.size());
+        assertTrue(set.contains(word1));
+        assertTrue(set.contains(word2));
     }
 
     @Test
     public void combineWords_count3() throws Exception {
         // setup
         ArrayList<String> words = new ArrayList<>();
-        words.add("word1");
-        words.add("word2");
-        words.add("word3");
+        String word1 = "word1";
+        String word2 = "word2";
+        String word3 = "word3";
+        words.add(word1);
+        words.add(word2);
+        words.add(word3);
 
         // when
         Set<String> set = combinator.combineWords(words);
 
         // then
-        Iterator<String> iterator = set.iterator();
-        String first = iterator.next();
-        assertTrue((words.get(2) + " " + words.get(1)).equals(first) || (words.get(2) + " " + words.get(0)).equals(first));
-        String second = iterator.next();
-        assertTrue((words.get(1) + " " + words.get(0)).equals(second));
+        assertEquals(3, set.size());
+        assertTrue(set.contains(word1));
+        assertTrue(set.contains(word2));
+        assertTrue(set.contains(word3));
     }
 }
