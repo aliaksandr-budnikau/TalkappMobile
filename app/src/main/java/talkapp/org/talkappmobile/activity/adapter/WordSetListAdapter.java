@@ -43,7 +43,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
         wordSetRow.setText(label);
 
         ProgressBar wordSetProgress = convertView.findViewById(R.id.wordSetProgress);
-        wordSetProgress.setProgress(experienceUtils.getProgress(wordSet.getExperience()));
+        if (wordSet.getExperience() == null) {
+            wordSetProgress.setProgress(0);
+        } else {
+            wordSetProgress.setProgress(experienceUtils.getProgress(wordSet.getExperience()));
+        }
 
         return convertView;
     }

@@ -30,6 +30,9 @@ public class GameProcesses {
     }
 
     public void start() {
+        if (wordSet.getExperience() == null) {
+            wordSet.setExperience(callback.createExperience(wordSet.getId()));
+        }
         Set<String> combinations = wordsCombinator.combineWords(wordSet.getWords());
         try {
             for (final String combination : combinations) {

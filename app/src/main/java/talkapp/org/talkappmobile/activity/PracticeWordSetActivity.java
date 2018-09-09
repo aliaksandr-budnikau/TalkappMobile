@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.service.AudioProcessesFactory;
 import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.GameProcessesFactory;
@@ -39,6 +40,7 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.VoiceService;
+import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.impl.GameProcessCallback;
 import talkapp.org.talkappmobile.service.impl.GameProcesses;
@@ -53,6 +55,8 @@ public class PracticeWordSetActivity extends AppCompatActivity {
     SentenceService sentenceService;
     @Inject
     VoiceService voiceService;
+    @Inject
+    WordSetExperienceService wordSetExperienceService;
     @Inject
     Executor executor;
     @Inject
@@ -95,7 +99,11 @@ public class PracticeWordSetActivity extends AppCompatActivity {
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
-        wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience()));
+        if (currentWordSet.getExperience() == null) {
+            wordSetProgress.setProgress(0);
+        } else {
+            wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience()));
+        }
         gameFlow = new GameFlow();
         GameProcesses gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, gameFlow);
         gameFlow.executeOnExecutor(executor, gameProcesses);
@@ -108,7 +116,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             return;
         }
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
-        uncheckedAnswer.setWordSetExperienceId(currentWordSet.getId());
+        uncheckedAnswer.setWordSetExperienceId(currentWordSet.getExperience().getId());
         uncheckedAnswer.setActualAnswer(actualAnswer);
         uncheckedAnswer.setExpectedAnswer(sentenceBlockingQueue.peek().getText());
         refereeService.checkAnswer(uncheckedAnswer, authSign).enqueue(new Callback<AnswerCheckingResult>() {
@@ -117,6 +125,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
                 AnswerCheckingResult result = response.body();
                 if (result.getErrors().isEmpty()) {
+                    currentWordSet.getExperience().setTrainingExperience(result.getCurrentTrainingExperience());
                     wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience(), result.getCurrentTrainingExperience()));
                     if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
                         Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
@@ -249,6 +258,15 @@ public class PracticeWordSetActivity extends AppCompatActivity {
         public void returnProgress(Sentence sentence) throws InterruptedException {
             sentenceBlockingQueue.put(sentence);
             this.publishProgress(sentence);
+        }
+
+        @Override
+        public WordSetExperience createExperience(String wordSetId) {
+            try {
+                return wordSetExperienceService.create(wordSetId, authSign).execute().body();
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
         }
 
         @Override
