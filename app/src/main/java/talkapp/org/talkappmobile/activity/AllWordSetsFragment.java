@@ -45,7 +45,11 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     private AsyncTask<String, Object, List<WordSet>> loadingWordSets = new AsyncTask<String, Object, List<WordSet>>() {
         @Override
         protected List<WordSet> doInBackground(String... params) {
-            String topicId = (String) AllWordSetsFragment.this.getArguments().get(TOPIC_ID_MAPPING);
+            Bundle arguments = AllWordSetsFragment.this.getArguments();
+            String topicId = null;
+            if (arguments != null) {
+                topicId = (String) arguments.get(TOPIC_ID_MAPPING);
+            }
 
             Call<List<WordSet>> wordSetCall;
             if (topicId == null) {
