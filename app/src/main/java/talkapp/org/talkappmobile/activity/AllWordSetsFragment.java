@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener {
+    public static final String TOPIC_ID_MAPPING = "topicId";
     @Inject
     WordSetService wordSetService;
     @Inject
@@ -44,9 +45,14 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     private AsyncTask<String, Object, List<WordSet>> loadingWordSets = new AsyncTask<String, Object, List<WordSet>>() {
         @Override
         protected List<WordSet> doInBackground(String... params) {
-            Call<List<WordSet>> wordSetCall = wordSetService.findAll(authSign);
-            Call<List<WordSetExperience>> wordSetExperienceCall =
-                    wordSetExperienceService.findAll(authSign);
+            String topicId = (String) AllWordSetsFragment.this.getArguments().get(TOPIC_ID_MAPPING);
+
+            Call<List<WordSet>> wordSetCall;
+            if (topicId == null) {
+                wordSetCall = wordSetService.findAll(authSign);
+            } else {
+                wordSetCall = wordSetService.findByTopicId(topicId, authSign);
+            }
             Response<List<WordSet>> wordSets = null;
             try {
                 wordSets = wordSetCall.execute();
@@ -54,6 +60,12 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
                 e.printStackTrace();
             }
 
+            Call<List<WordSetExperience>> wordSetExperienceCall;
+            if (topicId == null) {
+                wordSetExperienceCall = wordSetExperienceService.findAll(authSign);
+            } else {
+                wordSetExperienceCall = wordSetExperienceService.findByTopicId(topicId, authSign);
+            }
             Response<List<WordSetExperience>> wordSetExperiences = null;
             try {
                 wordSetExperiences = wordSetExperienceCall.execute();

@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity.adapter;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
 /**
@@ -10,4 +11,6 @@ import talkapp.org.talkappmobile.model.WordSet;
  */
 public interface AdaptersFactory {
     ArrayAdapter<WordSet> createWordSetListAdapter(Context context);
+
+    ArrayAdapter<Topic> createTopicListAdapter(Context context);
 }

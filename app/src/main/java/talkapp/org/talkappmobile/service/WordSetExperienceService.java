@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
@@ -19,4 +20,7 @@ public interface WordSetExperienceService {
 
     @GET("/wordsetExperience")
     Call<List<WordSetExperience>> findAll(@HeaderMap Map<String, String> headers);
+
+    @GET("/wordsetExperience")
+    Call<List<WordSetExperience>> findByTopicId(@Query("topicId") String topicId, @HeaderMap Map<String, String> headers);
 }

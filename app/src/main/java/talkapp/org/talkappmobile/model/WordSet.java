@@ -11,6 +11,8 @@ import java.util.Objects;
 public class WordSet implements Serializable {
     private String id;
 
+    private String topicId;
+
     private List<String> words;
 
     private WordSetExperience experience;
@@ -39,6 +41,14 @@ public class WordSet implements Serializable {
         this.experience = experience;
     }
 
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,12 +56,13 @@ public class WordSet implements Serializable {
         WordSet wordSet = (WordSet) o;
         return Objects.equals(id, wordSet.id) &&
                 Objects.equals(words, wordSet.words) &&
+                Objects.equals(topicId, wordSet.topicId) &&
                 Objects.equals(experience, wordSet.experience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, words, experience);
+        return Objects.hash(id, topicId, words, experience);
     }
 
     @Override
@@ -59,6 +70,7 @@ public class WordSet implements Serializable {
         final StringBuilder sb = new StringBuilder("WordSet{");
         sb.append("id='").append(id).append('\'');
         sb.append(", words=").append(words);
+        sb.append(", topicId=").append(topicId);
         sb.append(", experience=").append(experience);
         sb.append('}');
         return sb.toString();

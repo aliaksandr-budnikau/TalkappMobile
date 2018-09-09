@@ -5,6 +5,9 @@
         <item
             android:id="@+id/word_set_practise"
             android:title="Word sets practise" />
+        <item
+            android:id="@+id/topic_practise"
+            android:title="Topics" />
     </group>
 
     <item android:title="Settings">

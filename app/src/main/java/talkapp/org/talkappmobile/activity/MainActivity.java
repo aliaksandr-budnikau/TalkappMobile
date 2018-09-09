@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         if (id == R.id.word_set_practise) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment()).commit();
+        } else if  (id == R.id.topic_practise) {
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment()).commit();
         } else if (id == R.id.nav_manage) {
             Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_exit) {
