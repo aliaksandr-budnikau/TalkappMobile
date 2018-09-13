@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.impl;
+package talkapp.org.talkappmobile.async;
 
 import android.os.AsyncTask;
 

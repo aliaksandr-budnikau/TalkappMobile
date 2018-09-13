@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
 import talkapp.org.talkappmobile.activity.PracticeWordSetObserver;
+import talkapp.org.talkappmobile.async.GameProcesses;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.component.GameProcessesFactory;
 

@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.component;
 
 import talkapp.org.talkappmobile.activity.PracticeWordSetObserver;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.component.impl.GameProcesses;
+import talkapp.org.talkappmobile.async.GameProcesses;
 
 /**
  * @author Budnikau Aliaksandr

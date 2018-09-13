@@ -42,7 +42,7 @@ import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.impl.GameProcesses;
+import talkapp.org.talkappmobile.async.GameProcesses;
 import talkapp.org.talkappmobile.component.impl.VoicePlayingProcess;
 import talkapp.org.talkappmobile.component.impl.VoiceRecordingProcess;
 
