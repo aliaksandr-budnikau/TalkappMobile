@@ -16,8 +16,8 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.SentenceSelector;
-import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.WordSetExperienceService;
+import talkapp.org.talkappmobile.service.backend.SentenceService;
+import talkapp.org.talkappmobile.service.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 
 /**

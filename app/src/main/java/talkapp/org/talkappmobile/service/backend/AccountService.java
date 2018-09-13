@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service;
+package talkapp.org.talkappmobile.service.backend;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

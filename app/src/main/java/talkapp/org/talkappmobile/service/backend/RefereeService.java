@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service;
+package talkapp.org.talkappmobile.service.backend;
 
 import java.util.Map;
 

@@ -44,9 +44,9 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.LoginCredentials;
-import talkapp.org.talkappmobile.service.AccountService;
+import talkapp.org.talkappmobile.service.backend.AccountService;
 import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.LoginService;
+import talkapp.org.talkappmobile.service.backend.LoginService;
 import talkapp.org.talkappmobile.service.SaveSharedPreference;
 
 import static android.Manifest.permission.READ_CONTACTS;

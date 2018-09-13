@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,9 +23,8 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.TopicService;
+import talkapp.org.talkappmobile.service.backend.TopicService;
 
 import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_ID_MAPPING;
 
