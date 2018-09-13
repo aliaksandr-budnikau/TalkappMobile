@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
+import talkapp.org.talkappmobile.service.impl.GameProcesses;
 import talkapp.org.talkappmobile.service.impl.RecordedTrackImpl;
 
 @Singleton
@@ -60,4 +61,6 @@ public abstract class DIContext {
     public abstract void inject(AllWordSetsFragment allWordSetsFragment);
 
     public abstract void inject(TopicsFragment topicsFragment);
+
+    public abstract void inject(GameProcesses target);
 }

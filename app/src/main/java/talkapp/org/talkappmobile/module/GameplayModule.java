@@ -48,8 +48,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public GameProcessesFactory provideGameProcessesFactory(WordsCombinator wordsCombinator,
-                                                            SentenceSelector sentenceSelector) {
-        return new GameProcessesFactoryImpl(wordsCombinator, sentenceSelector);
+    public GameProcessesFactory provideGameProcessesFactory() {
+        return new GameProcessesFactoryImpl();
     }
 }

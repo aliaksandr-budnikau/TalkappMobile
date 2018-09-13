@@ -18,7 +18,8 @@ public class WordSetExperienceUtilsImpl implements WordSetExperienceUtils {
         return getProgress((double) experience.getTrainingExperience(), (double) experience.getMaxTrainingExperience());
     }
 
-    private int getProgress(double experience, double maxTrainingExperience) {
+    @Override
+    public int getProgress(double experience, double maxTrainingExperience) {
         return (int) (experience / maxTrainingExperience * 100);
     }
 }

@@ -3,7 +3,11 @@ package talkapp.org.talkappmobile.activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -13,7 +17,6 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -34,29 +37,23 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.service.AudioProcessesFactory;
 import talkapp.org.talkappmobile.service.AuthSign;
 import talkapp.org.talkappmobile.service.GameProcessesFactory;
-import talkapp.org.talkappmobile.service.NothingGotException;
 import talkapp.org.talkappmobile.service.RecordedTrack;
 import talkapp.org.talkappmobile.service.RefereeService;
-import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.VoiceService;
-import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.impl.GameProcessCallback;
 import talkapp.org.talkappmobile.service.impl.GameProcesses;
 import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
 import talkapp.org.talkappmobile.service.impl.VoiceRecordingProcess;
 
-public class PracticeWordSetActivity extends AppCompatActivity {
+public class PracticeWordSetActivity extends AppCompatActivity implements PracticeWordSetObserver {
+    private static final String TAG = PracticeWordSetActivity.class.getSimpleName();
     public static final String WORD_SET_MAPPING = "wordSet";
+    public static final int NEXT_SENTENCE = 1;
     @Inject
     RefereeService refereeService;
     @Inject
-    SentenceService sentenceService;
-    @Inject
     VoiceService voiceService;
-    @Inject
-    WordSetExperienceService wordSetExperienceService;
     @Inject
     Executor executor;
     @Inject
@@ -78,11 +75,12 @@ public class PracticeWordSetActivity extends AppCompatActivity {
     private TextView answerText;
     private WordSet currentWordSet;
     private LinkedBlockingQueue<Sentence> sentenceBlockingQueue;
-    private GameFlow gameFlow;
     private ProgressBar recProgress;
     private ProgressBar wordSetProgress;
     private Button nextButton;
     private Button checkButton;
+    private GameProcesses gameProcesses;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,14 +97,26 @@ public class PracticeWordSetActivity extends AppCompatActivity {
 
         sentenceBlockingQueue = new LinkedBlockingQueue<>(1);
         currentWordSet = (WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING);
-        if (currentWordSet.getExperience() == null) {
-            wordSetProgress.setProgress(0);
-        } else {
-            wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience()));
-        }
-        gameFlow = new GameFlow();
-        GameProcesses gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, gameFlow);
-        gameFlow.executeOnExecutor(executor, gameProcesses);
+        gameProcesses = gameProcessesFactory.createGameProcesses(currentWordSet, this);
+        gameProcesses.executeOnExecutor(executor);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == NEXT_SENTENCE) {
+                    Sentence sentence = (Sentence) msg.obj;
+                    originalText.setText(sentence.getTranslations().get("russian"));
+                    rightAnswer.setText(textUtils.screenTextWith(sentence.getText()));
+                    nextButton.setVisibility(View.GONE);
+                    checkButton.setVisibility(View.VISIBLE);
+                }
+            }
+        };
     }
 
     public void onCheckAnswerButtonClick(View v) {
@@ -124,23 +134,29 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<AnswerCheckingResult> call, Response<AnswerCheckingResult> response) {
                 AnswerCheckingResult result = response.body();
-                if (result.getErrors().isEmpty()) {
-                    currentWordSet.getExperience().setTrainingExperience(result.getCurrentTrainingExperience());
-                    wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience(), result.getCurrentTrainingExperience()));
-                    if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
-                        Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(PracticeWordSetActivity.this, MainActivity.class);
-                        finish();
-                        startActivity(intent);
-                        return;
-                    }
-                    Sentence sentence = sentenceBlockingQueue.peek();
-                    rightAnswer.setText(sentence.getText());
-                    nextButton.setVisibility(View.VISIBLE);
-                    checkButton.setVisibility(View.GONE);
-                } else {
+                if (!result.getErrors().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
+                    return;
                 }
+
+                if (result.getCurrentTrainingExperience() == 0) {
+                    Toast.makeText(getApplicationContext(), "Accuracy to low", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                currentWordSet.getExperience().setTrainingExperience(result.getCurrentTrainingExperience());
+                wordSetProgress.setProgress(experienceUtils.getProgress(currentWordSet.getExperience(), result.getCurrentTrainingExperience()));
+                if (result.getCurrentTrainingExperience() == currentWordSet.getExperience().getMaxTrainingExperience()) {
+                    Toast.makeText(getApplicationContext(), "Congratulations! You are won!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(PracticeWordSetActivity.this, MainActivity.class);
+                    finish();
+                    startActivity(intent);
+                    return;
+                }
+                Sentence sentence = sentenceBlockingQueue.peek();
+                rightAnswer.setText(sentence.getText());
+                nextButton.setVisibility(View.VISIBLE);
+                checkButton.setVisibility(View.GONE);
             }
 
             @Override
@@ -172,7 +188,7 @@ public class PracticeWordSetActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        gameFlow.cancel(true);
+        gameProcesses.cancel(true);
     }
 
     public void onNextButtonClick(View view) {
@@ -183,6 +199,34 @@ public class PracticeWordSetActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Toast.makeText(getApplicationContext(), "Cool! Next sentence.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onInitialise(WordSet wordSet) {
+        WordSetExperience exp = wordSet.getExperience();
+        wordSetProgress.setProgress(experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience()));
+    }
+
+    @Override
+    public void onSentencesNotFound(String words) {
+        Log.v(TAG, "Sentences haven't been found with words '" + words + "'. Fill the storage.");
+    }
+
+    @Override
+    public void onNextSentence(Sentence sentence) throws InterruptedException {
+        sentenceBlockingQueue.put(sentence);
+        Message message = handler.obtainMessage(NEXT_SENTENCE, sentence);
+        handler.sendMessage(message);
+    }
+
+    @Override
+    public void onFinish() {
+        finish();
+    }
+
+    @Override
+    public void onInterruption() {
+        Toast.makeText(getApplicationContext(), "Interrupted", Toast.LENGTH_SHORT).show();
     }
 
     private class PlayAudioAsyncTask extends AsyncTask<VoicePlayingProcess, Integer, Void> {
@@ -237,55 +281,6 @@ public class PracticeWordSetActivity extends AppCompatActivity {
         @Override
         public void markProgress(long speechLength, long maxSpeechLengthMillis) {
             publishProgress(speechLength, maxSpeechLengthMillis);
-        }
-    }
-
-    private class GameFlow extends AsyncTask<GameProcesses, Sentence, Void> implements GameProcessCallback {
-
-        @Override
-        protected Void doInBackground(GameProcesses... gameProcesses) {
-            gameProcesses[0].start();
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Sentence... values) {
-            originalText.setText(values[0].getTranslations().get("russian"));
-            rightAnswer.setText(textUtils.screenTextWith(values[0].getText()));
-        }
-
-        @Override
-        public void returnProgress(Sentence sentence) throws InterruptedException {
-            sentenceBlockingQueue.put(sentence);
-            this.publishProgress(sentence);
-        }
-
-        @Override
-        public WordSetExperience createExperience(String wordSetId) {
-            try {
-                return wordSetExperienceService.create(wordSetId, authSign).execute().body();
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-
-        @Override
-        public List<Sentence> findByWords(String words) {
-            try {
-                return sentenceService.findByWords(words, 10, authSign).execute().body();
-            } catch (IOException e) {
-                throw new NothingGotException(e);
-            }
-        }
-
-        @Override
-        public void onFinish() {
-            PracticeWordSetActivity.this.finish();
-        }
-
-        @Override
-        public void onInterruption() {
-            Toast.makeText(getApplicationContext(), "Interrupted", Toast.LENGTH_SHORT).show();
         }
     }
 }
