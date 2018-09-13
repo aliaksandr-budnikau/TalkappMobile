@@ -11,6 +11,7 @@ import talkapp.org.talkappmobile.service.LoginService;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.AccountService;
+import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.VoiceService;
 import talkapp.org.talkappmobile.service.WordSetExperienceService;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -25,6 +26,12 @@ public class BackEndServiceModule {
     @Singleton
     public WordSetService provideWordSetService(Retrofit retrofit) {
         return retrofit.create(WordSetService.class);
+    }
+
+    @Provides
+    @Singleton
+    public TopicService provideTopicService(Retrofit retrofit) {
+        return retrofit.create(TopicService.class);
     }
 
     @Provides
