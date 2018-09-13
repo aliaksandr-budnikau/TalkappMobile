@@ -44,13 +44,13 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.LoginCredentials;
-import talkapp.org.talkappmobile.service.backend.AccountService;
-import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.backend.LoginService;
-import talkapp.org.talkappmobile.service.SaveSharedPreference;
+import talkapp.org.talkappmobile.component.backend.AccountService;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.SaveSharedPreference;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static talkapp.org.talkappmobile.service.AuthSign.AUTHORIZATION_HEADER_KEY;
+import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
 
 /**
  * A login screen that offers login via email/password.
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Inject
     AuthSign authSign;
     @Inject
-    talkapp.org.talkappmobile.service.TextUtils textUtils;
+    talkapp.org.talkappmobile.component.TextUtils textUtils;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */

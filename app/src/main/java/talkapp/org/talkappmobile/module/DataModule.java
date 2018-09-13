@@ -4,9 +4,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.SaveSharedPreference;
-import talkapp.org.talkappmobile.service.impl.SaveSharedPreferenceImpl;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.SaveSharedPreference;
+import talkapp.org.talkappmobile.component.impl.SaveSharedPreferenceImpl;
 
 /**
  * @author Budnikau Aliaksandr

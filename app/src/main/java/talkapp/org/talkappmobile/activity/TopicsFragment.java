@@ -23,8 +23,8 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.backend.TopicService;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.backend.TopicService;
 
 import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_ID_MAPPING;
 

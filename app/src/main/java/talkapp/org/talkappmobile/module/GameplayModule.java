@@ -4,16 +4,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.service.GameProcessesFactory;
-import talkapp.org.talkappmobile.service.SentenceSelector;
-import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.WordsCombinator;
-import talkapp.org.talkappmobile.service.impl.GameProcessesFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.RandomSentenceSelectorImpl;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorImpl;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
+import talkapp.org.talkappmobile.component.GameProcessesFactory;
+import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.impl.GameProcessesFactoryImpl;
+import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
+import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
+import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
 /**
  * @author Budnikau Aliaksandr

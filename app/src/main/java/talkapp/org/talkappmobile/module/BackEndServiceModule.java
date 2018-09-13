@@ -7,14 +7,14 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-import talkapp.org.talkappmobile.service.backend.LoginService;
-import talkapp.org.talkappmobile.service.backend.RefereeService;
-import talkapp.org.talkappmobile.service.backend.SentenceService;
-import talkapp.org.talkappmobile.service.backend.AccountService;
-import talkapp.org.talkappmobile.service.backend.TopicService;
-import talkapp.org.talkappmobile.service.backend.VoiceService;
-import talkapp.org.talkappmobile.service.backend.WordSetExperienceService;
-import talkapp.org.talkappmobile.service.backend.WordSetService;
+import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.backend.RefereeService;
+import talkapp.org.talkappmobile.component.backend.SentenceService;
+import talkapp.org.talkappmobile.component.backend.AccountService;
+import talkapp.org.talkappmobile.component.backend.TopicService;
+import talkapp.org.talkappmobile.component.backend.VoiceService;
+import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.backend.WordSetService;
 
 /**
  * @author Budnikau Aliaksandr

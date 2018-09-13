@@ -4,14 +4,14 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.service.AudioProcessesFactory;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
-import talkapp.org.talkappmobile.service.ByteUtils;
-import talkapp.org.talkappmobile.service.RecordedTrack;
-import talkapp.org.talkappmobile.service.impl.AudioProcessesFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.ByteUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.RecordedTrackImpl;
+import talkapp.org.talkappmobile.component.AudioProcessesFactory;
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
+import talkapp.org.talkappmobile.component.ByteUtils;
+import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.impl.AudioProcessesFactoryImpl;
+import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryImpl;
+import talkapp.org.talkappmobile.component.impl.ByteUtilsImpl;
+import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 
 /**
  * @author Budnikau Aliaksandr

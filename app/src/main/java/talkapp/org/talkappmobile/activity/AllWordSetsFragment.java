@@ -25,9 +25,9 @@ import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
-import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.backend.WordSetExperienceService;
-import talkapp.org.talkappmobile.service.backend.WordSetService;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.backend.WordSetService;
 
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener {
     public static final String TOPIC_ID_MAPPING = "topicId";

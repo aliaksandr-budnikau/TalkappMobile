@@ -34,17 +34,17 @@ import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
-import talkapp.org.talkappmobile.service.AudioProcessesFactory;
-import talkapp.org.talkappmobile.service.AuthSign;
-import talkapp.org.talkappmobile.service.GameProcessesFactory;
-import talkapp.org.talkappmobile.service.RecordedTrack;
-import talkapp.org.talkappmobile.service.backend.RefereeService;
-import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.backend.VoiceService;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.impl.GameProcesses;
-import talkapp.org.talkappmobile.service.impl.VoicePlayingProcess;
-import talkapp.org.talkappmobile.service.impl.VoiceRecordingProcess;
+import talkapp.org.talkappmobile.component.AudioProcessesFactory;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.GameProcessesFactory;
+import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.backend.RefereeService;
+import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.backend.VoiceService;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.impl.GameProcesses;
+import talkapp.org.talkappmobile.component.impl.VoicePlayingProcess;
+import talkapp.org.talkappmobile.component.impl.VoiceRecordingProcess;
 
 public class PracticeWordSetActivity extends AppCompatActivity implements PracticeWordSetObserver {
     private static final String TAG = PracticeWordSetActivity.class.getSimpleName();

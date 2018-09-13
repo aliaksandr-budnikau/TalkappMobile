@@ -16,8 +16,8 @@ import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
-import talkapp.org.talkappmobile.service.impl.GameProcesses;
-import talkapp.org.talkappmobile.service.impl.RecordedTrackImpl;
+import talkapp.org.talkappmobile.component.impl.GameProcesses;
+import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 
 @Singleton
 @Component(modules = {
