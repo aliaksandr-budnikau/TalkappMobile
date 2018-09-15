@@ -81,6 +81,6 @@ public class BackEndServiceModule {
     @Provides
     @Named("serverUrl")
     public String provideServerUrl() {
-        return "http://192.168.0.102:8080";
+        return "http://192.168.0.100:8080";
     }
 }
