@@ -7,17 +7,19 @@ import talkapp.org.talkappmobile.activity.AllWordSetsFragment;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
+import talkapp.org.talkappmobile.activity.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
+import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
+import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
-import talkapp.org.talkappmobile.async.GameProcesses;
-import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 
 @Singleton
 @Component(modules = {
@@ -26,6 +28,7 @@ import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
         ConcurrentModule.class,
         AudioModule.class,
         DataModule.class,
+        InfraModule.class,
         ItemsListModule.class
 })
 public abstract class DIContext {
@@ -39,6 +42,7 @@ public abstract class DIContext {
                     .concurrentModule(new ConcurrentModule())
                     .audioModule(new AudioModule())
                     .dataModule(new DataModule())
+                    .infraModule(new InfraModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
                     .build();
@@ -62,5 +66,7 @@ public abstract class DIContext {
 
     public abstract void inject(TopicsFragment topicsFragment);
 
-    public abstract void inject(GameProcesses target);
+    public abstract void inject(PracticeWordSetPresenter target);
+
+    public abstract void inject(PracticeWordSetInteractor target);
 }
