@@ -15,12 +15,14 @@ public class TextUtilsImpl implements TextUtils {
 
     private final Set<String> words;
     private final Set<String> lastSymbols;
+    private final Set<String> punctuationMarks;
     private String placeholder;
 
-    public TextUtilsImpl(String placeholder, String[] words, String[] lastSymbols) {
+    public TextUtilsImpl(String placeholder, String[] words, String[] lastSymbols, String[] punctuationMarks) {
         this.placeholder = placeholder;
         this.words = new HashSet<>(Arrays.asList(words));
         this.lastSymbols = new HashSet<>(Arrays.asList(lastSymbols));
+        this.punctuationMarks = new HashSet<>(Arrays.asList(punctuationMarks));
     }
 
     @Override
@@ -28,11 +30,24 @@ public class TextUtilsImpl implements TextUtils {
         String[] tokens = text.split(" ");
         StringBuilder screened = new StringBuilder();
         for (String token : tokens) {
-            if (words.contains(token.toLowerCase())) {
-                screened.append(token);
+            String[] wordAndMark = new String[]{token, ""};
+            for (String mark : punctuationMarks) {
+                if (!token.contains(mark)) {
+                    continue;
+                }
+                int markIndex = token.indexOf(mark);
+                if (markIndex > 0) {
+                    wordAndMark[0] = token.substring(0, markIndex);
+                    wordAndMark[1] = mark;
+                    break;
+                }
+            }
+            if (words.contains(wordAndMark[0].toLowerCase())) {
+                screened.append(wordAndMark[0]);
             } else {
                 screened.append(placeholder);
             }
+            screened.append(wordAndMark[1]);
             screened.append(" ");
         }
         return screened.toString().trim();

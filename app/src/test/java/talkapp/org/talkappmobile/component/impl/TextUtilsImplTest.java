@@ -3,14 +3,16 @@ package talkapp.org.talkappmobile.component.impl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static talkapp.org.talkappmobile.module.GameplayModule.ARTICLES;
+import static talkapp.org.talkappmobile.module.GameplayModule.LAST_SYMBOLS;
+import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
+import static talkapp.org.talkappmobile.module.GameplayModule.PUNCTUATION_MARKS;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public class TextUtilsImplTest {
-    String[] articles = new String[]{"a", "an", "the"};
-    String[] lastSymbols = new String[]{".", "!", "?"};
-    private TextUtilsImpl utils = new TextUtilsImpl("...", articles, lastSymbols);
+    private TextUtilsImpl utils = new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
 
     @Test
     public void screenTextWith_withoutChanges() throws Exception {
@@ -43,6 +45,19 @@ public class TextUtilsImplTest {
         // setup
         String text = "The A An sdthefsdf a safasad an fsandffa the sdf sfs s";
         String expected = "The A An ... a ... an ... the ... ... ...";
+
+        // when
+        String actual = utils.screenTextWith(text);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void screenTextWith_comma() throws Exception {
+        // setup
+        String text = "Happy anniversary, Mike.";
+        String expected = "... ..., ....";
 
         // when
         String actual = utils.screenTextWith(text);

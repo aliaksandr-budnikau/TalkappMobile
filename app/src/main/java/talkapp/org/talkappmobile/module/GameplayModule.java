@@ -20,6 +20,11 @@ import talkapp.org.talkappmobile.config.DIContext;
  */
 @Module
 public class GameplayModule {
+    public static final String[] ARTICLES = new String[]{"a", "an", "the"};
+    public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
+    public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
+    public static final String PLACEHOLDER = "...";
+
     @Provides
     @Singleton
     public SentenceSelector provideSentenceSelector() {
@@ -35,9 +40,7 @@ public class GameplayModule {
     @Provides
     @Singleton
     public TextUtils provideTextUtils() {
-        String[] articles = new String[]{"a", "an", "the"};
-        String[] lastSymbols = new String[]{".", "!", "?"};
-        return new TextUtilsImpl("...", articles, lastSymbols);
+        return new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
     }
 
     @Provides
