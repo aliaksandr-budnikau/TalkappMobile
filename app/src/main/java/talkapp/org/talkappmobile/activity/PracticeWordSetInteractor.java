@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.media.AudioTrack;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +9,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
@@ -39,6 +43,10 @@ public class PracticeWordSetInteractor {
     RefereeService refereeService;
     @Inject
     Logger logger;
+    @Inject
+    RecordedTrack recordedTrackBuffer;
+    @Inject
+    AudioStuffFactory audioStuffFactory;
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         if (wordSet.getExperience() == null) {
@@ -118,6 +126,28 @@ public class PracticeWordSetInteractor {
         }
     }
 
+    public void playVoice(OnPracticeWordSetListener listener) {
+        if (recordedTrackBuffer.isEmpty()) {
+            return;
+        }
+        try {
+            listener.onStartPlaying();
+            AudioTrack audioTrack = null;
+            try {
+                audioTrack = audioStuffFactory.createAudioTrack();
+                audioTrack.play();
+                byte[] bytes = recordedTrackBuffer.getAsOneArray();
+                audioTrack.write(bytes, 0, recordedTrackBuffer.getPosition());
+            } finally {
+                if (audioTrack != null) {
+                    audioTrack.release();
+                }
+            }
+        } finally {
+            listener.onStopPlaying();
+        }
+    }
+
     interface OnPracticeWordSetListener {
         void onInitialiseExperience();
 
@@ -134,5 +164,9 @@ public class PracticeWordSetInteractor {
         void onTrainingFinished();
 
         void onRightAnswer();
+
+        void onStartPlaying();
+
+        void onStopPlaying();
     }
 }

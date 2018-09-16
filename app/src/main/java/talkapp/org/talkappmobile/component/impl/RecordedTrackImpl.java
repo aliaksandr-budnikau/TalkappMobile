@@ -24,6 +24,11 @@ public class RecordedTrackImpl implements RecordedTrack {
     }
 
     @Override
+    public int getPosition() {
+        return byteBuf.position();
+    }
+
+    @Override
     public void clear() {
         byteBuf = ByteBuffer.allocate(BYTE_BUFFER_SIZE);
     }

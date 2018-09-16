@@ -36,4 +36,10 @@ interface PracticeWordSetView {
     void closeActivity();
 
     void openAnotherActivity();
+
+    void setEnableVoiceRecButton(boolean value);
+
+    void setEnableCheckButton(boolean value);
+
+    void setEnableNextButton(boolean value);
 }

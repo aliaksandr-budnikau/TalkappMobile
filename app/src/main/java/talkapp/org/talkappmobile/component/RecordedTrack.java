@@ -9,6 +9,8 @@ public interface RecordedTrack {
 
     boolean isEmpty();
 
+    int getPosition();
+
     void clear();
 
     void append(byte[] data);

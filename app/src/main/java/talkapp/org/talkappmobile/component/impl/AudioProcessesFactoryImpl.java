@@ -23,9 +23,4 @@ public class AudioProcessesFactoryImpl implements AudioProcessesFactory {
     public VoiceRecordingProcess createVoiceRecordingProcess(RecordedTrack recordedTrackBuffer, ProgressCallback progress) {
         return new VoiceRecordingProcess(recordedTrackBuffer, audioStuffFactory, byteUtils, progress);
     }
-
-    @Override
-    public VoicePlayingProcess createVoicePlayingProcess(RecordedTrack recordedTrackBuffer) {
-        return new VoicePlayingProcess(recordedTrackBuffer, audioStuffFactory);
-    }
 }

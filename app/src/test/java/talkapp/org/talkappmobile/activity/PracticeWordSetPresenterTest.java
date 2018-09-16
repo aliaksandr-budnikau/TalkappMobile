@@ -147,6 +147,24 @@ public class PracticeWordSetPresenterTest {
     }
 
     @Test
-    public void getSentence() {
+    public void onStartPlaying() {
+        presenter.onStartPlaying();
+        verify(view).setEnableVoiceRecButton(false);
+        verify(view).setEnableCheckButton(false);
+        verify(view).setEnableNextButton(false);
+    }
+
+    @Test
+    public void onStopPlaying() {
+        presenter.onStopPlaying();
+        verify(view).setEnableVoiceRecButton(true);
+        verify(view).setEnableCheckButton(true);
+        verify(view).setEnableNextButton(true);
+    }
+
+    @Test
+    public void onPlayVoiceButtonClick() {
+        presenter.onPlayVoiceButtonClick();
+        verify(interactor).playVoice(presenter);
     }
 }

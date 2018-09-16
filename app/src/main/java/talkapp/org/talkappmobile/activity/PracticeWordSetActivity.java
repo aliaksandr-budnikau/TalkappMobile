@@ -23,7 +23,6 @@ import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
-import talkapp.org.talkappmobile.component.impl.VoicePlayingProcess;
 import talkapp.org.talkappmobile.component.impl.VoiceRecordingProcess;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -59,6 +58,7 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     private ProgressBar wordSetProgress;
     private Button nextButton;
     private Button checkButton;
+    private Button speakButton;
     private PracticeWordSetPresenter presenter;
 
     @Override
@@ -74,6 +74,7 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         wordSetProgress = (ProgressBar) findViewById(R.id.wordSetProgress);
         nextButton = (Button) findViewById(R.id.nextButton);
         checkButton = (Button) findViewById(R.id.checkButton);
+        speakButton = (Button) findViewById(R.id.speakButton);
 
         presenter = new PracticeWordSetPresenter((WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING), this);
     }
@@ -121,13 +122,14 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         }
     }
 
-    public void onHearVoiceButtonClick(View view) {
-        if (recordedTrackBuffer.isEmpty()) {
-            return;
-        }
-        VoicePlayingProcess voicePlayingProcess = audioProcessesFactory.createVoicePlayingProcess(recordedTrackBuffer);
-        PlayAudioAsyncTask playTask = new PlayAudioAsyncTask();
-        playTask.executeOnExecutor(executor, voicePlayingProcess);
+    public void onPlayVoiceButtonClick(View view) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                presenter.onPlayVoiceButtonClick();
+                return null;
+            }
+        }.executeOnExecutor(executor);
     }
 
     public void onNextButtonClick(View view) {
@@ -285,12 +287,34 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         });
     }
 
-    private class PlayAudioAsyncTask extends AsyncTask<VoicePlayingProcess, Integer, Void> {
-        @Override
-        protected Void doInBackground(VoicePlayingProcess... params) {
-            params[0].play();
-            return null;
-        }
+    @Override
+    public void setEnableVoiceRecButton(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                speakButton.setEnabled(value);
+            }
+        });
+    }
+
+    @Override
+    public void setEnableCheckButton(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                checkButton.setEnabled(value);
+            }
+        });
+    }
+
+    @Override
+    public void setEnableNextButton(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                nextButton.setEnabled(value);
+            }
+        });
     }
 
     private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Long, VoiceRecognitionResult> implements ProgressCallback {

@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity;
 
 
+import android.media.AudioTrack;
 import android.support.annotation.NonNull;
 
 import org.junit.Test;
@@ -16,8 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
@@ -36,6 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,7 +65,11 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private RefereeService refereeService;
     @Mock
+    private RecordedTrack recordedTrackBuffer;
+    @Mock
     private PracticeWordSetInteractor.OnPracticeWordSetListener listener;
+    @Mock
+    private AudioStuffFactory audioStuffFactory;
     @InjectMocks
     private PracticeWordSetInteractor interactor;
 
@@ -378,5 +386,102 @@ public class PracticeWordSetInteractorTest {
         Call call = mock(Call.class);
         when(call.execute()).thenReturn(success(checkingResult));
         when(refereeService.checkAnswer(uncheckedAnswer, authSign)).thenReturn(call);
+    }
+
+    @Test
+    public void playVoice_bufferIsEmpty() {
+        // setup
+        // when
+        when(recordedTrackBuffer.isEmpty()).thenReturn(true);
+        interactor.playVoice(listener);
+
+        // then
+        verify(listener, times(0)).onStartPlaying();
+        verify(listener, times(0)).onStopPlaying();
+        verify(audioStuffFactory, times(0)).createAudioTrack();
+        verify(recordedTrackBuffer, times(0)).getAsOneArray();
+        verify(recordedTrackBuffer, times(0)).getPosition();
+    }
+
+    @Test
+    public void playVoice_bufferIsNotEmpty() {
+        // setup
+        AudioTrack audioTrack = mock(AudioTrack.class);
+        byte[] array = new byte[10];
+        int position = 5;
+
+        // when
+        when(audioStuffFactory.createAudioTrack()).thenReturn(audioTrack);
+        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
+        when(recordedTrackBuffer.getAsOneArray()).thenReturn(array);
+        when(recordedTrackBuffer.getPosition()).thenReturn(position);
+        interactor.playVoice(listener);
+
+        // then
+        verify(listener).onStartPlaying();
+        verify(listener).onStopPlaying();
+        verify(audioTrack).play();
+        verify(audioTrack).write(array, 0, position);
+        verify(audioTrack).release();
+    }
+
+    @Test
+    public void playVoice_bufferIsNotEmptyButExceptionOnStartPlaying() {
+        // setup
+        // when
+        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
+        doThrow(RuntimeException.class).when(listener).onStartPlaying();
+        try {
+            interactor.playVoice(listener);
+        } catch (Exception e) {
+        }
+
+        // then
+        verify(listener).onStopPlaying();
+        verify(audioStuffFactory, times(0)).createAudioTrack();
+        verify(recordedTrackBuffer, times(0)).getAsOneArray();
+        verify(recordedTrackBuffer, times(0)).getPosition();
+    }
+
+
+    @Test
+    public void playVoice_bufferIsNotEmptyButExceptionOnPlay() {
+        // setup
+        AudioTrack audioTrack = mock(AudioTrack.class);
+
+        // when
+        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
+        when(audioStuffFactory.createAudioTrack()).thenReturn(audioTrack);
+        doThrow(RuntimeException.class).when(audioTrack).play();
+        try {
+            interactor.playVoice(listener);
+        } catch (Exception e) {
+        }
+
+        // then
+        verify(listener).onStartPlaying();
+        verify(listener).onStopPlaying();
+        verify(recordedTrackBuffer, times(0)).getAsOneArray();
+        verify(recordedTrackBuffer, times(0)).getPosition();
+        verify(audioTrack).release();
+    }
+
+
+    @Test
+    public void playVoice_bufferIsNotEmptyButExceptionOnCreateAudioTrack() {
+        // setup
+        // when
+        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
+        doThrow(RuntimeException.class).when(audioStuffFactory).createAudioTrack();
+        try {
+            interactor.playVoice(listener);
+        } catch (Exception e) {
+        }
+
+        // then
+        verify(listener).onStartPlaying();
+        verify(listener).onStopPlaying();
+        verify(recordedTrackBuffer, times(0)).getAsOneArray();
+        verify(recordedTrackBuffer, times(0)).getPosition();
     }
 }

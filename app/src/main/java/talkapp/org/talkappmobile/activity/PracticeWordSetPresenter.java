@@ -68,6 +68,20 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.hideCheckButton();
     }
 
+    @Override
+    public void onStartPlaying() {
+        view.setEnableVoiceRecButton(false);
+        view.setEnableCheckButton(false);
+        view.setEnableNextButton(false);
+    }
+
+    @Override
+    public void onStopPlaying() {
+        view.setEnableVoiceRecButton(true);
+        view.setEnableCheckButton(true);
+        view.setEnableNextButton(true);
+    }
+
     public void onResume() {
         interactor.initialiseExperience(wordSet, this);
         interactor.initialiseWordsSequence(wordSet, this);
@@ -88,5 +102,9 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
     @Deprecated
     public Sentence getSentence() {
         return sentence;
+    }
+
+    public void onPlayVoiceButtonClick() {
+        interactor.playVoice(this);
     }
 }
