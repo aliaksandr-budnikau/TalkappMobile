@@ -1,51 +1,35 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.nio.ByteBuffer;
 
-import talkapp.org.talkappmobile.component.ByteUtils;
 import talkapp.org.talkappmobile.component.RecordedTrack;
+
+import static talkapp.org.talkappmobile.component.impl.VoiceRecordingProcess.MAX_SPEECH_LENGTH_MILLIS;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public class RecordedTrackImpl implements RecordedTrack {
-    private ByteUtils byteUtils;
-
-    private List<byte[]> track = new LinkedList<>();
-
-    public RecordedTrackImpl(ByteUtils byteUtils) {
-        this.byteUtils = byteUtils;
-    }
+    private static final int BYTE_BUFFER_SIZE = 35 * MAX_SPEECH_LENGTH_MILLIS;
+    private ByteBuffer byteBuf = ByteBuffer.allocate(BYTE_BUFFER_SIZE);
 
     @Override
     public byte[] getAsOneArray() {
-        LinkedList<Byte> result = new LinkedList<>();
-        for (byte[] bytes : track) {
-            for (int i = 0; i < bytes.length; i++) {
-                result.add(bytes[i]);
-            }
-        }
-        return byteUtils.toPrimitives(result);
-    }
-
-    @Override
-    public List<byte[]> get() {
-        return track;
+        return byteBuf.array();
     }
 
     @Override
     public boolean isEmpty() {
-        return track.isEmpty();
+        return byteBuf.position() == 0;
     }
 
     @Override
     public void clear() {
-        track.clear();
+        byteBuf = ByteBuffer.allocate(BYTE_BUFFER_SIZE);
     }
 
     @Override
     public void append(byte[] data) {
-        track.add(data);
+        byteBuf.put(data);
     }
 }

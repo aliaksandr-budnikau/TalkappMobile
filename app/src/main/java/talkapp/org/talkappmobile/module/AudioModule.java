@@ -32,8 +32,8 @@ public class AudioModule {
 
     @Provides
     @Singleton
-    public RecordedTrack provideRecordedTrackBuffer(ByteUtils byteUtils) {
-        return new RecordedTrackImpl(byteUtils);
+    public RecordedTrack provideRecordedTrackBuffer() {
+        return new RecordedTrackImpl();
     }
 
     @Provides

@@ -1,9 +1,5 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.Iterator;
-
 import talkapp.org.talkappmobile.component.ByteUtils;
 
 /**
@@ -12,15 +8,6 @@ import talkapp.org.talkappmobile.component.ByteUtils;
 public class ByteUtilsImpl implements ByteUtils {
 
     private static final int AMPLITUDE_THRESHOLD = 1500;
-
-    @Override
-    public byte[] toPrimitives(Collection<Byte> collection) {
-        ByteBuffer byteBuf = ByteBuffer.allocate(collection.size());
-        for (Iterator<Byte> i = collection.iterator(); i.hasNext(); ) {
-            byteBuf.put(i.next());
-        }
-        return byteBuf.array();
-    }
 
     @Override
     public boolean isHearingVoice(byte[] buffer, int size) {

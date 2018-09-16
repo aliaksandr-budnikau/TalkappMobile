@@ -12,8 +12,8 @@ import talkapp.org.talkappmobile.component.RecordedTrack;
  */
 public class VoiceRecordingProcess {
 
-    private static final int SPEECH_TIMEOUT_MILLIS = 2000;
-    private static final int MAX_SPEECH_LENGTH_MILLIS = 8 * 1000;
+    private static final int SPEECH_TIMEOUT_MILLIS = 1000;
+    public static final int MAX_SPEECH_LENGTH_MILLIS = 8 * 1000;
     private static final int MAX_SPEECH_LENGTH_MILLIS_NORMALISED = MAX_SPEECH_LENGTH_MILLIS / 100;
 
     private final RecordedTrack recordedTrackBuffer;

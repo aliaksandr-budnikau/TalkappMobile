@@ -2,8 +2,6 @@ package talkapp.org.talkappmobile.component.impl;
 
 import android.media.AudioTrack;
 
-import java.util.List;
-
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 
@@ -25,10 +23,8 @@ public class VoicePlayingProcess {
         try {
             audioTrack = audioStuffFactory.createAudioTrack();
             audioTrack.play();
-            List<byte[]> bytes = recordedTrackBuffer.get();
-            for (byte[] audioData : bytes) {
-                audioTrack.write(audioData, 0, audioData.length);
-            }
+            byte[] bytes = recordedTrackBuffer.getAsOneArray();
+            audioTrack.write(bytes, 0, bytes.length);
         } finally {
             if (audioTrack != null) {
                 audioTrack.release();
