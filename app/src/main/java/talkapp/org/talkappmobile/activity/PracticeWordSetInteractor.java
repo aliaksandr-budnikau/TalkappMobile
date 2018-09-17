@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.media.AudioRecord;
 import android.media.AudioTrack;
 
 import java.io.IOException;
@@ -11,16 +12,20 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.ByteUtils;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
+import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.UnrecognizedVoice;
+import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -47,6 +52,10 @@ public class PracticeWordSetInteractor {
     RecordedTrack recordedTrackBuffer;
     @Inject
     AudioStuffFactory audioStuffFactory;
+    @Inject
+    ByteUtils byteUtils;
+    @Inject
+    VoiceService voiceService;
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         if (wordSet.getExperience() == null) {
@@ -148,6 +157,75 @@ public class PracticeWordSetInteractor {
         }
     }
 
+    public void recVoice(int speechTimeoutMillis, OnPracticeWordSetListener listener) {
+        recordedTrackBuffer.init();
+        boolean recording = true;
+        AudioRecord audioRecord = null;
+        try {
+            listener.onStartRecording();
+            try {
+                audioRecord = audioStuffFactory.createAudioRecord();
+                audioRecord.startRecording();
+                byte[] buffer = audioStuffFactory.createBuffer();
+                long voiceStartedMillis = 0;
+                long lastVoiceHeardMillis = Long.MAX_VALUE;
+                while (recording && !recordedTrackBuffer.isClosed()) {
+                    buffer = new byte[buffer.length];
+                    final int size = audioRecord.read(buffer, 0, buffer.length);
+                    final long now = System.currentTimeMillis();
+                    if (byteUtils.isHearingVoice(buffer, size)) {
+                        if (lastVoiceHeardMillis == Long.MAX_VALUE) {
+                            voiceStartedMillis = now;
+                        }
+                        recordedTrackBuffer.append(buffer);
+                        lastVoiceHeardMillis = now;
+                        long speechLength = now - voiceStartedMillis;
+                        listener.onSnippetRecorded(speechLength, recordedTrackBuffer.getMaxSpeechLengthMillis());
+                        if (speechLength > recordedTrackBuffer.getMaxSpeechLengthMillis()) {
+                            recording = false;
+                        }
+                    } else {
+                        recordedTrackBuffer.append(buffer);
+                        if (now - lastVoiceHeardMillis > speechTimeoutMillis) {
+                            recording = false;
+                        }
+                    }
+                }
+            } finally {
+                if (audioRecord != null) {
+                    audioRecord.release();
+                }
+            }
+        } finally {
+            listener.onStopRecording();
+        }
+    }
+
+    public void recognizeVoice(OnPracticeWordSetListener listener) {
+        UnrecognizedVoice voice = new UnrecognizedVoice();
+        voice.setVoice(recordedTrackBuffer.getAsOneArray());
+        VoiceRecognitionResult result = getVoiceRecognitionResult(voice);
+        listener.onStopRecognition();
+        if (result.getVariant().isEmpty()) {
+            return;
+        }
+        listener.onGotRecognitionResult(result);
+    }
+
+    private VoiceRecognitionResult getVoiceRecognitionResult(UnrecognizedVoice voice) {
+        VoiceRecognitionResult result;
+        try {
+            result = voiceService.recognize(voice, authSign).execute().body();
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return result;
+    }
+
+    public void stopRecording() {
+        recordedTrackBuffer.close();
+    }
+
     interface OnPracticeWordSetListener {
         void onInitialiseExperience();
 
@@ -168,5 +246,15 @@ public class PracticeWordSetInteractor {
         void onStartPlaying();
 
         void onStopPlaying();
+
+        void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis);
+
+        void onStartRecording();
+
+        void onStopRecording();
+
+        void onStopRecognition();
+
+        void onGotRecognitionResult(VoiceRecognitionResult result);
     }
 }

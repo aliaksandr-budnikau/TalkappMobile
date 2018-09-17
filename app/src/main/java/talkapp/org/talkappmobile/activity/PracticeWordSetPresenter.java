@@ -2,14 +2,19 @@ package talkapp.org.talkappmobile.activity;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPracticeWordSetListener {
+    private static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
     @Inject
     PracticeWordSetInteractor interactor;
+    @Inject
+    TextUtils textUtils;
     private PracticeWordSetView view;
     private Sentence sentence;
 
@@ -82,6 +87,40 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.setEnableNextButton(true);
     }
 
+    @Override
+    public void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis) {
+        view.setRecProgress((int) (((double) speechLength / maxSpeechLengthMillis) * 100));
+    }
+
+    @Override
+    public void onStartRecording() {
+        view.setRecProgress(0);
+        view.showRecProgress();
+        view.setEnablePlayButton(false);
+        view.setEnableCheckButton(false);
+        view.setEnableNextButton(false);
+    }
+
+    @Override
+    public void onStopRecording() {
+        view.setEnablePlayButton(true);
+        view.setEnableCheckButton(true);
+        view.setEnableNextButton(true);
+    }
+
+    @Override
+    public void onStopRecognition() {
+        view.hideRecProgress();
+        view.setRecProgress(0);
+    }
+
+    @Override
+    public void onGotRecognitionResult(VoiceRecognitionResult result) {
+        String textWithUpper = textUtils.toUpperCaseFirstLetter(result.getVariant().get(0));
+        String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper, sentence.getText());
+        view.setAnswerText(textWithLastSymbol);
+    }
+
     public void onResume() {
         interactor.initialiseExperience(wordSet, this);
         interactor.initialiseWordsSequence(wordSet, this);
@@ -106,5 +145,14 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
 
     public void onPlayVoiceButtonClick() {
         interactor.playVoice(this);
+    }
+
+    public void onRecogniseVoiceButtonClick() {
+        interactor.recVoice(SPEECH_TIMEOUT_MILLIS, this);
+        interactor.recognizeVoice(this);
+    }
+
+    public void onStopRecognitionVoiceButtonClick() {
+        interactor.stopRecording();
     }
 }

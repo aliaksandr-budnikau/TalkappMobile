@@ -4,11 +4,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.component.AudioProcessesFactory;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.ByteUtils;
 import talkapp.org.talkappmobile.component.RecordedTrack;
-import talkapp.org.talkappmobile.component.impl.AudioProcessesFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.ByteUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
@@ -18,6 +16,8 @@ import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
  */
 @Module
 public class AudioModule {
+    private static final int MAX_SPEECH_LENGTH_MILLIS = 8 * 1000;
+
     @Provides
     @Singleton
     public AudioStuffFactory provideAudioStuffFactory() {
@@ -33,12 +33,6 @@ public class AudioModule {
     @Provides
     @Singleton
     public RecordedTrack provideRecordedTrackBuffer() {
-        return new RecordedTrackImpl();
-    }
-
-    @Provides
-    @Singleton
-    public AudioProcessesFactory provideAudioProcessesFactory(AudioStuffFactory audioStuffFactory, ByteUtils byteUtils) {
-        return new AudioProcessesFactoryImpl(audioStuffFactory, byteUtils);
+        return new RecordedTrackImpl(MAX_SPEECH_LENGTH_MILLIS);
     }
 }

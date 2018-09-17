@@ -93,7 +93,7 @@
                     android:textSize="13pt" />
 
                 <Button
-                    android:id="@+id/hearButton"
+                    android:id="@+id/playButton"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

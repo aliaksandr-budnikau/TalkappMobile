@@ -11,7 +11,13 @@ public interface RecordedTrack {
 
     int getPosition();
 
-    void clear();
+    void init();
 
     void append(byte[] data);
+
+    int getMaxSpeechLengthMillis();
+
+    void close();
+
+    boolean isClosed();
 }

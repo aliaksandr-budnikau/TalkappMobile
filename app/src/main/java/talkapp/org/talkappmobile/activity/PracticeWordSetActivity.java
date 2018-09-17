@@ -11,36 +11,29 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.AudioProcessesFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.backend.VoiceService;
-import talkapp.org.talkappmobile.component.impl.VoiceRecordingProcess;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.UnrecognizedVoice;
-import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static android.os.AsyncTask.Status.RUNNING;
+
 public class PracticeWordSetActivity extends AppCompatActivity implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
-    @Inject
-    VoiceService voiceService;
+
     @Inject
     Executor executor;
     @Inject
     RecordedTrack recordedTrackBuffer;
-    @Inject
-    AudioProcessesFactory audioProcessesFactory;
     @Inject
     TextUtils textUtils;
     @Inject
@@ -50,7 +43,6 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     @Inject
     Handler uiEventHandler;
 
-    private VoiceRecordingProcess voiceRecordingProcess;
     private TextView originalText;
     private TextView rightAnswer;
     private TextView answerText;
@@ -59,7 +51,9 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     private Button nextButton;
     private Button checkButton;
     private Button speakButton;
+    private Button playButton;
     private PracticeWordSetPresenter presenter;
+    private AsyncTask<Void, Void, Void> asyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +69,7 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         nextButton = (Button) findViewById(R.id.nextButton);
         checkButton = (Button) findViewById(R.id.checkButton);
         speakButton = (Button) findViewById(R.id.speakButton);
+        playButton = (Button) findViewById(R.id.playButton);
 
         presenter = new PracticeWordSetPresenter((WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING), this);
     }
@@ -82,14 +77,10 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.onResume();
-        nextSentenceButtonClick();
-    }
-
-    private void nextSentenceButtonClick() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                presenter.onResume();
                 presenter.onNextButtonClick();
                 return null;
             }
@@ -113,13 +104,17 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     }
 
     public void onRecogniseVoiceButtonClick(View view) {
-        if (voiceRecordingProcess == null) {
-            RecordAudioAsyncTask recordTask = new RecordAudioAsyncTask();
-            voiceRecordingProcess = audioProcessesFactory.createVoiceRecordingProcess(recordedTrackBuffer, recordTask);
-            recordTask.executeOnExecutor(executor, voiceRecordingProcess);
-        } else {
-            voiceRecordingProcess.stop();
+        if (asyncTask == null || asyncTask.getStatus() != RUNNING) {
+            asyncTask = new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    presenter.onRecogniseVoiceButtonClick();
+                    return null;
+                }
+            }.executeOnExecutor(executor);
+            return;
         }
+        presenter.onStopRecognitionVoiceButtonClick();
     }
 
     public void onPlayVoiceButtonClick(View view) {
@@ -133,7 +128,13 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     }
 
     public void onNextButtonClick(View view) {
-        nextSentenceButtonClick();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                presenter.onNextButtonClick();
+                return null;
+            }
+        }.executeOnExecutor(executor);
     }
 
     @Override
@@ -298,6 +299,16 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     }
 
     @Override
+    public void setEnablePlayButton(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                playButton.setEnabled(value);
+            }
+        });
+    }
+
+    @Override
     public void setEnableCheckButton(final boolean value) {
         uiEventHandler.post(new Runnable() {
             @Override
@@ -317,49 +328,43 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         });
     }
 
-    private class RecordAudioAsyncTask extends AsyncTask<VoiceRecordingProcess, Long, VoiceRecognitionResult> implements ProgressCallback {
-        @Override
-        protected void onPreExecute() {
-            recProgress.setProgress(0);
-            recProgress.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected VoiceRecognitionResult doInBackground(VoiceRecordingProcess... params) {
-            params[0].rec();
-            UnrecognizedVoice voice = new UnrecognizedVoice();
-            voice.setVoice(recordedTrackBuffer.getAsOneArray());
-            try {
-                return voiceService.recognize(voice, authSign).execute().body();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new VoiceRecognitionResult();
+    @Override
+    public void setRecProgress(final int value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                recProgress.setProgress(value);
             }
-        }
+        });
+    }
 
-        @Override
-        protected void onPostExecute(VoiceRecognitionResult result) {
-            voiceRecordingProcess = null;
-            recProgress.setVisibility(View.INVISIBLE);
-            recProgress.setProgress(0);
-            if (result.getVariant().isEmpty()) {
-                return;
+    @Override
+    public void hideRecProgress() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                recProgress.setVisibility(View.INVISIBLE);
             }
-            String textWithUpper = textUtils.toUpperCaseFirstLetter(result.getVariant().get(0));
-            String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper, presenter.getSentence().getText());
-            answerText.setText(textWithLastSymbol);
-        }
+        });
+    }
 
-        @Override
-        protected void onProgressUpdate(Long... values) {
-            long speechLength = values[0];
-            long maxSpeechLengthMillis = values[1];
-            recProgress.setProgress((int) (speechLength / maxSpeechLengthMillis));
-        }
+    @Override
+    public void setAnswerText(final String text) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                answerText.setText(text);
+            }
+        });
+    }
 
-        @Override
-        public void markProgress(long speechLength, long maxSpeechLengthMillis) {
-            publishProgress(speechLength, maxSpeechLengthMillis);
-        }
+    @Override
+    public void showRecProgress() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                recProgress.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }
