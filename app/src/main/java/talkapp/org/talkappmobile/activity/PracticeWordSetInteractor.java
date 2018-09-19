@@ -159,17 +159,16 @@ public class PracticeWordSetInteractor {
 
     public void recVoice(int speechTimeoutMillis, OnPracticeWordSetListener listener) {
         recordedTrackBuffer.init();
-        boolean recording = true;
-        AudioRecord audioRecord = null;
         try {
             listener.onStartRecording();
+            AudioRecord audioRecord = null;
             try {
                 audioRecord = audioStuffFactory.createAudioRecord();
                 audioRecord.startRecording();
                 byte[] buffer = audioStuffFactory.createBuffer();
                 long voiceStartedMillis = 0;
                 long lastVoiceHeardMillis = Long.MAX_VALUE;
-                while (recording && !recordedTrackBuffer.isClosed()) {
+                while (!recordedTrackBuffer.isClosed()) {
                     buffer = new byte[buffer.length];
                     final int size = audioRecord.read(buffer, 0, buffer.length);
                     final long now = System.currentTimeMillis();
@@ -182,12 +181,12 @@ public class PracticeWordSetInteractor {
                         long speechLength = now - voiceStartedMillis;
                         listener.onSnippetRecorded(speechLength, recordedTrackBuffer.getMaxSpeechLengthMillis());
                         if (speechLength > recordedTrackBuffer.getMaxSpeechLengthMillis()) {
-                            recording = false;
+                            break;
                         }
                     } else {
                         recordedTrackBuffer.append(buffer);
                         if (now - lastVoiceHeardMillis > speechTimeoutMillis) {
-                            recording = false;
+                            break;
                         }
                     }
                 }
