@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -54,6 +55,21 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     private Button playButton;
     private PracticeWordSetPresenter presenter;
     private AsyncTask<Void, Void, Void> asyncTask;
+    private View.OnTouchListener rightAnswerOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    presenter.rightAnswerTouched();
+                    return true; // if you want to handle the touch event
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    presenter.rightAnswerUntouched();
+                    return true; // if you want to handle the touch event
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +86,8 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         checkButton = (Button) findViewById(R.id.checkButton);
         speakButton = (Button) findViewById(R.id.speakButton);
         playButton = (Button) findViewById(R.id.playButton);
+
+        rightAnswer.setOnTouchListener(rightAnswerOnTouchListener);
 
         presenter = new PracticeWordSetPresenter((WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING), this);
     }
@@ -354,6 +372,16 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
             @Override
             public void run() {
                 answerText.setText(text);
+            }
+        });
+    }
+
+    @Override
+    public void setEnableRightAnswer(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                rightAnswer.setEnabled(value);
             }
         });
     }

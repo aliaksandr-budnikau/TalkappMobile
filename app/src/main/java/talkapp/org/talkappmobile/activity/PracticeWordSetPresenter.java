@@ -99,6 +99,8 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.setEnablePlayButton(false);
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
+        view.setHiddenRightAnswer(sentence);
+        view.setEnableRightAnswer(false);
     }
 
     @Override
@@ -106,6 +108,7 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.setEnablePlayButton(true);
         view.setEnableCheckButton(true);
         view.setEnableNextButton(true);
+        view.setEnableRightAnswer(true);
     }
 
     @Override
@@ -154,5 +157,13 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
 
     public void onStopRecognitionVoiceButtonClick() {
         interactor.stopRecording();
+    }
+
+    public void rightAnswerTouched() {
+        view.setRightAnswer(sentence);
+    }
+
+    public void rightAnswerUntouched() {
+        view.setHiddenRightAnswer(sentence);
     }
 }

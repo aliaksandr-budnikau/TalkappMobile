@@ -62,7 +62,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/color.text.answer"
-                    android:textSize="7pt" />
+                    android:textSize="9pt" />
             </RelativeLayout>
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

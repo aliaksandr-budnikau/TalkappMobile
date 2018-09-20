@@ -13,12 +13,14 @@ interface PracticeWordSetView {
 
     void hideCheckButton();
 
+    @Deprecated
     void setRightAnswer(Sentence sentence);
 
     void setProgress(WordSetExperience exp);
 
     void setOriginalText(Sentence sentence);
 
+    @Deprecated
     void setHiddenRightAnswer(Sentence sentence);
 
     @Deprecated
@@ -53,4 +55,6 @@ interface PracticeWordSetView {
     void hideRecProgress();
 
     void setAnswerText(String text);
+
+    void setEnableRightAnswer(boolean value);
 }

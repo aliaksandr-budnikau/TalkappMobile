@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -22,6 +23,7 @@ public class PracticeWordSetPresenterTest {
     private PracticeWordSetInteractor interactor;
     private PracticeWordSetPresenter presenter;
     private WordSet wordSet;
+    private Sentence sentence;
 
     @Before
     public void setUp() {
@@ -30,7 +32,12 @@ public class PracticeWordSetPresenterTest {
         wordSet.setExperience(new WordSetExperience());
         wordSet.getExperience().setId("sdfs");
         presenter = new PracticeWordSetPresenter(wordSet, view);
+
         Whitebox.setInternalState(presenter, "interactor", interactor);
+
+        sentence = new Sentence();
+        sentence.setId("dsfsd");
+        Whitebox.setInternalState(presenter, "sentence", sentence);
     }
 
     @Test
@@ -166,5 +173,19 @@ public class PracticeWordSetPresenterTest {
     public void onPlayVoiceButtonClick() {
         presenter.onPlayVoiceButtonClick();
         verify(interactor).playVoice(presenter);
+    }
+
+    @Test
+    public void rightAnswerTouched() {
+        presenter.rightAnswerTouched();
+        verify(view).setRightAnswer(sentence);
+        verify(view, times(0)).setHiddenRightAnswer(sentence);
+    }
+
+    @Test
+    public void rightAnswerUntouched() {
+        presenter.rightAnswerUntouched();
+        verify(view).setHiddenRightAnswer(sentence);
+        verify(view, times(0)).setRightAnswer(sentence);
     }
 }
