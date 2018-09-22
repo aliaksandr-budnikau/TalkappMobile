@@ -1,9 +1,12 @@
 package talkapp.org.talkappmobile.activity;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -45,8 +48,12 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
     }
 
     @Override
-    public void onSpellingOrGrammarError() {
+    public void onSpellingOrGrammarError(List<GrammarError> errors) {
         view.showMessageSpellingOrGrammarError();
+        view.hideSpellingOrGrammarErrorPanel();
+        for (GrammarError error : errors) {
+            view.showSpellingOrGrammarErrorPanel(error.getMessage());
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
+import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
@@ -93,7 +94,7 @@ public class PracticeWordSetInteractor {
 
         AnswerCheckingResult result = checkAnswer(uncheckedAnswer);
         if (!result.getErrors().isEmpty()) {
-            listener.onSpellingOrGrammarError();
+            listener.onSpellingOrGrammarError(result.getErrors());
             return;
         }
 
@@ -232,7 +233,7 @@ public class PracticeWordSetInteractor {
 
         void onAnswerEmpty();
 
-        void onSpellingOrGrammarError();
+        void onSpellingOrGrammarError(List<GrammarError> errors);
 
         void onAccuracyTooLowError();
 

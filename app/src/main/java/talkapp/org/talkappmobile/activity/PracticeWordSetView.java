@@ -57,4 +57,8 @@ interface PracticeWordSetView {
     void setAnswerText(String text);
 
     void setEnableRightAnswer(boolean value);
+
+    void showSpellingOrGrammarErrorPanel(String errorMessage);
+
+    void hideSpellingOrGrammarErrorPanel();
 }

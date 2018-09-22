@@ -92,12 +92,23 @@
                     android:textColor="@color/color.text.answer"
                     android:textSize="13pt" />
 
+                <LinearLayout
+                    android:id="@+id/spellingGrammarErrorsListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical"
+                    android:layout_below="@+id/answerText"
+                    android:layout_marginLeft="3pt"
+                    android:layout_marginRight="3pt"
+                    android:layout_marginTop="5pt"/>
+
                 <Button
                     android:id="@+id/playButton"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/answerText"
+                    android:layout_below="@+id/spellingGrammarErrorsListView"
                     android:layout_marginTop="0pt"
                     android:layout_toLeftOf="@+id/speakButton"
                     android:layout_toStartOf="@+id/speakButton"
@@ -117,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignEnd="@id/answerText"
                     android:layout_alignRight="@id/answerText"
-                    android:layout_below="@+id/answerText"
+                    android:layout_below="@+id/spellingGrammarErrorsListView"
                     android:layout_marginTop="0pt"
 
                     android:background="@android:color/transparent"

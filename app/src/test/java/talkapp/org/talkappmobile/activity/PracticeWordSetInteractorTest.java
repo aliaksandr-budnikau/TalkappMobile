@@ -233,7 +233,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onSpellingOrGrammarError();
+        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
     }
 
@@ -269,7 +269,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onRightAnswer();
         verify(listener).onTrainingFinished();
         verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onSpellingOrGrammarError();
+        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
     }
 
@@ -305,7 +305,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
-        verify(listener, times(0)).onSpellingOrGrammarError();
+        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
     }
 
@@ -330,14 +330,15 @@ public class PracticeWordSetInteractorTest {
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 0;
         checkingResult.setCurrentTrainingExperience(currentTrainingExperience);
-        checkingResult.setErrors(asList(new GrammarError()));
+        List<GrammarError> errors = asList(new GrammarError());
+        checkingResult.setErrors(errors);
 
         // when
         whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
-        verify(listener).onSpellingOrGrammarError();
+        verify(listener).onSpellingOrGrammarError(errors);
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
@@ -375,7 +376,7 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onAnswerEmpty();
-        verify(listener, times(0)).onSpellingOrGrammarError();
+        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();

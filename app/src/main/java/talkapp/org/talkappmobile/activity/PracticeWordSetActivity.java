@@ -5,9 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,8 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
     private Button checkButton;
     private Button speakButton;
     private Button playButton;
+    private LinearLayout spellingGrammarErrorsListView;
+
     private PracticeWordSetPresenter presenter;
     private AsyncTask<Void, Void, Void> asyncTask;
     private View.OnTouchListener rightAnswerOnTouchListener = new View.OnTouchListener() {
@@ -87,6 +91,7 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
         speakButton = (Button) findViewById(R.id.speakButton);
         playButton = (Button) findViewById(R.id.playButton);
 
+        spellingGrammarErrorsListView = (LinearLayout) findViewById(R.id.spellingGrammarErrorsListView);
         rightAnswer.setOnTouchListener(rightAnswerOnTouchListener);
 
         presenter = new PracticeWordSetPresenter((WordSet) getIntent().getSerializableExtra(WORD_SET_MAPPING), this);
@@ -382,6 +387,36 @@ public class PracticeWordSetActivity extends AppCompatActivity implements Practi
             @Override
             public void run() {
                 rightAnswer.setEnabled(value);
+            }
+        });
+    }
+
+    @Override
+    public void showSpellingOrGrammarErrorPanel(final String errorMessage) {
+        final LayoutInflater inflater = getLayoutInflater();
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                View vi = inflater.inflate(R.layout.row_spelling_grammar_errors_list_item, null);
+                vi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
+                TextView textView = vi.findViewById(R.id.errorRow);
+                textView.setText(errorMessage);
+                spellingGrammarErrorsListView.addView(vi);
+            }
+        });
+    }
+
+    @Override
+    public void hideSpellingOrGrammarErrorPanel() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                spellingGrammarErrorsListView.removeAllViews();
             }
         });
     }

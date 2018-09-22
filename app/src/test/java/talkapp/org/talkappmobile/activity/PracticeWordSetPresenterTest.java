@@ -7,10 +7,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.List;
+
+import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -70,8 +74,22 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onSpellingOrGrammarError() {
-        presenter.onSpellingOrGrammarError();
+        // setup
+        GrammarError error1 = new GrammarError();
+        error1.setMessage("error1");
+
+        GrammarError error2 = new GrammarError();
+        error2.setMessage("error2");
+
+        List<GrammarError> errors = asList(error1, error2);
+
+        // when
+        presenter.onSpellingOrGrammarError(errors);
+
+        // then
         verify(view).showMessageSpellingOrGrammarError();
+        verify(view).showSpellingOrGrammarErrorPanel(error1.getMessage());
+        verify(view).showSpellingOrGrammarErrorPanel(error2.getMessage());
     }
 
     @Test
