@@ -9,6 +9,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -18,6 +19,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
@@ -25,6 +27,8 @@ public class PracticeWordSetPresenterTest {
     private PracticeWordSetView view;
     @Mock
     private PracticeWordSetInteractor interactor;
+    @Mock
+    private TextUtils textUtils;
     private PracticeWordSetPresenter presenter;
     private WordSet wordSet;
     private Sentence sentence;
@@ -42,6 +46,7 @@ public class PracticeWordSetPresenterTest {
         sentence = new Sentence();
         sentence.setId("dsfsd");
         Whitebox.setInternalState(presenter, "sentence", sentence);
+        Whitebox.setInternalState(presenter, "textUtils", textUtils);
     }
 
     @Test
@@ -84,6 +89,8 @@ public class PracticeWordSetPresenterTest {
         List<GrammarError> errors = asList(error1, error2);
 
         // when
+        when(textUtils.buildSpellingGrammarErrorMessage(error1)).thenReturn("error1");
+        when(textUtils.buildSpellingGrammarErrorMessage(error2)).thenReturn("error2");
         presenter.onSpellingOrGrammarError(errors);
 
         // then

@@ -52,7 +52,8 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.showMessageSpellingOrGrammarError();
         view.hideSpellingOrGrammarErrorPanel();
         for (GrammarError error : errors) {
-            view.showSpellingOrGrammarErrorPanel(error.getMessage());
+            String errorMessage = textUtils.buildSpellingGrammarErrorMessage(error);
+            view.showSpellingOrGrammarErrorPanel(errorMessage);
         }
     }
 

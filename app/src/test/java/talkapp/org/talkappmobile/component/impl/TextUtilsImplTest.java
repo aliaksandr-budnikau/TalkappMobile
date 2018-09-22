@@ -2,6 +2,9 @@ package talkapp.org.talkappmobile.component.impl;
 
 import org.junit.Test;
 
+import talkapp.org.talkappmobile.model.GrammarError;
+
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static talkapp.org.talkappmobile.module.GameplayModule.ARTICLES;
 import static talkapp.org.talkappmobile.module.GameplayModule.LAST_SYMBOLS;
@@ -208,5 +211,50 @@ public class TextUtilsImplTest {
 
         // then
         assertEquals(translation, actual);
+    }
+
+    @Test
+    public void buildSpellingGrammarErrorMessage_noSuggestion() {
+        // setup
+        GrammarError e = new GrammarError();
+        e.setMessage("message");
+        e.setBad("bad");
+        e.setSuggestions(null);
+
+        // when
+        String actual = utils.buildSpellingGrammarErrorMessage(e);
+
+        // then
+        assertEquals("message in \"bad\".", actual);
+    }
+
+    @Test
+    public void buildSpellingGrammarErrorMessage_oneSuggestion() {
+        // setup
+        GrammarError e = new GrammarError();
+        e.setMessage("message");
+        e.setBad("bad");
+        e.setSuggestions(asList("sug1"));
+
+        // when
+        String actual = utils.buildSpellingGrammarErrorMessage(e);
+
+        // then
+        assertEquals("message in \"bad\". Try \"sug1\".", actual);
+    }
+
+    @Test
+    public void buildSpellingGrammarErrorMessage_twoSuggestions() {
+        // setup
+        GrammarError e = new GrammarError();
+        e.setMessage("message");
+        e.setBad("bad");
+        e.setSuggestions(asList("sug1", "sug2"));
+
+        // when
+        String actual = utils.buildSpellingGrammarErrorMessage(e);
+
+        // then
+        assertEquals("message in \"bad\". Try \"sug1\", \"sug2\".", actual);
     }
 }

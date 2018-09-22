@@ -4,9 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.model.GrammarError;
 
 /**
  * @author Budnikau Aliaksandr
@@ -72,5 +74,26 @@ public class TextUtilsImpl implements TextUtils {
             return text;
         }
         return text + translation.substring(translation.length() - 1);
+    }
+
+    @Override
+    public String buildSpellingGrammarErrorMessage(GrammarError e) {
+        String errorMessage = e.getMessage() + " in \"" + e.getBad() + "\".";
+        if (e.getSuggestions() == null || e.getSuggestions().isEmpty()) {
+            return errorMessage;
+        }
+        StringBuilder builder = new StringBuilder(errorMessage);
+        builder.append(" Try ");
+        Iterator<String> iterator = e.getSuggestions().iterator();
+        while (iterator.hasNext()) {
+            builder.append("\"");
+            builder.append(iterator.next());
+            builder.append("\"");
+            if (iterator.hasNext()) {
+                builder.append(", ");
+            }
+        }
+        builder.append(".");
+        return builder.toString();
     }
 }
