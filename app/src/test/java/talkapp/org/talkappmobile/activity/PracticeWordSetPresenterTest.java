@@ -103,6 +103,7 @@ public class PracticeWordSetPresenterTest {
     public void onAccuracyTooLowError() {
         presenter.onAccuracyTooLowError();
         verify(view).showMessageAccuracyTooLow();
+        verify(view).hideSpellingOrGrammarErrorPanel();
     }
 
     @Test
@@ -141,6 +142,7 @@ public class PracticeWordSetPresenterTest {
         verify(view).setRightAnswer(sentence);
         verify(view).showNextButton();
         verify(view).hideCheckButton();
+        verify(view).hideSpellingOrGrammarErrorPanel();
     }
 
     @Test

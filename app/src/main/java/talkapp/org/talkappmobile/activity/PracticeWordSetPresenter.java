@@ -60,6 +60,7 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
     @Override
     public void onAccuracyTooLowError() {
         view.showMessageAccuracyTooLow();
+        view.hideSpellingOrGrammarErrorPanel();
     }
 
     @Override
@@ -79,6 +80,7 @@ public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPra
         view.setRightAnswer(sentence);
         view.showNextButton();
         view.hideCheckButton();
+        view.hideSpellingOrGrammarErrorPanel();
     }
 
     @Override
