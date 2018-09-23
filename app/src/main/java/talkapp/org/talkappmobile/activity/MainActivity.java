@@ -22,7 +22,7 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     @Inject
     AuthSign authSign;

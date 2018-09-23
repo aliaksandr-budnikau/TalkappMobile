@@ -30,7 +30,7 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static android.os.AsyncTask.Status.RUNNING;
 
-public class PracticeWordSetActivity extends AppCompatActivity implements PracticeWordSetView {
+public class PracticeWordSetActivity extends BaseActivity implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
 
     @Inject

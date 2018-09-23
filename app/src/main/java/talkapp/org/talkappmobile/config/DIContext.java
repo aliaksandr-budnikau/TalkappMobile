@@ -4,6 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import talkapp.org.talkappmobile.activity.AllWordSetsFragment;
+import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
@@ -69,4 +70,6 @@ public abstract class DIContext {
     public abstract void inject(PracticeWordSetPresenter target);
 
     public abstract void inject(PracticeWordSetInteractor target);
+
+    public abstract void inject(BaseActivity target);
 }

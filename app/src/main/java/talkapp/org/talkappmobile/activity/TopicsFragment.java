@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,10 +22,10 @@ import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.config.DIContext;
-import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.TopicService;
+import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_ID_MAPPING;
 
@@ -49,7 +50,7 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
                 e.printStackTrace();
             }
 
-            return topics.body();
+            return topics.body() == null ? new ArrayList<Topic>() : topics.body();
         }
 
         @Override
