@@ -5,16 +5,18 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import talkapp.org.talkappmobile.component.backend.AccountService;
 import talkapp.org.talkappmobile.component.backend.LoginService;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.component.backend.AccountService;
 import talkapp.org.talkappmobile.component.backend.TopicService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 
 /**
  * @author Budnikau Aliaksandr
@@ -71,9 +73,22 @@ public class BackEndServiceModule {
     }
 
     @Provides
-    public Retrofit provideRetrofit(@Named("serverUrl") String serverUrl) {
+    @Singleton
+    public AuthorizationInterceptor provideAuthorizationInterceptor() {
+        return new AuthorizationInterceptor();
+    }
+
+    @Provides
+    @Singleton
+    public OkHttpClient provideOkHttpClient(AuthorizationInterceptor authorizationInterceptor) {
+        return new OkHttpClient().newBuilder().addInterceptor(authorizationInterceptor).build();
+    }
+
+    @Provides
+    public Retrofit provideRetrofit(@Named("serverUrl") String serverUrl, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(serverUrl)
+                .client(okHttpClient)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
     }
