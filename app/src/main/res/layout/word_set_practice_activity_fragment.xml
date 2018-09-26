@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/wordSetProgress"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+
+        android:layout_height="3dip"
+
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="visible" />
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/wordSetProgress">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/originalTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10pt"
+                android:background="@drawable/shape_rectangle">
+
+                <TextView
+                    android:id="@+id/originalText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="3pt"
+                    android:layout_marginRight="3pt"
+                    android:layout_marginTop="5pt"
+
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/color.text.origin"
+                    android:textSize="14pt" />
+
+                <TextView
+                    android:id="@+id/rightAnswer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/originalText"
+                    android:layout_marginBottom="5pt"
+                    android:layout_marginTop="20pt"
+
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/color.text.answer"
+                    android:textSize="9pt" />
+            </RelativeLayout>
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/answerTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/originalTextLayout"
+                android:layout_marginTop="10pt"
+
+                android:background="@drawable/shape_rectangle">
+
+                <EditText
+                    android:id="@+id/answerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="3pt"
+                    android:layout_marginRight="3pt"
+                    android:layout_marginTop="5pt"
+
+                    android:background="@android:color/background_light"
+                    android:gravity="center_horizontal"
+                    android:lines="4"
+                    android:maxLines="4"
+                    android:textColor="@color/color.text.answer"
+                    android:textSize="13pt" />
+
+                <LinearLayout
+                    android:id="@+id/spellingGrammarErrorsListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/answerText"
+                    android:layout_marginLeft="3pt"
+                    android:layout_marginRight="3pt"
+                    android:layout_marginTop="5pt"
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/playButton"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/spellingGrammarErrorsListView"
+                    android:layout_marginTop="0pt"
+                    android:layout_toLeftOf="@+id/speakButton"
+                    android:layout_toStartOf="@+id/speakButton"
+
+                    android:background="@android:color/transparent"
+
+                    android:text="LISTEN"
+                    android:textColor="@color/color.text.answer"
+
+                    android:textSize="5pt" />
+
+                <Button
+                    android:id="@+id/speakButton"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/answerText"
+                    android:layout_alignRight="@id/answerText"
+                    android:layout_below="@+id/spellingGrammarErrorsListView"
+                    android:layout_marginTop="0pt"
+
+                    android:background="@android:color/transparent"
+
+                    android:text="BY VOICE"
+                    android:textColor="@color/color.text.answer"
+
+                    android:textSize="5pt" />
+
+                <ProgressBar
+                    android:id="@+id/recProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+
+                    android:layout_width="fill_parent"
+                    android:layout_height="3dip"
+
+                    android:layout_below="@+id/speakButton"
+
+                    android:progressDrawable="@drawable/progressbar"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/checkButton"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/answerTextLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20pt"
+                android:layout_marginTop="15pt"
+
+                android:background="@drawable/shape_rectangle"
+                android:minHeight="25pt"
+                android:minWidth="55pt"
+                android:text="CHECK"
+                android:textColor="@color/color.button.text"
+                android:textSize="12sp"
+
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/nextButton"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/answerTextLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20pt"
+                android:layout_marginTop="15pt"
+
+                android:background="@drawable/shape_rectangle"
+                android:minHeight="25pt"
+
+                android:minWidth="55pt"
+                android:text="NEXT"
+                android:textColor="@color/color.button.text"
+                android:textSize="12sp"
+                android:textStyle="bold"
+
+                android:visibility="gone" />
+        </RelativeLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

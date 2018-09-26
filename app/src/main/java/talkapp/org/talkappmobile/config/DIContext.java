@@ -11,6 +11,7 @@ import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
+import talkapp.org.talkappmobile.activity.WordSetPracticeFragment;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
 import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
@@ -72,4 +73,6 @@ public abstract class DIContext {
     public abstract void inject(PracticeWordSetInteractor target);
 
     public abstract void inject(BaseActivity target);
+
+    public abstract void inject(WordSetPracticeFragment target);
 }
