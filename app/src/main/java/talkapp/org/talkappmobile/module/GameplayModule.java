@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.activity.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
@@ -13,7 +14,6 @@ import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.config.DIContext;
 
 /**
  * @author Budnikau Aliaksandr
@@ -52,8 +52,12 @@ public class GameplayModule {
     @Provides
     @Singleton
     public PracticeWordSetInteractor providePracticeWordSetInteractor() {
-        PracticeWordSetInteractor interactor = new PracticeWordSetInteractor();
-        DIContext.get().inject(interactor);
-        return interactor;
+        return new PracticeWordSetInteractor();
+    }
+
+    @Provides
+    @Singleton
+    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
+        return new PracticeWordSetVocabularyInteractor();
     }
 }

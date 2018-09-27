@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.component.backend.TopicService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.backend.WordTranslationService;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 
 /**
@@ -70,6 +71,12 @@ public class BackEndServiceModule {
     @Singleton
     public SentenceService provideSentenceService(Retrofit retrofit) {
         return retrofit.create(SentenceService.class);
+    }
+
+    @Provides
+    @Singleton
+    public WordTranslationService provideWordTranslationService(Retrofit retrofit) {
+        return retrofit.create(WordTranslationService.class);
     }
 
     @Provides

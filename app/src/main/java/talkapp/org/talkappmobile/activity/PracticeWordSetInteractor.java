@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -57,6 +58,10 @@ public class PracticeWordSetInteractor {
     ByteUtils byteUtils;
     @Inject
     VoiceService voiceService;
+
+    public PracticeWordSetInteractor() {
+        DIContext.get().inject(this);
+    }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         if (wordSet.getExperience() == null) {

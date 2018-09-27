@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/word"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginLeft="3pt"
+        android:layout_marginRight="3pt"
+
+        android:textColor="@color/color.wordTranslation.word"
+        android:textSize="13pt" />
+
+    <TextView
+        android:id="@+id/translation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_below="@id/word"
+
+        android:layout_marginLeft="3pt"
+        android:layout_marginRight="3pt"
+
+        android:textColor="@color/color.wordTranslation.translation"
+        android:textSize="9pt" />
+
+</RelativeLayout>

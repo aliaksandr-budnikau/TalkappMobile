@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="color.wordTranslation.word">#272e35</color>
+    <color name="color.wordTranslation.translation">#72767b</color>
     <color name="color.text.origin">#47525E</color>
     <color name="color.text.answer">#47525E</color>
     <color name="color.text.spellingGrammarError">#FFFF1500</color>

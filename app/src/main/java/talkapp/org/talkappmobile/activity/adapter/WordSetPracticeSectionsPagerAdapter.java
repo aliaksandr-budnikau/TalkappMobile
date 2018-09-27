@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import talkapp.org.talkappmobile.activity.WordSetPracticeFragment;
+import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class WordSetPracticeSectionsPagerAdapter extends FragmentPagerAdapter {
@@ -18,15 +19,15 @@ public class WordSetPracticeSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return WordSetPracticeFragment.newInstance(wordSet);
+        if (position == 0) {
+            return PracticeWordSetVocabularyFragment.newInstance(wordSet);
+        } else {
+            return WordSetPracticeFragment.newInstance(wordSet);
+        }
     }
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 2;
     }
 }
