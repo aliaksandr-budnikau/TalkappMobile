@@ -10,7 +10,7 @@ public class AuthorizationInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response mainResponse = chain.proceed(chain.request());
-        if (mainResponse.code() == 401 || mainResponse.code() == 403) {
+        if (mainResponse.code() == 403) {
             throw new AuthorizationException("Authorization is required!");
         }
         return mainResponse;
