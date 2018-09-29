@@ -5,11 +5,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private static final int SPEECH_TIMEOUT_MILLIS = 1000;
@@ -18,6 +20,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     PracticeWordSetInteractor interactor;
     @Inject
     TextUtils textUtils;
+    @Inject
+    WordSetExperienceUtils experienceUtils;
     private PracticeWordSetView view;
     private Sentence sentence;
 
@@ -29,7 +33,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onInitialiseExperience() {
-        view.setProgress(wordSet.getExperience());
+        WordSetExperience exp = wordSet.getExperience();
+        int progress = experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience());
+        view.setProgress(progress);
     }
 
     @Override
@@ -37,9 +43,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         this.sentence = sentence;
         view.hideNextButton();
         view.showCheckButton();
-        view.setOriginalText(sentence);
-        view.setHiddenRightAnswer(sentence);
-        view.setAnswerText(sentence);
+        view.setOriginalText(sentence.getTranslations().get("russian"));
+        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
+        view.setRightAnswer(hiddenRightAnswer);
+        view.setAnswerText("");
     }
 
     @Override
@@ -65,7 +72,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onUpdateProgress(int currentTrainingExperience) {
-        view.updateProgress(wordSet.getExperience(), currentTrainingExperience);
+        int progress = experienceUtils.getProgress(currentTrainingExperience, wordSet.getExperience().getMaxTrainingExperience());
+        view.setProgress(progress);
     }
 
     @Override
@@ -77,7 +85,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onRightAnswer() {
-        view.setRightAnswer(sentence);
+        view.setRightAnswer(sentence.getText());
         view.showNextButton();
         view.hideCheckButton();
         view.hideSpellingOrGrammarErrorPanel();
@@ -109,7 +117,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         view.setEnablePlayButton(false);
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
-        view.setHiddenRightAnswer(sentence);
+        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
+        view.setRightAnswer(hiddenRightAnswer);
         view.setEnableRightAnswer(false);
     }
 
@@ -151,11 +160,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         interactor.checkAnswer(answer, wordSet, sentence, this);
     }
 
-    @Deprecated
-    public Sentence getSentence() {
-        return sentence;
-    }
-
     public void onPlayVoiceButtonClick() {
         interactor.playVoice(this);
     }
@@ -170,10 +174,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerTouched() {
-        view.setRightAnswer(sentence);
+        view.setRightAnswer(sentence.getText());
     }
 
     public void rightAnswerUntouched() {
-        view.setHiddenRightAnswer(sentence);
+        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
+        view.setRightAnswer(hiddenRightAnswer);
     }
 }

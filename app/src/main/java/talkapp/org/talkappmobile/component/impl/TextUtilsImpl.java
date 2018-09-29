@@ -18,7 +18,7 @@ public class TextUtilsImpl implements TextUtils {
     private final Set<String> words;
     private final Set<String> lastSymbols;
     private final Set<String> punctuationMarks;
-    private String placeholder;
+    private final String placeholder;
 
     public TextUtilsImpl(String placeholder, String[] words, String[] lastSymbols, String[] punctuationMarks) {
         this.placeholder = placeholder;

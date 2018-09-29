@@ -7,9 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -17,12 +19,13 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
+    @Mock
+    WordSetExperienceUtils experienceUtils;
     @Mock
     private PracticeWordSetView view;
     @Mock
@@ -47,18 +50,31 @@ public class PracticeWordSetPresenterTest {
         sentence.setId("dsfsd");
         Whitebox.setInternalState(presenter, "sentence", sentence);
         Whitebox.setInternalState(presenter, "textUtils", textUtils);
+        Whitebox.setInternalState(presenter, "experienceUtils", experienceUtils);
     }
 
     @Test
     public void onInitialiseExperience() {
+        // setup
+        int progress = 32;
+        WordSetExperience exp = wordSet.getExperience();
+
+        // when
+        when(experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience())).thenReturn(progress);
         presenter.onInitialiseExperience();
-        verify(view).setProgress(wordSet.getExperience());
+
+        // then
+        verify(view).setProgress(progress);
     }
 
     @Test
     public void onSentencesFound() {
         // setup
+        String origText = "fsdfsfs";
+
         Sentence sentence = new Sentence();
+        sentence.setTranslations(new HashMap<String, String>());
+        sentence.getTranslations().put("russian", origText);
 
         // when
         presenter.onSentencesFound(sentence);
@@ -66,9 +82,9 @@ public class PracticeWordSetPresenterTest {
         // then
         verify(view).hideNextButton();
         verify(view).showCheckButton();
-        verify(view).setOriginalText(sentence);
-        verify(view).setHiddenRightAnswer(sentence);
-        verify(view).setAnswerText(sentence);
+        verify(view).setOriginalText(origText);
+        verify(view).setRightAnswer(sentence.getText());
+        verify(view).setAnswerText("");
     }
 
     @Test
@@ -110,12 +126,14 @@ public class PracticeWordSetPresenterTest {
     public void onUpdateProgress() {
         // setup
         int currentTrainingExperience = 32;
+        int progress = 232;
 
         // when
+        when(experienceUtils.getProgress(currentTrainingExperience, wordSet.getExperience().getMaxTrainingExperience())).thenReturn(progress);
         presenter.onUpdateProgress(currentTrainingExperience);
 
         // then
-        verify(view).updateProgress(wordSet.getExperience(), currentTrainingExperience);
+        verify(view).setProgress(progress);
     }
 
 
@@ -139,7 +157,7 @@ public class PracticeWordSetPresenterTest {
         presenter.onRightAnswer();
 
         // then
-        verify(view).setRightAnswer(sentence);
+        verify(view).setRightAnswer(sentence.getText());
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -205,14 +223,19 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void rightAnswerTouched() {
         presenter.rightAnswerTouched();
-        verify(view).setRightAnswer(sentence);
-        verify(view, times(0)).setHiddenRightAnswer(sentence);
+        verify(view).setRightAnswer(sentence.getText());
     }
 
     @Test
     public void rightAnswerUntouched() {
+        // setup
+        String hiddenRightAnswer = "sdfsdf";
+
+        // when
+        when(textUtils.screenTextWith(sentence.getText())).thenReturn(hiddenRightAnswer);
         presenter.rightAnswerUntouched();
-        verify(view).setHiddenRightAnswer(sentence);
-        verify(view, times(0)).setRightAnswer(sentence);
+
+        // then
+        verify(view).setRightAnswer(hiddenRightAnswer);
     }
 }

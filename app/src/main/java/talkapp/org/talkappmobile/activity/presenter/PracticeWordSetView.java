@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 interface PracticeWordSetView {
 
@@ -13,26 +12,17 @@ interface PracticeWordSetView {
 
     void hideCheckButton();
 
-    @Deprecated
-    void setRightAnswer(Sentence sentence);
+    void setRightAnswer(String text);
 
-    void setProgress(WordSetExperience exp);
+    void setProgress(int progress);
 
-    void setOriginalText(Sentence sentence);
-
-    @Deprecated
-    void setHiddenRightAnswer(Sentence sentence);
-
-    @Deprecated
-    void setAnswerText(Sentence sentence) ;
+    void setOriginalText(String text);
 
     void showMessageAnswerEmpty();
 
     void showMessageSpellingOrGrammarError();
 
     void showMessageAccuracyTooLow();
-
-    void updateProgress(WordSetExperience experience, int currentTrainingExperience);
 
     void showCongratulationMessage();
 

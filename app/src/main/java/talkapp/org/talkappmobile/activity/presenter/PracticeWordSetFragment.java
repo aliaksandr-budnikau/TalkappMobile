@@ -21,12 +21,9 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.MainActivity;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static android.os.AsyncTask.Status.RUNNING;
 
@@ -34,10 +31,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     Executor executor;
-    @Inject
-    TextUtils textUtils;
-    @Inject
-    WordSetExperienceUtils experienceUtils;
     @Inject
     Handler uiEventHandler;
 
@@ -229,46 +222,26 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void setRightAnswer(final Sentence sentence) {
+    public void setRightAnswer(final String text) {
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {
-                rightAnswer.setText(sentence.getText());
+                rightAnswer.setText(text);
             }
         });
     }
 
     @Override
-    public void setProgress(WordSetExperience exp) {
-        wordSetProgress.setProgress(experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience()));
+    public void setProgress(int progress) {
+        wordSetProgress.setProgress(progress);
     }
 
     @Override
-    public void setOriginalText(final Sentence sentence) {
+    public void setOriginalText(final String text) {
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {
-                originalText.setText(sentence.getTranslations().get("russian"));
-            }
-        });
-    }
-
-    @Override
-    public void setHiddenRightAnswer(final Sentence sentence) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                rightAnswer.setText(textUtils.screenTextWith(sentence.getText()));
-            }
-        });
-    }
-
-    @Override
-    public void setAnswerText(Sentence sentence) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                answerText.setText("");
+                originalText.setText(text);
             }
         });
     }
@@ -301,11 +274,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                 Toast.makeText(getContext(), "Accuracy too low", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    public void updateProgress(WordSetExperience experience, int currentTrainingExperience) {
-        wordSetProgress.setProgress(experienceUtils.getProgress(currentTrainingExperience, experience.getMaxTrainingExperience()));
     }
 
     @Override
