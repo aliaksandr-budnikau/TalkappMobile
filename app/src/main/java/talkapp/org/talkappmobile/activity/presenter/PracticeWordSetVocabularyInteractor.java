@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,8 @@ public class PracticeWordSetVocabularyInteractor {
         DIContext.get().inject(this);
     }
 
-    public void initialiseVocabulary(WordSet wordSet, OnWordTranslationListener listener) {
-        listener.onWordTranslationsFound(getWordTranslations(wordSet));
+    public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
+        listener.onWordSetVocabularyFound(getWordTranslations(wordSet));
     }
 
     private List<WordTranslation> getWordTranslations(WordSet wordSet) {
@@ -31,9 +31,5 @@ public class PracticeWordSetVocabularyInteractor {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-    }
-
-    interface OnWordTranslationListener {
-        void onWordTranslationsFound(List<WordTranslation> wordTranslations);
     }
 }

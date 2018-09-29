@@ -8,15 +8,15 @@ import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
-import talkapp.org.talkappmobile.activity.PracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
-import talkapp.org.talkappmobile.activity.WordSetPracticeFragment;
-import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFragment;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyFragment;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
@@ -77,7 +77,7 @@ public abstract class DIContext {
 
     public abstract void inject(BaseActivity target);
 
-    public abstract void inject(WordSetPracticeFragment target);
+    public abstract void inject(PracticeWordSetFragment target);
 
     public abstract void inject(PracticeWordSetVocabularyPresenter target);
 

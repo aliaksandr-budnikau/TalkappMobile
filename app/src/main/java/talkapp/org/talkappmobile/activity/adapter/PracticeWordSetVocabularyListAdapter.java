@@ -12,9 +12,9 @@ import android.widget.TextView;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-public class WordTranslationListAdapter extends ArrayAdapter<WordTranslation> {
+public class PracticeWordSetVocabularyListAdapter extends ArrayAdapter<WordTranslation> {
 
-    public WordTranslationListAdapter(@NonNull final Context context) {
+    public PracticeWordSetVocabularyListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
     }
 

@@ -1,5 +1,4 @@
-package talkapp.org.talkappmobile.activity;
-
+package talkapp.org.talkappmobile.activity.presenter;
 
 import android.media.AudioTrack;
 import android.support.annotation.NonNull;
@@ -45,7 +44,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static retrofit2.Response.success;
-import static talkapp.org.talkappmobile.activity.PracticeWordSetInteractor.WORDS_NUMBER;
+import static talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorTest {
@@ -67,7 +66,7 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private RecordedTrack recordedTrackBuffer;
     @Mock
-    private PracticeWordSetInteractor.OnPracticeWordSetListener listener;
+    private OnPracticeWordSetListener listener;
     @Mock
     private AudioStuffFactory audioStuffFactory;
     @InjectMocks

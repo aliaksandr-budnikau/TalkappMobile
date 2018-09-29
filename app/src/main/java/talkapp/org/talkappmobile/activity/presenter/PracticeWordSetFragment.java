@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,7 +20,7 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContext;
@@ -30,14 +30,12 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static android.os.AsyncTask.Status.RUNNING;
 
-public class WordSetPracticeFragment extends Fragment implements PracticeWordSetView {
+public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     Executor executor;
     @Inject
     TextUtils textUtils;
-    @Inject
-    AuthSign authSign;
     @Inject
     WordSetExperienceUtils experienceUtils;
     @Inject
@@ -132,8 +130,8 @@ public class WordSetPracticeFragment extends Fragment implements PracticeWordSet
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static WordSetPracticeFragment newInstance(WordSet wordSet) {
-        WordSetPracticeFragment fragment = new WordSetPracticeFragment();
+    public static PracticeWordSetFragment newInstance(WordSet wordSet) {
+        PracticeWordSetFragment fragment = new PracticeWordSetFragment();
         Bundle args = new Bundle();
         args.putSerializable(WORD_SET_MAPPING, wordSet);
         fragment.setArguments(args);

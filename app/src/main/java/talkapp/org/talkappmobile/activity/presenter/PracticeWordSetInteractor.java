@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import android.media.AudioRecord;
 import android.media.AudioTrack;
@@ -229,37 +229,5 @@ public class PracticeWordSetInteractor {
 
     public void stopRecording() {
         recordedTrackBuffer.close();
-    }
-
-    interface OnPracticeWordSetListener {
-        void onInitialiseExperience();
-
-        void onSentencesFound(Sentence sentence);
-
-        void onAnswerEmpty();
-
-        void onSpellingOrGrammarError(List<GrammarError> errors);
-
-        void onAccuracyTooLowError();
-
-        void onUpdateProgress(int currentTrainingExperience);
-
-        void onTrainingFinished();
-
-        void onRightAnswer();
-
-        void onStartPlaying();
-
-        void onStopPlaying();
-
-        void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis);
-
-        void onStartRecording();
-
-        void onStopRecording();
-
-        void onStopRecognition();
-
-        void onGotRecognitionResult(VoiceRecognitionResult result);
     }
 }

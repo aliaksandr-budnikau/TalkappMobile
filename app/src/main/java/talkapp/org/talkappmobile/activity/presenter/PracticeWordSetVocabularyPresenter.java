@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-public class PracticeWordSetVocabularyPresenter implements PracticeWordSetVocabularyInteractor.OnWordTranslationListener {
+public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
 
     private final WordSet wordSet;
     private final PracticeWordSetVocabularyView view;
@@ -26,7 +26,7 @@ public class PracticeWordSetVocabularyPresenter implements PracticeWordSetVocabu
     }
 
     @Override
-    public void onWordTranslationsFound(List<WordTranslation> wordTranslations) {
-        view.setWordTranslationList(wordTranslations);
+    public void onWordSetVocabularyFound(List<WordTranslation> wordTranslations) {
+        view.setWordSetVocabularyList(wordTranslations);
     }
 }

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 
-public class PracticeWordSetPresenter implements PracticeWordSetInteractor.OnPracticeWordSetListener {
+public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
     @Inject

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -29,8 +28,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     Executor executor;
     @Inject
     AdaptersFactory adaptersFactory;
-    @Inject
-    AuthSign authSign;
     @Inject
     Handler uiEventHandler;
     private ArrayAdapter<WordTranslation> adapter;
@@ -75,7 +72,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     }
 
     @Override
-    public void setWordTranslationList(final List<WordTranslation> wordTranslations) {
+    public void setWordSetVocabularyList(final List<WordTranslation> wordTranslations) {
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {

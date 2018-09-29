@@ -1,9 +1,9 @@
-package talkapp.org.talkappmobile.activity;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface PracticeWordSetVocabularyView {
-    void setWordTranslationList(List<WordTranslation> wordTranslations);
+    void setWordSetVocabularyList(List<WordTranslation> wordTranslations);
 }
