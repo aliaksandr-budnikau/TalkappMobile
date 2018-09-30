@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
+    private final PracticeWordSetView view;
     @Inject
     PracticeWordSetInteractor interactor;
     private PracticeWordSetViewStrategy viewStrategy;
@@ -20,7 +21,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
         this.wordSet = wordSet;
-        this.viewStrategy = new PracticeWordSetViewStrategy(view);
+        this.view = view;
+        this.viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
         DIContext.get().inject(this);
     }
 
@@ -58,6 +60,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onTrainingFinished() {
         viewStrategy.onTrainingFinished();
+        viewStrategy.onRightAnswer(sentence);
+        viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import talkapp.org.talkappmobile.model.Sentence;
-
 interface PracticeWordSetView {
 
     void showNextButton();

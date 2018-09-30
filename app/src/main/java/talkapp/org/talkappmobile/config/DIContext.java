@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
@@ -87,4 +88,6 @@ public abstract class DIContext {
     public abstract void inject(PracticeWordSetVocabularyFragment target);
 
     public abstract void inject(PracticeWordSetViewStrategy target);
+
+    public abstract void inject(PracticeWordSetViewHideNewWordOnlyStrategy target);
 }
