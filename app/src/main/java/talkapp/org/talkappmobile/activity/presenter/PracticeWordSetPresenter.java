@@ -4,143 +4,100 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
     @Inject
     PracticeWordSetInteractor interactor;
-    @Inject
-    TextUtils textUtils;
-    @Inject
-    WordSetExperienceUtils experienceUtils;
-    private PracticeWordSetView view;
+    private PracticeWordSetViewStrategy viewStrategy;
     private Sentence sentence;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
         this.wordSet = wordSet;
-        this.view = view;
+        this.viewStrategy = new PracticeWordSetViewStrategy(view);
         DIContext.get().inject(this);
     }
 
     @Override
     public void onInitialiseExperience() {
-        WordSetExperience exp = wordSet.getExperience();
-        int progress = experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience());
-        view.setProgress(progress);
+        viewStrategy.onInitialiseExperience(wordSet.getExperience());
     }
 
     @Override
     public void onSentencesFound(final Sentence sentence) {
         this.sentence = sentence;
-        view.hideNextButton();
-        view.showCheckButton();
-        view.setOriginalText(sentence.getTranslations().get("russian"));
-        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
-        view.setRightAnswer(hiddenRightAnswer);
-        view.setAnswerText("");
+        viewStrategy.onSentencesFound(sentence);
     }
 
     @Override
     public void onAnswerEmpty() {
-        view.showMessageAnswerEmpty();
+        viewStrategy.onAnswerEmpty();
     }
 
     @Override
     public void onSpellingOrGrammarError(List<GrammarError> errors) {
-        view.showMessageSpellingOrGrammarError();
-        view.hideSpellingOrGrammarErrorPanel();
-        for (GrammarError error : errors) {
-            String errorMessage = textUtils.buildSpellingGrammarErrorMessage(error);
-            view.showSpellingOrGrammarErrorPanel(errorMessage);
-        }
+        viewStrategy.onSpellingOrGrammarError(errors);
     }
 
     @Override
     public void onAccuracyTooLowError() {
-        view.showMessageAccuracyTooLow();
-        view.hideSpellingOrGrammarErrorPanel();
+        viewStrategy.onAccuracyTooLowError();
     }
 
     @Override
     public void onUpdateProgress(int currentTrainingExperience) {
-        int progress = experienceUtils.getProgress(currentTrainingExperience, wordSet.getExperience().getMaxTrainingExperience());
-        view.setProgress(progress);
+        viewStrategy.onUpdateProgress(wordSet.getExperience(), currentTrainingExperience);
     }
 
     @Override
     public void onTrainingFinished() {
-        view.showCongratulationMessage();
-        view.closeActivity();
-        view.openAnotherActivity();
+        viewStrategy.onTrainingFinished();
     }
 
     @Override
     public void onRightAnswer() {
-        view.setRightAnswer(sentence.getText());
-        view.showNextButton();
-        view.hideCheckButton();
-        view.hideSpellingOrGrammarErrorPanel();
+        viewStrategy.onRightAnswer(sentence);
     }
 
     @Override
     public void onStartPlaying() {
-        view.setEnableVoiceRecButton(false);
-        view.setEnableCheckButton(false);
-        view.setEnableNextButton(false);
+        viewStrategy.onStartPlaying();
     }
 
     @Override
     public void onStopPlaying() {
-        view.setEnableVoiceRecButton(true);
-        view.setEnableCheckButton(true);
-        view.setEnableNextButton(true);
+        viewStrategy.onStopPlaying();
     }
 
     @Override
     public void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis) {
-        view.setRecProgress((int) (((double) speechLength / maxSpeechLengthMillis) * 100));
+        viewStrategy.onSnippetRecorded(speechLength, maxSpeechLengthMillis);
     }
 
     @Override
     public void onStartRecording() {
-        view.setRecProgress(0);
-        view.showRecProgress();
-        view.setEnablePlayButton(false);
-        view.setEnableCheckButton(false);
-        view.setEnableNextButton(false);
-        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
-        view.setRightAnswer(hiddenRightAnswer);
-        view.setEnableRightAnswer(false);
+        viewStrategy.onStartRecording(sentence);
     }
 
     @Override
     public void onStopRecording() {
-        view.setEnablePlayButton(true);
-        view.setEnableCheckButton(true);
-        view.setEnableNextButton(true);
-        view.setEnableRightAnswer(true);
+        viewStrategy.onStopRecording();
     }
 
     @Override
     public void onStopRecognition() {
-        view.hideRecProgress();
-        view.setRecProgress(0);
+        viewStrategy.onStopRecognition();
     }
 
     @Override
     public void onGotRecognitionResult(VoiceRecognitionResult result) {
-        String textWithUpper = textUtils.toUpperCaseFirstLetter(result.getVariant().get(0));
-        String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper, sentence.getText());
-        view.setAnswerText(textWithLastSymbol);
+        viewStrategy.onGotRecognitionResult(sentence, result);
     }
 
     public void onResume() {
@@ -149,7 +106,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onDestroy() {
-        view = null;
+        viewStrategy = null;
     }
 
     public void onNextButtonClick() {
@@ -174,11 +131,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerTouched() {
-        view.setRightAnswer(sentence.getText());
+        viewStrategy.rightAnswerTouched(sentence);
     }
 
     public void rightAnswerUntouched() {
-        String hiddenRightAnswer = textUtils.screenTextWith(sentence.getText());
-        view.setRightAnswer(hiddenRightAnswer);
+        viewStrategy.rightAnswerUntouched(sentence);
     }
 }
