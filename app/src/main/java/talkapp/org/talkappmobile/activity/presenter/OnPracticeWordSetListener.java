@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 public interface OnPracticeWordSetListener {
     void onInitialiseExperience();
 
-    void onSentencesFound(Sentence sentence);
+    void onSentencesFound(Sentence sentence, String word);
 
     void onAnswerEmpty();
 

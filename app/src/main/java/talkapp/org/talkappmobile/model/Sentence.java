@@ -1,6 +1,8 @@
 package talkapp.org.talkappmobile.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ public class Sentence {
     private String id;
     private String text;
     private Map<String, String> translations = new HashMap<>();
+    private List<TextToken> tokens = new LinkedList<>();
 
     public String getId() {
         return id;
@@ -36,6 +39,14 @@ public class Sentence {
         this.translations = translations;
     }
 
+    public List<TextToken> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<TextToken> tokens) {
+        this.tokens = tokens;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,6 +68,7 @@ public class Sentence {
         sb.append("id='").append(id).append('\'');
         sb.append(", text='").append(text).append('\'');
         sb.append(", translations=").append(translations);
+        sb.append(", tokens=").append(tokens);
         sb.append('}');
         return sb.toString();
     }

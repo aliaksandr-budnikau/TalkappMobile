@@ -29,11 +29,11 @@ public class PracticeWordSetViewStrategy {
         view.setProgress(progress);
     }
 
-    public void onSentencesFound(Sentence sentence) {
+    public void onSentencesFound(Sentence sentence, String word) {
         view.hideNextButton();
         view.showCheckButton();
         view.setOriginalText(sentence.getTranslations().get("russian"));
-        String hiddenRightAnswer = hideRightAnswer(sentence);
+        String hiddenRightAnswer = hideRightAnswer(sentence, word);
         view.setRightAnswer(hiddenRightAnswer);
         view.setAnswerText("");
     }
@@ -90,13 +90,13 @@ public class PracticeWordSetViewStrategy {
         view.setRecProgress((int) (((double) speechLength / maxSpeechLengthMillis) * 100));
     }
 
-    public void onStartRecording(Sentence sentence) {
+    public void onStartRecording(Sentence sentence, String word) {
         view.setRecProgress(0);
         view.showRecProgress();
         view.setEnablePlayButton(false);
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
-        String hiddenRightAnswer = hideRightAnswer(sentence);
+        String hiddenRightAnswer = hideRightAnswer(sentence, word);
         view.setRightAnswer(hiddenRightAnswer);
         view.setEnableRightAnswer(false);
     }
@@ -123,8 +123,8 @@ public class PracticeWordSetViewStrategy {
         view.setRightAnswer(sentence.getText());
     }
 
-    public void rightAnswerUntouched(Sentence sentence) {
-        String hiddenRightAnswer = hideRightAnswer(sentence);
+    public void rightAnswerUntouched(Sentence sentence, String word) {
+        String hiddenRightAnswer = hideRightAnswer(sentence, word);
         view.setRightAnswer(hiddenRightAnswer);
     }
 
@@ -132,7 +132,7 @@ public class PracticeWordSetViewStrategy {
         return view;
     }
 
-    protected String hideRightAnswer(Sentence sentence) {
+    protected String hideRightAnswer(Sentence sentence, String word) {
         return textUtils.screenTextWith(sentence.getText());
     }
 }

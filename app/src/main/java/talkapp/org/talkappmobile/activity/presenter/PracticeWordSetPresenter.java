@@ -17,7 +17,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Inject
     PracticeWordSetInteractor interactor;
     private PracticeWordSetViewStrategy viewStrategy;
-    private Sentence sentence;
+    private Sentence currentSentence;
+    private String currentWord;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
         this.wordSet = wordSet;
@@ -32,9 +33,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onSentencesFound(final Sentence sentence) {
-        this.sentence = sentence;
-        viewStrategy.onSentencesFound(sentence);
+    public void onSentencesFound(final Sentence sentence, String word) {
+        this.currentSentence = sentence;
+        this.currentWord = word;
+        viewStrategy.onSentencesFound(sentence, word);
     }
 
     @Override
@@ -60,13 +62,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onTrainingFinished() {
         viewStrategy.onTrainingFinished();
-        viewStrategy.onRightAnswer(sentence);
+        viewStrategy.onRightAnswer(currentSentence);
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
     }
 
     @Override
     public void onRightAnswer() {
-        viewStrategy.onRightAnswer(sentence);
+        viewStrategy.onRightAnswer(currentSentence);
     }
 
     @Override
@@ -86,7 +88,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onStartRecording() {
-        viewStrategy.onStartRecording(sentence);
+        viewStrategy.onStartRecording(currentSentence, currentWord);
     }
 
     @Override
@@ -101,7 +103,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onGotRecognitionResult(VoiceRecognitionResult result) {
-        viewStrategy.onGotRecognitionResult(sentence, result);
+        viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
     public void onResume() {
@@ -118,7 +120,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onCheckAnswerButtonClick(final String answer) {
-        interactor.checkAnswer(answer, wordSet, sentence, this);
+        interactor.checkAnswer(answer, wordSet, currentSentence, this);
     }
 
     public void onPlayVoiceButtonClick() {
@@ -135,10 +137,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerTouched() {
-        viewStrategy.rightAnswerTouched(sentence);
+        viewStrategy.rightAnswerTouched(currentSentence);
     }
 
     public void rightAnswerUntouched() {
-        viewStrategy.rightAnswerUntouched(sentence);
+        viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
     }
 }

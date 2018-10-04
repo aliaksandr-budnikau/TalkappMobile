@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component;
 
+import java.util.LinkedList;
+
 import talkapp.org.talkappmobile.model.GrammarError;
 
 /**
@@ -16,4 +18,6 @@ public interface TextUtils {
     String appendLastSymbol(String text, String translation);
 
     String buildSpellingGrammarErrorMessage(GrammarError e);
+
+    String hideIntervalsInText(String text, LinkedList<Integer> intervalsToHide);
 }

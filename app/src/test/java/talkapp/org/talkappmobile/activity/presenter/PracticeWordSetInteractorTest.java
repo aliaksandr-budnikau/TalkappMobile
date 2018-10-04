@@ -146,14 +146,15 @@ public class PracticeWordSetInteractorTest {
 
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
+        String word = wordSet.getWords().get(0);
 
         // when
-        whenSentenceServiceFindByWords(wordSet, sentences);
+        whenSentenceServiceFindByWords(word, sentences);
         when(sentenceSelector.getSentence(sentences)).thenReturn(selectedSentence);
         interactor.initialiseSentence(wordSet, listener);
 
         // then
-        verify(listener).onSentencesFound(selectedSentence);
+        verify(listener).onSentencesFound(selectedSentence, word);
         assertTrue(wordSet.getWords().contains("sdfs"));
         assertFalse(wordSet.getWords().contains("fdsfs"));
     }
@@ -185,19 +186,21 @@ public class PracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
 
+        String word = wordSet.getWords().get(0);
+
         // when
-        whenSentenceServiceFindByWords(wordSet, emptyList);
+        whenSentenceServiceFindByWords(word, emptyList);
         interactor.initialiseSentence(wordSet, listener);
 
         // then
-        verify(listener, times(0)).onSentencesFound(selectedSentence);
+        verify(listener, times(0)).onSentencesFound(selectedSentence, word);
         verify(sentenceSelector, times(0)).getSentence(any(List.class));
     }
 
-    private void whenSentenceServiceFindByWords(WordSet wordSet, List<Sentence> emptyList) throws IOException {
+    private void whenSentenceServiceFindByWords(String word, List<Sentence> emptyList) throws IOException {
         Call call = mock(Call.class);
         when(call.execute()).thenReturn(success(emptyList));
-        when(sentenceService.findByWords(wordSet.getWords().get(0), WORDS_NUMBER, authSign)).thenReturn(call);
+        when(sentenceService.findByWords(word, WORDS_NUMBER, authSign)).thenReturn(call);
     }
 
     @Test

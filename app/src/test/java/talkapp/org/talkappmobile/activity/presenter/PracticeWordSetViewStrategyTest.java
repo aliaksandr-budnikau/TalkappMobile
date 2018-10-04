@@ -62,8 +62,10 @@ public class PracticeWordSetViewStrategyTest {
         sentence.setTranslations(new HashMap<String, String>());
         sentence.getTranslations().put("russian", origText);
 
+        String word = "word";
+
         // when
-        strategy.onSentencesFound(sentence);
+        strategy.onSentencesFound(sentence, word);
 
         // then
         verify(view).hideNextButton();
@@ -187,9 +189,11 @@ public class PracticeWordSetViewStrategyTest {
         Sentence sentence = new Sentence();
         sentence.setText("sdds");
 
+        String word = "word";
+
         // when
         when(textUtils.screenTextWith(sentence.getText())).thenReturn(hiddenRightAnswer);
-        strategy.rightAnswerUntouched(sentence);
+        strategy.rightAnswerUntouched(sentence, word);
 
         // then
         verify(view).setRightAnswer(hiddenRightAnswer);

@@ -42,7 +42,7 @@ public class PracticeWordSetPresenterTest {
 
         sentence = new Sentence();
         sentence.setId("dsfsd");
-        Whitebox.setInternalState(presenter, "sentence", sentence);
+        Whitebox.setInternalState(presenter, "currentSentence", sentence);
     }
 
     @Test
@@ -61,11 +61,13 @@ public class PracticeWordSetPresenterTest {
         sentence.setTranslations(new HashMap<String, String>());
         sentence.getTranslations().put("russian", "fsdfsfs");
 
+        String word = "word";
+
         // when
-        presenter.onSentencesFound(sentence);
+        presenter.onSentencesFound(sentence, word);
 
         // then
-        verify(viewStrategy).onSentencesFound(sentence);
+        verify(viewStrategy).onSentencesFound(sentence, word);
     }
 
     @Test
@@ -122,7 +124,7 @@ public class PracticeWordSetPresenterTest {
         Sentence sentence = new Sentence();
         sentence.setId("dsfs");
 
-        Whitebox.setInternalState(presenter, "sentence", sentence);
+        Whitebox.setInternalState(presenter, "currentSentence", sentence);
 
         // when
         presenter.onRightAnswer();
@@ -159,7 +161,7 @@ public class PracticeWordSetPresenterTest {
         sentence.setId("323");
 
         // when
-        Whitebox.setInternalState(presenter, "sentence", sentence);
+        Whitebox.setInternalState(presenter, "currentSentence", sentence);
         presenter.onCheckAnswerButtonClick(answer);
 
         // then
@@ -192,10 +194,15 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void rightAnswerUntouched() {
+        // setup
+        String word = "word";
+
+        Whitebox.setInternalState(presenter, "currentWord", word);
+
         // when
         presenter.rightAnswerUntouched();
 
         // then
-        verify(viewStrategy).rightAnswerUntouched(sentence);
+        verify(viewStrategy).rightAnswerUntouched(sentence, word);
     }
 }

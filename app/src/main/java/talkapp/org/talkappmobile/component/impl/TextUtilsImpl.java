@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.TextUtils;
@@ -94,6 +95,18 @@ public class TextUtilsImpl implements TextUtils {
             }
         }
         builder.append(".");
+        return builder.toString();
+    }
+
+    @Override
+    public String hideIntervalsInText(String text, LinkedList<Integer> intervalsToHide) {
+        Iterator<Integer> iterator = intervalsToHide.iterator();
+        StringBuilder builder = new StringBuilder(text);
+        while (iterator.hasNext()) {
+            Integer start = iterator.next();
+            Integer end = iterator.next();
+            builder.replace(start, end, placeholder);
+        }
         return builder.toString();
     }
 }

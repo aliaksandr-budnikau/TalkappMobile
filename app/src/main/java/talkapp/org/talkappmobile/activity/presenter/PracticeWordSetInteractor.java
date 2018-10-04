@@ -84,7 +84,7 @@ public class PracticeWordSetInteractor {
             return;
         }
         final Sentence sentence = sentenceSelector.getSentence(sentences);
-        listener.onSentencesFound(sentence);
+        listener.onSentencesFound(sentence, word);
     }
 
     public void checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, final OnPracticeWordSetListener listener) {
