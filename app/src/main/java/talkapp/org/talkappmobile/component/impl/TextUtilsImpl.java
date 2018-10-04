@@ -3,9 +3,11 @@ package talkapp.org.talkappmobile.component.impl;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.TextUtils;
@@ -99,13 +101,19 @@ public class TextUtilsImpl implements TextUtils {
     }
 
     @Override
-    public String hideIntervalsInText(String text, LinkedList<Integer> intervalsToHide) {
-        Iterator<Integer> iterator = intervalsToHide.iterator();
+    public String hideIntervalsInText(String text, Collection<Integer> intervalsToHide) {
+        Queue<Integer> queue = new LinkedList<>(intervalsToHide);
         StringBuilder builder = new StringBuilder(text);
-        while (iterator.hasNext()) {
-            Integer start = iterator.next();
-            Integer end = iterator.next();
+        while (!queue.isEmpty()) {
+            int start = queue.poll();
+            int end = queue.poll();
             builder.replace(start, end, placeholder);
+            int shift = end - start - placeholder.length();
+            LinkedList<Integer> shiftedQueue = new LinkedList<>();
+            for (Integer index : queue) {
+                shiftedQueue.addLast(index - shift);
+            }
+            queue = shiftedQueue;
         }
         return builder.toString();
     }

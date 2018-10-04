@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.component;
 
-import java.util.LinkedList;
+import java.util.Collection;
 
 import talkapp.org.talkappmobile.model.GrammarError;
 
@@ -19,5 +19,5 @@ public interface TextUtils {
 
     String buildSpellingGrammarErrorMessage(GrammarError e);
 
-    String hideIntervalsInText(String text, LinkedList<Integer> intervalsToHide);
+    String hideIntervalsInText(String text, Collection<Integer> intervalsToHide);
 }
