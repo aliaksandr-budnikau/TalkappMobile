@@ -16,8 +16,10 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
+import static talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter.SPEECH_TIMEOUT_MILLIS;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
@@ -67,6 +69,8 @@ public class PracticeWordSetPresenterTest {
         presenter.onSentencesFound(sentence, word);
 
         // then
+        assertEquals(sentence, Whitebox.getInternalState(presenter, "currentSentence"));
+        assertEquals(word, Whitebox.getInternalState(presenter, "currentWord"));
         verify(viewStrategy).onSentencesFound(sentence, word);
     }
 
@@ -131,6 +135,16 @@ public class PracticeWordSetPresenterTest {
 
         // then
         verify(viewStrategy).onRightAnswer(sentence);
+    }
+
+    @Test
+    public void onRecogniseVoiceButtonClick() {
+        // when
+        presenter.onRecogniseVoiceButtonClick();
+
+        // then
+        verify(interactor).recVoice(SPEECH_TIMEOUT_MILLIS, presenter);
+        verify(interactor).recognizeVoice(presenter);
     }
 
     @Test

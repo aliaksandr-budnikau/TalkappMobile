@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
-    private static final int SPEECH_TIMEOUT_MILLIS = 1000;
+    public static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
     private final PracticeWordSetView view;
     @Inject
