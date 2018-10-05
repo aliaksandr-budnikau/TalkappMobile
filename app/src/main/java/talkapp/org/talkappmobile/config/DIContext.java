@@ -20,6 +20,8 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyFra
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
@@ -90,4 +92,8 @@ public abstract class DIContext {
     public abstract void inject(PracticeWordSetViewStrategy target);
 
     public abstract void inject(PracticeWordSetViewHideNewWordOnlyStrategy target);
+
+    public abstract void inject(SentenceProviderStrategy target);
+
+    public abstract void inject(SentenceProviderImpl target);
 }

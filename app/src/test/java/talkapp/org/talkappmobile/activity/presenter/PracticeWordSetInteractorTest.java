@@ -20,10 +20,10 @@ import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -44,7 +44,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static retrofit2.Response.success;
-import static talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorTest {
@@ -58,7 +57,7 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private WordSetExperienceService wordSetExperienceService;
     @Mock
-    private SentenceService sentenceService;
+    private SentenceProvider sentenceProvider;
     @Mock
     private SentenceSelector sentenceSelector;
     @Mock
@@ -149,7 +148,7 @@ public class PracticeWordSetInteractorTest {
         String word = wordSet.getWords().get(0);
 
         // when
-        whenSentenceServiceFindByWords(word, sentences);
+        when(sentenceProvider.findByWord(word)).thenReturn(sentences);
         when(sentenceSelector.getSentence(sentences)).thenReturn(selectedSentence);
         interactor.initialiseSentence(wordSet, listener);
 
@@ -189,18 +188,12 @@ public class PracticeWordSetInteractorTest {
         String word = wordSet.getWords().get(0);
 
         // when
-        whenSentenceServiceFindByWords(word, emptyList);
+        when(sentenceProvider.findByWord(word)).thenReturn(emptyList);
         interactor.initialiseSentence(wordSet, listener);
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
         verify(sentenceSelector, times(0)).getSentence(any(List.class));
-    }
-
-    private void whenSentenceServiceFindByWords(String word, List<Sentence> emptyList) throws IOException {
-        Call call = mock(Call.class);
-        when(call.execute()).thenReturn(success(emptyList));
-        when(sentenceService.findByWords(word, WORDS_NUMBER, authSign)).thenReturn(call);
     }
 
     @Test

@@ -15,15 +15,14 @@ import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.ByteUtils;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
-import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
@@ -34,7 +33,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class PracticeWordSetInteractor {
-    public static final int WORDS_NUMBER = 6;
     private static final String TAG = PracticeWordSetInteractor.class.getSimpleName();
     @Inject
     WordsCombinator wordsCombinator;
@@ -43,7 +41,7 @@ public class PracticeWordSetInteractor {
     @Inject
     AuthSign authSign;
     @Inject
-    SentenceService sentenceService;
+    SentenceProvider sentenceProvider;
     @Inject
     SentenceSelector sentenceSelector;
     @Inject
@@ -78,7 +76,7 @@ public class PracticeWordSetInteractor {
     public void initialiseSentence(WordSet wordSet, final OnPracticeWordSetListener listener) {
         List<String> words = wordSet.getWords();
         String word = words.remove(0);
-        List<Sentence> sentences = findSentencesByWords(word);
+        List<Sentence> sentences = sentenceProvider.findByWord(word);
         if (sentences.isEmpty()) {
             logger.w(TAG, "Sentences haven't been found with words '{}'. Fill the storage.", word);
             return;
@@ -128,14 +126,6 @@ public class PracticeWordSetInteractor {
     private WordSetExperience createExperience(String wordSetId) {
         try {
             return wordSetExperienceService.create(wordSetId, authSign).execute().body();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private List<Sentence> findSentencesByWords(String words) {
-        try {
-            return sentenceService.findByWords(words, WORDS_NUMBER, authSign).execute().body();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

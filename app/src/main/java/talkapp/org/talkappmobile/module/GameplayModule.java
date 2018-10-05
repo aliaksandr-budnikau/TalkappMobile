@@ -6,12 +6,15 @@ import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
@@ -29,6 +32,18 @@ public class GameplayModule {
     @Singleton
     public SentenceSelector provideSentenceSelector() {
         return new RandomSentenceSelectorImpl();
+    }
+
+    @Provides
+    @Singleton
+    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy() {
+        return new BackendSentenceProviderStrategy();
+    }
+
+    @Provides
+    @Singleton
+    public SentenceProvider provideSentenceProvider() {
+        return new SentenceProviderImpl();
     }
 
     @Provides
