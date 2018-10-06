@@ -20,10 +20,6 @@ public class PracticeWordSetViewHideNewWordOnlyStrategy extends PracticeWordSetV
     }
 
     @Override
-    public void onTrainingFinished() {
-    }
-
-    @Override
     protected String hideRightAnswer(Sentence sentence, String word) {
         LinkedList<Integer> intervalsToHide = new LinkedList<>();
         for (TextToken token : sentence.getTokens()) {

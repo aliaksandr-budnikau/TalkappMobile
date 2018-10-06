@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
@@ -38,6 +39,12 @@ public class GameplayModule {
     @Singleton
     public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy() {
         return new BackendSentenceProviderStrategy();
+    }
+
+    @Provides
+    @Singleton
+    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy() {
+        return new SentenceProviderRepetitionStrategy();
     }
 
     @Provides

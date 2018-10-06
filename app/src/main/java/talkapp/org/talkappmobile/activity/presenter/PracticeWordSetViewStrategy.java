@@ -135,4 +135,8 @@ public class PracticeWordSetViewStrategy {
     protected String hideRightAnswer(Sentence sentence, String word) {
         return textUtils.screenTextWith(sentence.getText());
     }
+
+    public void onTrainingHalfFinished() {
+
+    }
 }

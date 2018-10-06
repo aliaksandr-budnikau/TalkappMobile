@@ -108,6 +108,12 @@ public class PracticeWordSetInteractor {
 
         wordSet.getExperience().setTrainingExperience(result.getCurrentTrainingExperience());
         listener.onUpdateProgress(result.getCurrentTrainingExperience());
+
+        if (result.getCurrentTrainingExperience() == wordSet.getExperience().getMaxTrainingExperience() / 2) {
+            listener.onTrainingHalfFinished();
+            return;
+        }
+
         if (result.getCurrentTrainingExperience() == wordSet.getExperience().getMaxTrainingExperience()) {
             listener.onTrainingFinished();
             return;

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.component.SentenceProvider;
+import talkapp.org.talkappmobile.component.Word2SentenceCache;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -16,6 +18,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetView view;
     @Inject
     PracticeWordSetInteractor interactor;
+    @Inject
+    Word2SentenceCache word2SentenceCache;
+    @Inject
+    SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
     private Sentence currentSentence;
     private String currentWord;
@@ -34,6 +40,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onSentencesFound(final Sentence sentence, String word) {
+        word2SentenceCache.save(word, sentence);
         this.currentSentence = sentence;
         this.currentWord = word;
         viewStrategy.onSentencesFound(sentence, word);
@@ -60,10 +67,16 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onTrainingFinished() {
-        viewStrategy.onTrainingFinished();
+    public void onTrainingHalfFinished() {
+        viewStrategy.onTrainingHalfFinished();
         viewStrategy.onRightAnswer(currentSentence);
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
+        sentenceProvider.enableRepetitionMode();
+    }
+
+    @Override
+    public void onTrainingFinished() {
+        viewStrategy.onTrainingFinished();
     }
 
     @Override
