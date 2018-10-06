@@ -10,6 +10,7 @@ import org.powermock.reflect.Whitebox;
 import java.util.HashMap;
 import java.util.List;
 
+import talkapp.org.talkappmobile.component.Word2SentenceCache;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -27,6 +28,8 @@ public class PracticeWordSetPresenterTest {
     private PracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
+    @Mock
+    private Word2SentenceCache word2SentenceCache;
     private PracticeWordSetPresenter presenter;
     private WordSet wordSet;
     private Sentence sentence;
@@ -41,6 +44,7 @@ public class PracticeWordSetPresenterTest {
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
+        Whitebox.setInternalState(presenter, "word2SentenceCache", word2SentenceCache);
 
         sentence = new Sentence();
         sentence.setId("dsfsd");
@@ -70,8 +74,8 @@ public class PracticeWordSetPresenterTest {
 
         // then
         assertEquals(sentence, Whitebox.getInternalState(presenter, "currentSentence"));
-        assertEquals(word, Whitebox.getInternalState(presenter, "currentWord"));
         verify(viewStrategy).onSentencesFound(sentence, word);
+        verify(word2SentenceCache).save(word, sentence);
     }
 
     @Test
@@ -149,7 +153,14 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onResume() {
+        // setup
+        String word = "word";
+        wordSet.setWords(asList(word, "dsfsddsd"));
+
+        // when
         presenter.onResume();
+
+        // then
         verify(interactor).initialiseExperience(wordSet, presenter);
         verify(interactor).initialiseWordsSequence(wordSet, presenter);
     }
@@ -162,8 +173,16 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onNextButtonClick() {
+        // setup
+        String word1 = "sdfsd";
+        wordSet.setWords(asList(word1, "dsfsddsd"));
+        Whitebox.setInternalState(presenter, "wordSequenceIterator", wordSet.getWords().listIterator());
+
+        // when
         presenter.onNextButtonClick();
-        verify(interactor).initialiseSentence(wordSet, presenter);
+
+        // then
+        verify(interactor).initialiseSentence(word1, presenter);
     }
 
     @Test

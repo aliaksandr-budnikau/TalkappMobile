@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -24,6 +25,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
     private Sentence currentSentence;
+    private ListIterator<String> wordSequenceIterator;
     private String currentWord;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
@@ -42,7 +44,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onSentencesFound(final Sentence sentence, String word) {
         word2SentenceCache.save(word, sentence);
         this.currentSentence = sentence;
-        this.currentWord = word;
         viewStrategy.onSentencesFound(sentence, word);
     }
 
@@ -72,6 +73,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onRightAnswer(currentSentence);
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
         sentenceProvider.enableRepetitionMode();
+        wordSequenceIterator = wordSet.getWords().listIterator();
     }
 
     @Override
@@ -122,6 +124,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onResume() {
         interactor.initialiseExperience(wordSet, this);
         interactor.initialiseWordsSequence(wordSet, this);
+        wordSequenceIterator = wordSet.getWords().listIterator();
     }
 
     public void onDestroy() {
@@ -129,7 +132,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onNextButtonClick() {
-        interactor.initialiseSentence(wordSet, this);
+        currentWord = wordSequenceIterator.next();
+        interactor.initialiseSentence(currentWord, this);
     }
 
     public void onCheckAnswerButtonClick(final String answer) {

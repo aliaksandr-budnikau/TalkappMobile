@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
 import android.media.AudioTrack;
-import android.support.annotation.NonNull;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -133,10 +131,8 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void initialiseSentence_sentenceFound() throws IOException {
+    public void initialiseSentence_sentenceFound() {
         // setup
-        WordSet wordSet = getWordSet();
-
         Sentence sentence = new Sentence();
         sentence.setId("fds32ddd");
         sentence = new Sentence();
@@ -145,51 +141,28 @@ public class PracticeWordSetInteractorTest {
 
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
-        String word = wordSet.getWords().get(0);
+        String word = "sdfs";
 
         // when
         when(sentenceProvider.findByWord(word)).thenReturn(sentences);
         when(sentenceSelector.getSentence(sentences)).thenReturn(selectedSentence);
-        interactor.initialiseSentence(wordSet, listener);
+        interactor.initialiseSentence(word, listener);
 
         // then
         verify(listener).onSentencesFound(selectedSentence, word);
-        assertTrue(wordSet.getWords().contains("sdfs"));
-        assertFalse(wordSet.getWords().contains("fdsfs"));
-    }
-
-    @NonNull
-    private WordSet getWordSet() {
-        List<String> words = new ArrayList<>();
-        words.add("fdsfs");
-        words.add("sdfs");
-
-        WordSet wordSet = new WordSet();
-        wordSet.setWords(words);
-        wordSet.setExperience(null);
-        wordSet.setId("3243");
-        return wordSet;
     }
 
     @Test
-    public void initialiseSentence_sentenceNotFound() throws IOException {
+    public void initialiseSentence_sentenceNotFound() {
         // setup
-        WordSet wordSet = getWordSet();
-
-        Sentence sentence = new Sentence();
-        sentence.setId("fds32ddd");
-        sentence = new Sentence();
-        sentence.setId("fds32ddddsas");
-        List<Sentence> emptyList = Collections.emptyList();
-
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
 
-        String word = wordSet.getWords().get(0);
+        String word = "SDFDS";
 
         // when
-        when(sentenceProvider.findByWord(word)).thenReturn(emptyList);
-        interactor.initialiseSentence(wordSet, listener);
+        when(sentenceProvider.findByWord(word)).thenReturn(Collections.<Sentence>emptyList());
+        interactor.initialiseSentence(word, listener);
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
