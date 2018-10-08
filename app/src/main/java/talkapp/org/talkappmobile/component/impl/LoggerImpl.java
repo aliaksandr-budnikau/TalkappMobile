@@ -11,6 +11,11 @@ public class LoggerImpl implements Logger {
         Log.w(tag, replacePlaceholders(message, args));
     }
 
+    @Override
+    public void e(String tag, String message, Object... args) {
+        Log.e(tag, replacePlaceholders(message, args));
+    }
+
     private String replacePlaceholders(String message, Object[] args) {
         for (Object arg : args) {
             message = message.replaceFirst("\\{\\}", String.valueOf(arg));
