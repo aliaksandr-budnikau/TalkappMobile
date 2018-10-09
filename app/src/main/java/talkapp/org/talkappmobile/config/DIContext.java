@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
+import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
@@ -43,6 +44,7 @@ import talkapp.org.talkappmobile.module.ItemsListModule;
         AndroidModule.class,
         DataModule.class,
         InfraModule.class,
+        DatabaseModule.class,
         ItemsListModule.class
 })
 public abstract class DIContext {
@@ -58,6 +60,7 @@ public abstract class DIContext {
                     .audioModule(new AudioModule())
                     .dataModule(new DataModule())
                     .infraModule(new InfraModule())
+                    .databaseModule(new DatabaseModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
                     .build();
