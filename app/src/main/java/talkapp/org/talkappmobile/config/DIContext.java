@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.config;
 
+import android.app.Application;
+
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -23,6 +25,7 @@ import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
+import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
@@ -37,6 +40,7 @@ import talkapp.org.talkappmobile.module.ItemsListModule;
         GameplayModule.class,
         ConcurrentModule.class,
         AudioModule.class,
+        AndroidModule.class,
         DataModule.class,
         InfraModule.class,
         ItemsListModule.class
@@ -45,9 +49,10 @@ public abstract class DIContext {
 
     private static DIContext instance;
 
-    public static DIContext get() {
-        if (instance == null) {
+    public static DIContext init(Application application) {
+        if (instance == null && application != null) {
             instance = DaggerDIContext.builder()
+                    .androidModule(new AndroidModule(application))
                     .gameplayModule(new GameplayModule())
                     .concurrentModule(new ConcurrentModule())
                     .audioModule(new AudioModule())
@@ -56,6 +61,13 @@ public abstract class DIContext {
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
                     .build();
+        }
+        return instance;
+    }
+
+    public static DIContext get() {
+        if (instance == null) {
+            throw new RuntimeException("DIContext wasn't initialized yet");
         }
         return instance;
     }
