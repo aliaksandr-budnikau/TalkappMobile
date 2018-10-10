@@ -1,14 +1,17 @@
 package talkapp.org.talkappmobile.module;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
-import talkapp.org.talkappmobile.component.impl.PracticeWordSetExerciseTempRepositoryImpl;
+import talkapp.org.talkappmobile.component.impl.PracticeWordSetExerciseRepositoryImpl;
 import talkapp.org.talkappmobile.component.impl.SaveSharedPreferenceImpl;
+import talkapp.org.talkappmobile.db.dao.PracticeWordSetExerciseDao;
 
 /**
  * @author Budnikau Aliaksandr
@@ -30,7 +33,7 @@ public class DataModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetExerciseTempRepository provideWord2SentenceCache() {
-        return new PracticeWordSetExerciseTempRepositoryImpl();
+    public PracticeWordSetExerciseRepository provideWord2SentenceCache(PracticeWordSetExerciseDao exerciseDao, ObjectMapper mapper) {
+        return new PracticeWordSetExerciseRepositoryImpl(exerciseDao, mapper);
     }
 }

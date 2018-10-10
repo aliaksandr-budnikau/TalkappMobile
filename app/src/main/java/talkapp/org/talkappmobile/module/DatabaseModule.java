@@ -13,7 +13,7 @@ import dagger.Provides;
 import talkapp.org.talkappmobile.db.DatabaseHelper;
 import talkapp.org.talkappmobile.db.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.db.dao.impl.PracticeWordSetExerciseDaoImpl;
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise;
+import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
 
 /**
  * @author Budnikau Aliaksandr
@@ -31,7 +31,7 @@ public class DatabaseModule {
     @Singleton
     public PracticeWordSetExerciseDao providePracticeWordSetExerciseDao(DatabaseHelper databaseHelper) {
         try {
-            return new PracticeWordSetExerciseDaoImpl(databaseHelper.getConnectionSource(), PracticeWordSetExercise.class);
+            return new PracticeWordSetExerciseDaoImpl(databaseHelper.getConnectionSource(), PracticeWordSetExerciseMapping.class);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -4,11 +4,11 @@ import com.j256.ormlite.dao.Dao;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise;
+import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
 
 public interface PracticeWordSetExerciseDao {
 
-    List<PracticeWordSetExercise> findByWordAndWordSetId(String word, String wordSetId);
+    List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, String wordSetId);
 
-    Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExercise exercise);
+    Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise);
 }

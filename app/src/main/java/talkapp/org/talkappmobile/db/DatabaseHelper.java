@@ -9,7 +9,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise;
+import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
@@ -23,7 +23,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, PracticeWordSetExercise.class);
+            TableUtils.createTable(connectionSource, PracticeWordSetExerciseMapping.class);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -32,7 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer, int newVer) {
         try {
-            TableUtils.dropTable(connectionSource, PracticeWordSetExercise.class, true);
+            TableUtils.dropTable(connectionSource, PracticeWordSetExerciseMapping.class, true);
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);

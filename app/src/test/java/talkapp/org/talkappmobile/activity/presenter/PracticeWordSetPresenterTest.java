@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -32,7 +32,7 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private PracticeWordSetExerciseTempRepository practiceWordSetExerciseTempRepository;
+    private PracticeWordSetExerciseRepository practiceWordSetExerciseRepository;
     private PracticeWordSetPresenter presenter;
     private WordSet wordSet;
     private Sentence sentence;
@@ -52,7 +52,7 @@ public class PracticeWordSetPresenterTest {
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "practiceWordSetExerciseTempRepository", practiceWordSetExerciseTempRepository);
+        Whitebox.setInternalState(presenter, "practiceWordSetExerciseRepository", practiceWordSetExerciseRepository);
 
         sentence = new Sentence();
         sentence.setId("dsfsd");
@@ -88,7 +88,7 @@ public class PracticeWordSetPresenterTest {
         // then
         assertEquals(sentence, Whitebox.getInternalState(presenter, "currentSentence"));
         verify(viewStrategy).onSentencesFound(sentence, word);
-        verify(practiceWordSetExerciseTempRepository).save(word, wordSetId, sentence);
+        verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
     }
 
     @Test

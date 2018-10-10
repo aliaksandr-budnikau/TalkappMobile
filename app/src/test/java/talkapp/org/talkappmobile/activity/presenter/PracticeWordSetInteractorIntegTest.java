@@ -13,7 +13,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.config.DIContext;
@@ -26,7 +26,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static retrofit2.Response.success;
@@ -38,7 +37,7 @@ public class PracticeWordSetInteractorIntegTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private PracticeWordSetExerciseTempRepository practiceWordSetExerciseTempRepository;
+    private PracticeWordSetExerciseRepository practiceWordSetExerciseRepository;
     @Mock
     private RefereeService refereeService;
     @Mock
@@ -72,7 +71,7 @@ public class PracticeWordSetInteractorIntegTest {
 
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, view);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "practiceWordSetExerciseTempRepository", practiceWordSetExerciseTempRepository);
+        Whitebox.setInternalState(presenter, "practiceWordSetExerciseRepository", practiceWordSetExerciseRepository);
         whenRefereeServiceCheckAnswer(result);
         presenter.interactor.refereeService = refereeService;
         when(sentenceProvider.findByWordAndWordSetId(word1, wordSetId)).thenReturn(asList(sentence));

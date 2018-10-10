@@ -6,7 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Objects;
 
 @DatabaseTable(tableName = "PracticeWordSetExercise")
-public class PracticeWordSetExercise {
+public class PracticeWordSetExerciseMapping {
     public static final String WORD_FN = "word";
     public static final String WORD_SET_ID_FN = "wordSetId";
     @DatabaseField(generatedId = true)
@@ -57,7 +57,7 @@ public class PracticeWordSetExercise {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PracticeWordSetExercise that = (PracticeWordSetExercise) o;
+        PracticeWordSetExerciseMapping that = (PracticeWordSetExerciseMapping) o;
         return id == that.id &&
                 Objects.equals(word, that.word) &&
                 Objects.equals(sentenceJSON, that.sentenceJSON);
@@ -70,7 +70,7 @@ public class PracticeWordSetExercise {
 
     @Override
     public String toString() {
-        return "PracticeWordSetExercise{" +
+        return "PracticeWordSetExerciseMapping{" +
                 "id=" + id +
                 ", word='" + word + '\'' +
                 ", wordSetId='" + wordSetId + '\'' +

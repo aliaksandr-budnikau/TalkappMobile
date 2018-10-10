@@ -2,6 +2,8 @@ package talkapp.org.talkappmobile.module;
 
 import android.os.Handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -35,5 +37,11 @@ public class InfraModule {
     @Singleton
     public InfraComponentsFactory provideInfraComponentsFactory() {
         return new InfraComponentsFactoryImpl();
+    }
+
+    @Provides
+    @Singleton
+    public ObjectMapper provideObjectMapper() {
+        return new ObjectMapper();
     }
 }

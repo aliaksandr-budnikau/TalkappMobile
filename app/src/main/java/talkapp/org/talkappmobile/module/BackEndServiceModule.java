@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.module;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -87,16 +89,22 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
+    public JacksonConverterFactory provideJacksonConverterFactory(ObjectMapper mapper) {
+        return JacksonConverterFactory.create(mapper);
+    }
+
+    @Provides
+    @Singleton
     public OkHttpClient provideOkHttpClient(AuthorizationInterceptor authorizationInterceptor) {
         return new OkHttpClient().newBuilder().addInterceptor(authorizationInterceptor).build();
     }
 
     @Provides
-    public Retrofit provideRetrofit(@Named("serverUrl") String serverUrl, OkHttpClient okHttpClient) {
+    public Retrofit provideRetrofit(@Named("serverUrl") String serverUrl, OkHttpClient okHttpClient, JacksonConverterFactory jacksonConverterFactory) {
         return new Retrofit.Builder()
                 .baseUrl(serverUrl)
                 .client(okHttpClient)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(jacksonConverterFactory)
                 .build();
     }
 
