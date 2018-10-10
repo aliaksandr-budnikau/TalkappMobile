@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
+import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
@@ -34,6 +35,7 @@ import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
+import talkapp.org.talkappmobile.module.LanguageModule;
 
 @Singleton
 @Component(modules = {
@@ -44,6 +46,7 @@ import talkapp.org.talkappmobile.module.ItemsListModule;
         AndroidModule.class,
         DataModule.class,
         InfraModule.class,
+        LanguageModule.class,
         DatabaseModule.class,
         ItemsListModule.class
 })
@@ -60,6 +63,7 @@ public abstract class DIContext {
                     .audioModule(new AudioModule())
                     .dataModule(new DataModule())
                     .infraModule(new InfraModule())
+                    .languageModule(new LanguageModule())
                     .databaseModule(new DatabaseModule())
                     .backEndServiceModule(new BackEndServiceModule())
                     .itemsListModule(new ItemsListModule())
@@ -114,4 +118,6 @@ public abstract class DIContext {
     public abstract void inject(SentenceProviderRepetitionStrategy target);
 
     public abstract void inject(SentenceProviderImpl target);
+
+    public abstract void inject(GrammarCheckServiceImpl target);
 }

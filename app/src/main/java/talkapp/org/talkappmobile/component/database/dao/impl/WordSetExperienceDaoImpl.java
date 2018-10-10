@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -16,9 +15,18 @@ public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMappi
     }
 
     @Override
-    public Dao.CreateOrUpdateStatus createNewOrUpdate(WordSetExperienceMapping experience) {
+    public void createNewOrUpdate(WordSetExperienceMapping experience) {
         try {
-            return super.createOrUpdate(experience);
+            this.createOrUpdate(experience);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public WordSetExperienceMapping findById(int id) {
+        try {
+            return this.queryForId(id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

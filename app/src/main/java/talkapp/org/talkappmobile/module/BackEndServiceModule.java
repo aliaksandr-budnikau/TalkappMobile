@@ -12,7 +12,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import talkapp.org.talkappmobile.component.backend.AccountService;
 import talkapp.org.talkappmobile.component.backend.LoginService;
-import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.TopicService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
@@ -61,12 +60,6 @@ public class BackEndServiceModule {
     @Singleton
     public VoiceService provideVoiceService(Retrofit retrofit) {
         return retrofit.create(VoiceService.class);
-    }
-
-    @Provides
-    @Singleton
-    public RefereeService provideRefereeService(Retrofit retrofit) {
-        return retrofit.create(RefereeService.class);
     }
 
     @Provides

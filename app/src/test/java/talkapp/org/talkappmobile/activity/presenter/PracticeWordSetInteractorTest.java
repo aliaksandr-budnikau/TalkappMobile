@@ -15,16 +15,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import retrofit2.Call;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
@@ -45,7 +44,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static retrofit2.Response.success;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorTest {
@@ -200,7 +198,7 @@ public class PracticeWordSetInteractorTest {
         checkingResult.setErrors(new ArrayList<GrammarError>());
 
         // when
-        whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -236,7 +234,7 @@ public class PracticeWordSetInteractorTest {
         checkingResult.setErrors(new ArrayList<GrammarError>());
 
         // when
-        whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -272,7 +270,7 @@ public class PracticeWordSetInteractorTest {
         checkingResult.setErrors(new ArrayList<GrammarError>());
 
         // when
-        whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -309,7 +307,7 @@ public class PracticeWordSetInteractorTest {
         checkingResult.setErrors(errors);
 
         // when
-        whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -323,7 +321,7 @@ public class PracticeWordSetInteractorTest {
 
 
     @Test
-    public void checkAnswer_emptyAnswer() throws IOException {
+    public void checkAnswer_emptyAnswer() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
@@ -346,22 +344,16 @@ public class PracticeWordSetInteractorTest {
         checkingResult.setErrors(asList(new GrammarError()));
 
         // when
-        whenRefereeServiceCheckAnswer(uncheckedAnswer, checkingResult);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
+        verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);
         verify(listener).onAnswerEmpty();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
-    }
-
-    private void whenRefereeServiceCheckAnswer(UncheckedAnswer uncheckedAnswer, AnswerCheckingResult checkingResult) throws IOException {
-        Call call = mock(Call.class);
-        when(call.execute()).thenReturn(success(checkingResult));
-        when(refereeService.checkAnswer(uncheckedAnswer, authSign)).thenReturn(call);
     }
 
     @Test

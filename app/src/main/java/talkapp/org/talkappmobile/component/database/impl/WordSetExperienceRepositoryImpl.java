@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
@@ -9,10 +11,13 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 public class WordSetExperienceRepositoryImpl implements WordSetExperienceRepository {
+    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private final WordSetExperienceDao experienceDao;
+    private final Logger logger;
 
-    public WordSetExperienceRepositoryImpl(WordSetExperienceDao experienceDao) {
+    public WordSetExperienceRepositoryImpl(WordSetExperienceDao experienceDao, Logger logger) {
         this.experienceDao = experienceDao;
+        this.logger = logger;
     }
 
     @Override
@@ -25,6 +30,20 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
 
         experienceDao.createNewOrUpdate(mapping);
         return toDto(mapping);
+    }
+
+    @Override
+    public int increaseExperience(int id, int value) {
+        WordSetExperienceMapping mapping = experienceDao.findById(id);
+        int experience = mapping.getTrainingExperience() + value;
+        if (experience > mapping.getMaxTrainingExperience()) {
+            logger.w(TAG, "Experience {} + value {} > then max value!", mapping, value);
+            mapping.setTrainingExperience(mapping.getMaxTrainingExperience());
+        } else {
+            mapping.setTrainingExperience(experience);
+        }
+        experienceDao.createNewOrUpdate(mapping);
+        return experience;
     }
 
     private WordSetExperience toDto(WordSetExperienceMapping mapping) {

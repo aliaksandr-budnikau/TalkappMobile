@@ -11,15 +11,16 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
-import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseRepositoryImpl;
-import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceRepositoryImpl;
-import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetExperienceDaoImpl;
+import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseRepositoryImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceRepositoryImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
@@ -63,7 +64,7 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public WordSetExperienceRepository provideWordSetExperienceRepository(WordSetExperienceDao experienceDao) {
-        return new WordSetExperienceRepositoryImpl(experienceDao);
+    public WordSetExperienceRepository provideWordSetExperienceRepository(WordSetExperienceDao experienceDao, Logger logger) {
+        return new WordSetExperienceRepositoryImpl(experienceDao, logger);
     }
 }

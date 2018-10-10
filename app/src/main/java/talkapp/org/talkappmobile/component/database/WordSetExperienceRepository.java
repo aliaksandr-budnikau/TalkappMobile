@@ -6,4 +6,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public interface WordSetExperienceRepository {
 
     WordSetExperience createNew(WordSet wordSet);
+
+    int increaseExperience(int id, int value);
 }

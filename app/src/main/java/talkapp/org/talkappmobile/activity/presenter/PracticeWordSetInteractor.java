@@ -15,10 +15,10 @@ import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.ByteUtils;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
+import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
@@ -92,7 +92,7 @@ public class PracticeWordSetInteractor {
         uncheckedAnswer.setActualAnswer(answer);
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
 
-        AnswerCheckingResult result = checkAnswer(uncheckedAnswer);
+        AnswerCheckingResult result = refereeService.checkAnswer(uncheckedAnswer);
         if (!result.getErrors().isEmpty()) {
             listener.onSpellingOrGrammarError(result.getErrors());
             return;
@@ -116,14 +116,6 @@ public class PracticeWordSetInteractor {
             return;
         }
         listener.onRightAnswer();
-    }
-
-    private AnswerCheckingResult checkAnswer(UncheckedAnswer uncheckedAnswer) {
-        try {
-            return refereeService.checkAnswer(uncheckedAnswer, authSign).execute().body();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     public void playVoice(OnPracticeWordSetListener listener) {

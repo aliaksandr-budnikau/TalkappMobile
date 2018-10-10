@@ -6,14 +6,20 @@ import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.component.EqualityScorer;
+import talkapp.org.talkappmobile.component.GrammarCheckService;
+import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
+import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
+import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
@@ -63,6 +69,18 @@ public class GameplayModule {
     @Singleton
     public TextUtils provideTextUtils() {
         return new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
+    }
+
+    @Provides
+    @Singleton
+    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService, WordSetExperienceRepository experienceRepository, EqualityScorer equalityScorer) {
+        return new RefereeServiceImpl(grammarCheckService, experienceRepository, equalityScorer);
+    }
+
+    @Provides
+    @Singleton
+    public EqualityScorer provideEqualityScorer() {
+        return new EqualityScorerImpl();
     }
 
     @Provides
