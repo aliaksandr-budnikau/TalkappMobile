@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import retrofit2.Call;
+import talkapp.org.talkappmobile.app.TalkappMobileApplication;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
 import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.component.Word2SentenceCache;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -35,18 +38,27 @@ public class PracticeWordSetInteractorIntegTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private Word2SentenceCache word2SentenceCache;
+    private PracticeWordSetExerciseTempRepository practiceWordSetExerciseTempRepository;
     @Mock
     private RefereeService refereeService;
     @Mock
     private SentenceProvider sentenceProvider;
 
+    @BeforeClass
+    public static void setUpContext() {
+        DIContext.init(new TalkappMobileApplication());
+    }
+
     @Test
     public void initialiseSentence_throwIndexOutOfBoundsExceptionInHalfFinishedPractice() throws IOException {
         int maxTrainingExperience = 4;
 
+        String wordSetId = "wordSetId";
+
         WordSet wordSet = new WordSet();
-        wordSet.setWords(asList("word1", "word2"));
+        wordSet.setId(wordSetId);
+        String word1 = "word1";
+        wordSet.setWords(asList(word1, "word2"));
         wordSet.setExperience(new WordSetExperience());
         wordSet.getExperience().setTrainingExperience(0);
         wordSet.getExperience().setMaxTrainingExperience(maxTrainingExperience);
@@ -60,10 +72,10 @@ public class PracticeWordSetInteractorIntegTest {
 
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, view);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "word2SentenceCache", word2SentenceCache);
+        Whitebox.setInternalState(presenter, "practiceWordSetExerciseTempRepository", practiceWordSetExerciseTempRepository);
         whenRefereeServiceCheckAnswer(result);
         presenter.interactor.refereeService = refereeService;
-        when(sentenceProvider.findByWord(anyString())).thenReturn(asList(sentence));
+        when(sentenceProvider.findByWordAndWordSetId(word1, wordSetId)).thenReturn(asList(sentence));
         presenter.interactor.sentenceProvider = sentenceProvider;
 
 

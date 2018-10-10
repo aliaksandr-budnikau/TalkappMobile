@@ -21,7 +21,7 @@ public class SentenceProviderStrategy {
         DIContext.get().inject(this);
     }
 
-    public List<Sentence> findByWord(String word) {
+    public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
         try {
             return sentenceService.findByWords(word, WORDS_NUMBER, authSign).execute().body();
         } catch (IOException e) {

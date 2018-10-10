@@ -5,8 +5,8 @@ import java.util.ListIterator;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
 import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.component.Word2SentenceCache;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -20,7 +20,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Inject
     PracticeWordSetInteractor interactor;
     @Inject
-    Word2SentenceCache word2SentenceCache;
+    PracticeWordSetExerciseTempRepository practiceWordSetExerciseTempRepository;
     @Inject
     SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
@@ -42,7 +42,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onSentencesFound(final Sentence sentence, String word) {
-        word2SentenceCache.save(word, sentence);
+        practiceWordSetExerciseTempRepository.save(word, wordSet.getId(), sentence);
         this.currentSentence = sentence;
         viewStrategy.onSentencesFound(sentence, word);
     }
@@ -133,7 +133,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public void onNextButtonClick() {
         currentWord = wordSequenceIterator.next();
-        interactor.initialiseSentence(currentWord, this);
+        interactor.initialiseSentence(currentWord, wordSet.getId(), this);
     }
 
     public void onCheckAnswerButtonClick(final String answer) {

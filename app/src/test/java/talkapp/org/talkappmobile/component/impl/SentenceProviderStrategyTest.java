@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,8 +11,10 @@ import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
+import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static java.util.Arrays.asList;
@@ -32,10 +35,16 @@ public class SentenceProviderStrategyTest {
     @InjectMocks
     private SentenceProviderStrategy strategy;
 
+    @BeforeClass
+    public static void setUpContext() {
+        DIContext.init(new TalkappMobileApplication());
+    }
+
     @Test
     public void findByWord_sentenceFound() throws IOException {
         // setup
         String word = "word";
+        String wordSetId = "wordSetId";
 
         Sentence sentence1 = new Sentence();
         sentence1.setId("fds32ddd");
@@ -45,7 +54,7 @@ public class SentenceProviderStrategyTest {
 
         // when
         whenSentenceServiceFindByWords(word, sentences, false);
-        List<Sentence> sentencesActual = strategy.findByWord(word);
+        List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
         assertEquals(sentences.get(0), sentencesActual.get(0));
@@ -58,12 +67,13 @@ public class SentenceProviderStrategyTest {
     public void findByWord_sentenceNotFound() throws IOException {
         // setup
         String word = "word";
+        String wordSetId = "wordSetId";
 
         List<Sentence> sentences = emptyList();
 
         // when
         whenSentenceServiceFindByWords(word, sentences, false);
-        List<Sentence> sentencesActual = strategy.findByWord(word);
+        List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
         assertTrue(sentencesActual.isEmpty());
@@ -73,12 +83,13 @@ public class SentenceProviderStrategyTest {
     public void findByWord_exception() throws IOException {
         // setup
         String word = "word";
+        String wordSetId = "wordSetId";
 
         List<Sentence> sentences = emptyList();
 
         // when
         whenSentenceServiceFindByWords(word, sentences, true);
-        List<Sentence> sentencesActual = strategy.findByWord(word);
+        List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
         assertTrue(sentencesActual.isEmpty());

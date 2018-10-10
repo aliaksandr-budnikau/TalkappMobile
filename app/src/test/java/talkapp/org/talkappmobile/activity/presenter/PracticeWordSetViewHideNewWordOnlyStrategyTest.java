@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -8,7 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 
+import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 
@@ -22,6 +25,11 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
     private TextUtils textUtils;
     @InjectMocks
     private PracticeWordSetViewHideNewWordOnlyStrategy strategy = new PracticeWordSetViewHideNewWordOnlyStrategy(null);
+
+    @BeforeClass
+    public static void setUpContext() {
+        DIContext.init(new TalkappMobileApplication());
+    }
 
     @Test
     public void hideRightAnswer_oneWord() {

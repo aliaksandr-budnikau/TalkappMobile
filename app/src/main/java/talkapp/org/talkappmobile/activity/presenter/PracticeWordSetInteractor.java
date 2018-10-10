@@ -73,8 +73,8 @@ public class PracticeWordSetInteractor {
         wordSet.setWords(new ArrayList<>(set));
     }
 
-    public void initialiseSentence(String word, final OnPracticeWordSetListener listener) {
-        List<Sentence> sentences = sentenceProvider.findByWord(word);
+    public void initialiseSentence(String word, String wordSetId, final OnPracticeWordSetListener listener) {
+        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
         if (sentences.isEmpty()) {
             logger.w(TAG, "Sentences haven't been found with words '{}'. Fill the storage.", word);
             return;

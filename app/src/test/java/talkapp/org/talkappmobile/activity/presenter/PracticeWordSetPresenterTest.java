@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -10,7 +11,9 @@ import org.powermock.reflect.Whitebox;
 import java.util.HashMap;
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.Word2SentenceCache;
+import talkapp.org.talkappmobile.app.TalkappMobileApplication;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -29,10 +32,15 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private Word2SentenceCache word2SentenceCache;
+    private PracticeWordSetExerciseTempRepository practiceWordSetExerciseTempRepository;
     private PracticeWordSetPresenter presenter;
     private WordSet wordSet;
     private Sentence sentence;
+
+    @BeforeClass
+    public static void setUpContext() {
+        DIContext.init(new TalkappMobileApplication());
+    }
 
     @Before
     public void setUp() {
@@ -44,7 +52,7 @@ public class PracticeWordSetPresenterTest {
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "word2SentenceCache", word2SentenceCache);
+        Whitebox.setInternalState(presenter, "practiceWordSetExerciseTempRepository", practiceWordSetExerciseTempRepository);
 
         sentence = new Sentence();
         sentence.setId("dsfsd");
@@ -68,6 +76,11 @@ public class PracticeWordSetPresenterTest {
         sentence.getTranslations().put("russian", "fsdfsfs");
 
         String word = "word";
+        String wordSetId = "wordSetId";
+        WordSet wordSet = new WordSet();
+        wordSet.setId(wordSetId);
+
+        Whitebox.setInternalState(presenter, "wordSet", wordSet);
 
         // when
         presenter.onSentencesFound(sentence, word);
@@ -75,7 +88,7 @@ public class PracticeWordSetPresenterTest {
         // then
         assertEquals(sentence, Whitebox.getInternalState(presenter, "currentSentence"));
         verify(viewStrategy).onSentencesFound(sentence, word);
-        verify(word2SentenceCache).save(word, sentence);
+        verify(practiceWordSetExerciseTempRepository).save(word, wordSetId, sentence);
     }
 
     @Test
@@ -175,14 +188,16 @@ public class PracticeWordSetPresenterTest {
     public void onNextButtonClick() {
         // setup
         String word1 = "sdfsd";
+        String wordSetId = "sdfsdId";
         wordSet.setWords(asList(word1, "dsfsddsd"));
+        wordSet.setId(wordSetId);
         Whitebox.setInternalState(presenter, "wordSequenceIterator", wordSet.getWords().listIterator());
 
         // when
         presenter.onNextButtonClick();
 
         // then
-        verify(interactor).initialiseSentence(word1, presenter);
+        verify(interactor).initialiseSentence(word1, wordSetId, presenter);
     }
 
     @Test

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.component.Word2SentenceCache;
+import talkapp.org.talkappmobile.component.PracticeWordSetExerciseTempRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
 
@@ -13,14 +13,14 @@ import static java.util.Arrays.asList;
 public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy {
 
     @Inject
-    Word2SentenceCache sentenceCache;
+    PracticeWordSetExerciseTempRepository tempRepository;
 
     public SentenceProviderRepetitionStrategy() {
         DIContext.get().inject(this);
     }
 
     @Override
-    public List<Sentence> findByWord(String word) {
-        return asList(sentenceCache.findByWord(word));
+    public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
+        return asList(tempRepository.findByWordAndWordSetId(word, wordSetId));
     }
 }

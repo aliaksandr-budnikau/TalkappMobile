@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import android.media.AudioTrack;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
+import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
@@ -24,6 +26,7 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -68,6 +71,11 @@ public class PracticeWordSetInteractorTest {
     private AudioStuffFactory audioStuffFactory;
     @InjectMocks
     private PracticeWordSetInteractor interactor;
+
+    @BeforeClass
+    public static void setUp() {
+        DIContext.init(new TalkappMobileApplication());
+    }
 
     @Test
     public void initialiseExperience_experienceIsNull() throws IOException {
@@ -142,11 +150,12 @@ public class PracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
         String word = "sdfs";
+        String wordSetId = "sdfsId";
 
         // when
-        when(sentenceProvider.findByWord(word)).thenReturn(sentences);
+        when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
         when(sentenceSelector.getSentence(sentences)).thenReturn(selectedSentence);
-        interactor.initialiseSentence(word, listener);
+        interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
         verify(listener).onSentencesFound(selectedSentence, word);
@@ -159,10 +168,11 @@ public class PracticeWordSetInteractorTest {
         selectedSentence.setId("fds32");
 
         String word = "SDFDS";
+        String wordSetId = "SDFDSId";
 
         // when
-        when(sentenceProvider.findByWord(word)).thenReturn(Collections.<Sentence>emptyList());
-        interactor.initialiseSentence(word, listener);
+        when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(Collections.<Sentence>emptyList());
+        interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
