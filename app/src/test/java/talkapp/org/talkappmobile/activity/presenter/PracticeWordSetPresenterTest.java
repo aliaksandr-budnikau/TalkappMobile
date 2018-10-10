@@ -47,7 +47,7 @@ public class PracticeWordSetPresenterTest {
         wordSet = new WordSet();
         wordSet.setId("dsfse3");
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("sdfs");
+        wordSet.getExperience().setId(3453);
         presenter = new PracticeWordSetPresenter(wordSet, null);
 
         Whitebox.setInternalState(presenter, "interactor", interactor);

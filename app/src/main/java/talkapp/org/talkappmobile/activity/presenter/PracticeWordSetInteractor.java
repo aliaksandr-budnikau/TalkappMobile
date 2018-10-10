@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
@@ -28,7 +29,6 @@ import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.UnrecognizedVoice;
 import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -56,6 +56,8 @@ public class PracticeWordSetInteractor {
     ByteUtils byteUtils;
     @Inject
     VoiceService voiceService;
+    @Inject
+    WordSetExperienceRepository experienceRepository;
 
     public PracticeWordSetInteractor() {
         DIContext.get().inject(this);
@@ -63,7 +65,7 @@ public class PracticeWordSetInteractor {
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         if (wordSet.getExperience() == null) {
-            wordSet.setExperience(createExperience(wordSet.getId()));
+            wordSet.setExperience(experienceRepository.createNew(wordSet));
         }
         listener.onInitialiseExperience();
     }
@@ -122,14 +124,6 @@ public class PracticeWordSetInteractor {
     private AnswerCheckingResult checkAnswer(UncheckedAnswer uncheckedAnswer) {
         try {
             return refereeService.checkAnswer(uncheckedAnswer, authSign).execute().body();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private WordSetExperience createExperience(String wordSetId) {
-        try {
-            return wordSetExperienceService.create(wordSetId, authSign).execute().body();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

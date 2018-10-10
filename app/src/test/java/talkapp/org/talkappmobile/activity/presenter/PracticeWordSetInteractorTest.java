@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
@@ -69,6 +70,8 @@ public class PracticeWordSetInteractorTest {
     private OnPracticeWordSetListener listener;
     @Mock
     private AudioStuffFactory audioStuffFactory;
+    @Mock
+    private WordSetExperienceRepository wordSetExperienceRepository;
     @InjectMocks
     private PracticeWordSetInteractor interactor;
 
@@ -85,10 +88,10 @@ public class PracticeWordSetInteractorTest {
         wordSet.setId("3243");
 
         WordSetExperience experience = new WordSetExperience();
-        experience.setId("323423");
+        experience.setId(323423);
 
         // when
-        whenWordSetExperienceServiceCreate(wordSet, experience);
+        when(wordSetExperienceRepository.createNew(wordSet)).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -97,17 +100,11 @@ public class PracticeWordSetInteractorTest {
         assertEquals(experience.getId(), wordSet.getExperience().getId());
     }
 
-    private void whenWordSetExperienceServiceCreate(WordSet wordSet, WordSetExperience experience) throws IOException {
-        Call call = mock(Call.class);
-        when(call.execute()).thenReturn(success(experience));
-        when(wordSetExperienceService.create(wordSet.getId(), authSign)).thenReturn(call);
-    }
-
     @Test
     public void initialiseExperience_experienceIsNotNull() throws IOException {
         // setup
         WordSetExperience experience = new WordSetExperience();
-        experience.setId("323423");
+        experience.setId(323423);
 
         WordSet wordSet = new WordSet();
         wordSet.setExperience(experience);
@@ -184,7 +181,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("ds3243");
+        wordSet.getExperience().setId(323);
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -220,7 +217,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("ds3243");
+        wordSet.getExperience().setId(23534);
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -256,7 +253,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("ds3243");
+        wordSet.getExperience().setId(3232);
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -292,7 +289,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("ds3243");
+        wordSet.getExperience().setId(32534);
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -330,7 +327,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("ds3243");
+        wordSet.getExperience().setId(23234);
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
