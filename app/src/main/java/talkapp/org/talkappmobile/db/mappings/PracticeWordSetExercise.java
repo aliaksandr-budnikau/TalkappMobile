@@ -8,8 +8,12 @@ import java.util.Objects;
 @DatabaseTable(tableName = "PracticeWordSetExercise")
 public class PracticeWordSetExercise {
     public static final String WORD_FN = "word";
+    public static final String WORD_SET_ID_FN = "wordSetId";
     @DatabaseField(generatedId = true)
     private int id;
+
+    @DatabaseField(canBeNull = false, columnName = WORD_SET_ID_FN)
+    private String wordSetId;
 
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String word;
@@ -31,6 +35,14 @@ public class PracticeWordSetExercise {
 
     public void setWord(String word) {
         this.word = word;
+    }
+
+    public String getWordSetId() {
+        return wordSetId;
+    }
+
+    public void setWordSetId(String wordSetId) {
+        this.wordSetId = wordSetId;
     }
 
     public String getSentenceJSON() {
@@ -61,6 +73,7 @@ public class PracticeWordSetExercise {
         return "PracticeWordSetExercise{" +
                 "id=" + id +
                 ", word='" + word + '\'' +
+                ", wordSetId='" + wordSetId + '\'' +
                 ", sentenceJSON='" + sentenceJSON + '\'' +
                 '}';
     }

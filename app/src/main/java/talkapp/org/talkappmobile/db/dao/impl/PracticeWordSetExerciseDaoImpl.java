@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.db.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise;
 
 import static talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise.WORD_FN;
+import static talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise.WORD_SET_ID_FN;
 
 public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetExercise, Integer> implements PracticeWordSetExerciseDao {
 
@@ -18,9 +19,14 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExercise> findByWord(String word) {
+    public List<PracticeWordSetExercise> findByWordAndWordSetId(String word, String wordSetId) {
         try {
-            return this.queryForEq(WORD_FN, word);
+            return this.query(
+                    queryBuilder()
+                            .where()
+                            .eq(WORD_FN, word)
+                            .eq(WORD_SET_ID_FN, wordSetId).prepare()
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

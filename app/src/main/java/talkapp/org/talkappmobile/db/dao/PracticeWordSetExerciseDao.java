@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExercise;
 
 public interface PracticeWordSetExerciseDao {
 
-    List<PracticeWordSetExercise> findByWord(String word);
+    List<PracticeWordSetExercise> findByWordAndWordSetId(String word, String wordSetId);
 
     Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExercise exercise);
 }
