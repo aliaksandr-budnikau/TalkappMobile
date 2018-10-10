@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.db.dao.impl;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
@@ -6,8 +6,8 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.db.dao.WordSetExperienceDao;
-import talkapp.org.talkappmobile.db.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
 public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMapping, Integer> implements WordSetExperienceDao {
 

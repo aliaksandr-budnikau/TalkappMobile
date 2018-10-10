@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.db;
+package talkapp.org.talkappmobile.component.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,7 +9,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseHelper.class.getSimpleName();

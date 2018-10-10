@@ -1,8 +1,8 @@
-package talkapp.org.talkappmobile.component.impl;
+package talkapp.org.talkappmobile.component.database.impl;
 
-import talkapp.org.talkappmobile.component.WordSetExperienceRepository;
-import talkapp.org.talkappmobile.db.dao.WordSetExperienceDao;
-import talkapp.org.talkappmobile.db.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 

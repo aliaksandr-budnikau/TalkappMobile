@@ -5,7 +5,7 @@ import java.util.ListIterator;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;

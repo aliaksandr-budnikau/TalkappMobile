@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.impl;
+package talkapp.org.talkappmobile.component.database.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.db.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExerciseRepository {

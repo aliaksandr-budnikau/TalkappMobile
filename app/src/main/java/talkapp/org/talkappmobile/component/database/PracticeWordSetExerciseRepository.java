@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component;
+package talkapp.org.talkappmobile.component.database;
 
 import talkapp.org.talkappmobile.model.Sentence;
 

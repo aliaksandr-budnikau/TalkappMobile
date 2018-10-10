@@ -23,10 +23,10 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
-import talkapp.org.talkappmobile.component.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -114,7 +114,7 @@ public class PracticeWordSetInteractorTest {
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetExperienceService, times(0)).create(wordSet.getId(), authSign);
+        verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
         verify(listener).onInitialiseExperience();
         assertNotNull(wordSet.getExperience());
         assertEquals(experience.getId(), wordSet.getExperience().getId());

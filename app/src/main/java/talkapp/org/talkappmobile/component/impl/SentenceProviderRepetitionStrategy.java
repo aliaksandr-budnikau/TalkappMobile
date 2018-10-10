@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.component.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.Sentence;
 

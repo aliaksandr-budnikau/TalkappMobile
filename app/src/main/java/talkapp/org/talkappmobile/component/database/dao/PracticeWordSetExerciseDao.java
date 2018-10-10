@@ -1,10 +1,10 @@
-package talkapp.org.talkappmobile.db.dao;
+package talkapp.org.talkappmobile.component.database.dao;
 
 import com.j256.ormlite.dao.Dao;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 
 public interface PracticeWordSetExerciseDao {
 

@@ -17,11 +17,10 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
-import talkapp.org.talkappmobile.component.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.RefereeService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
-import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -36,8 +35,6 @@ public class PracticeWordSetInteractor {
     private static final String TAG = PracticeWordSetInteractor.class.getSimpleName();
     @Inject
     WordsCombinator wordsCombinator;
-    @Inject
-    WordSetExperienceService wordSetExperienceService;
     @Inject
     AuthSign authSign;
     @Inject

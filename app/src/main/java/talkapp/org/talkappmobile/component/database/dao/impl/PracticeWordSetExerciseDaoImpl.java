@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.db.dao.impl;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
@@ -6,11 +6,11 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
 
-import talkapp.org.talkappmobile.db.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 
-import static talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping.WORD_FN;
-import static talkapp.org.talkappmobile.db.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
 
 public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetExerciseMapping, Integer> implements PracticeWordSetExerciseDao {
 
