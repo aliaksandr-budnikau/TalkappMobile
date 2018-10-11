@@ -10,9 +10,11 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.backend.AccountService;
 import talkapp.org.talkappmobile.component.backend.LoginService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
+import talkapp.org.talkappmobile.component.backend.TextGrammarCheckService;
 import talkapp.org.talkappmobile.component.backend.TopicService;
 import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
@@ -35,6 +37,12 @@ public class BackEndServiceModule {
     @Singleton
     public TopicService provideTopicService(Retrofit retrofit) {
         return retrofit.create(TopicService.class);
+    }
+
+    @Provides
+    @Singleton
+    public TextGrammarCheckService provideTextGrammarCheckService(Retrofit retrofit) {
+        return retrofit.create(TextGrammarCheckService.class);
     }
 
     @Provides
@@ -90,6 +98,7 @@ public class BackEndServiceModule {
         return new Retrofit.Builder()
                 .baseUrl(serverUrl)
                 .client(okHttpClient)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(jacksonConverterFactory)
                 .build();
     }
