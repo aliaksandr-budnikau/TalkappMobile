@@ -1,5 +1,8 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
@@ -18,6 +21,16 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     public WordSetExperienceRepositoryImpl(WordSetExperienceDao experienceDao, Logger logger) {
         this.experienceDao = experienceDao;
         this.logger = logger;
+    }
+
+    @Override
+    public List<WordSetExperience> findAll() {
+        List<WordSetExperienceMapping> all = experienceDao.findAll();
+        LinkedList<WordSetExperience> result = new LinkedList<>();
+        for (WordSetExperienceMapping wordSetExperienceMapping : all) {
+            result.addLast(toDto(wordSetExperienceMapping));
+        }
+        return result;
     }
 
     @Override

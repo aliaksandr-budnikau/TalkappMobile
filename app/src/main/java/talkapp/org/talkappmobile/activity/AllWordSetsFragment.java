@@ -22,19 +22,19 @@ import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.WordSetExperienceService;
-import talkapp.org.talkappmobile.component.backend.WordSetService;
 
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener {
     public static final String TOPIC_ID_MAPPING = "topicId";
     @Inject
     WordSetService wordSetService;
     @Inject
-    WordSetExperienceService wordSetExperienceService;
+    WordSetExperienceRepository experienceRepository;
     @Inject
     AdaptersFactory adaptersFactory;
     @Inject
@@ -64,21 +64,9 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
                 e.printStackTrace();
             }
 
-            Call<List<WordSetExperience>> wordSetExperienceCall;
-            if (topicId == null) {
-                wordSetExperienceCall = wordSetExperienceService.findAll(authSign);
-            } else {
-                wordSetExperienceCall = wordSetExperienceService.findByTopicId(topicId, authSign);
-            }
-            Response<List<WordSetExperience>> wordSetExperiences = null;
-            try {
-                wordSetExperiences = wordSetExperienceCall.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            List<WordSetExperience> wordSetExperiences = experienceRepository.findAll();
             HashMap<String, WordSetExperience> experienceMap = new HashMap<>();
-            for (WordSetExperience experience : wordSetExperiences.body()) {
+            for (WordSetExperience experience : wordSetExperiences) {
                 experienceMap.put(experience.getWordSetId(), experience);
             }
             List<WordSet> body = wordSets.body();
