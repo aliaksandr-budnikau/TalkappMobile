@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
-@DatabaseTable(tableName = "PracticeWordSetExercise")
+@DatabaseTable(tableName = "WordSetExperience")
 public class WordSetExperienceMapping {
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
