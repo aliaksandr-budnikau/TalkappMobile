@@ -11,4 +11,6 @@ public interface PracticeWordSetExerciseDao {
     List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, String wordSetId);
 
     Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise);
+
+    void cleanByWordSetId(String wordSetId);
 }

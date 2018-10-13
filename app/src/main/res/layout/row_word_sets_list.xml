@@ -7,7 +7,7 @@
         android:id="@+id/wordSetRow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="15pt" />
+        android:textSize="10pt" />
 
     <ProgressBar
         android:id="@+id/wordSetProgress"

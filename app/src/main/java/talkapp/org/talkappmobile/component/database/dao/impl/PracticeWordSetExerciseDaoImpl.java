@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -36,6 +37,17 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     public CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
         try {
             return super.createOrUpdate(exercise);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void cleanByWordSetId(String wordSetId) {
+        try {
+            DeleteBuilder<PracticeWordSetExerciseMapping, Integer> builder = deleteBuilder();
+            builder.where().eq(WORD_SET_ID_FN, wordSetId);
+            builder.delete();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -46,4 +46,9 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
         exercise.setWordSetId(wordSetId);
         exerciseDao.createNewOrUpdate(exercise);
     }
+
+    @Override
+    public void cleanByWordSetId(String wordSetId) {
+        exerciseDao.cleanByWordSetId(wordSetId);
+    }
 }

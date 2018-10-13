@@ -1,16 +1,19 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,12 +27,13 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     public static final String TOPIC_ID_MAPPING = "topicId";
     @Inject
     WordSetService wordSetService;
@@ -37,6 +41,8 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     WordSetExperienceRepository experienceRepository;
     @Inject
     AdaptersFactory adaptersFactory;
+    @Inject
+    PracticeWordSetExerciseRepository exerciseRepository;
     @Inject
     AuthSign authSign;
     private ListView wordSetsListView;
@@ -95,6 +101,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         wordSetsListView = view.findViewById(R.id.wordSetsListView);
         wordSetsListView.setAdapter(adapter);
         wordSetsListView.setOnItemClickListener(this);
+        wordSetsListView.setOnItemLongClickListener(this);
 
         loadingWordSets.execute();
         return view;
@@ -106,5 +113,25 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("Do you want to reset your progress?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        WordSet wordSet = adapter.getItem(position);
+                        exerciseRepository.cleanByWordSetId(wordSet.getId());
+                        WordSetExperience experience = experienceRepository.createNew(wordSet);
+                        ProgressBar wordSetProgress = view.findViewById(R.id.wordSetProgress);
+                        wordSetProgress.setProgress(experience.getTrainingExperience());
+                        wordSet.setExperience(experience);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null).show();
+        return true;
     }
 }
