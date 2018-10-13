@@ -5,8 +5,8 @@ import java.util.ListIterator;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.SentenceProvider;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -154,10 +154,14 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerTouched() {
-        viewStrategy.rightAnswerTouched(currentSentence);
+        if (currentSentence != null) {
+            viewStrategy.rightAnswerTouched(currentSentence);
+        }
     }
 
     public void rightAnswerUntouched() {
-        viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
+        if (currentSentence != null) {
+            viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
+        }
     }
 }
