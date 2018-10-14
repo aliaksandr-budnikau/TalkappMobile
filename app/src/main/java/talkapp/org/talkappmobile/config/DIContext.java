@@ -26,6 +26,7 @@ import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
+import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
@@ -42,6 +43,7 @@ import talkapp.org.talkappmobile.module.LanguageModule;
         ConcurrentModule.class,
         AndroidModule.class,
         DataModule.class,
+        AudioModule.class,
         InfraModule.class,
         LanguageModule.class,
         DatabaseModule.class,
@@ -55,6 +57,7 @@ public abstract class DIContext {
         if (instance == null && application != null) {
             instance = DaggerDIContext.builder()
                     .androidModule(new AndroidModule(application))
+                    .audioModule(new AudioModule())
                     .gameplayModule(new GameplayModule())
                     .concurrentModule(new ConcurrentModule())
                     .dataModule(new DataModule())

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
@@ -40,6 +41,8 @@ public class PracticeWordSetInteractor {
     WordSetExperienceRepository experienceRepository;
     @Inject
     Context context;
+    @Inject
+    AudioStuffFactory audioStuffFactory;
 
     public PracticeWordSetInteractor() {
         DIContext.get().inject(this);
@@ -111,7 +114,7 @@ public class PracticeWordSetInteractor {
         try {
             listener.onStartPlaying();
             try {
-                mp = new MediaPlayer();
+                mp = audioStuffFactory.createMediaPlayer();
                 mp.setDataSource(context, voiceRecordUri);
                 mp.prepare();
                 mp.start();
