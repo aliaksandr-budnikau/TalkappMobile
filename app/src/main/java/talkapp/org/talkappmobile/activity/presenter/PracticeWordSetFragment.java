@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -22,10 +24,9 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.config.DIContext;
-import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import static android.os.AsyncTask.Status.RUNNING;
+import static android.app.Activity.RESULT_OK;
 
 public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
@@ -37,14 +38,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private TextView originalText;
     private TextView rightAnswer;
     private TextView answerText;
-    private ProgressBar recProgress;
     private ProgressBar wordSetProgress;
     private Button nextButton;
     private Button checkButton;
     private Button speakButton;
     private Button playButton;
     private LinearLayout spellingGrammarErrorsListView;
-    private AsyncTask<Void, Void, Void> asyncTask;
     private PracticeWordSetPresenter presenter;
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
@@ -92,17 +91,13 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private View.OnClickListener recogniseVoiceButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (asyncTask == null || asyncTask.getStatus() != RUNNING) {
-                asyncTask = new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        presenter.onRecogniseVoiceButtonClick();
-                        return null;
-                    }
-                }.executeOnExecutor(executor);
-                return;
-            }
-            presenter.onStopRecognitionVoiceButtonClick();
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, PracticeWordSetFragment.class.getPackage().getName());
+            intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
+            intent.putExtra("android.speech.extra.GET_AUDIO", true);
+            startActivityForResult(intent, 3000);
         }
     };
 
@@ -140,7 +135,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         originalText = inflate.findViewById(R.id.originalText);
         rightAnswer = inflate.findViewById(R.id.rightAnswer);
         answerText = inflate.findViewById(R.id.answerText);
-        recProgress = inflate.findViewById(R.id.recProgress);
         wordSetProgress = inflate.findViewById(R.id.wordSetProgress);
         nextButton = inflate.findViewById(R.id.nextButton);
         checkButton = inflate.findViewById(R.id.checkButton);
@@ -159,12 +153,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         spellingGrammarErrorsListView = inflate.findViewById(R.id.spellingGrammarErrorsListView);
         rightAnswer.setOnTouchListener(rightAnswerOnTouchListener);
 
-        return inflate;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -173,12 +161,34 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                 return null;
             }
         }.executeOnExecutor(executor);
+        return inflate;
     }
 
     @Override
     public void onDestroy() {
         presenter.onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        Bundle bundle = data.getExtras();
+
+        if (resultCode != RESULT_OK || bundle == null) {
+            return;
+        }
+
+        List<String> suggestedWords = bundle.getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
+        if (suggestedWords == null || suggestedWords.isEmpty()) {
+            return;
+        }
+
+        presenter.onGotRecognitionResult(suggestedWords);
+        presenter.onVoiceRecognized(data.getData());
     }
 
     @Override
@@ -318,16 +328,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void setEnablePlayButton(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                playButton.setEnabled(value);
-            }
-        });
-    }
-
-    @Override
     public void setEnableCheckButton(final boolean value) {
         uiEventHandler.post(new Runnable() {
             @Override
@@ -348,41 +348,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void setRecProgress(final int value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                recProgress.setProgress(value);
-            }
-        });
-    }
-
-    @Override
-    public void hideRecProgress() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                recProgress.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
-
-    @Override
     public void setAnswerText(final String text) {
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {
                 answerText.setText(text);
-            }
-        });
-    }
-
-    @Override
-    public void setEnableRightAnswer(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                rightAnswer.setEnabled(value);
             }
         });
     }
@@ -413,16 +383,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             @Override
             public void run() {
                 spellingGrammarErrorsListView.removeAllViews();
-            }
-        });
-    }
-
-    @Override
-    public void showRecProgress() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                recProgress.setVisibility(View.VISIBLE);
             }
         });
     }

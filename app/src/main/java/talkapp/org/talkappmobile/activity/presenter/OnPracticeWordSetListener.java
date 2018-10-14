@@ -4,7 +4,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 
 public interface OnPracticeWordSetListener {
     void onInitialiseExperience();
@@ -29,13 +28,5 @@ public interface OnPracticeWordSetListener {
 
     void onStopPlaying();
 
-    void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis);
-
-    void onStartRecording();
-
-    void onStopRecording();
-
-    void onStopRecognition();
-
-    void onGotRecognitionResult(VoiceRecognitionResult result);
+    void onGotRecognitionResult(List<String> result);
 }

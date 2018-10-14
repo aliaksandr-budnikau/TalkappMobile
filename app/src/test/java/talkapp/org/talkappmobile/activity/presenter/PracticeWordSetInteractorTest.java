@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import android.media.AudioTrack;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,17 +7,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RecordedTrack;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
@@ -38,8 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,21 +41,13 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private WordsCombinator wordsCombinator;
     @Mock
-    private AuthSign authSign;
-    @Mock
-    private Logger logger;
-    @Mock
     private SentenceProvider sentenceProvider;
     @Mock
     private SentenceSelector sentenceSelector;
     @Mock
     private RefereeService refereeService;
     @Mock
-    private RecordedTrack recordedTrackBuffer;
-    @Mock
     private OnPracticeWordSetListener listener;
-    @Mock
-    private AudioStuffFactory audioStuffFactory;
     @Mock
     private WordSetExperienceRepository wordSetExperienceRepository;
     @InjectMocks
@@ -76,7 +59,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void initialiseExperience_experienceIsNull() throws IOException {
+    public void initialiseExperience_experienceIsNull() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(null);
@@ -96,7 +79,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void initialiseExperience_experienceIsNotNull() throws IOException {
+    public void initialiseExperience_experienceIsNotNull() {
         // setup
         WordSetExperience experience = new WordSetExperience();
         experience.setId(323423);
@@ -172,7 +155,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void checkAnswer_answerIsOk() throws IOException {
+    public void checkAnswer_answerIsOk() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
@@ -208,7 +191,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void checkAnswer_answerIsOkAndFinish() throws IOException {
+    public void checkAnswer_answerIsOkAndFinish() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
@@ -244,7 +227,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void checkAnswer_accuracyTooLowError() throws IOException {
+    public void checkAnswer_accuracyTooLowError() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
@@ -280,7 +263,7 @@ public class PracticeWordSetInteractorTest {
     }
 
     @Test
-    public void checkAnswer_spellingOrGrammarError() throws IOException {
+    public void checkAnswer_spellingOrGrammarError() {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
@@ -315,7 +298,6 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAnswerEmpty();
     }
-
 
     @Test
     public void checkAnswer_emptyAnswer() {
@@ -353,100 +335,5 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
     }
 
-    @Test
-    public void playVoice_bufferIsEmpty() {
-        // setup
-        // when
-        when(recordedTrackBuffer.isEmpty()).thenReturn(true);
-        interactor.playVoice(listener);
-
-        // then
-        verify(listener, times(0)).onStartPlaying();
-        verify(listener, times(0)).onStopPlaying();
-        verify(audioStuffFactory, times(0)).createAudioTrack();
-        verify(recordedTrackBuffer, times(0)).getAsOneArray();
-        verify(recordedTrackBuffer, times(0)).getPosition();
-    }
-
-    @Test
-    public void playVoice_bufferIsNotEmpty() {
-        // setup
-        AudioTrack audioTrack = mock(AudioTrack.class);
-        byte[] array = new byte[10];
-        int position = 5;
-
-        // when
-        when(audioStuffFactory.createAudioTrack()).thenReturn(audioTrack);
-        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
-        when(recordedTrackBuffer.getAsOneArray()).thenReturn(array);
-        when(recordedTrackBuffer.getPosition()).thenReturn(position);
-        interactor.playVoice(listener);
-
-        // then
-        verify(listener).onStartPlaying();
-        verify(listener).onStopPlaying();
-        verify(audioTrack).play();
-        verify(audioTrack).write(array, 0, position);
-        verify(audioTrack).release();
-    }
-
-    @Test
-    public void playVoice_bufferIsNotEmptyButExceptionOnStartPlaying() {
-        // setup
-        // when
-        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
-        doThrow(RuntimeException.class).when(listener).onStartPlaying();
-        try {
-            interactor.playVoice(listener);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(listener).onStopPlaying();
-        verify(audioStuffFactory, times(0)).createAudioTrack();
-        verify(recordedTrackBuffer, times(0)).getAsOneArray();
-        verify(recordedTrackBuffer, times(0)).getPosition();
-    }
-
-
-    @Test
-    public void playVoice_bufferIsNotEmptyButExceptionOnPlay() {
-        // setup
-        AudioTrack audioTrack = mock(AudioTrack.class);
-
-        // when
-        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
-        when(audioStuffFactory.createAudioTrack()).thenReturn(audioTrack);
-        doThrow(RuntimeException.class).when(audioTrack).play();
-        try {
-            interactor.playVoice(listener);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(listener).onStartPlaying();
-        verify(listener).onStopPlaying();
-        verify(recordedTrackBuffer, times(0)).getAsOneArray();
-        verify(recordedTrackBuffer, times(0)).getPosition();
-        verify(audioTrack).release();
-    }
-
-
-    @Test
-    public void playVoice_bufferIsNotEmptyButExceptionOnCreateAudioTrack() {
-        // setup
-        // when
-        when(recordedTrackBuffer.isEmpty()).thenReturn(false);
-        doThrow(RuntimeException.class).when(audioStuffFactory).createAudioTrack();
-        try {
-            interactor.playVoice(listener);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(listener).onStartPlaying();
-        verify(listener).onStopPlaying();
-        verify(recordedTrackBuffer, times(0)).getAsOneArray();
-        verify(recordedTrackBuffer, times(0)).getPosition();
-    }
+    // TODO return tests
 }

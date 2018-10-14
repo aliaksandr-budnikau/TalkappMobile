@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.net.Uri;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +25,6 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter.SPEECH_TIMEOUT_MILLIS;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
@@ -155,16 +156,6 @@ public class PracticeWordSetPresenterTest {
     }
 
     @Test
-    public void onRecogniseVoiceButtonClick() {
-        // when
-        presenter.onRecogniseVoiceButtonClick();
-
-        // then
-        verify(interactor).recVoice(SPEECH_TIMEOUT_MILLIS, presenter);
-        verify(interactor).recognizeVoice(presenter);
-    }
-
-    @Test
     public void onResume() {
         // setup
         String word = "word";
@@ -230,8 +221,9 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onPlayVoiceButtonClick() {
+        Whitebox.setInternalState(presenter, "voiceRecordUri", Uri.EMPTY);
         presenter.onPlayVoiceButtonClick();
-        verify(interactor).playVoice(presenter);
+        verify(interactor).playVoice(Uri.EMPTY, presenter);
     }
 
     @Test

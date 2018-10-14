@@ -16,7 +16,6 @@ import talkapp.org.talkappmobile.component.backend.LoginService;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckService;
 import talkapp.org.talkappmobile.component.backend.TopicService;
-import talkapp.org.talkappmobile.component.backend.VoiceService;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
 import talkapp.org.talkappmobile.component.backend.WordTranslationService;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
@@ -55,12 +54,6 @@ public class BackEndServiceModule {
     @Singleton
     public AccountService provideUserService(Retrofit retrofit) {
         return retrofit.create(AccountService.class);
-    }
-
-    @Provides
-    @Singleton
-    public VoiceService provideVoiceService(Retrofit retrofit) {
-        return retrofit.create(VoiceService.class);
     }
 
     @Provides

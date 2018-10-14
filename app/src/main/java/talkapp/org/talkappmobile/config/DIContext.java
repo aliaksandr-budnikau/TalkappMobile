@@ -22,12 +22,10 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyFra
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
-import talkapp.org.talkappmobile.component.impl.RecordedTrackImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
-import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
@@ -42,7 +40,6 @@ import talkapp.org.talkappmobile.module.LanguageModule;
         BackEndServiceModule.class,
         GameplayModule.class,
         ConcurrentModule.class,
-        AudioModule.class,
         AndroidModule.class,
         DataModule.class,
         InfraModule.class,
@@ -60,7 +57,6 @@ public abstract class DIContext {
                     .androidModule(new AndroidModule(application))
                     .gameplayModule(new GameplayModule())
                     .concurrentModule(new ConcurrentModule())
-                    .audioModule(new AudioModule())
                     .dataModule(new DataModule())
                     .infraModule(new InfraModule())
                     .languageModule(new LanguageModule())
@@ -86,8 +82,6 @@ public abstract class DIContext {
     abstract public void inject(WordSetListAdapter target);
 
     abstract public void inject(TopicListAdapter target);
-
-    abstract public void inject(RecordedTrackImpl target);
 
     abstract public void inject(MainActivity mainActivity);
 

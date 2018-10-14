@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.net.Uri;
+
 import java.util.List;
 import java.util.ListIterator;
 
@@ -10,11 +12,9 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepos
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
-    public static final int SPEECH_TIMEOUT_MILLIS = 1000;
     private final WordSet wordSet;
     private final PracticeWordSetView view;
     @Inject
@@ -27,6 +27,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private Sentence currentSentence;
     private ListIterator<String> wordSequenceIterator;
     private String currentWord;
+    private Uri voiceRecordUri;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
         this.wordSet = wordSet;
@@ -97,27 +98,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis) {
-        viewStrategy.onSnippetRecorded(speechLength, maxSpeechLengthMillis);
-    }
-
-    @Override
-    public void onStartRecording() {
-        viewStrategy.onStartRecording(currentSentence, currentWord);
-    }
-
-    @Override
-    public void onStopRecording() {
-        viewStrategy.onStopRecording();
-    }
-
-    @Override
-    public void onStopRecognition() {
-        viewStrategy.onStopRecognition();
-    }
-
-    @Override
-    public void onGotRecognitionResult(VoiceRecognitionResult result) {
+    public void onGotRecognitionResult(List<String> result) {
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
@@ -141,16 +122,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onPlayVoiceButtonClick() {
-        interactor.playVoice(this);
+        interactor.playVoice(voiceRecordUri, this);
     }
 
-    public void onRecogniseVoiceButtonClick() {
-        interactor.recVoice(SPEECH_TIMEOUT_MILLIS, this);
-        interactor.recognizeVoice(this);
-    }
-
-    public void onStopRecognitionVoiceButtonClick() {
-        interactor.stopRecording();
+    public void onVoiceRecognized(Uri voiceRecordUri) {
+        this.voiceRecordUri = voiceRecordUri;
     }
 
     public void rightAnswerTouched() {

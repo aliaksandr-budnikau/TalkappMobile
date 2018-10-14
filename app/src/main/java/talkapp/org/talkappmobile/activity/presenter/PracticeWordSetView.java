@@ -30,21 +30,11 @@ interface PracticeWordSetView {
 
     void setEnableVoiceRecButton(boolean value);
 
-    void setEnablePlayButton(boolean value);
-
     void setEnableCheckButton(boolean value);
 
     void setEnableNextButton(boolean value);
 
-    void showRecProgress();
-
-    void setRecProgress(int value);
-
-    void hideRecProgress();
-
     void setAnswerText(String text);
-
-    void setEnableRightAnswer(boolean value);
 
     void showSpellingOrGrammarErrorPanel(String errorMessage);
 

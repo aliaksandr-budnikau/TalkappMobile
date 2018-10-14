@@ -9,7 +9,6 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.VoiceRecognitionResult;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetViewStrategy {
@@ -86,35 +85,8 @@ public class PracticeWordSetViewStrategy {
         view.setEnableNextButton(true);
     }
 
-    public void onSnippetRecorded(long speechLength, int maxSpeechLengthMillis) {
-        view.setRecProgress((int) (((double) speechLength / maxSpeechLengthMillis) * 100));
-    }
-
-    public void onStartRecording(Sentence sentence, String word) {
-        view.setRecProgress(0);
-        view.showRecProgress();
-        view.setEnablePlayButton(false);
-        view.setEnableCheckButton(false);
-        view.setEnableNextButton(false);
-        String hiddenRightAnswer = hideRightAnswer(sentence, word);
-        view.setRightAnswer(hiddenRightAnswer);
-        view.setEnableRightAnswer(false);
-    }
-
-    public void onStopRecording() {
-        view.setEnablePlayButton(true);
-        view.setEnableCheckButton(true);
-        view.setEnableNextButton(true);
-        view.setEnableRightAnswer(true);
-    }
-
-    public void onStopRecognition() {
-        view.hideRecProgress();
-        view.setRecProgress(0);
-    }
-
-    public void onGotRecognitionResult(Sentence sentence, VoiceRecognitionResult result) {
-        String textWithUpper = textUtils.toUpperCaseFirstLetter(result.getVariant().get(0));
+    public void onGotRecognitionResult(Sentence sentence, List<String> result) {
+        String textWithUpper = textUtils.toUpperCaseFirstLetter(result.get(0));
         String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper, sentence.getText());
         view.setAnswerText(textWithLastSymbol);
     }

@@ -132,18 +132,6 @@
 
                     android:textSize="5pt" />
 
-                <ProgressBar
-                    android:id="@+id/recProgress"
-                    style="?android:attr/progressBarStyleHorizontal"
-
-                    android:layout_width="fill_parent"
-                    android:layout_height="3dip"
-
-                    android:layout_below="@+id/speakButton"
-
-                    android:progressDrawable="@drawable/progressbar"
-                    android:visibility="invisible" />
-
             </RelativeLayout>
 
             <Button
