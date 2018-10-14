@@ -26,6 +26,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
                     queryBuilder()
                             .where()
                             .eq(WORD_FN, word)
+                            .and()
                             .eq(WORD_SET_ID_FN, wordSetId).prepare()
             );
         } catch (SQLException e) {
