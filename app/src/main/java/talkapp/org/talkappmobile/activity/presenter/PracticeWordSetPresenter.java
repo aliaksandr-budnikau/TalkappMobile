@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.net.Uri;
 
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -15,8 +14,8 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
-    private final WordSet wordSet;
     private final PracticeWordSetView view;
+    private final PracticeWordSetPresenterCurrentState state;
     @Inject
     PracticeWordSetInteractor interactor;
     @Inject
@@ -24,27 +23,23 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Inject
     SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
-    private Sentence currentSentence;
-    private ListIterator<String> wordSequenceIterator;
-    private String currentWord;
-    private Uri voiceRecordUri;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
-        this.wordSet = wordSet;
         this.view = view;
+        state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
         DIContext.get().inject(this);
     }
 
     @Override
     public void onInitialiseExperience() {
-        viewStrategy.onInitialiseExperience(wordSet.getExperience());
+        viewStrategy.onInitialiseExperience(state.getWordSetExperience());
     }
 
     @Override
     public void onSentencesFound(final Sentence sentence, String word) {
-        practiceWordSetExerciseRepository.save(word, wordSet.getId(), sentence);
-        this.currentSentence = sentence;
+        practiceWordSetExerciseRepository.save(word, state.getWordSetId(), sentence);
+        state.setSentence(sentence);
         viewStrategy.onSentencesFound(sentence, word);
     }
 
@@ -65,16 +60,16 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onUpdateProgress(int currentTrainingExperience) {
-        viewStrategy.onUpdateProgress(wordSet.getExperience(), currentTrainingExperience);
+        viewStrategy.onUpdateProgress(state.getWordSetExperience(), currentTrainingExperience);
     }
 
     @Override
     public void onTrainingHalfFinished() {
         viewStrategy.onTrainingHalfFinished();
-        viewStrategy.onRightAnswer(currentSentence);
+        viewStrategy.onRightAnswer(state.getSentence());
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
         sentenceProvider.enableRepetitionMode();
-        wordSequenceIterator = wordSet.getWords().listIterator();
+        state.setWordSequenceIterator();
     }
 
     @Override
@@ -84,7 +79,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onRightAnswer() {
-        viewStrategy.onRightAnswer(currentSentence);
+        viewStrategy.onRightAnswer(state.getSentence());
     }
 
     @Override
@@ -99,13 +94,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onGotRecognitionResult(List<String> result) {
-        viewStrategy.onGotRecognitionResult(currentSentence, result);
+        viewStrategy.onGotRecognitionResult(state.getSentence(), result);
     }
 
     public void onResume() {
-        interactor.initialiseExperience(wordSet, this);
-        interactor.initialiseWordsSequence(wordSet, this);
-        wordSequenceIterator = wordSet.getWords().listIterator();
+        interactor.initialiseExperience(state.getWordSet(), this);
+        interactor.initialiseWordsSequence(state.getWordSet(), this);
+        state.setWordSequenceIterator();
     }
 
     public void onDestroy() {
@@ -113,31 +108,31 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onNextButtonClick() {
-        currentWord = wordSequenceIterator.next();
-        interactor.initialiseSentence(currentWord, wordSet.getId(), this);
+        state.nextWord();
+        interactor.initialiseSentence(state.getWord(), state.getWordSetId(), this);
     }
 
     public void onCheckAnswerButtonClick(final String answer) {
-        interactor.checkAnswer(answer, wordSet, currentSentence, this);
+        interactor.checkAnswer(answer, state.getWordSet(), state.getSentence(), this);
     }
 
     public void onPlayVoiceButtonClick() {
-        interactor.playVoice(voiceRecordUri, this);
+        interactor.playVoice(state.getVoiceRecordUri(), this);
     }
 
     public void onVoiceRecognized(Uri voiceRecordUri) {
-        this.voiceRecordUri = voiceRecordUri;
+        state.setVoiceRecordUri(voiceRecordUri);
     }
 
     public void rightAnswerTouched() {
-        if (currentSentence != null) {
-            viewStrategy.rightAnswerTouched(currentSentence);
+        if (state.getSentence() != null) {
+            viewStrategy.rightAnswerTouched(state.getSentence());
         }
     }
 
     public void rightAnswerUntouched() {
-        if (currentSentence != null) {
-            viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
+        if (state.getSentence() != null) {
+            viewStrategy.rightAnswerUntouched(state.getSentence(), state.getWord());
         }
     }
 }

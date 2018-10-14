@@ -22,9 +22,9 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
@@ -34,9 +34,9 @@ public class PracticeWordSetPresenterTest {
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
     private PracticeWordSetExerciseRepository practiceWordSetExerciseRepository;
+    @Mock
+    private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
-    private WordSet wordSet;
-    private Sentence sentence;
 
     @BeforeClass
     public static void setUpContext() {
@@ -45,28 +45,24 @@ public class PracticeWordSetPresenterTest {
 
     @Before
     public void setUp() {
-        wordSet = new WordSet();
-        wordSet.setId("dsfse3");
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(3453);
-        presenter = new PracticeWordSetPresenter(wordSet, null);
+        presenter = new PracticeWordSetPresenter(new WordSet(), null);
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
         Whitebox.setInternalState(presenter, "practiceWordSetExerciseRepository", practiceWordSetExerciseRepository);
-
-        sentence = new Sentence();
-        sentence.setId("dsfsd");
-        Whitebox.setInternalState(presenter, "currentSentence", sentence);
+        Whitebox.setInternalState(presenter, "state", state);
     }
 
     @Test
     public void onInitialiseExperience() {
+        WordSetExperience value = new WordSetExperience();
+
         // when
+        when(state.getWordSetExperience()).thenReturn(value);
         presenter.onInitialiseExperience();
 
         // then
-        verify(viewStrategy).onInitialiseExperience(wordSet.getExperience());
+        verify(viewStrategy).onInitialiseExperience(value);
     }
 
     @Test
@@ -78,16 +74,13 @@ public class PracticeWordSetPresenterTest {
 
         String word = "word";
         String wordSetId = "wordSetId";
-        WordSet wordSet = new WordSet();
-        wordSet.setId(wordSetId);
-
-        Whitebox.setInternalState(presenter, "wordSet", wordSet);
 
         // when
+        when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.onSentencesFound(sentence, word);
 
         // then
-        assertEquals(sentence, Whitebox.getInternalState(presenter, "currentSentence"));
+        verify(state).setSentence(sentence);
         verify(viewStrategy).onSentencesFound(sentence, word);
         verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
     }
@@ -127,11 +120,15 @@ public class PracticeWordSetPresenterTest {
         // setup
         int currentTrainingExperience = 32;
 
+        WordSetExperience wordSetExperience = new WordSetExperience();
+        wordSetExperience.setTrainingExperience(currentTrainingExperience);
+
         // when
+        when(state.getWordSetExperience()).thenReturn(wordSetExperience);
         presenter.onUpdateProgress(currentTrainingExperience);
 
         // then
-        verify(viewStrategy).onUpdateProgress(wordSet.getExperience(), currentTrainingExperience);
+        verify(viewStrategy).onUpdateProgress(wordSetExperience, currentTrainingExperience);
     }
 
     @Test
@@ -146,9 +143,8 @@ public class PracticeWordSetPresenterTest {
         Sentence sentence = new Sentence();
         sentence.setId("dsfs");
 
-        Whitebox.setInternalState(presenter, "currentSentence", sentence);
-
         // when
+        when(state.getSentence()).thenReturn(sentence);
         presenter.onRightAnswer();
 
         // then
@@ -158,10 +154,10 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void onResume() {
         // setup
-        String word = "word";
-        wordSet.setWords(asList(word, "dsfsddsd"));
+        WordSet wordSet = new WordSet();
 
         // when
+        when(state.getWordSet()).thenReturn(wordSet);
         presenter.onResume();
 
         // then
@@ -180,27 +176,30 @@ public class PracticeWordSetPresenterTest {
         // setup
         String word1 = "sdfsd";
         String wordSetId = "sdfsdId";
-        wordSet.setWords(asList(word1, "dsfsddsd"));
-        wordSet.setId(wordSetId);
-        Whitebox.setInternalState(presenter, "wordSequenceIterator", wordSet.getWords().listIterator());
 
         // when
+        when(state.getWord()).thenReturn(word1);
+        when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.onNextButtonClick();
 
         // then
+        verify(state).nextWord();
         verify(interactor).initialiseSentence(word1, wordSetId, presenter);
     }
 
     @Test
     public void onCheckAnswerButtonClick() {
         // setup
+        WordSet wordSet = new WordSet();
+
         String answer = "sdfsd";
 
         Sentence sentence = new Sentence();
         sentence.setId("323");
 
         // when
-        Whitebox.setInternalState(presenter, "currentSentence", sentence);
+        when(state.getWordSet()).thenReturn(wordSet);
+        when(state.getSentence()).thenReturn(sentence);
         presenter.onCheckAnswerButtonClick(answer);
 
         // then
@@ -221,25 +220,39 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onPlayVoiceButtonClick() {
-        Whitebox.setInternalState(presenter, "voiceRecordUri", Uri.EMPTY);
+        // setup
+        Uri empty = Uri.EMPTY;
+
+        // when
+        when(state.getVoiceRecordUri()).thenReturn(empty);
         presenter.onPlayVoiceButtonClick();
-        verify(interactor).playVoice(Uri.EMPTY, presenter);
+
+        // then
+        verify(interactor).playVoice(empty, presenter);
     }
 
     @Test
     public void rightAnswerTouched() {
+        // setup
+        Sentence sentence = new Sentence();
+
+        // when
+        when(state.getSentence()).thenReturn(sentence);
         presenter.rightAnswerTouched();
+
+        // then
         verify(viewStrategy).rightAnswerTouched(sentence);
     }
 
     @Test
     public void rightAnswerUntouched() {
         // setup
+        Sentence sentence = new Sentence();
         String word = "word";
 
-        Whitebox.setInternalState(presenter, "currentWord", word);
-
         // when
+        when(state.getSentence()).thenReturn(sentence);
+        when(state.getWord()).thenReturn(word);
         presenter.rightAnswerUntouched();
 
         // then

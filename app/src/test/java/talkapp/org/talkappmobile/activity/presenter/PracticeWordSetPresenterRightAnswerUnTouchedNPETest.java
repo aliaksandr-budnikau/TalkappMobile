@@ -13,10 +13,14 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     @Mock
     private TextUtils textUtils;
+    @Mock
+    private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
 
     @BeforeClass
@@ -29,25 +33,18 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
         presenter = new PracticeWordSetPresenter(new WordSet(), null);
         PracticeWordSetViewStrategy strategy = Whitebox.getInternalState(presenter, "viewStrategy");
         Whitebox.setInternalState(strategy, "textUtils", textUtils);
+        Whitebox.setInternalState(presenter, "state", state);
     }
 
     @Test
     public void rightAnswerTouched_whenSentenceIsNotInitializedYetNPE() {
-        // setup
-        Object o = null;
-        Whitebox.setInternalState(presenter, "currentSentence", o);
-
-        // when
+        when(state.getSentence()).thenReturn(null);
         presenter.rightAnswerTouched();
     }
 
     @Test
     public void rightAnswerUntouched_whenSentenceIsNotInitializedYetNPE() {
-        // setup
-        Object o = null;
-        Whitebox.setInternalState(presenter, "currentSentence", o);
-
-        // when
+        when(state.getSentence()).thenReturn(null);
         presenter.rightAnswerUntouched();
     }
 }
