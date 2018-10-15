@@ -60,8 +60,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onUpdateProgress(WordSetExperience exp, int currentTrainingExperience) {
-        viewStrategy.onUpdateProgress(exp, currentTrainingExperience);
+    public void onUpdateProgress(WordSetExperience exp) {
+        viewStrategy.onUpdateProgress(exp);
     }
 
     @Override

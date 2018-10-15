@@ -24,11 +24,11 @@ public class RefereeServiceImpl implements RefereeService {
         result.setErrors(grammarCheckService.check(answer.getActualAnswer()));
         if (result.getErrors().isEmpty()) {
             if (equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer()) < 80) {
+                result.setAccuracyTooLow(true);
                 return result;
             }
             String id = answer.getWordSetExperienceId();
-            int exp = experienceRepository.increaseExperience(id, 1);
-            result.setCurrentTrainingExperience(exp);
+            experienceRepository.increaseExperience(id, 1);
         }
         return result;
     }

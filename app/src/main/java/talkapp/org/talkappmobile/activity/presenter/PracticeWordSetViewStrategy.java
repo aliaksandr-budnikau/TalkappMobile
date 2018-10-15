@@ -55,8 +55,8 @@ public class PracticeWordSetViewStrategy {
         view.hideSpellingOrGrammarErrorPanel();
     }
 
-    public void onUpdateProgress(WordSetExperience exp, int currentTrainingExperience) {
-        int progress = experienceUtils.getProgress(currentTrainingExperience, exp.getMaxTrainingExperience());
+    public void onUpdateProgress(WordSetExperience exp) {
+        int progress = experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience());
         view.setProgress(progress);
     }
 

@@ -117,16 +117,13 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void onUpdateProgress() {
         // setup
-        int currentTrainingExperience = 32;
-
         WordSetExperience wordSetExperience = new WordSetExperience();
-        wordSetExperience.setTrainingExperience(currentTrainingExperience);
 
         // when
-        presenter.onUpdateProgress(wordSetExperience, currentTrainingExperience);
+        presenter.onUpdateProgress(wordSetExperience);
 
         // then
-        verify(viewStrategy).onUpdateProgress(wordSetExperience, currentTrainingExperience);
+        verify(viewStrategy).onUpdateProgress(wordSetExperience);
     }
 
     @Test

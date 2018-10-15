@@ -121,7 +121,6 @@ public class PracticeWordSetViewStrategyTest {
     @Test
     public void onUpdateProgress() {
         // setup
-        int currentTrainingExperience = 32;
         int progress = 232;
 
         WordSetExperience exp = new WordSetExperience();
@@ -129,8 +128,8 @@ public class PracticeWordSetViewStrategyTest {
         exp.setTrainingExperience(23332);
 
         // when
-        when(experienceUtils.getProgress(currentTrainingExperience, exp.getMaxTrainingExperience())).thenReturn(progress);
-        strategy.onUpdateProgress(exp, currentTrainingExperience);
+        when(experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience())).thenReturn(progress);
+        strategy.onUpdateProgress(exp);
 
         // then
         verify(view).setProgress(progress);

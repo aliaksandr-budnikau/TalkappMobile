@@ -88,20 +88,20 @@ public class PracticeWordSetInteractor {
             return;
         }
 
-        if (result.getCurrentTrainingExperience() == 0) {
+        WordSetExperience exp = experienceRepository.findById(wordSet.getId());
+        if (result.isAccuracyTooLow()) {
             listener.onAccuracyTooLowError();
             return;
         }
 
-        WordSetExperience exp = experienceRepository.findById(wordSet.getId());
-        listener.onUpdateProgress(exp, result.getCurrentTrainingExperience());
+        listener.onUpdateProgress(exp);
 
-        if (result.getCurrentTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
+        if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             listener.onTrainingHalfFinished();
             return;
         }
 
-        if (result.getCurrentTrainingExperience() == exp.getMaxTrainingExperience()) {
+        if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             listener.onTrainingFinished();
             return;
         }

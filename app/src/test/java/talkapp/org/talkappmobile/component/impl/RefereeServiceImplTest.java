@@ -92,7 +92,6 @@ public class RefereeServiceImplTest {
 
         // then
         assertTrue(result.getErrors().isEmpty());
-        assertEquals(value, result.getCurrentTrainingExperience());
         verify(experienceRepository).increaseExperience(answer.getWordSetExperienceId(), delta);
     }
 
@@ -110,6 +109,5 @@ public class RefereeServiceImplTest {
 
         // then
         assertTrue(result.getErrors().isEmpty());
-        assertEquals(0, result.getCurrentTrainingExperience());
     }
 }

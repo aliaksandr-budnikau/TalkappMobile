@@ -58,14 +58,13 @@ public class PracticeWordSetInteractorIntegTest {
         String word1 = "word1";
         wordSet.setWords(asList(word1, "word2"));
         WordSetExperience experience = new WordSetExperience();
-        experience.setTrainingExperience(0);
+        experience.setTrainingExperience(maxTrainingExperience / 2);
         experience.setMaxTrainingExperience(maxTrainingExperience);
 
         Sentence sentence = new Sentence();
         sentence.setText("some text");
 
         AnswerCheckingResult result = new AnswerCheckingResult();
-        result.setCurrentTrainingExperience(maxTrainingExperience / 2);
         result.setErrors(new ArrayList<GrammarError>());
 
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, view);

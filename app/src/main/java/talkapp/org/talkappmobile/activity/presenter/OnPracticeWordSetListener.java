@@ -17,7 +17,7 @@ public interface OnPracticeWordSetListener {
 
     void onAccuracyTooLowError();
 
-    void onUpdateProgress(WordSetExperience exp, int currentTrainingExperience);
+    void onUpdateProgress(WordSetExperience exp);
 
     void onTrainingHalfFinished();
 
