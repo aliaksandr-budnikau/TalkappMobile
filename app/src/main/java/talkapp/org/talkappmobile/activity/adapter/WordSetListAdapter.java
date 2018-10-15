@@ -15,9 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
  * @author Budnikau Aliaksandr
@@ -25,6 +27,8 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 public class WordSetListAdapter extends ArrayAdapter<WordSet> {
     @Inject
     WordSetExperienceUtils experienceUtils;
+    @Inject
+    WordSetExperienceRepository experienceRepository;
 
     public WordSetListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
@@ -43,10 +47,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
         wordSetRow.setText(label);
 
         ProgressBar wordSetProgress = convertView.findViewById(R.id.wordSetProgress);
-        if (wordSet.getExperience() == null) {
+        WordSetExperience experience = experienceRepository.findById(wordSet.getId());
+        if (experience == null) {
             wordSetProgress.setProgress(0);
         } else {
-            wordSetProgress.setProgress(experienceUtils.getProgress(wordSet.getExperience()));
+            wordSetProgress.setProgress(experienceUtils.getProgress(experience));
         }
 
         return convertView;

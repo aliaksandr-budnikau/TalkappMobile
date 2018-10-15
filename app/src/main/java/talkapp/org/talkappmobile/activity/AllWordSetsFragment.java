@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -67,21 +66,10 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
             try {
                 wordSets = wordSetCall.execute();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage(), e);
             }
 
-            List<WordSetExperience> wordSetExperiences = experienceRepository.findAll();
-            HashMap<String, WordSetExperience> experienceMap = new HashMap<>();
-            for (WordSetExperience experience : wordSetExperiences) {
-                experienceMap.put(experience.getId(), experience);
-            }
-            List<WordSet> body = wordSets.body();
-            for (WordSet set : body) {
-                WordSetExperience experience = experienceMap.get(set.getId());
-                set.setExperience(experience);
-            }
-
-            return body;
+            return wordSets.body();
         }
 
         @Override
@@ -128,7 +116,6 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
                         WordSetExperience experience = experienceRepository.createNew(wordSet);
                         ProgressBar wordSetProgress = view.findViewById(R.id.wordSetProgress);
                         wordSetProgress.setProgress(experience.getTrainingExperience());
-                        wordSet.setExperience(experience);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();

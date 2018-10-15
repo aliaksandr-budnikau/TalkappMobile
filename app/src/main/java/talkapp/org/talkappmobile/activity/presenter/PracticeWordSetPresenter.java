@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetView view;
@@ -32,8 +33,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onInitialiseExperience() {
-        viewStrategy.onInitialiseExperience(state.getWordSetExperience());
+    public void onInitialiseExperience(WordSetExperience exp) {
+        viewStrategy.onInitialiseExperience(exp);
     }
 
     @Override
@@ -59,8 +60,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onUpdateProgress(int currentTrainingExperience) {
-        viewStrategy.onUpdateProgress(state.getWordSetExperience(), currentTrainingExperience);
+    public void onUpdateProgress(WordSetExperience exp, int currentTrainingExperience) {
+        viewStrategy.onUpdateProgress(exp, currentTrainingExperience);
     }
 
     @Override

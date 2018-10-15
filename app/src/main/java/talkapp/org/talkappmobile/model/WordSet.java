@@ -15,8 +15,6 @@ public class WordSet implements Serializable {
 
     private List<String> words;
 
-    private WordSetExperience experience;
-
     public String getId() {
         return id;
     }
@@ -31,14 +29,6 @@ public class WordSet implements Serializable {
 
     public void setWords(List<String> words) {
         this.words = words;
-    }
-
-    public WordSetExperience getExperience() {
-        return experience;
-    }
-
-    public void setExperience(WordSetExperience experience) {
-        this.experience = experience;
     }
 
     public String getTopicId() {
@@ -56,13 +46,12 @@ public class WordSet implements Serializable {
         WordSet wordSet = (WordSet) o;
         return Objects.equals(id, wordSet.id) &&
                 Objects.equals(words, wordSet.words) &&
-                Objects.equals(topicId, wordSet.topicId) &&
-                Objects.equals(experience, wordSet.experience);
+                Objects.equals(topicId, wordSet.topicId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, topicId, words, experience);
+        return Objects.hash(id, topicId, words);
     }
 
     @Override
@@ -71,7 +60,6 @@ public class WordSet implements Serializable {
         sb.append("id='").append(id).append('\'');
         sb.append(", words=").append(words);
         sb.append(", topicId=").append(topicId);
-        sb.append(", experience=").append(experience);
         sb.append('}');
         return sb.toString();
     }

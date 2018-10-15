@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -38,6 +39,8 @@ public class PracticeWordSetInteractorIntegTest {
     private RefereeService refereeService;
     @Mock
     private SentenceProvider sentenceProvider;
+    @Mock
+    WordSetExperienceRepository experienceRepository;
 
     @BeforeClass
     public static void setUpContext() {
@@ -54,9 +57,9 @@ public class PracticeWordSetInteractorIntegTest {
         wordSet.setId(wordSetId);
         String word1 = "word1";
         wordSet.setWords(asList(word1, "word2"));
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setTrainingExperience(0);
-        wordSet.getExperience().setMaxTrainingExperience(maxTrainingExperience);
+        WordSetExperience experience = new WordSetExperience();
+        experience.setTrainingExperience(0);
+        experience.setMaxTrainingExperience(maxTrainingExperience);
 
         Sentence sentence = new Sentence();
         sentence.setText("some text");
@@ -70,6 +73,8 @@ public class PracticeWordSetInteractorIntegTest {
         Whitebox.setInternalState(presenter, "practiceWordSetExerciseRepository", practiceWordSetExerciseRepository);
         when(refereeService.checkAnswer(any(UncheckedAnswer.class))).thenReturn(result);
         presenter.interactor.refereeService = refereeService;
+        presenter.interactor.experienceRepository = experienceRepository;
+        when(experienceRepository.findById(wordSetId)).thenReturn(experience);
         when(sentenceProvider.findByWordAndWordSetId(word1, wordSetId)).thenReturn(asList(sentence));
         presenter.interactor.sentenceProvider = sentenceProvider;
 

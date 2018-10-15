@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -49,10 +50,11 @@ public class PracticeWordSetInteractor {
     }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
-        if (wordSet.getExperience() == null) {
-            wordSet.setExperience(experienceRepository.createNew(wordSet));
+        WordSetExperience exp = experienceRepository.findById(wordSet.getId());
+        if (exp == null) {
+            exp = experienceRepository.createNew(wordSet);
         }
-        listener.onInitialiseExperience();
+        listener.onInitialiseExperience(exp);
     }
 
     public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
@@ -76,7 +78,7 @@ public class PracticeWordSetInteractor {
             return;
         }
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
         uncheckedAnswer.setActualAnswer(answer);
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
 
@@ -91,15 +93,15 @@ public class PracticeWordSetInteractor {
             return;
         }
 
-        wordSet.getExperience().setTrainingExperience(result.getCurrentTrainingExperience());
-        listener.onUpdateProgress(result.getCurrentTrainingExperience());
+        WordSetExperience exp = experienceRepository.findById(wordSet.getId());
+        listener.onUpdateProgress(exp, result.getCurrentTrainingExperience());
 
-        if (result.getCurrentTrainingExperience() == wordSet.getExperience().getMaxTrainingExperience() / 2) {
+        if (result.getCurrentTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             listener.onTrainingHalfFinished();
             return;
         }
 
-        if (result.getCurrentTrainingExperience() == wordSet.getExperience().getMaxTrainingExperience()) {
+        if (result.getCurrentTrainingExperience() == exp.getMaxTrainingExperience()) {
             listener.onTrainingFinished();
             return;
         }

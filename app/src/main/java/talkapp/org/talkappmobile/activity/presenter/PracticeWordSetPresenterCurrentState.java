@@ -6,7 +6,6 @@ import java.util.ListIterator;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenterCurrentState {
     private final WordSet wordSet;
@@ -57,9 +56,5 @@ public class PracticeWordSetPresenterCurrentState {
 
     public String getWordSetId() {
         return wordSet.getId();
-    }
-
-    public WordSetExperience getWordSetExperience() {
-        return wordSet.getExperience();
     }
 }

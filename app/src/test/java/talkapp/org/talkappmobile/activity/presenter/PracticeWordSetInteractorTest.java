@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -74,20 +73,19 @@ public class PracticeWordSetInteractorTest {
     public void initialiseExperience_experienceIsNull() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(null);
         wordSet.setId("3243");
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId("323423");
 
         // when
+        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(null);
         when(wordSetExperienceRepository.createNew(wordSet)).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(listener).onInitialiseExperience();
-        assertNotNull(wordSet.getExperience());
-        assertEquals(experience.getId(), wordSet.getExperience().getId());
+        verify(listener).onInitialiseExperience(experience);
+        assertEquals(experience.getId(), experience.getId());
     }
 
     @Test
@@ -97,17 +95,16 @@ public class PracticeWordSetInteractorTest {
         experience.setId("323423");
 
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(experience);
         wordSet.setId("3243");
 
         // when
+        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
         verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
-        verify(listener).onInitialiseExperience();
-        assertNotNull(wordSet.getExperience());
-        assertEquals(experience.getId(), wordSet.getExperience().getId());
+        verify(listener).onInitialiseExperience(experience);
+        assertEquals(experience.getId(), experience.getId());
     }
 
     @Test
@@ -170,10 +167,10 @@ public class PracticeWordSetInteractorTest {
     public void checkAnswer_answerIsOk() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("323");
-        wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId(wordSet.getId());
+        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -182,7 +179,7 @@ public class PracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 4;
@@ -191,10 +188,11 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
-        verify(listener).onUpdateProgress(currentTrainingExperience);
+        verify(listener).onUpdateProgress(experience, currentTrainingExperience);
         verify(listener).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAccuracyTooLowError();
@@ -206,10 +204,10 @@ public class PracticeWordSetInteractorTest {
     public void checkAnswer_answerIsOkAndFinish() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("23534");
-        wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId(wordSet.getId());
+        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -218,7 +216,7 @@ public class PracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 12;
@@ -227,10 +225,11 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
-        verify(listener).onUpdateProgress(currentTrainingExperience);
+        verify(listener).onUpdateProgress(experience, currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener).onTrainingFinished();
         verify(listener, times(0)).onAccuracyTooLowError();
@@ -242,10 +241,10 @@ public class PracticeWordSetInteractorTest {
     public void checkAnswer_accuracyTooLowError() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("3232");
-        wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId(wordSet.getId());
+        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -254,7 +253,7 @@ public class PracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 0;
@@ -267,7 +266,7 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onAccuracyTooLowError();
-        verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
+        verify(listener, times(0)).onUpdateProgress(experience, currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
@@ -278,10 +277,10 @@ public class PracticeWordSetInteractorTest {
     public void checkAnswer_spellingOrGrammarError() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("32534");
-        wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId(wordSet.getId());
+        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -290,7 +289,7 @@ public class PracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 0;
@@ -305,7 +304,7 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(listener).onSpellingOrGrammarError(errors);
         verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
+        verify(listener, times(0)).onUpdateProgress(experience, currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAnswerEmpty();
@@ -315,9 +314,9 @@ public class PracticeWordSetInteractorTest {
     public void checkAnswer_emptyAnswer() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId("23234");
-        wordSet.getExperience().setMaxTrainingExperience(12);
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId("23234");
+        experience.setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
         Sentence sentence = new Sentence();
@@ -327,7 +326,7 @@ public class PracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getExperience().getId());
+        uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
         AnswerCheckingResult checkingResult = new AnswerCheckingResult();
         int currentTrainingExperience = 0;
@@ -342,7 +341,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener).onAnswerEmpty();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onUpdateProgress(currentTrainingExperience);
+        verify(listener, times(0)).onUpdateProgress(experience, currentTrainingExperience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
     }

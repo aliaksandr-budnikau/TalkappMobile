@@ -4,9 +4,10 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public interface OnPracticeWordSetListener {
-    void onInitialiseExperience();
+    void onInitialiseExperience(WordSetExperience exp);
 
     void onSentencesFound(Sentence sentence, String word);
 
@@ -16,7 +17,7 @@ public interface OnPracticeWordSetListener {
 
     void onAccuracyTooLowError();
 
-    void onUpdateProgress(int currentTrainingExperience);
+    void onUpdateProgress(WordSetExperience exp, int currentTrainingExperience);
 
     void onTrainingHalfFinished();
 

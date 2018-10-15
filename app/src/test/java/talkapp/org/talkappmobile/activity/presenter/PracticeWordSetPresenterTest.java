@@ -55,14 +55,13 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onInitialiseExperience() {
-        WordSetExperience value = new WordSetExperience();
+        WordSetExperience exp = new WordSetExperience();
 
         // when
-        when(state.getWordSetExperience()).thenReturn(value);
-        presenter.onInitialiseExperience();
+        presenter.onInitialiseExperience(exp);
 
         // then
-        verify(viewStrategy).onInitialiseExperience(value);
+        verify(viewStrategy).onInitialiseExperience(exp);
     }
 
     @Test
@@ -124,8 +123,7 @@ public class PracticeWordSetPresenterTest {
         wordSetExperience.setTrainingExperience(currentTrainingExperience);
 
         // when
-        when(state.getWordSetExperience()).thenReturn(wordSetExperience);
-        presenter.onUpdateProgress(currentTrainingExperience);
+        presenter.onUpdateProgress(wordSetExperience, currentTrainingExperience);
 
         // then
         verify(viewStrategy).onUpdateProgress(wordSetExperience, currentTrainingExperience);
