@@ -11,5 +11,5 @@ public interface WordSetExperienceRepository {
 
     WordSetExperience createNew(WordSet wordSet);
 
-    int increaseExperience(int id, int value);
+    int increaseExperience(String id, int value);
 }

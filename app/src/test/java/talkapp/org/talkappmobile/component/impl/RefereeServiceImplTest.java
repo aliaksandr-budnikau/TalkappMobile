@@ -21,6 +21,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ public class RefereeServiceImplTest {
 
         // then
         assertEquals(1, result.getErrors().size());
-        verify(experienceRepository, times(0)).increaseExperience(anyInt(), anyInt());
+        verify(experienceRepository, times(0)).increaseExperience(anyString(), anyInt());
     }
 
     @Test
@@ -65,7 +66,7 @@ public class RefereeServiceImplTest {
 
         // then
         assertEquals(3, result.getErrors().size());
-        verify(experienceRepository, times(0)).increaseExperience(anyInt(), anyInt());
+        verify(experienceRepository, times(0)).increaseExperience(anyString(), anyInt());
     }
 
     @Test
@@ -74,7 +75,7 @@ public class RefereeServiceImplTest {
         UncheckedAnswer answer = new UncheckedAnswer();
         answer.setActualAnswer("Who is duty today?");
         answer.setExpectedAnswer("Who is duty today?");
-        answer.setWordSetExperienceId(233);
+        answer.setWordSetExperienceId("233");
 
         WordSetExperience experience = new WordSetExperience();
         experience.setTrainingExperience(0);

@@ -6,7 +6,7 @@ import java.util.Objects;
  * @author Budnikau Aliaksandr
  */
 public class UncheckedAnswer {
-    private int wordSetExperienceId;
+    private String wordSetExperienceId;
     private String actualAnswer;
     private String expectedAnswer;
 
@@ -26,11 +26,11 @@ public class UncheckedAnswer {
         this.expectedAnswer = expectedAnswer;
     }
 
-    public int getWordSetExperienceId() {
+    public String getWordSetExperienceId() {
         return wordSetExperienceId;
     }
 
-    public void setWordSetExperienceId(int wordSetExperienceId) {
+    public void setWordSetExperienceId(String wordSetExperienceId) {
         this.wordSetExperienceId = wordSetExperienceId;
     }
 

@@ -7,26 +7,17 @@ import java.util.Objects;
  * @author Budnikau Aliaksandr
  */
 public class WordSetExperience implements Serializable {
-    private int id;
-    private String wordSetId;
+    private String id;
     private int trainingExperience;
     private int maxTrainingExperience;
     private WordSetExperienceStatus status;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getWordSetId() {
-        return wordSetId;
-    }
-
-    public void setWordSetId(String wordSetId) {
-        this.wordSetId = wordSetId;
     }
 
     public int getTrainingExperience() {
@@ -43,14 +34,13 @@ public class WordSetExperience implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         WordSetExperience that = (WordSetExperience) o;
         return trainingExperience == that.trainingExperience &&
-                Objects.equals(wordSetId, that.wordSetId) &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(maxTrainingExperience, that.maxTrainingExperience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, wordSetId, trainingExperience, maxTrainingExperience);
+        return Objects.hash(id, trainingExperience, maxTrainingExperience);
     }
 
     public WordSetExperienceStatus getStatus() {
@@ -64,7 +54,6 @@ public class WordSetExperience implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WordSetExperienceMapping{");
-        sb.append("wordSetId='").append(wordSetId).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append(", id='").append(id).append('\'');
         sb.append(", maxTrainingExperience='").append(maxTrainingExperience).append('\'');

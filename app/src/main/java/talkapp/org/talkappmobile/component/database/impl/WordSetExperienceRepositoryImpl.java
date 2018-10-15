@@ -37,7 +37,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     public WordSetExperience createNew(WordSet wordSet) {
         WordSetExperienceMapping mapping = new WordSetExperienceMapping();
         mapping.setStatus(STUDYING);
-        mapping.setWordSetId(wordSet.getId());
+        mapping.setId(wordSet.getId());
         mapping.setTrainingExperience(0);
         mapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);
 
@@ -46,7 +46,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     }
 
     @Override
-    public int increaseExperience(int id, int value) {
+    public int increaseExperience(String id, int value) {
         WordSetExperienceMapping mapping = experienceDao.findById(id);
         int experience = mapping.getTrainingExperience() + value;
         if (experience > mapping.getMaxTrainingExperience()) {
@@ -61,7 +61,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
 
     private WordSetExperience toDto(WordSetExperienceMapping mapping) {
         WordSetExperience wordSetExperience = new WordSetExperience();
-        wordSetExperience.setWordSetId(mapping.getWordSetId());
+        wordSetExperience.setId(mapping.getId());
         wordSetExperience.setStatus(mapping.getStatus());
         wordSetExperience.setTrainingExperience(mapping.getTrainingExperience());
         wordSetExperience.setMaxTrainingExperience(mapping.getMaxTrainingExperience());

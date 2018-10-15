@@ -8,7 +8,7 @@ public interface WordSetExperienceDao {
 
     void createNewOrUpdate(WordSetExperienceMapping experience);
 
-    WordSetExperienceMapping findById(int id);
+    WordSetExperienceMapping findById(String id);
 
     List<WordSetExperienceMapping> findAll();
 }

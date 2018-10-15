@@ -73,7 +73,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
             List<WordSetExperience> wordSetExperiences = experienceRepository.findAll();
             HashMap<String, WordSetExperience> experienceMap = new HashMap<>();
             for (WordSetExperience experience : wordSetExperiences) {
-                experienceMap.put(experience.getWordSetId(), experience);
+                experienceMap.put(experience.getId(), experience);
             }
             List<WordSet> body = wordSets.body();
             for (WordSet set : body) {

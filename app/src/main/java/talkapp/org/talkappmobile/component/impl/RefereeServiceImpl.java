@@ -26,7 +26,7 @@ public class RefereeServiceImpl implements RefereeService {
             if (equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer()) < 80) {
                 return result;
             }
-            int id = answer.getWordSetExperienceId();
+            String id = answer.getWordSetExperienceId();
             int exp = experienceRepository.increaseExperience(id, 1);
             result.setCurrentTrainingExperience(exp);
         }

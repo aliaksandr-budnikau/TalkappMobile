@@ -9,7 +9,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
-public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMapping, Integer> implements WordSetExperienceDao {
+public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMapping, String> implements WordSetExperienceDao {
 
     public WordSetExperienceDaoImpl(ConnectionSource connectionSource, Class<WordSetExperienceMapping> dataClass) throws SQLException {
         super(connectionSource, dataClass);
@@ -25,7 +25,7 @@ public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMappi
     }
 
     @Override
-    public WordSetExperienceMapping findById(int id) {
+    public WordSetExperienceMapping findById(String id) {
         try {
             return this.queryForId(id);
         } catch (SQLException e) {

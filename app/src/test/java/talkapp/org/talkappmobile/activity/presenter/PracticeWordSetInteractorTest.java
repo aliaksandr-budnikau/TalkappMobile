@@ -78,7 +78,7 @@ public class PracticeWordSetInteractorTest {
         wordSet.setId("3243");
 
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(323423);
+        experience.setId("323423");
 
         // when
         when(wordSetExperienceRepository.createNew(wordSet)).thenReturn(experience);
@@ -94,7 +94,7 @@ public class PracticeWordSetInteractorTest {
     public void initialiseExperience_experienceIsNotNull() {
         // setup
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(323423);
+        experience.setId("323423");
 
         WordSet wordSet = new WordSet();
         wordSet.setExperience(experience);
@@ -171,7 +171,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(323);
+        wordSet.getExperience().setId("323");
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -207,7 +207,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(23534);
+        wordSet.getExperience().setId("23534");
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -243,7 +243,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(3232);
+        wordSet.getExperience().setId("3232");
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -279,7 +279,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(32534);
+        wordSet.getExperience().setId("32534");
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
@@ -316,7 +316,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setExperience(new WordSetExperience());
-        wordSet.getExperience().setId(23234);
+        wordSet.getExperience().setId("23234");
         wordSet.getExperience().setMaxTrainingExperience(12);
         wordSet.setId("3243");
 
