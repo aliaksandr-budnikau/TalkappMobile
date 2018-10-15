@@ -34,6 +34,15 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     }
 
     @Override
+    public WordSetExperience findById(String id) {
+        WordSetExperienceMapping mapping = experienceDao.findById(id);
+        if (mapping == null) {
+            return null;
+        }
+        return toDto(mapping);
+    }
+
+    @Override
     public WordSetExperience createNew(WordSet wordSet) {
         WordSetExperienceMapping mapping = new WordSetExperienceMapping();
         mapping.setStatus(STUDYING);

@@ -9,6 +9,8 @@ public interface WordSetExperienceRepository {
 
     List<WordSetExperience> findAll();
 
+    WordSetExperience findById(String id);
+
     WordSetExperience createNew(WordSet wordSet);
 
     int increaseExperience(String id, int value);
