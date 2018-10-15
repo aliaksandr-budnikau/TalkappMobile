@@ -16,10 +16,7 @@ public class WordSetExperienceMapping {
     public static final String MAX_TRAINING_EXPERIENCE_FN = "maxTrainingExperience";
     public static final String STATUS_FN = "status";
 
-    @DatabaseField(generatedId = true)
-    private int id;
-
-    @DatabaseField(canBeNull = false, columnName = WORD_SET_ID_FN)
+    @DatabaseField(id = true, unique = true, canBeNull = false, columnName = WORD_SET_ID_FN)
     private String wordSetId;
 
     @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
@@ -30,14 +27,6 @@ public class WordSetExperienceMapping {
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetExperienceStatus status = STUDYING;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getWordSetId() {
         return wordSetId;
@@ -70,20 +59,18 @@ public class WordSetExperienceMapping {
         WordSetExperienceMapping that = (WordSetExperienceMapping) o;
         return trainingExperience == that.trainingExperience &&
                 Objects.equals(wordSetId, that.wordSetId) &&
-                Objects.equals(id, that.id) &&
                 Objects.equals(maxTrainingExperience, that.maxTrainingExperience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, wordSetId, trainingExperience, maxTrainingExperience);
+        return Objects.hash(wordSetId, trainingExperience, maxTrainingExperience);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WordSetExperienceMapping{");
         sb.append("wordSetId='").append(wordSetId).append('\'');
-        sb.append(", id='").append(id).append('\'');
         sb.append(", maxTrainingExperience='").append(maxTrainingExperience).append('\'');
         sb.append(", trainingExperience=").append(trainingExperience);
         sb.append(", status=").append(status);

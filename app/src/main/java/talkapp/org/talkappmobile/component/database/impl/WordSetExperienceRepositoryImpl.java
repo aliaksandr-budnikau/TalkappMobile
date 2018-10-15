@@ -61,7 +61,6 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
 
     private WordSetExperience toDto(WordSetExperienceMapping mapping) {
         WordSetExperience wordSetExperience = new WordSetExperience();
-        wordSetExperience.setId(mapping.getId());
         wordSetExperience.setWordSetId(mapping.getWordSetId());
         wordSetExperience.setStatus(mapping.getStatus());
         wordSetExperience.setTrainingExperience(mapping.getTrainingExperience());
