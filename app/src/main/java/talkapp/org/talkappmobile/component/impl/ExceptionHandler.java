@@ -25,7 +25,7 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        if (e.getCause() instanceof AuthorizationException) {
+        if (getCause(e) instanceof AuthorizationException) {
             Intent intent = new Intent(activity, LoginActivity.class);
             activity.startActivity(intent);
         } else {
@@ -69,5 +69,13 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
         }
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(10);
+    }
+
+    private Throwable getCause(Throwable e) {
+        Throwable cause = e;
+        while (cause.getCause() != null) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 }
