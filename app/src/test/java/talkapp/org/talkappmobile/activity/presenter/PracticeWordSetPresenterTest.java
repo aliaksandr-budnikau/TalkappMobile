@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -179,7 +180,22 @@ public class PracticeWordSetPresenterTest {
 
         // then
         verify(state).nextWord();
+        verify(viewStrategy).onNextButtonStart();
+        verify(viewStrategy).onNextButtonFinish();
         verify(interactor).initialiseSentence(word1, wordSetId, presenter);
+    }
+
+    @Test
+    public void onNextButtonClick_exception() {
+        // when
+        doThrow(new RuntimeException()).when(viewStrategy).onNextButtonStart();
+        try {
+            presenter.onNextButtonClick();
+        } catch (Exception e) {
+        }
+
+        // then
+        verify(viewStrategy).onNextButtonFinish();
     }
 
     @Test
@@ -198,7 +214,25 @@ public class PracticeWordSetPresenterTest {
         presenter.onCheckAnswerButtonClick(answer);
 
         // then
+        verify(viewStrategy).onCheckAnswerFinish();
+        verify(viewStrategy).onCheckAnswerStart();
         verify(interactor).checkAnswer(answer, wordSet, sentence, presenter);
+    }
+
+    @Test
+    public void onCheckAnswerButtonClick_exception() {
+        // setup
+        String answer = "sdfsd";
+
+        // when
+        doThrow(new RuntimeException()).when(viewStrategy).onCheckAnswerStart();
+        try {
+            presenter.onCheckAnswerButtonClick(answer);
+        } catch (Exception e) {
+        }
+
+        // then
+        verify(viewStrategy).onCheckAnswerFinish();
     }
 
     @Test

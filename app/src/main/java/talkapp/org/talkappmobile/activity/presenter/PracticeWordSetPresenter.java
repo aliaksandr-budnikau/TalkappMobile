@@ -109,12 +109,22 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void onNextButtonClick() {
-        state.nextWord();
-        interactor.initialiseSentence(state.getWord(), state.getWordSetId(), this);
+        try {
+            viewStrategy.onNextButtonStart();
+            state.nextWord();
+            interactor.initialiseSentence(state.getWord(), state.getWordSetId(), this);
+        } finally {
+            viewStrategy.onNextButtonFinish();
+        }
     }
 
     public void onCheckAnswerButtonClick(final String answer) {
-        interactor.checkAnswer(answer, state.getWordSet(), state.getSentence(), this);
+        try {
+            viewStrategy.onCheckAnswerStart();
+            interactor.checkAnswer(answer, state.getWordSet(), state.getSentence(), this);
+        } finally {
+            viewStrategy.onCheckAnswerFinish();
+        }
     }
 
     public void onPlayVoiceButtonClick() {

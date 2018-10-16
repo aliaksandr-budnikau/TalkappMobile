@@ -111,4 +111,21 @@ public class PracticeWordSetViewStrategy {
     public void onTrainingHalfFinished() {
 
     }
+
+    public void onNextButtonStart() {
+        view.setEnableNextButton(false);
+    }
+
+    public void onNextButtonFinish() {
+        view.setEnableNextButton(true);
+    }
+
+    public void onCheckAnswerStart() {
+        view.setEnableCheckButton(false);
+    }
+
+    public void onCheckAnswerFinish() {
+        view.setEnableCheckButton(true);
+
+    }
 }
