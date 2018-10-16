@@ -25,6 +25,8 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
 
 public class PracticeWordSetInteractor {
     private static final String TAG = PracticeWordSetInteractor.class.getSimpleName();
@@ -97,11 +99,13 @@ public class PracticeWordSetInteractor {
         listener.onUpdateProgress(exp);
 
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
+            experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
             listener.onTrainingHalfFinished();
             return;
         }
 
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
+            experienceRepository.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();
             return;
         }

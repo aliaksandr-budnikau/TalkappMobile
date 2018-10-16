@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.component.database;
 
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 public interface WordSetExperienceRepository {
 
@@ -10,4 +11,6 @@ public interface WordSetExperienceRepository {
     WordSetExperience createNew(WordSet wordSet);
 
     WordSetExperience increaseExperience(String id, int value);
+
+    WordSetExperience moveToAnotherState(String id, WordSetExperienceStatus value);
 }

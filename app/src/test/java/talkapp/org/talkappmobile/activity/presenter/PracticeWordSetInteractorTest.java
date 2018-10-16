@@ -41,6 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorTest {
@@ -194,6 +195,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener).onUpdateProgress(experience);
         verify(listener).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
+        verify(listener, times(0)).onTrainingHalfFinished();
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
@@ -230,6 +232,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener).onTrainingFinished();
+        verify(wordSetExperienceRepository).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
@@ -304,6 +307,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
+        verify(listener, times(0)).onTrainingHalfFinished();
         verify(listener, times(0)).onAnswerEmpty();
     }
 
@@ -340,6 +344,7 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer();
         verify(listener, times(0)).onTrainingFinished();
+        verify(listener, times(0)).onTrainingHalfFinished();
     }
 
     @Test

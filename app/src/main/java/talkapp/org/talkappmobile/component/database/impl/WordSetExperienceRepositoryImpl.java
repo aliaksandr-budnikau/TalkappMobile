@@ -7,7 +7,9 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 public class WordSetExperienceRepositoryImpl implements WordSetExperienceRepository {
@@ -51,6 +53,14 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
         } else {
             mapping.setTrainingExperience(experience);
         }
+        experienceDao.createNewOrUpdate(mapping);
+        return toDto(mapping);
+    }
+
+    @Override
+    public WordSetExperience moveToAnotherState(String id, WordSetExperienceStatus value) {
+        WordSetExperienceMapping mapping = experienceDao.findById(id);
+        mapping.setStatus(REPETITION);
         experienceDao.createNewOrUpdate(mapping);
         return toDto(mapping);
     }
