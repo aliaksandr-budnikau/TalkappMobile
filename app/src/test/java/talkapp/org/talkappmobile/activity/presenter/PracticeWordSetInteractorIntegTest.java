@@ -30,6 +30,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorIntegTest {
     @Mock
+    WordSetExperienceRepository experienceRepository;
+    @Mock
     private PracticeWordSetView view;
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
@@ -39,8 +41,6 @@ public class PracticeWordSetInteractorIntegTest {
     private RefereeService refereeService;
     @Mock
     private SentenceProvider sentenceProvider;
-    @Mock
-    WordSetExperienceRepository experienceRepository;
 
     @BeforeClass
     public static void setUpContext() {
@@ -73,7 +73,7 @@ public class PracticeWordSetInteractorIntegTest {
         when(refereeService.checkAnswer(any(UncheckedAnswer.class))).thenReturn(result);
         presenter.interactor.refereeService = refereeService;
         presenter.interactor.experienceRepository = experienceRepository;
-        when(experienceRepository.findById(wordSetId)).thenReturn(experience);
+        when(experienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         when(sentenceProvider.findByWordAndWordSetId(word1, wordSetId)).thenReturn(asList(sentence));
         presenter.interactor.sentenceProvider = sentenceProvider;
 

@@ -187,7 +187,7 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetExperienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -223,7 +223,7 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetExperienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -260,7 +260,6 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then

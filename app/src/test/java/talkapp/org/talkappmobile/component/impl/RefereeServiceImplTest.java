@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -20,18 +19,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefereeServiceImplTest {
     @Mock
     private GrammarCheckService grammarCheckService;
-    @Mock
-    private WordSetExperienceRepository experienceRepository;
     @Mock
     private EqualityScorer equalityScorer;
     @InjectMocks
@@ -50,7 +43,6 @@ public class RefereeServiceImplTest {
 
         // then
         assertEquals(1, result.getErrors().size());
-        verify(experienceRepository, times(0)).increaseExperience(anyString(), anyInt());
     }
 
     @Test
@@ -66,7 +58,6 @@ public class RefereeServiceImplTest {
 
         // then
         assertEquals(3, result.getErrors().size());
-        verify(experienceRepository, times(0)).increaseExperience(anyString(), anyInt());
     }
 
     @Test
@@ -81,18 +72,15 @@ public class RefereeServiceImplTest {
         experience.setTrainingExperience(0);
         experience.setMaxTrainingExperience(12);
 
-        int value = 1223;
         int delta = 1;
 
         // when
         when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(80);
         when(grammarCheckService.check(answer.getActualAnswer())).thenReturn(new ArrayList<GrammarError>());
-        when(experienceRepository.increaseExperience(answer.getWordSetExperienceId(), delta)).thenReturn(value);
         AnswerCheckingResult result = service.checkAnswer(answer);
 
         // then
         assertTrue(result.getErrors().isEmpty());
-        verify(experienceRepository).increaseExperience(answer.getWordSetExperienceId(), delta);
     }
 
     @Test

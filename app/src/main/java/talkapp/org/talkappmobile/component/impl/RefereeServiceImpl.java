@@ -3,18 +3,15 @@ package talkapp.org.talkappmobile.component.impl;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 
 public class RefereeServiceImpl implements RefereeService {
     private final GrammarCheckService grammarCheckService;
-    private final WordSetExperienceRepository experienceRepository;
     private final EqualityScorer equalityScorer;
 
-    public RefereeServiceImpl(GrammarCheckService grammarCheckService, WordSetExperienceRepository experienceRepository, EqualityScorer equalityScorer) {
+    public RefereeServiceImpl(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {
         this.grammarCheckService = grammarCheckService;
-        this.experienceRepository = experienceRepository;
         this.equalityScorer = equalityScorer;
     }
 
@@ -27,8 +24,6 @@ public class RefereeServiceImpl implements RefereeService {
                 result.setAccuracyTooLow(true);
                 return result;
             }
-            String id = answer.getWordSetExperienceId();
-            experienceRepository.increaseExperience(id, 1);
         }
         return result;
     }

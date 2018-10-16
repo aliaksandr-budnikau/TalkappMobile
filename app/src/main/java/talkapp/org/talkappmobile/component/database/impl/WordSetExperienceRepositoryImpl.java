@@ -1,8 +1,5 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
@@ -21,16 +18,6 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     public WordSetExperienceRepositoryImpl(WordSetExperienceDao experienceDao, Logger logger) {
         this.experienceDao = experienceDao;
         this.logger = logger;
-    }
-
-    @Override
-    public List<WordSetExperience> findAll() {
-        List<WordSetExperienceMapping> all = experienceDao.findAll();
-        LinkedList<WordSetExperience> result = new LinkedList<>();
-        for (WordSetExperienceMapping wordSetExperienceMapping : all) {
-            result.addLast(toDto(wordSetExperienceMapping));
-        }
-        return result;
     }
 
     @Override
@@ -55,7 +42,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     }
 
     @Override
-    public int increaseExperience(String id, int value) {
+    public WordSetExperience increaseExperience(String id, int value) {
         WordSetExperienceMapping mapping = experienceDao.findById(id);
         int experience = mapping.getTrainingExperience() + value;
         if (experience > mapping.getMaxTrainingExperience()) {
@@ -65,7 +52,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
             mapping.setTrainingExperience(experience);
         }
         experienceDao.createNewOrUpdate(mapping);
-        return experience;
+        return toDto(mapping);
     }
 
     private WordSetExperience toDto(WordSetExperienceMapping mapping) {

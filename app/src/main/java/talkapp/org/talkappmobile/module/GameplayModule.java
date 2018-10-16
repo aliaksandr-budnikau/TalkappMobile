@@ -14,7 +14,6 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
@@ -73,8 +72,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService, WordSetExperienceRepository experienceRepository, EqualityScorer equalityScorer) {
-        return new RefereeServiceImpl(grammarCheckService, experienceRepository, equalityScorer);
+    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {
+        return new RefereeServiceImpl(grammarCheckService, equalityScorer);
     }
 
     @Provides

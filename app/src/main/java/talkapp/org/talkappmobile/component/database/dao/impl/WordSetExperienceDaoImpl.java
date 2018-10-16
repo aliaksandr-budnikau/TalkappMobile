@@ -4,7 +4,6 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
@@ -28,15 +27,6 @@ public class WordSetExperienceDaoImpl extends BaseDaoImpl<WordSetExperienceMappi
     public WordSetExperienceMapping findById(String id) {
         try {
             return this.queryForId(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public List<WordSetExperienceMapping> findAll() {
-        try {
-            return this.queryForAll();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
