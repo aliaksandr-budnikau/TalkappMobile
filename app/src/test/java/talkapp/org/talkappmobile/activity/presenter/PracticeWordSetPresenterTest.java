@@ -145,7 +145,7 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getWordSet()).thenReturn(wordSet);
-        presenter.onResume();
+        presenter.initialise();
 
         // then
         verify(interactor).initialiseExperience(wordSet, presenter);
@@ -154,7 +154,7 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onDestroy() {
-        presenter.onDestroy();
+        presenter.destroy();
         assertNull(Whitebox.getInternalState(presenter, "viewStrategy"));
     }
 
@@ -167,7 +167,7 @@ public class PracticeWordSetPresenterTest {
         // when
         when(interactor.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
         when(state.getWordSetId()).thenReturn(wordSetId);
-        presenter.onNextButtonClick();
+        presenter.nextButtonClick();
 
         // then
         verify(viewStrategy).onNextButtonStart();
@@ -180,7 +180,7 @@ public class PracticeWordSetPresenterTest {
         // when
         doThrow(new RuntimeException()).when(viewStrategy).onNextButtonStart();
         try {
-            presenter.onNextButtonClick();
+            presenter.nextButtonClick();
         } catch (Exception e) {
         }
 
@@ -202,7 +202,7 @@ public class PracticeWordSetPresenterTest {
         when(state.getWordSet()).thenReturn(wordSet);
         when(state.getWordSetId()).thenReturn(wordSet.getId());
         when(interactor.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
-        presenter.onCheckAnswerButtonClick(answer);
+        presenter.checkAnswerButtonClick(answer);
 
         // then
         verify(viewStrategy).onCheckAnswerFinish();
@@ -218,7 +218,7 @@ public class PracticeWordSetPresenterTest {
         // when
         doThrow(new RuntimeException()).when(viewStrategy).onCheckAnswerStart();
         try {
-            presenter.onCheckAnswerButtonClick(answer);
+            presenter.checkAnswerButtonClick(answer);
         } catch (Exception e) {
         }
 
@@ -245,7 +245,7 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getVoiceRecordUri()).thenReturn(empty);
-        presenter.onPlayVoiceButtonClick();
+        presenter.playVoiceButtonClick();
 
         // then
         verify(interactor).playVoice(empty, presenter);

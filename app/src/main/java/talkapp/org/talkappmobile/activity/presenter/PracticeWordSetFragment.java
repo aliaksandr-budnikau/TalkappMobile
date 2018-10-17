@@ -52,7 +52,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    presenter.onNextButtonClick();
+                    presenter.nextButtonClick();
                     return null;
                 }
             }.executeOnExecutor(executor);
@@ -65,7 +65,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    presenter.onCheckAnswerButtonClick(answerText.getText().toString());
+                    presenter.checkAnswerButtonClick(answerText.getText().toString());
                     return null;
                 }
             }.executeOnExecutor(executor);
@@ -107,7 +107,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    presenter.onPlayVoiceButtonClick();
+                    presenter.playVoiceButtonClick();
                     return null;
                 }
             }.executeOnExecutor(executor);
@@ -156,8 +156,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                presenter.onResume();
-                presenter.onNextButtonClick();
+                presenter.initialise();
+                presenter.nextButtonClick();
                 return null;
             }
         }.executeOnExecutor(executor);
@@ -166,7 +166,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     public void onDestroy() {
-        presenter.onDestroy();
+        presenter.destroy();
         super.onDestroy();
     }
 
@@ -187,8 +187,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             return;
         }
 
-        presenter.onGotRecognitionResult(suggestedWords);
-        presenter.onVoiceRecognized(data.getData());
+        presenter.gotRecognitionResult(suggestedWords);
+        presenter.voiceRecorded(data.getData());
     }
 
     @Override

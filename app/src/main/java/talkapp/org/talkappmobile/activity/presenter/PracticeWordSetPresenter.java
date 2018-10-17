@@ -89,21 +89,21 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onStopPlaying();
     }
 
-    public void onGotRecognitionResult(List<String> result) {
+    public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
-    public void onResume() {
+    public void initialise() {
         interactor.initialiseExperience(state.getWordSet(), this);
         interactor.initialiseWordsSequence(state.getWordSet(), this);
     }
 
-    public void onDestroy() {
+    public void destroy() {
         viewStrategy = null;
     }
 
-    public void onNextButtonClick() {
+    public void nextButtonClick() {
         try {
             viewStrategy.onNextButtonStart();
             String word = interactor.peekByWordSetIdAnyWord(state.getWordSetId());
@@ -113,7 +113,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
-    public void onCheckAnswerButtonClick(final String answer) {
+    public void checkAnswerButtonClick(final String answer) {
         try {
             viewStrategy.onCheckAnswerStart();
             Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
@@ -123,11 +123,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
-    public void onPlayVoiceButtonClick() {
+    public void playVoiceButtonClick() {
         interactor.playVoice(state.getVoiceRecordUri(), this);
     }
 
-    public void onVoiceRecognized(Uri voiceRecordUri) {
+    public void voiceRecorded(Uri voiceRecordUri) {
         state.setVoiceRecordUri(voiceRecordUri);
     }
 

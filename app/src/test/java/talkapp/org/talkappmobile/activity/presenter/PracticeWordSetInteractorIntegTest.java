@@ -86,10 +86,10 @@ public class PracticeWordSetInteractorIntegTest {
         presenter.interactor.sentenceProvider = sentenceProvider;
 
 
-        presenter.onResume();
-        presenter.onNextButtonClick();
-        presenter.onNextButtonClick();
-        presenter.onCheckAnswerButtonClick("Answer 1");
-        presenter.onNextButtonClick();
+        presenter.initialise();
+        presenter.nextButtonClick();
+        presenter.nextButtonClick();
+        presenter.checkAnswerButtonClick("Answer 1");
+        presenter.nextButtonClick();
     }
 }
