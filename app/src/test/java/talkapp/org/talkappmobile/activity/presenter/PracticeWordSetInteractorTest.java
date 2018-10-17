@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
@@ -34,7 +35,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -48,6 +48,8 @@ public class PracticeWordSetInteractorTest {
 
     @Mock
     AudioStuffFactory audioStuffFactory;
+    @Mock
+    PracticeWordSetExerciseRepository exerciseRepository;
     @Mock
     private WordsCombinator wordsCombinator;
     @Mock
@@ -120,7 +122,7 @@ public class PracticeWordSetInteractorTest {
         interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
-        assertTrue(wordSet.getWords().isEmpty());
+        verify(exerciseRepository).createSomeIfNecessary(new HashSet<String>(), wordSet.getId());
     }
 
     @Test
@@ -194,6 +196,7 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(listener).onUpdateProgress(experience);
         verify(listener).onRightAnswer();
+        verify(exerciseRepository).putOffCurrentWord(wordSet.getId());
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished();
         verify(listener, times(0)).onAccuracyTooLowError();

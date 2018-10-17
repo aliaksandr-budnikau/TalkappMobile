@@ -9,7 +9,10 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
 
@@ -49,6 +52,45 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
             DeleteBuilder<PracticeWordSetExerciseMapping, Integer> builder = deleteBuilder();
             builder.where().eq(WORD_SET_ID_FN, wordSetId);
             builder.delete();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int createAll(List<PracticeWordSetExerciseMapping> words) {
+        try {
+            return super.create(words);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, String wordSetId) {
+        try {
+            return this.query(
+                    queryBuilder()
+                            .where()
+                            .eq(STATUS_FN, status)
+                            .and()
+                            .eq(WORD_SET_ID_FN, wordSetId).prepare()
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(String wordSetId) {
+        try {
+            return this.query(
+                    queryBuilder()
+                            .where()
+                            .eq(CURRENT_FN, true)
+                            .and()
+                            .eq(WORD_SET_ID_FN, wordSetId).prepare()
+            );
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

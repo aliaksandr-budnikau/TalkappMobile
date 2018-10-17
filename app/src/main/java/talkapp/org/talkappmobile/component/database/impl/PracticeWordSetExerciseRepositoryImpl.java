@@ -4,15 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
+
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExerciseRepository {
     private PracticeWordSetExerciseDao exerciseDao;
+    private WordSetExperienceDao experienceDao;
     private ObjectMapper mapper;
 
     public PracticeWordSetExerciseRepositoryImpl(PracticeWordSetExerciseDao exerciseDao, ObjectMapper mapper) {
@@ -36,19 +43,69 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
 
     @Override
     public void save(String word, String wordSetId, Sentence sentence) {
-        PracticeWordSetExerciseMapping exercise = new PracticeWordSetExerciseMapping();
-        exercise.setWord(word);
+        PracticeWordSetExerciseMapping exercise = exerciseDao.findByWordAndWordSetId(word, wordSetId).get(0);
         try {
             exercise.setSentenceJSON(mapper.writeValueAsString(sentence));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        exercise.setWordSetId(wordSetId);
         exerciseDao.createNewOrUpdate(exercise);
     }
 
     @Override
     public void cleanByWordSetId(String wordSetId) {
         exerciseDao.cleanByWordSetId(wordSetId);
+    }
+
+    @Override
+    public void createSomeIfNecessary(Set<String> words, String wordSetId) {
+        List<PracticeWordSetExerciseMapping> wordsEx = new LinkedList<>();
+        for (String word : words) {
+            List<PracticeWordSetExerciseMapping> alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(word, wordSetId);
+            if (alreadyCreatedWord != null && !alreadyCreatedWord.isEmpty()) {
+                continue;
+            }
+            PracticeWordSetExerciseMapping exercise = new PracticeWordSetExerciseMapping();
+            exercise.setWord(word);
+            exercise.setStatus(STUDYING);
+            exercise.setWordSetId(wordSetId);
+            wordsEx.add(exercise);
+        }
+        exerciseDao.createAll(wordsEx);
+    }
+
+    @Override
+    public String peekByWordSetIdAnyWord(String wordSetId) {
+        WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
+        List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
+        PracticeWordSetExerciseMapping mapping = exercises.get(0);
+        mapping.setCurrent(true);
+        exerciseDao.createNewOrUpdate(mapping);
+        return mapping.getWord();
+    }
+
+    @Override
+    public String getCurrentWord(String wordSetId) {
+        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        return current.get(0).getWord();
+    }
+
+    @Override
+    public Sentence getCurrentSentence(String wordSetId) {
+        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        String sentenceJSON = current.get(0).getSentenceJSON();
+        try {
+            return mapper.readValue(sentenceJSON, Sentence.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void putOffCurrentWord(String wordSetId) {
+        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        PracticeWordSetExerciseMapping mapping = current.get(0);
+        mapping.setCurrent(false);
+        exerciseDao.createNewOrUpdate(mapping);
     }
 }

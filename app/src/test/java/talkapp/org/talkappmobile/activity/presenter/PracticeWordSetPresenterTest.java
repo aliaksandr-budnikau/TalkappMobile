@@ -50,7 +50,7 @@ public class PracticeWordSetPresenterTest {
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "practiceWordSetExerciseRepository", practiceWordSetExerciseRepository);
+        Whitebox.setInternalState(presenter, "exerciseRepository", practiceWordSetExerciseRepository);
         Whitebox.setInternalState(presenter, "state", state);
     }
 
@@ -80,7 +80,7 @@ public class PracticeWordSetPresenterTest {
         presenter.onSentencesFound(sentence, word);
 
         // then
-        verify(state).setSentence(sentence);
+        verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
         verify(viewStrategy).onSentencesFound(sentence, word);
         verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
     }
@@ -138,9 +138,11 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
         sentence.setId("dsfs");
+        String wordSetId = "wordSetId";
 
         // when
-        when(state.getSentence()).thenReturn(sentence);
+        when(state.getWordSetId()).thenReturn(wordSetId);
+        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.onRightAnswer();
 
         // then
@@ -174,12 +176,11 @@ public class PracticeWordSetPresenterTest {
         String wordSetId = "sdfsdId";
 
         // when
-        when(state.getWord()).thenReturn(word1);
+        when(practiceWordSetExerciseRepository.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
         when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.onNextButtonClick();
 
         // then
-        verify(state).nextWord();
         verify(viewStrategy).onNextButtonStart();
         verify(viewStrategy).onNextButtonFinish();
         verify(interactor).initialiseSentence(word1, wordSetId, presenter);
@@ -202,7 +203,7 @@ public class PracticeWordSetPresenterTest {
     public void onCheckAnswerButtonClick() {
         // setup
         WordSet wordSet = new WordSet();
-
+        wordSet.setId("dsfs");
         String answer = "sdfsd";
 
         Sentence sentence = new Sentence();
@@ -210,7 +211,8 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getWordSet()).thenReturn(wordSet);
-        when(state.getSentence()).thenReturn(sentence);
+        when(state.getWordSetId()).thenReturn(wordSet.getId());
+        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
         presenter.onCheckAnswerButtonClick(answer);
 
         // then
@@ -265,8 +267,11 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
 
+        String wordSetId = "wordSetId";
+
         // when
-        when(state.getSentence()).thenReturn(sentence);
+        when(state.getWordSetId()).thenReturn(wordSetId);
+        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerTouched();
 
         // then
@@ -278,10 +283,12 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
         String word = "word";
+        String wordSetId = "wordSetId";
 
         // when
-        when(state.getSentence()).thenReturn(sentence);
-        when(state.getWord()).thenReturn(word);
+        when(state.getWordSetId()).thenReturn(wordSetId);
+        when(practiceWordSetExerciseRepository.getCurrentWord(wordSetId)).thenReturn(word);
+        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerUntouched();
 
         // then

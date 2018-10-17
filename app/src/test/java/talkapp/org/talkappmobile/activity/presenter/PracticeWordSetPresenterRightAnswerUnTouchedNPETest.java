@@ -10,6 +10,7 @@ import org.powermock.reflect.Whitebox;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -17,6 +18,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
+    @Mock
+    PracticeWordSetExerciseRepository exerciseRepository;
     @Mock
     private TextUtils textUtils;
     @Mock
@@ -34,17 +37,22 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
         PracticeWordSetViewStrategy strategy = Whitebox.getInternalState(presenter, "viewStrategy");
         Whitebox.setInternalState(strategy, "textUtils", textUtils);
         Whitebox.setInternalState(presenter, "state", state);
+        Whitebox.setInternalState(presenter, "exerciseRepository", exerciseRepository);
     }
 
     @Test
     public void rightAnswerTouched_whenSentenceIsNotInitializedYetNPE() {
-        when(state.getSentence()).thenReturn(null);
+        String wordSetId = "wordSetId";
+        when(state.getWordSetId()).thenReturn(wordSetId);
+        when(exerciseRepository.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerTouched();
     }
 
     @Test
     public void rightAnswerUntouched_whenSentenceIsNotInitializedYetNPE() {
-        when(state.getSentence()).thenReturn(null);
+        String wordSetId = "wordSetId";
+        when(state.getWordSetId()).thenReturn(wordSetId);
+        when(exerciseRepository.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerUntouched();
     }
 }

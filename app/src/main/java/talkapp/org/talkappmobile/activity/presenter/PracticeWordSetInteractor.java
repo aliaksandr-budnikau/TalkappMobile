@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +15,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
@@ -43,6 +43,8 @@ public class PracticeWordSetInteractor {
     @Inject
     WordSetExperienceRepository experienceRepository;
     @Inject
+    PracticeWordSetExerciseRepository exerciseRepository;
+    @Inject
     Context context;
     @Inject
     AudioStuffFactory audioStuffFactory;
@@ -60,8 +62,8 @@ public class PracticeWordSetInteractor {
     }
 
     public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
-        Set<String> set = wordsCombinator.combineWords(wordSet.getWords());
-        wordSet.setWords(new ArrayList<>(set));
+        Set<String> words = wordsCombinator.combineWords(wordSet.getWords());
+        exerciseRepository.createSomeIfNecessary(words, wordSet.getId());
     }
 
     public void initialiseSentence(String word, String wordSetId, final OnPracticeWordSetListener listener) {
@@ -109,6 +111,7 @@ public class PracticeWordSetInteractor {
             listener.onTrainingFinished();
             return;
         }
+        exerciseRepository.putOffCurrentWord(wordSet.getId());
         listener.onRightAnswer();
     }
 
