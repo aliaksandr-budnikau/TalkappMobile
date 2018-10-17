@@ -14,6 +14,8 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
+
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetView view;
     private final PracticeWordSetPresenterCurrentState state;
@@ -34,6 +36,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onInitialiseExperience(WordSetExperience exp) {
+        if (REPETITION.equals(exp.getStatus())) {
+            viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
+            sentenceProvider.enableRepetitionMode();
+        }
         viewStrategy.onInitialiseExperience(exp);
     }
 

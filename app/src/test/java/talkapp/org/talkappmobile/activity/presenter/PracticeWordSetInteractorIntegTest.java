@@ -73,6 +73,7 @@ public class PracticeWordSetInteractorIntegTest {
         when(refereeService.checkAnswer(any(UncheckedAnswer.class))).thenReturn(result);
         presenter.interactor.refereeService = refereeService;
         presenter.interactor.experienceRepository = experienceRepository;
+        when(experienceRepository.findById(wordSet.getId())).thenReturn(experience);
         when(experienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         when(sentenceProvider.findByWordAndWordSetId(word1, wordSetId)).thenReturn(asList(sentence));
         presenter.interactor.sentenceProvider = sentenceProvider;

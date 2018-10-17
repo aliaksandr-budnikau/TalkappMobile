@@ -32,6 +32,8 @@ import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
     public static final String TOPIC_ID_MAPPING = "topicId";
     @Inject
@@ -98,6 +100,15 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WordSet wordSet = adapter.getItem(position);
+        WordSetExperience experience = experienceRepository.findById(wordSet.getId());
+        if (FINISHED.equals(experience.getStatus())) {
+            askToResetExperience(view, position);
+        } else {
+            startWordSetActivity(wordSet);
+        }
+    }
+
+    private void startWordSetActivity(WordSet wordSet) {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         startActivity(intent);
@@ -105,6 +116,11 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
+        askToResetExperience(view, position);
+        return true;
+    }
+
+    private void askToResetExperience(final View view, final int position) {
         new AlertDialog.Builder(getActivity())
                 .setMessage("Do you want to reset your progress?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -119,6 +135,5 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();
-        return true;
     }
 }

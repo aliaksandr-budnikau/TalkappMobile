@@ -60,7 +60,7 @@ public class WordSetExperienceRepositoryImpl implements WordSetExperienceReposit
     @Override
     public WordSetExperience moveToAnotherState(String id, WordSetExperienceStatus value) {
         WordSetExperienceMapping mapping = experienceDao.findById(id);
-        mapping.setStatus(REPETITION);
+        mapping.setStatus(value);
         experienceDao.createNewOrUpdate(mapping);
         return toDto(mapping);
     }
