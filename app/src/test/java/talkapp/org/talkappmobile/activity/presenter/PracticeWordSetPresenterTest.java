@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -34,8 +33,6 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private PracticeWordSetExerciseRepository practiceWordSetExerciseRepository;
-    @Mock
     private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
 
@@ -50,7 +47,6 @@ public class PracticeWordSetPresenterTest {
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "exerciseRepository", practiceWordSetExerciseRepository);
         Whitebox.setInternalState(presenter, "state", state);
     }
 
@@ -73,16 +69,12 @@ public class PracticeWordSetPresenterTest {
         sentence.getTranslations().put("russian", "fsdfsfs");
 
         String word = "word";
-        String wordSetId = "wordSetId";
 
         // when
-        when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.onSentencesFound(sentence, word);
 
         // then
-        verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
         verify(viewStrategy).onSentencesFound(sentence, word);
-        verify(practiceWordSetExerciseRepository).save(word, wordSetId, sentence);
     }
 
     @Test
@@ -138,12 +130,9 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
         sentence.setId("dsfs");
-        String wordSetId = "wordSetId";
 
         // when
-        when(state.getWordSetId()).thenReturn(wordSetId);
-        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
-        presenter.onRightAnswer();
+        presenter.onRightAnswer(sentence);
 
         // then
         verify(viewStrategy).onRightAnswer(sentence);
@@ -176,7 +165,7 @@ public class PracticeWordSetPresenterTest {
         String wordSetId = "sdfsdId";
 
         // when
-        when(practiceWordSetExerciseRepository.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
+        when(interactor.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
         when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.onNextButtonClick();
 
@@ -212,7 +201,7 @@ public class PracticeWordSetPresenterTest {
         // when
         when(state.getWordSet()).thenReturn(wordSet);
         when(state.getWordSetId()).thenReturn(wordSet.getId());
-        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
+        when(interactor.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
         presenter.onCheckAnswerButtonClick(answer);
 
         // then
@@ -271,7 +260,7 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
+        when(interactor.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerTouched();
 
         // then
@@ -287,8 +276,8 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(practiceWordSetExerciseRepository.getCurrentWord(wordSetId)).thenReturn(word);
-        when(practiceWordSetExerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
+        when(interactor.getCurrentWord(wordSetId)).thenReturn(word);
+        when(interactor.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerUntouched();
 
         // then

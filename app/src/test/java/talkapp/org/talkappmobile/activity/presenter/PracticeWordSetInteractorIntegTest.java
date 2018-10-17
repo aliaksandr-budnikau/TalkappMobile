@@ -73,7 +73,6 @@ public class PracticeWordSetInteractorIntegTest {
 
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, view);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
-        Whitebox.setInternalState(presenter, "exerciseRepository", practiceWordSetExerciseRepository);
         Whitebox.setInternalState(presenter, "state", state);
         when(refereeService.checkAnswer(any(UncheckedAnswer.class))).thenReturn(result);
         when(state.getWordSet()).thenReturn(wordSet);
@@ -81,7 +80,6 @@ public class PracticeWordSetInteractorIntegTest {
         presenter.interactor.refereeService = refereeService;
         presenter.interactor.experienceRepository = experienceRepository;
         presenter.interactor.exerciseRepository = exerciseRepository;
-        presenter.exerciseRepository = exerciseRepository;
         when(exerciseRepository.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
         when(experienceRepository.findById(wordSet.getId())).thenReturn(experience);
         when(experienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);

@@ -19,15 +19,13 @@ public interface OnPracticeWordSetListener {
 
     void onUpdateProgress(WordSetExperience exp);
 
-    void onTrainingHalfFinished();
+    void onTrainingHalfFinished(Sentence sentence);
 
     void onTrainingFinished();
 
-    void onRightAnswer();
+    void onRightAnswer(Sentence sentence);
 
     void onStartPlaying();
 
     void onStopPlaying();
-
-    void onGotRecognitionResult(List<String> result);
 }

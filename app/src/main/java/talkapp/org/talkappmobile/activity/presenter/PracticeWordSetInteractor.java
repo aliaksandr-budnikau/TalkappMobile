@@ -73,6 +73,7 @@ public class PracticeWordSetInteractor {
             return;
         }
         final Sentence sentence = sentenceSelector.getSentence(sentences);
+        exerciseRepository.save(word, wordSetId, sentence);
         listener.onSentencesFound(sentence, word);
     }
 
@@ -102,7 +103,7 @@ public class PracticeWordSetInteractor {
 
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
-            listener.onTrainingHalfFinished();
+            listener.onTrainingHalfFinished(sentence);
             return;
         }
 
@@ -112,7 +113,7 @@ public class PracticeWordSetInteractor {
             return;
         }
         exerciseRepository.putOffCurrentWord(wordSet.getId());
-        listener.onRightAnswer();
+        listener.onRightAnswer(sentence);
     }
 
     public void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
@@ -136,5 +137,17 @@ public class PracticeWordSetInteractor {
         } finally {
             listener.onStopPlaying();
         }
+    }
+
+    public Sentence getCurrentSentence(String wordSetId) {
+        return exerciseRepository.getCurrentSentence(wordSetId);
+    }
+
+    public String peekByWordSetIdAnyWord(String wordSetId) {
+        return exerciseRepository.peekByWordSetIdAnyWord(wordSetId);
+    }
+
+    public String getCurrentWord(String wordSetId) {
+        return exerciseRepository.getCurrentWord(wordSetId);
     }
 }

@@ -23,6 +23,8 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     @Mock
     private TextUtils textUtils;
     @Mock
+    private PracticeWordSetInteractor interactor;
+    @Mock
     private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
 
@@ -37,14 +39,14 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
         PracticeWordSetViewStrategy strategy = Whitebox.getInternalState(presenter, "viewStrategy");
         Whitebox.setInternalState(strategy, "textUtils", textUtils);
         Whitebox.setInternalState(presenter, "state", state);
-        Whitebox.setInternalState(presenter, "exerciseRepository", exerciseRepository);
+        Whitebox.setInternalState(presenter, "interactor", interactor);
     }
 
     @Test
     public void rightAnswerTouched_whenSentenceIsNotInitializedYetNPE() {
         String wordSetId = "wordSetId";
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(exerciseRepository.getCurrentSentence(wordSetId)).thenReturn(null);
+        when(interactor.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerTouched();
     }
 
@@ -52,7 +54,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     public void rightAnswerUntouched_whenSentenceIsNotInitializedYetNPE() {
         String wordSetId = "wordSetId";
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(exerciseRepository.getCurrentSentence(wordSetId)).thenReturn(null);
+        when(interactor.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerUntouched();
     }
 }

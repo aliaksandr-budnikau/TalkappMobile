@@ -195,10 +195,10 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onUpdateProgress(experience);
-        verify(listener).onRightAnswer();
+        verify(listener).onRightAnswer(sentence);
         verify(exerciseRepository).putOffCurrentWord(wordSet.getId());
         verify(listener, times(0)).onTrainingFinished();
-        verify(listener, times(0)).onTrainingHalfFinished();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
@@ -233,7 +233,7 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onUpdateProgress(experience);
-        verify(listener, times(0)).onRightAnswer();
+        verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener).onTrainingFinished();
         verify(wordSetExperienceRepository).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(listener, times(0)).onAccuracyTooLowError();
@@ -271,7 +271,7 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(listener).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
-        verify(listener, times(0)).onRightAnswer();
+        verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
@@ -308,9 +308,9 @@ public class PracticeWordSetInteractorTest {
         verify(listener).onSpellingOrGrammarError(errors);
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
-        verify(listener, times(0)).onRightAnswer();
+        verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
-        verify(listener, times(0)).onTrainingHalfFinished();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
     }
 
@@ -345,9 +345,9 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
-        verify(listener, times(0)).onRightAnswer();
+        verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
-        verify(listener, times(0)).onTrainingHalfFinished();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
     }
 
     @Test

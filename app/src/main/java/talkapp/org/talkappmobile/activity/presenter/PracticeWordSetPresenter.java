@@ -7,7 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -21,8 +20,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;
     @Inject
     PracticeWordSetInteractor interactor;
-    @Inject
-    PracticeWordSetExerciseRepository exerciseRepository;
     @Inject
     SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
@@ -45,7 +42,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onSentencesFound(final Sentence sentence, String word) {
-        exerciseRepository.save(word, state.getWordSetId(), sentence);
         viewStrategy.onSentencesFound(sentence, word);
     }
 
@@ -70,9 +66,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onTrainingHalfFinished() {
+    public void onTrainingHalfFinished(Sentence currentSentence) {
         viewStrategy.onTrainingHalfFinished();
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
         viewStrategy.onRightAnswer(currentSentence);
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
         sentenceProvider.enableRepetitionMode();
@@ -84,9 +79,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onRightAnswer() {
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
-        viewStrategy.onRightAnswer(currentSentence);
+    public void onRightAnswer(Sentence sentence) {
+        viewStrategy.onRightAnswer(sentence);
     }
 
     @Override
@@ -99,9 +93,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onStopPlaying();
     }
 
-    @Override
     public void onGotRecognitionResult(List<String> result) {
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
+        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
@@ -117,7 +110,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onNextButtonClick() {
         try {
             viewStrategy.onNextButtonStart();
-            String word = exerciseRepository.peekByWordSetIdAnyWord(state.getWordSetId());
+            String word = interactor.peekByWordSetIdAnyWord(state.getWordSetId());
             interactor.initialiseSentence(word, state.getWordSetId(), this);
         } finally {
             viewStrategy.onNextButtonFinish();
@@ -127,7 +120,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onCheckAnswerButtonClick(final String answer) {
         try {
             viewStrategy.onCheckAnswerStart();
-            Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
+            Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
             interactor.checkAnswer(answer, state.getWordSet(), currentSentence, this);
         } finally {
             viewStrategy.onCheckAnswerFinish();
@@ -143,16 +136,16 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerTouched() {
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
+        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         if (currentSentence != null) {
             viewStrategy.rightAnswerTouched(currentSentence);
         }
     }
 
     public void rightAnswerUntouched() {
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(state.getWordSetId());
+        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         if (currentSentence != null) {
-            String currentWord = exerciseRepository.getCurrentWord(state.getWordSetId());
+            String currentWord = interactor.getCurrentWord(state.getWordSetId());
             viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
         }
     }
