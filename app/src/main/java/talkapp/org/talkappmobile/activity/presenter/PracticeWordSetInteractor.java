@@ -58,6 +58,9 @@ public class PracticeWordSetInteractor {
         if (exp == null) {
             exp = experienceRepository.createNew(wordSet);
         }
+        if (REPETITION.equals(exp.getStatus())) {
+            sentenceProvider.enableRepetitionMode();
+        }
         listener.onInitialiseExperience(exp);
     }
 
@@ -103,6 +106,7 @@ public class PracticeWordSetInteractor {
 
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
+            sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             return;
         }

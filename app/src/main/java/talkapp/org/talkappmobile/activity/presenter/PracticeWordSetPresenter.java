@@ -20,8 +20,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;
     @Inject
     PracticeWordSetInteractor interactor;
-    @Inject
-    SentenceProvider sentenceProvider;
     private PracticeWordSetViewStrategy viewStrategy;
 
     public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
@@ -35,7 +33,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onInitialiseExperience(WordSetExperience exp) {
         if (REPETITION.equals(exp.getStatus())) {
             viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
-            sentenceProvider.enableRepetitionMode();
         }
         viewStrategy.onInitialiseExperience(exp);
     }
@@ -70,7 +67,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onTrainingHalfFinished();
         viewStrategy.onRightAnswer(currentSentence);
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
-        sentenceProvider.enableRepetitionMode();
     }
 
     @Override
