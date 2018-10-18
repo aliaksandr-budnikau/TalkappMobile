@@ -4,8 +4,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.RefereeService;
@@ -14,6 +16,9 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
@@ -92,6 +97,12 @@ public class GameplayModule {
     @Singleton
     public PracticeWordSetInteractor providePracticeWordSetInteractor() {
         return new PracticeWordSetInteractor();
+    }
+
+    @Provides
+    @Singleton
+    public AllWordSetsInteractor provideAllWordSetsInteractor(WordSetService wordSetService, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, AuthSign authSign) {
+        return new AllWordSetsInteractor(wordSetService, experienceRepository, exerciseRepository, authSign);
     }
 
     @Provides
