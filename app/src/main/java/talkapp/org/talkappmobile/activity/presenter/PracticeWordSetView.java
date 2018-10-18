@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-interface PracticeWordSetView {
+public interface PracticeWordSetView {
 
     void showNextButton();
 
