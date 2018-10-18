@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -42,6 +41,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetInteractorTest {
@@ -80,6 +81,7 @@ public class PracticeWordSetInteractorTest {
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId("323423");
+        experience.setStatus(STUDYING);
 
         // when
         when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(null);
@@ -88,17 +90,19 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onInitialiseExperience(experience);
-        assertEquals(experience.getId(), experience.getId());
     }
 
     @Test
-    public void initialiseExperience_experienceIsNotNull() {
+    public void initialiseExperience_experienceIsNotNullAndStatusRepetition() {
         // setup
+        String id = "3243";
+
         WordSetExperience experience = new WordSetExperience();
-        experience.setId("323423");
+        experience.setId(id);
+        experience.setStatus(REPETITION);
 
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(id);
 
         // when
         when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
@@ -106,8 +110,30 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
+        verify(sentenceProvider).enableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
-        assertEquals(experience.getId(), experience.getId());
+    }
+
+    @Test
+    public void initialiseExperience_experienceIsNotNullAndStatusNotRepetition() {
+        // setup
+        String id = "3243";
+
+        WordSetExperience experience = new WordSetExperience();
+        experience.setId(id);
+        experience.setStatus(STUDYING);
+
+        WordSet wordSet = new WordSet();
+        wordSet.setId(id);
+
+        // when
+        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
+        interactor.initialiseExperience(wordSet, listener);
+
+        // then
+        verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener).onInitialiseExperience(experience);
     }
 
     @Test
@@ -117,22 +143,24 @@ public class PracticeWordSetInteractorTest {
         wordSet.setWords(asList("fdsfs", "sdfs"));
         wordSet.setId("3243");
 
+        HashSet<String> words = new HashSet<>(wordSet.getWords());
+
         // when
-        when(wordsCombinator.combineWords(wordSet.getWords())).thenReturn(new HashSet<String>());
+        when(wordsCombinator.combineWords(wordSet.getWords())).thenReturn(words);
         interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
-        verify(exerciseRepository).createSomeIfNecessary(new HashSet<String>(), wordSet.getId());
+        verify(exerciseRepository).createSomeIfNecessary(words, wordSet.getId());
     }
 
     @Test
     public void initialiseSentence_sentenceFound() {
         // setup
-        Sentence sentence = new Sentence();
-        sentence.setId("fds32ddd");
-        sentence = new Sentence();
-        sentence.setId("fds32ddddsas");
-        List<Sentence> sentences = asList(sentence, sentence);
+        Sentence sentence1 = new Sentence();
+        sentence1.setId("fds32ddd");
+        Sentence sentence2 = new Sentence();
+        sentence2.setId("fds32ddddsas");
+        List<Sentence> sentences = asList(sentence1, sentence2);
 
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
@@ -145,6 +173,7 @@ public class PracticeWordSetInteractorTest {
         interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
+        verify(exerciseRepository).save(word, wordSetId, selectedSentence);
         verify(listener).onSentencesFound(selectedSentence, word);
     }
 
@@ -163,6 +192,7 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
+        verify(exerciseRepository, times(0)).save(word, wordSetId, selectedSentence);
         verify(sentenceSelector, times(0)).getSentence(any(List.class));
     }
 
