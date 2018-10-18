@@ -45,7 +45,7 @@ public class AllWordSetsInteractor {
 
     public void itemClick(WordSet wordSet, OnAllWordSetsListener listener) {
         WordSetExperience experience = experienceRepository.findById(wordSet.getId());
-        if (FINISHED.equals(experience.getStatus())) {
+        if (experience != null && FINISHED.equals(experience.getStatus())) {
             listener.onWordSetFinished(wordSet);
         } else {
             listener.onWordSetNotFinished(wordSet);
