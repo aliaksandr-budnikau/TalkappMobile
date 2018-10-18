@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsView;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
@@ -38,6 +39,8 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     Executor executor;
     @Inject
     AdaptersFactory adaptersFactory;
+    @Inject
+    AllWordSetsInteractor interactor;
     private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
     private AllWordSetsPresenter presenter;
@@ -61,7 +64,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
             topicId = (String) arguments.get(TOPIC_ID_MAPPING);
         }
 
-        presenter = new AllWordSetsPresenter(topicId, this);
+        presenter = new AllWordSetsPresenter(topicId, this, interactor);
 
         new AsyncTask<Void, Void, Void>() {
             @Override

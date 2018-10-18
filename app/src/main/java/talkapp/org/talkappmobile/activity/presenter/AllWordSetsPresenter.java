@@ -2,20 +2,18 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class AllWordSetsPresenter implements OnAllWordSetsListener {
     private final String topicId;
     private final AllWordSetsView view;
-    @Inject
-    AllWordSetsInteractor interactor;
+    private final AllWordSetsInteractor interactor;
 
-    public AllWordSetsPresenter(String topicId, AllWordSetsView view) {
+    public AllWordSetsPresenter(String topicId, AllWordSetsView view, AllWordSetsInteractor interactor) {
         this.topicId = topicId;
         this.view = view;
+        this.interactor = interactor;
     }
 
     public void initialize() {
