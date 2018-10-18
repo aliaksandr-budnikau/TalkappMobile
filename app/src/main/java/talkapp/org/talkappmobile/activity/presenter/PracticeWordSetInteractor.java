@@ -109,6 +109,7 @@ public class PracticeWordSetInteractor {
             experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
+            listener.onEnableRepetitionMode();
             return;
         }
 

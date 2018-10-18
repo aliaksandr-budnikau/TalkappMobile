@@ -63,7 +63,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void onTrainingHalfFinished(Sentence currentSentence) {
         viewStrategy.onTrainingHalfFinished();
         viewStrategy.onRightAnswer(currentSentence);
-        viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
     }
 
     @Override
