@@ -203,10 +203,13 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void checkAnswer_answerIsOk() {
         // setup
+        String id = "3243";
+
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(id);
+
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(wordSet.getId());
+        experience.setId(id);
         experience.setMaxTrainingExperience(12);
         experience.setTrainingExperience(4);
 
@@ -236,15 +239,22 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
     }
 
     @Test
     public void checkAnswer_answerIsOkAndFinish() {
         // setup
+        String id = "3243";
+
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(id);
+
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(wordSet.getId());
+        experience.setId(id);
         experience.setMaxTrainingExperience(12);
         experience.setTrainingExperience(12);
 
@@ -273,15 +283,23 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
+        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
     public void checkAnswer_accuracyTooLowError() {
         // setup
+        String id = "3243";
+
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(id);
+
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(wordSet.getId());
+        experience.setId(id);
         experience.setMaxTrainingExperience(12);
         experience.setTrainingExperience(0);
 
@@ -309,15 +327,23 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
+        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
     public void checkAnswer_spellingOrGrammarError() {
         // setup
+        String id = "3243";
+
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(id);
+
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(wordSet.getId());
+        experience.setId(id);
         experience.setMaxTrainingExperience(12);
         experience.setTrainingExperience(0);
 
@@ -346,6 +372,11 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
+        verify(listener, times(0)).onTrainingHalfFinished(sentence);
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
+        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -382,6 +413,10 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
+        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
+        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
