@@ -60,6 +60,7 @@ public class PracticeWordSetInteractor {
         }
         if (REPETITION.equals(exp.getStatus())) {
             sentenceProvider.enableRepetitionMode();
+            listener.onEnableRepetitionMode();
         }
         listener.onInitialiseExperience(exp);
     }

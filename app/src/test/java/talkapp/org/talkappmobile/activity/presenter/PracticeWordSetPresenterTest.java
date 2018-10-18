@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -282,5 +283,12 @@ public class PracticeWordSetPresenterTest {
 
         // then
         verify(viewStrategy).rightAnswerUntouched(sentence, word);
+    }
+
+    @Test
+    public void onEnableRepetitionMode() {
+        Object viewStrategy = Whitebox.getInternalState(presenter, "viewStrategy");
+        presenter.onEnableRepetitionMode();
+        assertNotEquals(viewStrategy, Whitebox.getInternalState(presenter, "viewStrategy"));
     }
 }

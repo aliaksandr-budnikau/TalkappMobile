@@ -90,6 +90,8 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener).onInitialiseExperience(experience);
+        verify(listener, times(0)).onEnableRepetitionMode();
+        verify(sentenceProvider, times(0)).enableRepetitionMode();
     }
 
     @Test
@@ -111,6 +113,7 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
         verify(sentenceProvider).enableRepetitionMode();
+        verify(listener).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
     }
 
@@ -133,6 +136,7 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
+        verify(listener, times(0)).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
     }
 

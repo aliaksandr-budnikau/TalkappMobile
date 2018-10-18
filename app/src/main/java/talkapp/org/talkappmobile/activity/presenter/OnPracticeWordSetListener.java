@@ -28,4 +28,6 @@ public interface OnPracticeWordSetListener {
     void onStartPlaying();
 
     void onStopPlaying();
+
+    void onEnableRepetitionMode();
 }

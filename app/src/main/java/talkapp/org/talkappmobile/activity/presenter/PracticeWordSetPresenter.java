@@ -31,9 +31,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onInitialiseExperience(WordSetExperience exp) {
-        if (REPETITION.equals(exp.getStatus())) {
-            viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
-        }
         viewStrategy.onInitialiseExperience(exp);
     }
 
@@ -87,6 +84,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onStopPlaying() {
         viewStrategy.onStopPlaying();
+    }
+
+    @Override
+    public void onEnableRepetitionMode() {
+        viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
     }
 
     public void gotRecognitionResult(List<String> result) {
