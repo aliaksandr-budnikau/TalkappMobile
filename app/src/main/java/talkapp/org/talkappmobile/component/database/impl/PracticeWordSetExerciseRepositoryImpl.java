@@ -22,8 +22,9 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     private WordSetExperienceDao experienceDao;
     private ObjectMapper mapper;
 
-    public PracticeWordSetExerciseRepositoryImpl(PracticeWordSetExerciseDao exerciseDao, ObjectMapper mapper) {
+    public PracticeWordSetExerciseRepositoryImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
+        this.experienceDao = experienceDao;
         this.mapper = mapper;
     }
 

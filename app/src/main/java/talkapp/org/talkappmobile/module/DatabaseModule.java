@@ -58,8 +58,8 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetExerciseRepository providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, ObjectMapper mapper) {
-        return new PracticeWordSetExerciseRepositoryImpl(exerciseDao, mapper);
+    public PracticeWordSetExerciseRepository providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
+        return new PracticeWordSetExerciseRepositoryImpl(exerciseDao, experienceDao, mapper);
     }
 
     @Provides

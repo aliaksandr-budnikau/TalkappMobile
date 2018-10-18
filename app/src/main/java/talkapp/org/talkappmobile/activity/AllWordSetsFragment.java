@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -41,6 +42,8 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     AdaptersFactory adaptersFactory;
     @Inject
     AllWordSetsInteractor interactor;
+    @Inject
+    Handler uiEventHandler;
     private ListView wordSetsListView;
     private ArrayAdapter<WordSet> adapter;
     private AllWordSetsPresenter presenter;
@@ -93,8 +96,13 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     }
 
     @Override
-    public void onWordSetsInitialized(List<WordSet> wordSets) {
-        adapter.addAll(wordSets);
+    public void onWordSetsInitialized(final List<WordSet> wordSets) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.addAll(wordSets);
+            }
+        });
     }
 
     @Override
