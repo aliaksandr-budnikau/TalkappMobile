@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMa
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
 public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExerciseRepository {
     private PracticeWordSetExerciseDao exerciseDao;
@@ -107,6 +108,14 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setCurrent(false);
+        exerciseDao.createNewOrUpdate(mapping);
+    }
+
+    @Override
+    public void moveCurrentWordToNextState(String wordSetId) {
+        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        PracticeWordSetExerciseMapping mapping = current.get(0);
+        mapping.setStatus(next(mapping.getStatus()));
         exerciseDao.createNewOrUpdate(mapping);
     }
 }

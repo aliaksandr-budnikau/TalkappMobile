@@ -30,4 +30,6 @@ public interface OnPracticeWordSetListener {
     void onStopPlaying();
 
     void onEnableRepetitionMode();
+
+    void onDisableRepetitionMode();
 }

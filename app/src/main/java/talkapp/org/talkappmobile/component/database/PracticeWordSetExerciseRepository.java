@@ -20,4 +20,6 @@ public interface PracticeWordSetExerciseRepository {
     Sentence getCurrentSentence(String wordSetId);
 
     void putOffCurrentWord(String wordSetId);
+
+    void moveCurrentWordToNextState(String wordSetId);
 }

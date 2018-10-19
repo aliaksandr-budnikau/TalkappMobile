@@ -90,6 +90,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
     }
 
+    @Override
+    public void onDisableRepetitionMode() {
+        viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);

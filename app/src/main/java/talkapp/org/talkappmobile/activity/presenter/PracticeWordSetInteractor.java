@@ -61,6 +61,9 @@ public class PracticeWordSetInteractor {
         if (REPETITION.equals(exp.getStatus())) {
             sentenceProvider.enableRepetitionMode();
             listener.onEnableRepetitionMode();
+        } else {
+            sentenceProvider.disableRepetitionMode();
+            listener.onDisableRepetitionMode();
         }
         listener.onInitialiseExperience(exp);
     }
@@ -105,21 +108,19 @@ public class PracticeWordSetInteractor {
         WordSetExperience exp = experienceRepository.increaseExperience(wordSet.getId(), 1);
         listener.onUpdateProgress(exp);
 
+        exerciseRepository.moveCurrentWordToNextState(wordSet.getId());
+        exerciseRepository.putOffCurrentWord(wordSet.getId());
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
-            return;
-        }
-
-        if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
+        } else if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             experienceRepository.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();
-            return;
+        } else {
+            listener.onRightAnswer(sentence);
         }
-        exerciseRepository.putOffCurrentWord(wordSet.getId());
-        listener.onRightAnswer(sentence);
     }
 
     public void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
