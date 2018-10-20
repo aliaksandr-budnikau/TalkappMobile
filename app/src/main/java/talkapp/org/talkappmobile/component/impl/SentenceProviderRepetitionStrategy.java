@@ -2,21 +2,19 @@ package talkapp.org.talkappmobile.component.impl;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static java.util.Arrays.asList;
 
 public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy {
+    private final PracticeWordSetExerciseRepository repository;
 
-    @Inject
-    PracticeWordSetExerciseRepository repository;
-
-    public SentenceProviderRepetitionStrategy() {
-        DIContextUtils.get().inject(this);
+    public SentenceProviderRepetitionStrategy(SentenceService sentenceService, AuthSign authSign, PracticeWordSetExerciseRepository repository) {
+        super(sentenceService, authSign);
+        this.repository = repository;
     }
 
     @Override

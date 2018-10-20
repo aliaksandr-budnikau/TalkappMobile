@@ -3,22 +3,18 @@ package talkapp.org.talkappmobile.component.impl;
 import java.io.IOException;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class SentenceProviderStrategy {
     public static final int WORDS_NUMBER = 6;
-    @Inject
-    SentenceService sentenceService;
-    @Inject
-    AuthSign authSign;
+    private final SentenceService sentenceService;
+    private final AuthSign authSign;
 
-    public SentenceProviderStrategy() {
-        DIContextUtils.get().inject(this);
+    public SentenceProviderStrategy(SentenceService sentenceService, AuthSign authSign) {
+        this.sentenceService = sentenceService;
+        this.authSign = authSign;
     }
 
     public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {

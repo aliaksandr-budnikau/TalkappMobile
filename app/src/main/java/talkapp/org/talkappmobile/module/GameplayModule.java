@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.backend.SentenceService;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
@@ -53,20 +54,20 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy() {
-        return new BackendSentenceProviderStrategy();
+    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy(SentenceService sentenceService, AuthSign authSign) {
+        return new BackendSentenceProviderStrategy(sentenceService, authSign);
     }
 
     @Provides
     @Singleton
-    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy() {
-        return new SentenceProviderRepetitionStrategy();
+    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(SentenceService sentenceService, AuthSign authSign, PracticeWordSetExerciseRepository repository) {
+        return new SentenceProviderRepetitionStrategy(sentenceService, authSign, repository);
     }
 
     @Provides
     @Singleton
-    public SentenceProvider provideSentenceProvider() {
-        return new SentenceProviderImpl();
+    public SentenceProvider provideSentenceProvider(BackendSentenceProviderStrategy backendStrategy, SentenceProviderRepetitionStrategy repetitionStrategy) {
+        return new SentenceProviderImpl(backendStrategy, repetitionStrategy);
     }
 
     @Provides
