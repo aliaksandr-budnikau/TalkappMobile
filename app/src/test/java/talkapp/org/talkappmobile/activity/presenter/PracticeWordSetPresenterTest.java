@@ -44,7 +44,7 @@ public class PracticeWordSetPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), null);
+        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, null);
 
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);

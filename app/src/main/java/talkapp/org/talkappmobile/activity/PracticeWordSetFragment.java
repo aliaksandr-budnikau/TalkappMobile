@@ -22,6 +22,7 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetView;
 import talkapp.org.talkappmobile.config.DIContext;
@@ -35,6 +36,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     Executor executor;
     @Inject
     Handler uiEventHandler;
+    @Inject
+    PracticeWordSetInteractor interactor;
 
     private TextView originalText;
     private TextView rightAnswer;
@@ -149,7 +152,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
         WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
 
-        presenter = new PracticeWordSetPresenter(wordSet, this);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, this);
 
         spellingGrammarErrorsListView = inflate.findViewById(R.id.spellingGrammarErrorsListView);
         rightAnswer.setOnTouchListener(rightAnswerOnTouchListener);

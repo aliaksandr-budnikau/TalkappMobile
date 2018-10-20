@@ -4,26 +4,21 @@ import android.net.Uri;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
-
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetView view;
     private final PracticeWordSetPresenterCurrentState state;
-    @Inject
-    PracticeWordSetInteractor interactor;
+    private PracticeWordSetInteractor interactor;
     private PracticeWordSetViewStrategy viewStrategy;
 
-    public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetView view) {
+    public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetInteractor interactor, PracticeWordSetView view) {
         this.view = view;
+        this.interactor = interactor;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
         DIContext.get().inject(this);

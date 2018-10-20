@@ -36,8 +36,6 @@ public class PracticeWordSetInteractorIntegTest {
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
     @Mock
-    private PracticeWordSetExerciseRepository practiceWordSetExerciseRepository;
-    @Mock
     private RefereeService refereeService;
     @Mock
     private SentenceProvider sentenceProvider;
@@ -71,19 +69,21 @@ public class PracticeWordSetInteractorIntegTest {
         AnswerCheckingResult result = new AnswerCheckingResult();
         result.setErrors(new ArrayList<GrammarError>());
 
-        PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, view);
+        PracticeWordSetInteractor interactor = new PracticeWordSetInteractor();
+
+        PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(wordSet, interactor, view);
         Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
         Whitebox.setInternalState(presenter, "state", state);
         when(refereeService.checkAnswer(any(UncheckedAnswer.class))).thenReturn(result);
         when(state.getWordSet()).thenReturn(wordSet);
         when(state.getWordSetId()).thenReturn(wordSet.getId());
-        presenter.interactor.refereeService = refereeService;
-        presenter.interactor.experienceRepository = experienceRepository;
-        presenter.interactor.exerciseRepository = exerciseRepository;
+        Whitebox.setInternalState(interactor, "refereeService", refereeService);
+        Whitebox.setInternalState(interactor, "experienceRepository", experienceRepository);
+        Whitebox.setInternalState(interactor, "exerciseRepository", exerciseRepository);
+        Whitebox.setInternalState(interactor, "sentenceProvider", sentenceProvider);
         when(exerciseRepository.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
         when(experienceRepository.findById(wordSet.getId())).thenReturn(experience);
         when(experienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
-        presenter.interactor.sentenceProvider = sentenceProvider;
 
 
         presenter.initialise();

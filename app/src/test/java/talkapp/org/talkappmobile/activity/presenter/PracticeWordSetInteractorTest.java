@@ -287,7 +287,8 @@ public class PracticeWordSetInteractorTest {
         verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
+        verify(exerciseRepository).putOffCurrentWord(wordSet.getId());
+        verify(exerciseRepository).moveCurrentWordToNextState(wordSet.getId());
     }
 
     @Test
