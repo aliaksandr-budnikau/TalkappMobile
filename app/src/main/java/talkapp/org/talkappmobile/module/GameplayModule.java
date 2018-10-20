@@ -18,6 +18,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
@@ -31,6 +32,7 @@ import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.component.impl.ViewStrategyFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
 /**
@@ -113,5 +115,11 @@ public class GameplayModule {
     @Singleton
     public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
         return new PracticeWordSetVocabularyInteractor();
+    }
+
+    @Provides
+    @Singleton
+    public ViewStrategyFactory provideViewStrategyFactory(TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
+        return new ViewStrategyFactoryImpl(textUtils, experienceUtils);
     }
 }

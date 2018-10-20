@@ -27,8 +27,7 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -43,9 +42,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Inject
     PracticeWordSetInteractor interactor;
     @Inject
-    WordSetExperienceUtils experienceUtils;
-    @Inject
-    TextUtils textUtils;
+    ViewStrategyFactory viewStrategyFactory;
 
     private TextView originalText;
     private TextView rightAnswer;
@@ -160,8 +157,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
         WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
 
-        PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(this, textUtils, experienceUtils);
-        PracticeWordSetViewHideAllStrategy hideAllStrategy = new PracticeWordSetViewHideAllStrategy(this, textUtils, experienceUtils);
+        PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
+        PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
         presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
 
         spellingGrammarErrorsListView = inflate.findViewById(R.id.spellingGrammarErrorsListView);
