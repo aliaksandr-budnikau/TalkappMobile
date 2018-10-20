@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.WordTranslationService;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -18,7 +18,7 @@ public class PracticeWordSetVocabularyInteractor {
     AuthSign authSign;
 
     public PracticeWordSetVocabularyInteractor() {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {

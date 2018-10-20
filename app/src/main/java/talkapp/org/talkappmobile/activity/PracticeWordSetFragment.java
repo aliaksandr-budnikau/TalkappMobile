@@ -25,7 +25,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetView;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static android.app.Activity.RESULT_OK;
@@ -133,7 +133,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
         View inflate = inflater.inflate(R.layout.word_set_practice_activity_fragment, container, false);
 
         originalText = inflate.findViewById(R.id.originalText);

@@ -20,7 +20,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -46,7 +46,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
         View view = inflater.inflate(R.layout.word_translations_layout, container, false);
 
         adapter = adaptersFactory.createWordTranslationListAdapter(this.getActivity());

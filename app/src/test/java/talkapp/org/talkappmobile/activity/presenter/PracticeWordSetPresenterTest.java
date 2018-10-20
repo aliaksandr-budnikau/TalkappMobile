@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -39,7 +39,7 @@ public class PracticeWordSetPresenterTest {
 
     @BeforeClass
     public static void setUpContext() {
-        DIContext.init(new TalkappMobileApplication());
+        DIContextUtils.init(new TalkappMobileApplication());
     }
 
     @Before

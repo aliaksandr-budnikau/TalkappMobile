@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -32,7 +32,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
 
     public WordSetListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     @NonNull

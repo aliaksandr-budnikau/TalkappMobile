@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static java.util.Arrays.asList;
@@ -16,7 +16,7 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
     PracticeWordSetExerciseRepository repository;
 
     public SentenceProviderRepetitionStrategy() {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     @Override

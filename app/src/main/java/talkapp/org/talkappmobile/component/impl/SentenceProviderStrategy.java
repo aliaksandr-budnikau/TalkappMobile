@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class SentenceProviderStrategy {
@@ -18,7 +18,7 @@ public class SentenceProviderStrategy {
     AuthSign authSign;
 
     public SentenceProviderStrategy() {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {

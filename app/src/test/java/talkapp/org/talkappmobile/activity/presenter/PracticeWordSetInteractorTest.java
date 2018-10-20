@@ -26,7 +26,7 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -73,7 +73,7 @@ public class PracticeWordSetInteractorTest {
 
     @BeforeClass
     public static void setUp() {
-        DIContext.init(new TalkappMobileApplication());
+        DIContextUtils.init(new TalkappMobileApplication());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.config;
 
-import android.app.Application;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
@@ -10,15 +8,15 @@ import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
+import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
+import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
-import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
-import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
@@ -49,72 +47,44 @@ import talkapp.org.talkappmobile.module.LanguageModule;
         DatabaseModule.class,
         ItemsListModule.class
 })
-public abstract class DIContext {
+public interface DIContext {
+    void inject(PracticeWordSetActivity target);
 
-    private static DIContext instance;
+    void inject(LoginActivity target);
 
-    public static DIContext init(Application application) {
-        if (instance == null && application != null) {
-            instance = DaggerDIContext.builder()
-                    .androidModule(new AndroidModule(application))
-                    .audioModule(new AudioModule())
-                    .gameplayModule(new GameplayModule())
-                    .concurrentModule(new ConcurrentModule())
-                    .dataModule(new DataModule())
-                    .infraModule(new InfraModule())
-                    .languageModule(new LanguageModule())
-                    .databaseModule(new DatabaseModule())
-                    .backEndServiceModule(new BackEndServiceModule())
-                    .itemsListModule(new ItemsListModule())
-                    .build();
-        }
-        return instance;
-    }
+    void inject(WordSetListAdapter target);
 
-    public static DIContext get() {
-        if (instance == null) {
-            throw new RuntimeException("DIContext wasn't initialized yet");
-        }
-        return instance;
-    }
+    void inject(TopicListAdapter target);
 
-    abstract public void inject(PracticeWordSetActivity target);
+    void inject(MainActivity mainActivity);
 
-    abstract public void inject(LoginActivity target);
+    void inject(AllWordSetsFragment allWordSetsFragment);
 
-    abstract public void inject(WordSetListAdapter target);
+    void inject(TopicsFragment topicsFragment);
 
-    abstract public void inject(TopicListAdapter target);
+    void inject(PracticeWordSetPresenter target);
 
-    abstract public void inject(MainActivity mainActivity);
+    void inject(PracticeWordSetInteractor target);
 
-    public abstract void inject(AllWordSetsFragment allWordSetsFragment);
+    void inject(BaseActivity target);
 
-    public abstract void inject(TopicsFragment topicsFragment);
+    void inject(PracticeWordSetFragment target);
 
-    public abstract void inject(PracticeWordSetPresenter target);
+    void inject(PracticeWordSetVocabularyPresenter target);
 
-    public abstract void inject(PracticeWordSetInteractor target);
+    void inject(PracticeWordSetVocabularyInteractor target);
 
-    public abstract void inject(BaseActivity target);
+    void inject(PracticeWordSetVocabularyFragment target);
 
-    public abstract void inject(PracticeWordSetFragment target);
+    void inject(PracticeWordSetViewStrategy target);
 
-    public abstract void inject(PracticeWordSetVocabularyPresenter target);
+    void inject(PracticeWordSetViewHideNewWordOnlyStrategy target);
 
-    public abstract void inject(PracticeWordSetVocabularyInteractor target);
+    void inject(SentenceProviderStrategy target);
 
-    public abstract void inject(PracticeWordSetVocabularyFragment target);
+    void inject(SentenceProviderRepetitionStrategy target);
 
-    public abstract void inject(PracticeWordSetViewStrategy target);
+    void inject(SentenceProviderImpl target);
 
-    public abstract void inject(PracticeWordSetViewHideNewWordOnlyStrategy target);
-
-    public abstract void inject(SentenceProviderStrategy target);
-
-    public abstract void inject(SentenceProviderRepetitionStrategy target);
-
-    public abstract void inject(SentenceProviderImpl target);
-
-    public abstract void inject(GrammarCheckServiceImpl target);
+    void inject(GrammarCheckServiceImpl target);
 }

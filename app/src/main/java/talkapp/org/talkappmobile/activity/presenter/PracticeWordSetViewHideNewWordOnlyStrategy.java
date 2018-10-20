@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 
@@ -16,7 +16,7 @@ public class PracticeWordSetViewHideNewWordOnlyStrategy extends PracticeWordSetV
 
     public PracticeWordSetViewHideNewWordOnlyStrategy(PracticeWordSetView view) {
         super(view);
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     @Override

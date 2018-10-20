@@ -17,7 +17,6 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,13 +40,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.SaveSharedPreference;
+import talkapp.org.talkappmobile.component.backend.AccountService;
+import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.LoginCredentials;
-import talkapp.org.talkappmobile.component.backend.AccountService;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.LoginService;
-import talkapp.org.talkappmobile.component.SaveSharedPreference;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
@@ -85,7 +84,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();

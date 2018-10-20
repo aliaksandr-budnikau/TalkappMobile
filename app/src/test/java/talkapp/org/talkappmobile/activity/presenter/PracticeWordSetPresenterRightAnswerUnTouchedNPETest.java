@@ -10,7 +10,7 @@ import org.powermock.reflect.Whitebox;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.when;
@@ -27,7 +27,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
 
     @BeforeClass
     public static void setUpContext() {
-        DIContext.init(new TalkappMobileApplication());
+        DIContextUtils.init(new TalkappMobileApplication());
     }
 
     @Before

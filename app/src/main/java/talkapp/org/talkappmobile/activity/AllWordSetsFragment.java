@@ -27,7 +27,7 @@ import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsView;
 import talkapp.org.talkappmobile.component.backend.WordSetService;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -52,7 +52,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.all_word_sets_layout, container, false);
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
 
         adapter = adaptersFactory.createWordSetListAdapter(this.getActivity());
 

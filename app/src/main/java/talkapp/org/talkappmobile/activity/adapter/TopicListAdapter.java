@@ -12,9 +12,9 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.config.DIContext;
-import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.model.Topic;
 
 /**
  * @author Budnikau Aliaksandr
@@ -25,7 +25,7 @@ public class TopicListAdapter extends ArrayAdapter<Topic> {
 
     public TopicListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     @NonNull

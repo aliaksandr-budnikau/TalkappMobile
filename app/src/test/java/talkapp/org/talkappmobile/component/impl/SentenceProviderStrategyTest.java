@@ -14,7 +14,7 @@ import retrofit2.Call;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static java.util.Arrays.asList;
@@ -37,7 +37,7 @@ public class SentenceProviderStrategyTest {
 
     @BeforeClass
     public static void setUpContext() {
-        DIContext.init(new TalkappMobileApplication());
+        DIContextUtils.init(new TalkappMobileApplication());
     }
 
     @Test

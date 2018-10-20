@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class SentenceProviderImpl implements SentenceProvider {
@@ -16,7 +16,7 @@ public class SentenceProviderImpl implements SentenceProvider {
     private SentenceProviderStrategy currentStrategy;
 
     public SentenceProviderImpl() {
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
         disableRepetitionMode();
     }
 

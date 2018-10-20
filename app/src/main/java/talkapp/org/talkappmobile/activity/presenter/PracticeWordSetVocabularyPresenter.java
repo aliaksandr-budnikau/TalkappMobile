@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.config.DIContext;
+import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -18,7 +18,7 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
     public PracticeWordSetVocabularyPresenter(WordSet wordSet, PracticeWordSetVocabularyView view) {
         this.wordSet = wordSet;
         this.view = view;
-        DIContext.get().inject(this);
+        DIContextUtils.get().inject(this);
     }
 
     public void onResume() {
