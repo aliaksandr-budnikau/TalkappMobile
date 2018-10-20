@@ -19,6 +19,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
@@ -65,6 +66,8 @@ public class PracticeWordSetInteractorTest {
     private WordSetExperienceRepository wordSetExperienceRepository;
     @Mock
     private Context context;
+    @Mock
+    private Logger logger;
     @InjectMocks
     private PracticeWordSetInteractor interactor;
 

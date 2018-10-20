@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.module;
 
+import android.content.Context;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -7,9 +9,11 @@ import dagger.Provides;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
@@ -95,8 +99,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetInteractor providePracticeWordSetInteractor() {
-        return new PracticeWordSetInteractor();
+    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory) {
+        return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceRepository, exerciseRepository, context, audioStuffFactory);
     }
 
     @Provides

@@ -7,8 +7,6 @@ import android.net.Uri;
 import java.util.List;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
@@ -17,7 +15,6 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
-import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -30,27 +27,26 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION
 
 public class PracticeWordSetInteractor {
     private static final String TAG = PracticeWordSetInteractor.class.getSimpleName();
-    @Inject
-    WordsCombinator wordsCombinator;
-    @Inject
-    SentenceProvider sentenceProvider;
-    @Inject
-    SentenceSelector sentenceSelector;
-    @Inject
-    RefereeService refereeService;
-    @Inject
-    Logger logger;
-    @Inject
-    WordSetExperienceRepository experienceRepository;
-    @Inject
-    PracticeWordSetExerciseRepository exerciseRepository;
-    @Inject
-    Context context;
-    @Inject
-    AudioStuffFactory audioStuffFactory;
+    private WordsCombinator wordsCombinator;
+    private SentenceProvider sentenceProvider;
+    private SentenceSelector sentenceSelector;
+    private RefereeService refereeService;
+    private Logger logger;
+    private WordSetExperienceRepository experienceRepository;
+    private PracticeWordSetExerciseRepository exerciseRepository;
+    private Context context;
+    private AudioStuffFactory audioStuffFactory;
 
-    public PracticeWordSetInteractor() {
-        DIContext.get().inject(this);
+    public PracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory) {
+        this.wordsCombinator = wordsCombinator;
+        this.sentenceProvider = sentenceProvider;
+        this.sentenceSelector = sentenceSelector;
+        this.refereeService = refereeService;
+        this.logger = logger;
+        this.experienceRepository = experienceRepository;
+        this.exerciseRepository = exerciseRepository;
+        this.context = context;
+        this.audioStuffFactory = audioStuffFactory;
     }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {

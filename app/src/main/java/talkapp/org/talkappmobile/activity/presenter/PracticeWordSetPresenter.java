@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.config.DIContext;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -21,7 +20,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         this.interactor = interactor;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
-        DIContext.get().inject(this);
     }
 
     @Override
