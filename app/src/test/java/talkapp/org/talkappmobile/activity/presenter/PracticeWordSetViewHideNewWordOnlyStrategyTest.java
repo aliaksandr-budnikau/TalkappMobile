@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
@@ -23,8 +24,14 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
 
     @Mock
     private TextUtils textUtils;
+    @Mock
+    private WordSetExperienceUtils experienceUtils;
+    @Mock
+    private PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy;
+    @Mock
+    private PracticeWordSetViewHideAllStrategy hideAllStrategy;
     @InjectMocks
-    private PracticeWordSetViewHideNewWordOnlyStrategy strategy = new PracticeWordSetViewHideNewWordOnlyStrategy(null);
+    private PracticeWordSetViewHideNewWordOnlyStrategy strategy;
 
     @BeforeClass
     public static void setUpContext() {

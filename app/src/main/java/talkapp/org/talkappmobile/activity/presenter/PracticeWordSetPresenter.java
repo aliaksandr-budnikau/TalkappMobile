@@ -10,16 +10,21 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
-    private final PracticeWordSetView view;
     private final PracticeWordSetPresenterCurrentState state;
-    private PracticeWordSetInteractor interactor;
+    private final PracticeWordSetInteractor interactor;
+    private final PracticeWordSetViewHideAllStrategy hideAllStrategy;
+    private final PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy;
     private PracticeWordSetViewStrategy viewStrategy;
 
-    public PracticeWordSetPresenter(WordSet wordSet, PracticeWordSetInteractor interactor, PracticeWordSetView view) {
-        this.view = view;
+    public PracticeWordSetPresenter(WordSet wordSet,
+                                    PracticeWordSetInteractor interactor,
+                                    PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy,
+                                    PracticeWordSetViewHideAllStrategy hideAllStrategy) {
         this.interactor = interactor;
+        this.hideAllStrategy = hideAllStrategy;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
-        this.viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
+        this.newWordOnlyStrategy = newWordOnlyStrategy;
+        this.viewStrategy = newWordOnlyStrategy;
     }
 
     @Override
@@ -80,12 +85,12 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onEnableRepetitionMode() {
-        viewStrategy = new PracticeWordSetViewHideAllStrategy(view);
+        this.viewStrategy = hideAllStrategy;
     }
 
     @Override
     public void onDisableRepetitionMode() {
-        viewStrategy = new PracticeWordSetViewHideNewWordOnlyStrategy(view);
+        this.viewStrategy = newWordOnlyStrategy;
     }
 
     public void gotRecognitionResult(List<String> result) {

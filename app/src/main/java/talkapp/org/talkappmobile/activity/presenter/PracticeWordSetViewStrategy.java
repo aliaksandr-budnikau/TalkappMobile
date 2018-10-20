@@ -2,25 +2,21 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
-    @Inject
-    WordSetExperienceUtils experienceUtils;
-    @Inject
-    TextUtils textUtils;
+    private final WordSetExperienceUtils experienceUtils;
+    private final TextUtils textUtils;
 
-    public PracticeWordSetViewStrategy(PracticeWordSetView view) {
+    public PracticeWordSetViewStrategy(PracticeWordSetView view, TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
         this.view = view;
-        DIContextUtils.get().inject(this);
+        this.textUtils = textUtils;
+        this.experienceUtils = experienceUtils;
     }
 
     public void onInitialiseExperience(WordSetExperience exp) {

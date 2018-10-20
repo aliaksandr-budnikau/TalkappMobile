@@ -32,7 +32,7 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private PracticeWordSetInteractor interactor;
     @Mock
-    private PracticeWordSetViewStrategy viewStrategy;
+    private PracticeWordSetViewHideNewWordOnlyStrategy viewStrategy;
     @Mock
     private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
@@ -44,10 +44,7 @@ public class PracticeWordSetPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, null);
-
-        Whitebox.setInternalState(presenter, "interactor", interactor);
-        Whitebox.setInternalState(presenter, "viewStrategy", viewStrategy);
+        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy, null);
         Whitebox.setInternalState(presenter, "state", state);
     }
 

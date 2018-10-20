@@ -1,12 +1,11 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,18 +30,12 @@ public class PracticeWordSetViewStrategyTest {
     private PracticeWordSetView view;
     @Mock
     private TextUtils textUtils;
+    @InjectMocks
     private PracticeWordSetViewStrategy strategy;
 
     @BeforeClass
     public static void setUpContext() {
         DIContextUtils.init(new TalkappMobileApplication());
-    }
-
-    @Before
-    public void setUp() {
-        strategy = new PracticeWordSetViewStrategy(view);
-        Whitebox.setInternalState(strategy, "textUtils", textUtils);
-        Whitebox.setInternalState(strategy, "experienceUtils", experienceUtils);
     }
 
     @Test
