@@ -29,4 +29,8 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
     public void onWordSetVocabularyFound(List<WordTranslation> wordTranslations) {
         view.setWordSetVocabularyList(wordTranslations);
     }
+
+    public void onPronounceWordButtonClick(WordTranslation translation) {
+        interactor.pronounceWordButtonClick(translation, this);
+    }
 }

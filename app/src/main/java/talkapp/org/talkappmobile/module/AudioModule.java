@@ -1,23 +1,23 @@
 package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
-import android.speech.tts.TextToSpeech;
 
-import java.util.Locale;
+import java.util.concurrent.Executor;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
+import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryImpl;
+import talkapp.org.talkappmobile.component.impl.SpeakerImpl;
 
 /**
  * @author Budnikau Aliaksandr
  */
 @Module
 public class AudioModule {
-    private TextToSpeech speech;
 
     @Provides
     @Singleton
@@ -27,16 +27,7 @@ public class AudioModule {
 
     @Provides
     @Singleton
-    public TextToSpeech provideTextToSpeech(Context context) {
-        speech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    speech.setLanguage(Locale.US);
-                    speech.setSpeechRate(1.0f);
-                }
-            }
-        });
-        return speech;
+    public Speaker provideSpeaker(Context context, Executor executor) {
+        return new SpeakerImpl(context, executor);
     }
 }

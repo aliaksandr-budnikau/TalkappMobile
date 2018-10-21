@@ -3,12 +3,12 @@ package talkapp.org.talkappmobile.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -25,7 +25,7 @@ import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView {
+public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, AdapterView.OnItemClickListener {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
     Executor executor;
@@ -33,8 +33,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     AdaptersFactory adaptersFactory;
     @Inject
     Handler uiEventHandler;
-    @Inject
-    TextToSpeech speech;
     private ArrayAdapter<WordTranslation> adapter;
     private PracticeWordSetVocabularyPresenter presenter;
 
@@ -56,7 +54,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
         ListView wordSetsListView = view.findViewById(R.id.wordTranslationsListView);
         wordSetsListView.setAdapter(adapter);
-
+        wordSetsListView.setOnItemClickListener(this);
         WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
 
         presenter = new PracticeWordSetVocabularyPresenter(wordSet, this);
@@ -84,5 +82,11 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
                 adapter.addAll(wordTranslations);
             }
         });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        WordTranslation translation = adapter.getItem(position);
+        presenter.onPronounceWordButtonClick(translation);
     }
 }

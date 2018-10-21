@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.speech.tts.TextToSpeech;
 
 import java.util.List;
 import java.util.Set;
@@ -13,6 +12,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
@@ -37,7 +37,7 @@ public class PracticeWordSetInteractor {
     private final PracticeWordSetExerciseRepository exerciseRepository;
     private final Context context;
     private final AudioStuffFactory audioStuffFactory;
-    private final TextToSpeech speech;
+    private final Speaker speaker;
 
     public PracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                      SentenceProvider sentenceProvider,
@@ -48,7 +48,7 @@ public class PracticeWordSetInteractor {
                                      PracticeWordSetExerciseRepository exerciseRepository,
                                      Context context,
                                      AudioStuffFactory audioStuffFactory,
-                                     TextToSpeech speech) {
+                                     Speaker speaker) {
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
@@ -58,7 +58,7 @@ public class PracticeWordSetInteractor {
         this.exerciseRepository = exerciseRepository;
         this.context = context;
         this.audioStuffFactory = audioStuffFactory;
-        this.speech = speech;
+        this.speaker = speaker;
     }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
@@ -197,15 +197,11 @@ public class PracticeWordSetInteractor {
         if (currentSentence == null) {
             return;
         }
-        speech.speak(currentSentence.getText(), TextToSpeech.QUEUE_ADD, null);
         logger.i(TAG, "start speaking {}", currentSentence.getText());
-        while (speech.isSpeaking()) {
-            logger.i(TAG, "speaking...");
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+        try {
+            speaker.speak(currentSentence.getText()).get();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
         logger.i(TAG, "stop speaking");
     }
