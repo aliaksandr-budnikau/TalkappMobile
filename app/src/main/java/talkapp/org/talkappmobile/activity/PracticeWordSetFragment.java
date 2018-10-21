@@ -52,6 +52,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private Button checkButton;
     private Button speakButton;
     private Button playButton;
+    private Button pronounceRightAnswerButton;
     private LinearLayout spellingGrammarErrorsListView;
     private PracticeWordSetPresenter presenter;
 
@@ -75,6 +76,19 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                 @Override
                 protected Void doInBackground(Void... voids) {
                     presenter.checkAnswerButtonClick(answerText.getText().toString());
+                    return null;
+                }
+            }.executeOnExecutor(executor);
+        }
+    };
+
+    private View.OnClickListener pronounceRightAnswerButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    presenter.pronounceRightAnswerButtonClick();
                     return null;
                 }
             }.executeOnExecutor(executor);
@@ -149,11 +163,13 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         checkButton = inflate.findViewById(R.id.checkButton);
         speakButton = inflate.findViewById(R.id.speakButton);
         playButton = inflate.findViewById(R.id.playButton);
+        pronounceRightAnswerButton = inflate.findViewById(R.id.pronounceRightAnswerButton);
 
         nextButton.setOnClickListener(nextButtonListener);
         checkButton.setOnClickListener(checkAnswerButtonListener);
         speakButton.setOnClickListener(recogniseVoiceButtonListener);
         playButton.setOnClickListener(playVoiceButtonListener);
+        pronounceRightAnswerButton.setOnClickListener(pronounceRightAnswerButtonListener);
 
         WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
 
@@ -334,6 +350,16 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             @Override
             public void run() {
                 speakButton.setEnabled(value);
+            }
+        });
+    }
+
+    @Override
+    public void setEnablePronounceRightAnswerButton(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                pronounceRightAnswerButton.setEnabled(value);
             }
         });
     }

@@ -59,6 +59,20 @@
                     android:text=""
                     android:textColor="@color/color.text.answer"
                     android:textSize="9pt" />
+
+                <Button
+                    android:id="@+id/pronounceRightAnswerButton"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rightAnswer"
+
+                    android:background="@android:color/transparent"
+
+                    android:text="PRON"
+                    android:textColor="@color/color.text.answer"
+
+                    android:textSize="5pt" />
             </RelativeLayout>
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
+import android.speech.tts.TextToSpeech;
 
 import javax.inject.Singleton;
 
@@ -102,8 +103,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory) {
-        return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceRepository, exerciseRepository, context, audioStuffFactory);
+    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory, TextToSpeech speech) {
+        return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceRepository, exerciseRepository, context, audioStuffFactory, speech);
     }
 
     @Provides

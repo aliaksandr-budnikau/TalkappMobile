@@ -28,6 +28,8 @@ public interface PracticeWordSetView {
 
     void openAnotherActivity();
 
+    void setEnablePronounceRightAnswerButton(boolean value);
+
     void setEnableVoiceRecButton(boolean value);
 
     void setEnableCheckButton(boolean value);

@@ -149,4 +149,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
             viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
         }
     }
+
+    public void pronounceRightAnswerButtonClick() {
+        try {
+            viewStrategy.onStartSpeaking();
+            interactor.pronounceRightAnswer(state.getWordSetId(), this);
+        } finally {
+            viewStrategy.onStopSpeaking();
+        }
+    }
 }

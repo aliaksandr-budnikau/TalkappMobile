@@ -75,6 +75,20 @@ public class PracticeWordSetViewStrategy {
         view.setEnableNextButton(false);
     }
 
+    public void onStartSpeaking() {
+        view.setEnablePronounceRightAnswerButton(false);
+        view.setEnableVoiceRecButton(false);
+        view.setEnableCheckButton(false);
+        view.setEnableNextButton(false);
+    }
+
+    public void onStopSpeaking() {
+        view.setEnablePronounceRightAnswerButton(true);
+        view.setEnableVoiceRecButton(true);
+        view.setEnableCheckButton(true);
+        view.setEnableNextButton(true);
+    }
+
     public void onStopPlaying() {
         view.setEnableVoiceRecButton(true);
         view.setEnableCheckButton(true);

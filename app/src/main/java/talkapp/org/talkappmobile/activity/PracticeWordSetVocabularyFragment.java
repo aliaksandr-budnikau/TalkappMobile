@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     AdaptersFactory adaptersFactory;
     @Inject
     Handler uiEventHandler;
+    @Inject
+    TextToSpeech speech;
     private ArrayAdapter<WordTranslation> adapter;
     private PracticeWordSetVocabularyPresenter presenter;
 

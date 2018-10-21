@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.speech.tts.TextToSpeech;
 
 import java.util.List;
 import java.util.Set;
@@ -27,17 +28,27 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION
 
 public class PracticeWordSetInteractor {
     private static final String TAG = PracticeWordSetInteractor.class.getSimpleName();
-    private WordsCombinator wordsCombinator;
-    private SentenceProvider sentenceProvider;
-    private SentenceSelector sentenceSelector;
-    private RefereeService refereeService;
-    private Logger logger;
-    private WordSetExperienceRepository experienceRepository;
-    private PracticeWordSetExerciseRepository exerciseRepository;
-    private Context context;
-    private AudioStuffFactory audioStuffFactory;
+    private final WordsCombinator wordsCombinator;
+    private final SentenceProvider sentenceProvider;
+    private final SentenceSelector sentenceSelector;
+    private final RefereeService refereeService;
+    private final Logger logger;
+    private final WordSetExperienceRepository experienceRepository;
+    private final PracticeWordSetExerciseRepository exerciseRepository;
+    private final Context context;
+    private final AudioStuffFactory audioStuffFactory;
+    private final TextToSpeech speech;
 
-    public PracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory) {
+    public PracticeWordSetInteractor(WordsCombinator wordsCombinator,
+                                     SentenceProvider sentenceProvider,
+                                     SentenceSelector sentenceSelector,
+                                     RefereeService refereeService,
+                                     Logger logger,
+                                     WordSetExperienceRepository experienceRepository,
+                                     PracticeWordSetExerciseRepository exerciseRepository,
+                                     Context context,
+                                     AudioStuffFactory audioStuffFactory,
+                                     TextToSpeech speech) {
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
@@ -47,6 +58,7 @@ public class PracticeWordSetInteractor {
         this.exerciseRepository = exerciseRepository;
         this.context = context;
         this.audioStuffFactory = audioStuffFactory;
+        this.speech = speech;
     }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
@@ -178,5 +190,23 @@ public class PracticeWordSetInteractor {
 
     public String getCurrentWord(String wordSetId) {
         return exerciseRepository.getCurrentWord(wordSetId);
+    }
+
+    public void pronounceRightAnswer(String wordSetId, OnPracticeWordSetListener listener) {
+        Sentence currentSentence = exerciseRepository.getCurrentSentence(wordSetId);
+        if (currentSentence == null) {
+            return;
+        }
+        speech.speak(currentSentence.getText(), TextToSpeech.QUEUE_ADD, null);
+        logger.i(TAG, "start speaking {}", currentSentence.getText());
+        while (speech.isSpeaking()) {
+            logger.i(TAG, "speaking...");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
+        logger.i(TAG, "stop speaking");
     }
 }
