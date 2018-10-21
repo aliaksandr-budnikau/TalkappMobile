@@ -6,6 +6,7 @@ import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
@@ -28,6 +29,8 @@ public class ClassForInjection {
     LoginService loginService;
     @Inject
     AuthSign authSign;
+    @Inject
+    PracticeWordSetExerciseRepository exerciseRepository;
 
     public ClassForInjection() {
         TestDIContext context = DaggerTestDIContext.builder()
@@ -60,5 +63,9 @@ public class ClassForInjection {
 
     public ViewStrategyFactory getViewStrategyFactory() {
         return viewStrategyFactory;
+    }
+
+    public PracticeWordSetExerciseRepository getExerciseRepository() {
+        return exerciseRepository;
     }
 }
