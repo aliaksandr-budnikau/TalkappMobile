@@ -7,6 +7,11 @@ import talkapp.org.talkappmobile.component.Logger;
 public class LoggerImpl implements Logger {
 
     @Override
+    public void i(String tag, String message, Object... args) {
+        Log.i(tag, replacePlaceholders(message, args));
+    }
+
+    @Override
     public void w(String tag, String message, Object... args) {
         Log.w(tag, replacePlaceholders(message, args));
     }
