@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
@@ -97,5 +98,22 @@ public class RefereeServiceImplTest {
 
         // then
         assertTrue(result.getErrors().isEmpty());
+    }
+
+    @Test
+    public void removeIgnoredErrors() {
+        // setup
+        LinkedList<GrammarError> errors = new LinkedList<>();
+        errors.add(new GrammarError());
+        errors.get(0).setMessage("Punctuation error, sentence looks like a fragment in \"Unless\".");
+        errors.add(new GrammarError());
+        errors.get(1).setMessage("ky");
+
+        // when
+        service.removeIgnoredErrors(errors);
+
+        // then
+        assertEquals(1, errors.size());
+        assertEquals("ky", errors.get(0).getMessage());
     }
 }
