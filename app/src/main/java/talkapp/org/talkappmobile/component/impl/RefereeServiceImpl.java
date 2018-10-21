@@ -14,7 +14,8 @@ public class RefereeServiceImpl implements RefereeService {
     private final GrammarCheckService grammarCheckService;
     private final EqualityScorer equalityScorer;
     private final String[] ignoredErrors = {
-            "Punctuation error, sentence looks like a fragment in"
+            "Punctuation error, sentence looks like a fragment in",
+            "Topher"
     };
 
     public RefereeServiceImpl(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {

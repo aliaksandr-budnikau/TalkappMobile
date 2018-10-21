@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.AuthSign;
@@ -19,7 +20,11 @@ public class SentenceProviderStrategy {
 
     public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
         try {
-            return sentenceService.findByWords(word, WORDS_NUMBER, authSign).execute().body();
+            List<Sentence> body = sentenceService.findByWords(word, WORDS_NUMBER, authSign).execute().body();
+            if (body == null) {
+                return new LinkedList<>();
+            }
+            return body;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
