@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
-import android.speech.tts.TextToSpeech;
 
 import javax.inject.Singleton;
 
@@ -23,8 +22,7 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.component.backend.WordSetService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
@@ -56,14 +54,14 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy(SentenceService sentenceService, AuthSign authSign) {
-        return new BackendSentenceProviderStrategy(sentenceService, authSign);
+    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy(BackendServer server) {
+        return new BackendSentenceProviderStrategy(server);
     }
 
     @Provides
     @Singleton
-    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(SentenceService sentenceService, AuthSign authSign, PracticeWordSetExerciseRepository repository) {
-        return new SentenceProviderRepetitionStrategy(sentenceService, authSign, repository);
+    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(BackendServer server, PracticeWordSetExerciseRepository repository) {
+        return new SentenceProviderRepetitionStrategy(server, repository);
     }
 
     @Provides
@@ -110,8 +108,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public AllWordSetsInteractor provideAllWordSetsInteractor(WordSetService wordSetService, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, AuthSign authSign) {
-        return new AllWordSetsInteractor(wordSetService, experienceRepository, exerciseRepository, authSign);
+    public AllWordSetsInteractor provideAllWordSetsInteractor(BackendServer server, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository) {
+        return new AllWordSetsInteractor(server, experienceRepository, exerciseRepository);
     }
 
     @Provides

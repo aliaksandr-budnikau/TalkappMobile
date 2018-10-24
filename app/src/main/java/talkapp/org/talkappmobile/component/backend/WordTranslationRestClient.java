@@ -12,7 +12,7 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 /**
  * @author Budnikau Aliaksandr
  */
-public interface WordTranslationService {
+public interface WordTranslationRestClient {
     @GET("/wordtranslation")
     Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Query("wordSetId") String wordSetId, @Query("language") String language, @HeaderMap Map<String, String> headers);
 }

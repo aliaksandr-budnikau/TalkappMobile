@@ -28,28 +28,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.SaveSharedPreference;
-import talkapp.org.talkappmobile.component.backend.AccountService;
-import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.impl.LoginException;
+import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
 
 /**
  * A login screen that offers login via email/password.
@@ -61,13 +54,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     @Inject
-    LoginService loginService;
-    @Inject
-    AccountService accountService;
-    @Inject
-    SaveSharedPreference saveSharedPreference;
-    @Inject
-    AuthSign authSign;
+    BackendServer server;
     @Inject
     talkapp.org.talkappmobile.component.TextUtils textUtils;
     /**
@@ -347,34 +334,18 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             LoginCredentials credentials = new LoginCredentials();
             credentials.setEmail(email);
             credentials.setPassword(password);
-            loginService.login(credentials).enqueue(new Callback<Boolean>() {
-                @Override
-                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    Boolean result = response.body();
-                    String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
-                    Log.i(TAG, "Login " + textUtils.hideText(signature) + " is being checked");
-                    if (result != null && signature != null && result) {
-                        Log.i(TAG, "Login " + email + " is done!");
-                        authSign.put(signature);
-                        saveSharedPreference.setAuthorizationHeaderKey(LoginActivity.this, signature);
-                        finish();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Log.e(TAG, "Login failed");
-                        passwordView.setError(getString(R.string.error_incorrect_password));
-                        passwordView.requestFocus();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Boolean> call, Throwable t) {
-                    Log.e(TAG, "Login failed", t);
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-
-            // TODO: register the new account here.
+            try {
+                server.loginUser(credentials);
+            } catch (LoginException e) {
+                Log.e(TAG, "Login failed");
+                passwordView.setError(getString(R.string.error_incorrect_password));
+                passwordView.requestFocus();
+                return true;
+            }
+            Log.i(TAG, "Login " + email + " is done!");
+            finish();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -407,24 +378,15 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             Account account = new Account();
             account.setEmail(email);
             account.setPassword(password);
-            accountService.register(account).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                    if (response.code() == HttpURLConnection.HTTP_MOVED_TEMP) {
-                        Log.i(TAG, "Account " + email + " already exists");
-                        mEmailView.setError("Already exists");
-                        return;
-                    }
-                    Log.i(TAG, "Registration " + email + " is done!");
-                    attemptSignInOrSignUp(email, password, new UserLoginTask(email, password));
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e(TAG, "Registration failed", t);
-                    Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+            try {
+                server.registerAccount(account);
+            } catch (RegistrationException e) {
+                Log.i(TAG, "Account " + email + " already exists");
+                mEmailView.setError("Already exists");
+                return true;
+            }
+            Log.i(TAG, "Registration " + email + " is done!");
+            attemptSignInOrSignUp(email, password, new UserLoginTask(email, password));
             return true;
         }
 

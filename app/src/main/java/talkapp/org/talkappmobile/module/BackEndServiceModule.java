@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.module;
 
+import android.content.Context;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.inject.Named;
@@ -11,14 +13,18 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import talkapp.org.talkappmobile.component.backend.AccountService;
-import talkapp.org.talkappmobile.component.backend.LoginService;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.component.backend.TextGrammarCheckService;
-import talkapp.org.talkappmobile.component.backend.TopicService;
-import talkapp.org.talkappmobile.component.backend.WordSetService;
-import talkapp.org.talkappmobile.component.backend.WordTranslationService;
+import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.SaveSharedPreference;
+import talkapp.org.talkappmobile.component.backend.AccountRestClient;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.LoginRestClient;
+import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
+import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
+import talkapp.org.talkappmobile.component.backend.TopicRestClient;
+import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
+import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -28,44 +34,50 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public WordSetService provideWordSetService(Retrofit retrofit) {
-        return retrofit.create(WordSetService.class);
+    public WordSetRestClient provideWordSetService(Retrofit retrofit) {
+        return retrofit.create(WordSetRestClient.class);
     }
 
     @Provides
     @Singleton
-    public TopicService provideTopicService(Retrofit retrofit) {
-        return retrofit.create(TopicService.class);
+    public TopicRestClient provideTopicService(Retrofit retrofit) {
+        return retrofit.create(TopicRestClient.class);
     }
 
     @Provides
     @Singleton
-    public TextGrammarCheckService provideTextGrammarCheckService(Retrofit retrofit) {
-        return retrofit.create(TextGrammarCheckService.class);
+    public TextGrammarCheckRestClient provideTextGrammarCheckService(Retrofit retrofit) {
+        return retrofit.create(TextGrammarCheckRestClient.class);
     }
 
     @Provides
     @Singleton
-    public LoginService provideLoginService(Retrofit retrofit) {
-        return retrofit.create(LoginService.class);
+    public LoginRestClient provideLoginService(Retrofit retrofit) {
+        return retrofit.create(LoginRestClient.class);
     }
 
     @Provides
     @Singleton
-    public AccountService provideUserService(Retrofit retrofit) {
-        return retrofit.create(AccountService.class);
+    public AccountRestClient provideUserService(Retrofit retrofit) {
+        return retrofit.create(AccountRestClient.class);
     }
 
     @Provides
     @Singleton
-    public SentenceService provideSentenceService(Retrofit retrofit) {
-        return retrofit.create(SentenceService.class);
+    public SentenceRestClient provideSentenceService(Retrofit retrofit) {
+        return retrofit.create(SentenceRestClient.class);
     }
 
     @Provides
     @Singleton
-    public WordTranslationService provideWordTranslationService(Retrofit retrofit) {
-        return retrofit.create(WordTranslationService.class);
+    public WordTranslationRestClient provideWordTranslationService(Retrofit retrofit) {
+        return retrofit.create(WordTranslationRestClient.class);
+    }
+
+    @Provides
+    @Singleton
+    public BackendServer provideBackendServer(AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
+        return new BackendServerImpl(authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
     }
 
     @Provides

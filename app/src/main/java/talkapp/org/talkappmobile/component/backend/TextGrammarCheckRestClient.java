@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.model.GrammarError;
 /**
  * @author Budnikau Aliaksandr
  */
-public interface TextGrammarCheckService {
+public interface TextGrammarCheckRestClient {
 
     @POST("/grammar/check")
     @Headers("Content-Type: text/plain")

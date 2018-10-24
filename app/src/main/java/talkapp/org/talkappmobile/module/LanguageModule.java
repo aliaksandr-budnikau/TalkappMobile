@@ -4,10 +4,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.TextGrammarCheckService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 
 /**
@@ -17,7 +16,7 @@ import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 public class LanguageModule {
     @Provides
     @Singleton
-    public GrammarCheckService provideGrammarCheckService(TextGrammarCheckService grammarCheckService, AuthSign authSign, Logger logger) {
-        return new GrammarCheckServiceImpl(grammarCheckService, authSign, logger);
+    public GrammarCheckService provideGrammarCheckService(BackendServer server, Logger logger) {
+        return new GrammarCheckServiceImpl(server, logger);
     }
 }

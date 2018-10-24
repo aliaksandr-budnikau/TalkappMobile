@@ -12,18 +12,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import retrofit2.Call;
-import retrofit2.Response;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.TopicService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 
@@ -31,26 +26,16 @@ import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_ID_MA
 
 public class TopicsFragment extends Fragment implements AdapterView.OnItemClickListener {
     @Inject
-    TopicService topicService;
+    BackendServer server;
     @Inject
     AdaptersFactory adaptersFactory;
-    @Inject
-    AuthSign authSign;
     private ListView topicsListView;
     private ArrayAdapter<Topic> adapter;
 
     private AsyncTask<String, Object, List<Topic>> loadingTopics = new AsyncTask<String, Object, List<Topic>>() {
         @Override
         protected List<Topic> doInBackground(String... params) {
-            Call<List<Topic>> topicCall = topicService.findAll(authSign);
-            Response<List<Topic>> topics = null;
-            try {
-                topics = topicCall.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return topics.body() == null ? new ArrayList<Topic>() : topics.body();
+            return server.findAllTopics();
         }
 
         @Override

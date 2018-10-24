@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.model.LoginCredentials;
 /**
  * @author Budnikau Aliaksandr
  */
-public interface LoginService {
+public interface LoginRestClient {
 
     @POST("/login")
     Call<Boolean> login(@Body LoginCredentials credentials);

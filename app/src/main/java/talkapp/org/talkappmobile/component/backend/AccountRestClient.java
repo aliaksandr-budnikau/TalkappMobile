@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.model.Account;
 /**
  * @author Budnikau Aliaksandr
  */
-public interface AccountService {
+public interface AccountRestClient {
 
     @POST("/account")
     Call<Void> register(@Body Account account);

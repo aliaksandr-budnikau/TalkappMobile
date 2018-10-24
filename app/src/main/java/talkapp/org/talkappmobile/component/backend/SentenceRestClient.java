@@ -12,7 +12,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 /**
  * @author Budnikau Aliaksandr
  */
-public interface SentenceService {
+public interface SentenceRestClient {
 
     @GET("/sentence")
     Call<List<Sentence>> findByWords(@Query("words") String words, @Query("wordsNumber") int wordsNumber, @HeaderMap Map<String, String> headers);

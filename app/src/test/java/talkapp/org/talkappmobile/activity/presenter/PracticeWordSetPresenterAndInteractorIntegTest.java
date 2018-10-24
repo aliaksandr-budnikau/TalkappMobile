@@ -7,11 +7,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
-
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
-import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -23,7 +21,6 @@ import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest {
@@ -37,8 +34,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
     private ViewStrategyFactory viewStrategyFactory;
-    private AuthSign authSign;
-    private LoginService loginService;
+    private BackendServer server;
 
     @Before
     public void setup() {
@@ -46,17 +42,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         viewStrategyFactory = injection.getViewStrategyFactory();
         interactor = injection.getInteractor();
         exerciseRepository = injection.getExerciseRepository();
-        authSign = injection.getAuthSign();
-        loginService = injection.getLoginService();
+        server = injection.getServer();
     }
 
-    private void login(LoginService loginService, final AuthSign authSign) {
+    private void login() {
         LoginCredentials credentials = new LoginCredentials();
         credentials.setEmail("sasha-ne@tut.by");
         credentials.setPassword("password0");
         try {
-            authSign.put(loginService.login(credentials).execute().headers().get(AUTHORIZATION_HEADER_KEY));
-        } catch (IOException e) {
+            server.loginUser(credentials);
+        } catch (LoginException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -75,7 +70,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
     @Test
     public void testPracticeWordSet_completeOneSet() {
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -321,7 +316,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -382,7 +377,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         reset(view);
 
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(16);
@@ -442,7 +437,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         reset(view);
 
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(33);
@@ -501,7 +496,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         reset(view);
 
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(50);
@@ -559,7 +554,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         reset(view);
 
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(66);
@@ -617,7 +612,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
         reset(view);
 
         createPresenter(interactor, viewStrategyFactory);
-        login(loginService, authSign);
+        login();
 
         presenter.initialise();
         verify(view).setProgress(83);

@@ -3,21 +3,20 @@ package talkapp.org.talkappmobile.activity.presenter;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
-import talkapp.org.talkappmobile.component.backend.LoginService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DaggerTestDIContext;
-import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
 import talkapp.org.talkappmobile.module.TestDIContext;
+import talkapp.org.talkappmobile.module.TestDataModule;
 import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 public class ClassForInjection {
@@ -26,9 +25,7 @@ public class ClassForInjection {
     @Inject
     ViewStrategyFactory viewStrategyFactory;
     @Inject
-    LoginService loginService;
-    @Inject
-    AuthSign authSign;
+    BackendServer server;
     @Inject
     PracticeWordSetExerciseRepository exerciseRepository;
 
@@ -39,7 +36,7 @@ public class ClassForInjection {
                 .audioModule(new AudioModule())
                 .gameplayModule(new GameplayModule())
                 .concurrentModule(new ConcurrentModule())
-                .dataModule(new DataModule())
+                .dataModule(new TestDataModule())
                 .infraModule(new InfraModule())
                 .languageModule(new LanguageModule())
                 .backEndServiceModule(new BackEndServiceModule())
@@ -49,12 +46,8 @@ public class ClassForInjection {
         context.inject(this);
     }
 
-    public LoginService getLoginService() {
-        return loginService;
-    }
-
-    public AuthSign getAuthSign() {
-        return authSign;
+    public BackendServer getServer() {
+        return server;
     }
 
     public PracticeWordSetInteractor getInteractor() {

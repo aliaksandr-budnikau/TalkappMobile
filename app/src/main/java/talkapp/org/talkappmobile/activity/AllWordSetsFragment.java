@@ -26,7 +26,6 @@ import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsView;
-import talkapp.org.talkappmobile.component.backend.WordSetService;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -34,8 +33,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AllWordSetsView {
     public static final String TOPIC_ID_MAPPING = "topicId";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
-    @Inject
-    WordSetService wordSetService;
     @Inject
     Executor executor;
     @Inject

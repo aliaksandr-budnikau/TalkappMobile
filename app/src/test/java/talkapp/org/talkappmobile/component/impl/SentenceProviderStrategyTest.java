@@ -1,47 +1,33 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.List;
 
-import retrofit2.Call;
-import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
-import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.model.Sentence;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static retrofit2.Response.success;
 import static talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceProviderStrategyTest {
     @Mock
-    private SentenceService sentenceService;
-    @Mock
-    private AuthSign authSign;
+    private BackendServer backendServer;
     @InjectMocks
     private SentenceProviderStrategy strategy;
 
-    @BeforeClass
-    public static void setUpContext() {
-        DIContextUtils.init(new TalkappMobileApplication());
-    }
-
     @Test
-    public void findByWord_sentenceFound() throws IOException {
+    public void findByWord_sentenceFound() {
         // setup
         String word = "word";
         String wordSetId = "wordSetId";
@@ -53,7 +39,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = asList(sentence1, sentence2);
 
         // when
-        whenSentenceServiceFindByWords(word, sentences, false);
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -64,7 +50,7 @@ public class SentenceProviderStrategyTest {
     }
 
     @Test
-    public void findByWord_sentenceNotFound() throws IOException {
+    public void findByWord_sentenceNotFound() {
         // setup
         String word = "word";
         String wordSetId = "wordSetId";
@@ -72,7 +58,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = emptyList();
 
         // when
-        whenSentenceServiceFindByWords(word, sentences, false);
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -80,28 +66,16 @@ public class SentenceProviderStrategyTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void findByWord_exception() throws IOException {
+    public void findByWord_exception() {
         // setup
         String word = "word";
         String wordSetId = "wordSetId";
 
-        List<Sentence> sentences = emptyList();
-
         // when
-        whenSentenceServiceFindByWords(word, sentences, true);
+        doThrow(RuntimeException.class).when(backendServer.findSentencesByWords(word, WORDS_NUMBER));
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
         assertTrue(sentencesActual.isEmpty());
-    }
-
-    private void whenSentenceServiceFindByWords(String word, List<Sentence> sentences, boolean exception) throws IOException {
-        Call call = mock(Call.class);
-        if (exception) {
-            when(call.execute()).thenThrow(new IOException());
-        } else {
-            when(call.execute()).thenReturn(success(sentences));
-        }
-        when(sentenceService.findByWords(word, WORDS_NUMBER, authSign)).thenReturn(call);
     }
 }

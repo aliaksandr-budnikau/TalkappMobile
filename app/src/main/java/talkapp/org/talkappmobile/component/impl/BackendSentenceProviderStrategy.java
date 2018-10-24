@@ -1,10 +1,9 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.SentenceService;
+import talkapp.org.talkappmobile.component.backend.BackendServer;
 
 public class BackendSentenceProviderStrategy extends SentenceProviderStrategy {
-    public BackendSentenceProviderStrategy(SentenceService sentenceService, AuthSign authSign) {
-        super(sentenceService, authSign);
+    public BackendSentenceProviderStrategy(BackendServer server) {
+        super(server);
     }
 }
