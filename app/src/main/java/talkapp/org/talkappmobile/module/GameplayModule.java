@@ -114,8 +114,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public LoginInteractor provideLoginInteractor(BackendServer server) {
-        return new LoginInteractor(server);
+    public LoginInteractor provideLoginInteractor(Logger logger, BackendServer server, TextUtils textUtils) {
+        return new LoginInteractor(logger, server, textUtils);
     }
 
     @Provides
