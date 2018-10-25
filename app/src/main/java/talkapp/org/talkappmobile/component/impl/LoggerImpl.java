@@ -22,6 +22,11 @@ public class LoggerImpl implements Logger {
     }
 
     @Override
+    public void e(String tag, Throwable throwable, String message, Object... args) {
+        Log.e(tag, replacePlaceholders(message, args), throwable);
+    }
+
+    @Override
     public void d(String tag, String message, Object... args) {
         Log.d(tag, replacePlaceholders(message, args));
     }

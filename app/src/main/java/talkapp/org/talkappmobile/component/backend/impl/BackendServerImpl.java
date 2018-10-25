@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.backend.impl;
 import android.content.Context;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -31,6 +33,8 @@ import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_
 
 public class BackendServerImpl implements BackendServer {
 
+    private static final String TAG = BackendServerImpl.class.getSimpleName();
+
     private final AuthSign authSign;
 
     private final AccountRestClient accountRestClient;
@@ -51,7 +55,10 @@ public class BackendServerImpl implements BackendServer {
 
     private final Context context;
 
-    public BackendServerImpl(AuthSign authSign, Context context, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, SaveSharedPreference saveSharedPreference) {
+    private final Logger logger;
+
+    public BackendServerImpl(Logger logger, AuthSign authSign, Context context, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, SaveSharedPreference saveSharedPreference) {
+        this.logger = logger;
         this.authSign = authSign;
         this.context = context;
         this.accountRestClient = accountRestClient;
@@ -101,6 +108,9 @@ public class BackendServerImpl implements BackendServer {
     private <T> Response<T> execute(Call<T> call) {
         try {
             return call.execute();
+        } catch (ConnectException e) {
+            logger.e(TAG, e, e.getMessage());
+            throw new InternetConnectionLostException("Internet connection was lost");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

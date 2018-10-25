@@ -1,33 +1,46 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.CrashActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationException;
+import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 
 import static talkapp.org.talkappmobile.activity.CrashActivity.STACK_TRACE;
 
 public class ExceptionHandler implements UncaughtExceptionHandler {
 
     private final String LINE_SEPARATOR = "\n";
-    private BaseActivity activity;
+    private final Context context;
+    private final Handler uiEventHandler;
 
-    public ExceptionHandler(BaseActivity activity) {
-        this.activity = activity;
+    public ExceptionHandler(Context context, Handler uiEventHandler) {
+        this.context = context;
+        this.uiEventHandler = uiEventHandler;
     }
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        if (getCause(e) instanceof AuthorizationException) {
-            Intent intent = new Intent(activity, LoginActivity.class);
-            activity.startActivity(intent);
+        if (getCause(e) instanceof InternetConnectionLostException) {
+            uiEventHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Internet connection was lost", Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
+        } else if (getCause(e) instanceof AuthorizationException) {
+            Intent intent = new Intent(context, LoginActivity.class);
+            context.startActivity(intent);
         } else {
             StringWriter stackTrace = new StringWriter();
             e.printStackTrace();
@@ -63,9 +76,9 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
             errorReport.append(Build.VERSION.INCREMENTAL);
             errorReport.append(LINE_SEPARATOR);
 
-            Intent intent = new Intent(activity, CrashActivity.class);
+            Intent intent = new Intent(context, CrashActivity.class);
             intent.putExtra(STACK_TRACE, errorReport.toString());
-            activity.startActivity(intent);
+            context.startActivity(intent);
         }
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(10);

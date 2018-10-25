@@ -1,11 +1,13 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import talkapp.org.talkappmobile.activity.BaseActivity;
+import android.content.Context;
+import android.os.Handler;
+
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 
 public class InfraComponentsFactoryImpl implements InfraComponentsFactory {
     @Override
-    public Thread.UncaughtExceptionHandler createExceptionHandler(BaseActivity applicationContext) {
-        return new ExceptionHandler(applicationContext);
+    public Thread.UncaughtExceptionHandler createExceptionHandler(Context context, Handler uiEventHandler) {
+        return new ExceptionHandler(context, uiEventHandler);
     }
 }

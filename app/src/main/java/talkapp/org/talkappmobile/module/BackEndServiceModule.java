@@ -14,6 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -76,8 +77,8 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public BackendServer provideBackendServer(AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
-        return new BackendServerImpl(authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
+    public BackendServer provideBackendServer(Logger logger, AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
+        return new BackendServerImpl(logger, authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
     }
 
     @Provides
