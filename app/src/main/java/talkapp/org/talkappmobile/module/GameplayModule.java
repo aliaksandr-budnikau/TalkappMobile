@@ -7,10 +7,10 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
@@ -110,6 +110,12 @@ public class GameplayModule {
     @Singleton
     public AllWordSetsInteractor provideAllWordSetsInteractor(BackendServer server, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository) {
         return new AllWordSetsInteractor(server, experienceRepository, exerciseRepository);
+    }
+
+    @Provides
+    @Singleton
+    public LoginInteractor provideLoginInteractor(BackendServer server) {
+        return new LoginInteractor(server);
     }
 
     @Provides

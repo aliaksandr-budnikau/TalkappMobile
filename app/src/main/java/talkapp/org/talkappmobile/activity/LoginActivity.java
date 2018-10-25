@@ -35,6 +35,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
+import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
+import talkapp.org.talkappmobile.activity.presenter.LoginView;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
@@ -47,7 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>, LoginView {
     public static final String TAG = LoginActivity.class.getSimpleName();
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -57,6 +60,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     BackendServer server;
     @Inject
     talkapp.org.talkappmobile.component.TextUtils textUtils;
+    @Inject
+    LoginInteractor interactor;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -66,6 +71,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private EditText passwordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LoginPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        presenter = new LoginPresenter(this, interactor);
     }
 
     private void populateAutoComplete() {
