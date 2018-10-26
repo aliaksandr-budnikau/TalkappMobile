@@ -40,7 +40,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
     public void setup() {
         final ClassForInjection injection = new ClassForInjection();
         viewStrategyFactory = injection.getViewStrategyFactory();
-        interactor = injection.getInteractor();
+        interactor = injection.getPracticeWordSetInteractor();
         exerciseRepository = injection.getExerciseRepository();
         server = injection.getServer();
     }

@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
+
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
@@ -21,13 +23,17 @@ import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 public class ClassForInjection {
     @Inject
-    PracticeWordSetInteractor interactor;
+    PracticeWordSetInteractor practiceWordSetInteractor;
+    @Inject
+    LoginInteractor loginInteractor;
     @Inject
     ViewStrategyFactory viewStrategyFactory;
     @Inject
     BackendServer server;
     @Inject
     PracticeWordSetExerciseRepository exerciseRepository;
+    @Inject
+    Context context;
 
     public ClassForInjection() {
         TestDIContext context = DaggerTestDIContext.builder()
@@ -50,8 +56,16 @@ public class ClassForInjection {
         return server;
     }
 
-    public PracticeWordSetInteractor getInteractor() {
-        return interactor;
+    public PracticeWordSetInteractor getPracticeWordSetInteractor() {
+        return practiceWordSetInteractor;
+    }
+
+    public LoginInteractor getLoginInteractor() {
+        return loginInteractor;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public ViewStrategyFactory getViewStrategyFactory() {
