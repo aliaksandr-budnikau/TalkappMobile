@@ -16,4 +16,12 @@ public interface OnLoginListener {
     void onStopRegistrationProcess();
 
     void onRegistrationSucceed(String email, String password);
+
+    void onBeforeValidation();
+
+    void onPasswordValidationFail();
+
+    void onEmailEmpty();
+
+    void onEmailValidationFail();
 }

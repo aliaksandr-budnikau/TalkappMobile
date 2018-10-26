@@ -10,6 +10,8 @@ import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 public class LoginInteractor {
     public static final String TAG = LoginInteractor.class.getSimpleName();
     private final BackendServer server;
@@ -23,6 +25,9 @@ public class LoginInteractor {
     }
 
     public void signInButtonClick(String email, String password, OnLoginListener listener) {
+        if (!isValidCredentials(email, password, listener)) {
+            return;
+        }
         logger.i(TAG, "Attempt " + email + " " + textUtils.hideText(password) + " authentication against a network service");
         LoginCredentials credentials = new LoginCredentials();
         credentials.setEmail(email);
@@ -42,6 +47,9 @@ public class LoginInteractor {
     }
 
     public void signUpButtonClick(String email, String password, OnLoginListener listener) {
+        if (!isValidCredentials(email, password, listener)) {
+            return;
+        }
         logger.i(TAG, "Attempt " + email + " " + textUtils.hideText(password) + " registration against a network service");
         Account account = new Account();
         account.setEmail(email);
@@ -58,5 +66,31 @@ public class LoginInteractor {
         }
         Log.i(TAG, "Registration " + email + " is done!");
         listener.onRegistrationSucceed(email, password);
+    }
+
+    private boolean isValidCredentials(String email, String password, OnLoginListener listener) {
+        listener.onBeforeValidation();
+        if (!isPasswordValid(password)) {
+            listener.onPasswordValidationFail();
+            return false;
+        }
+        if (isEmpty(email)) {
+            listener.onEmailEmpty();
+            return false;
+        } else if (!isEmailValid(email)) {
+            listener.onEmailValidationFail();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isEmailValid(String email) {
+        //TODO: Replace this with your own logic
+        return email.contains("@");
+    }
+
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
     }
 }

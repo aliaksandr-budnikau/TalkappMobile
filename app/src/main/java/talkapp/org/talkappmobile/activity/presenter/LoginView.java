@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 public interface LoginView {
 
-    void requestFocus();
+    void requestPasswordFocus();
 
     void finishLoginActivity();
 
@@ -15,4 +15,6 @@ public interface LoginView {
     void setEmailError(String text);
 
     void setPasswordError(String text);
+
+    void requestEmailFocus();
 }

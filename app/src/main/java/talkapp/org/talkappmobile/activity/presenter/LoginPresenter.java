@@ -26,7 +26,7 @@ public class LoginPresenter implements OnLoginListener {
     @Override
     public void onLoginFailed() {
         view.setEmailError(context.getString(R.string.error_incorrect_password));
-        view.requestFocus();
+        view.requestPasswordFocus();
     }
 
     @Override
@@ -37,8 +37,6 @@ public class LoginPresenter implements OnLoginListener {
 
     @Override
     public void onStartLoginProcess() {
-        view.setEmailError(null);
-        view.setPasswordError(null);
         view.showProgress();
     }
 
@@ -49,8 +47,6 @@ public class LoginPresenter implements OnLoginListener {
 
     @Override
     public void onStartRegistrationProcess() {
-        view.setEmailError(null);
-        view.setPasswordError(null);
         view.showProgress();
     }
 
@@ -67,5 +63,29 @@ public class LoginPresenter implements OnLoginListener {
     @Override
     public void onRegistrationSucceed(String email, String password) {
         interactor.signInButtonClick(email, password, this);
+    }
+
+    @Override
+    public void onBeforeValidation() {
+        view.setEmailError(null);
+        view.setPasswordError(null);
+    }
+
+    @Override
+    public void onPasswordValidationFail() {
+        view.setPasswordError(context.getString(R.string.error_invalid_password));
+        view.requestPasswordFocus();
+    }
+
+    @Override
+    public void onEmailEmpty() {
+        view.setEmailError(context.getString(R.string.error_field_required));
+        view.requestEmailFocus();
+    }
+
+    @Override
+    public void onEmailValidationFail() {
+        view.setEmailError(context.getString(R.string.error_invalid_email));
+        view.requestEmailFocus();
     }
 }

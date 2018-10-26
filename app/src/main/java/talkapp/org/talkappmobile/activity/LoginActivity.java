@@ -17,9 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -67,7 +65,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     Handler uiEventHandler;
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
+    private AutoCompleteTextView emailView;
     private EditText passwordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -79,7 +77,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         setContentView(R.layout.activity_login);
         DIContextUtils.get().inject(this);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        emailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
         passwordView = (EditText) findViewById(R.id.password);
@@ -87,15 +85,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    final String email = mEmailView.getText().toString();
-                    final String password = passwordView.getText().toString();
-                    attemptSignInOrSignUp(email, password, new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            presenter.signInButtonClick(email, password);
-                            return null;
-                        }
-                    });
+                    signIn();
                     return true;
                 }
                 return false;
@@ -107,15 +97,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             @Override
             public void onClick(View view) {
                 // Store values at the time of the login attempt.
-                final String email = mEmailView.getText().toString();
-                final String password = passwordView.getText().toString();
-                attemptSignInOrSignUp(email, password, new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        presenter.signInButtonClick(email, password);
-                        return null;
-                    }
-                });
+                signIn();
             }
         });
 
@@ -124,21 +106,37 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             @Override
             public void onClick(View view) {
                 // Store values at the time of the login attempt.
-                final String email = mEmailView.getText().toString();
-                final String password = passwordView.getText().toString();
-                attemptSignInOrSignUp(email, password, new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... params) {
-                        presenter.signUpButtonClick(email, password);
-                        return null;
-                    }
-                });
+                signUp();
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         presenter = new LoginPresenter(context, this, interactor);
+    }
+
+    private void signUp() {
+        final String email = emailView.getText().toString();
+        final String password = passwordView.getText().toString();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                presenter.signUpButtonClick(email, password);
+                return null;
+            }
+        }.executeOnExecutor(executor);
+    }
+
+    private void signIn() {
+        final String email = emailView.getText().toString();
+        final String password = passwordView.getText().toString();
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                presenter.signInButtonClick(email, password);
+                return null;
+            }
+        }.executeOnExecutor(executor);
     }
 
     private void populateAutoComplete() {
@@ -157,7 +155,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(emailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -182,62 +180,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 populateAutoComplete();
             }
         }
-    }
-
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     *
-     * @param email
-     * @param password
-     */
-    private void attemptSignInOrSignUp(final String email, final String password, AsyncTask<Void, Void, Void> task) {
-        // Reset errors.
-        mEmailView.setError(null);
-        passwordView.setError(null);
-
-        View focusViewWithError = validateFields(email, password);
-
-        if (focusViewWithError != null) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusViewWithError.requestFocus();
-        } else {
-            task.executeOnExecutor(executor);
-        }
-    }
-
-    @Nullable
-    private View validateFields(String email, String password) {
-        View focusViewWithError = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordView.setError(getString(R.string.error_invalid_password));
-            focusViewWithError = passwordView;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusViewWithError = mEmailView;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusViewWithError = mEmailView;
-        }
-        return focusViewWithError;
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     /**
@@ -316,11 +258,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        mEmailView.setAdapter(adapter);
+        emailView.setAdapter(adapter);
     }
 
     @Override
-    public void requestFocus() {
+    public void requestPasswordFocus() {
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -365,7 +307,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         uiEventHandler.post(new Runnable() {
             @Override
             public void run() {
-                mEmailView.setError(text);
+                emailView.setError(text);
             }
         });
     }
@@ -376,6 +318,16 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             @Override
             public void run() {
                 passwordView.setError(text);
+            }
+        });
+    }
+
+    @Override
+    public void requestEmailFocus() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                emailView.requestFocus();
             }
         });
     }
