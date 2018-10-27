@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -28,6 +29,8 @@ public class ClassForInjection {
     PracticeWordSetInteractor practiceWordSetInteractor;
     @Inject
     LoginInteractor loginInteractor;
+    @Inject
+    TopicsFragmentInteractor topicsFragmentInteractor;
     @Inject
     ViewStrategyFactory viewStrategyFactory;
     @Inject
@@ -66,15 +69,15 @@ public class ClassForInjection {
         return loginInteractor;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public ViewStrategyFactory getViewStrategyFactory() {
         return viewStrategyFactory;
     }
 
     public PracticeWordSetExerciseRepository getExerciseRepository() {
         return exerciseRepository;
+    }
+
+    public TopicsFragmentInteractor getTopicsFragmentInteractor() {
+        return topicsFragmentInteractor;
     }
 }

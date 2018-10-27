@@ -10,10 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
-import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -25,8 +22,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PracticeWordSetPresenterAndInteractorIntegTest {
-    public static final String PLACEHOLDER_REGEX = "\\.\\.\\.";
+public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
+    private static final String PLACEHOLDER_REGEX = "\\.\\.\\.";
     private static final String NOT_ENGLISH = "[^a-zA-Z]{5,}";
     private static final String ENGLISH = ".*[a-zA-Z]{3,}.*";
     @Mock
@@ -36,26 +33,12 @@ public class PracticeWordSetPresenterAndInteractorIntegTest {
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
     private ViewStrategyFactory viewStrategyFactory;
-    private BackendServer server;
 
     @Before
     public void setup() {
-        final ClassForInjection injection = new ClassForInjection();
-        viewStrategyFactory = injection.getViewStrategyFactory();
-        interactor = injection.getPracticeWordSetInteractor();
-        exerciseRepository = injection.getExerciseRepository();
-        server = injection.getServer();
-    }
-
-    private void login() {
-        LoginCredentials credentials = new LoginCredentials();
-        credentials.setEmail("sasha-ne@tut.by");
-        credentials.setPassword("password0");
-        try {
-            server.loginUser(credentials);
-        } catch (LoginException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        viewStrategyFactory = getClassForInjection().getViewStrategyFactory();
+        interactor = getClassForInjection().getPracticeWordSetInteractor();
+        exerciseRepository = getClassForInjection().getExerciseRepository();
     }
 
     private void createPresenter(PracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
