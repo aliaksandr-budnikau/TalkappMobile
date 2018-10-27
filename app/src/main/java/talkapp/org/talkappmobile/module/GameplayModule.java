@@ -121,8 +121,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
-        return new PracticeWordSetVocabularyInteractor();
+    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor(BackendServer server, Speaker speaker) {
+        return new PracticeWordSetVocabularyInteractor(server, speaker);
     }
 
     @Provides

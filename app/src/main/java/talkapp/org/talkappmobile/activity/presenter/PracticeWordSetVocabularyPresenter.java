@@ -2,12 +2,9 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -15,13 +12,12 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
 
     private final WordSet wordSet;
     private final PracticeWordSetVocabularyView view;
-    @Inject
-    PracticeWordSetVocabularyInteractor interactor;
+    private final PracticeWordSetVocabularyInteractor interactor;
 
-    public PracticeWordSetVocabularyPresenter(WordSet wordSet, PracticeWordSetVocabularyView view) {
+    public PracticeWordSetVocabularyPresenter(WordSet wordSet, PracticeWordSetVocabularyView view, PracticeWordSetVocabularyInteractor interactor) {
         this.wordSet = wordSet;
         this.view = view;
-        DIContextUtils.get().inject(this);
+        this.interactor = interactor;
     }
 
     public void onResume() {

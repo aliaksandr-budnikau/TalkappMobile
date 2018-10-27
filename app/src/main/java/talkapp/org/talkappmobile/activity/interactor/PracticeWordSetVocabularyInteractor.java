@@ -2,23 +2,19 @@ package talkapp.org.talkappmobile.activity.interactor;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public class PracticeWordSetVocabularyInteractor {
-    @Inject
-    BackendServer server;
-    @Inject
-    Speaker speaker;
+    private final BackendServer server;
+    private final Speaker speaker;
 
-    public PracticeWordSetVocabularyInteractor() {
-        DIContextUtils.get().inject(this);
+    public PracticeWordSetVocabularyInteractor(BackendServer server, Speaker speaker) {
+        this.server = server;
+        this.speaker = speaker;
     }
 
     public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
