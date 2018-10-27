@@ -4,6 +4,7 @@ import android.content.Context;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
@@ -11,6 +12,7 @@ import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
@@ -39,6 +41,10 @@ public class ClassForInjection {
     PracticeWordSetExerciseRepository exerciseRepository;
     @Inject
     Context context;
+    @Inject
+    AllWordSetsInteractor allWordSetsInteractor;
+    @Inject
+    WordSetExperienceDao wordSetExperienceDao;
 
     public ClassForInjection() {
         TestDIContext context = DaggerTestDIContext.builder()
@@ -79,5 +85,13 @@ public class ClassForInjection {
 
     public TopicsFragmentInteractor getTopicsFragmentInteractor() {
         return topicsFragmentInteractor;
+    }
+
+    public AllWordSetsInteractor getAllWordSetsInteractor() {
+        return allWordSetsInteractor;
+    }
+
+    public WordSetExperienceDao getWordSetExperienceDao() {
+        return wordSetExperienceDao;
     }
 }
