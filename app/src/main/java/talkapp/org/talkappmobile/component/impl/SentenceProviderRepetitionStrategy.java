@@ -17,7 +17,7 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
         return asList(repository.findByWordAndWordSetId(word, wordSetId));
     }
 }

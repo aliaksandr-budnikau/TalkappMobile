@@ -41,7 +41,7 @@ public class AllWordSetsInteractorTest {
     @Test
     public void itemClick_experienceNull() {
         // setup
-        String id = "sfs";
+        int id = 2;
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);

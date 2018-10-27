@@ -30,7 +30,7 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public Sentence findByWordAndWordSetId(String word, String wordSetId) {
+    public Sentence findByWordAndWordSetId(String word, int wordSetId) {
         List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByWordAndWordSetId(word, wordSetId);
         if (exercises.isEmpty()) {
             return null;
@@ -44,7 +44,7 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public void save(String word, String wordSetId, Sentence sentence) {
+    public void save(String word, int wordSetId, Sentence sentence) {
         PracticeWordSetExerciseMapping exercise = exerciseDao.findByWordAndWordSetId(word, wordSetId).get(0);
         try {
             exercise.setSentenceJSON(mapper.writeValueAsString(sentence));
@@ -55,12 +55,12 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public void cleanByWordSetId(String wordSetId) {
+    public void cleanByWordSetId(int wordSetId) {
         exerciseDao.cleanByWordSetId(wordSetId);
     }
 
     @Override
-    public void createSomeIfNecessary(Set<String> words, String wordSetId) {
+    public void createSomeIfNecessary(Set<String> words, int wordSetId) {
         List<PracticeWordSetExerciseMapping> wordsEx = new LinkedList<>();
         for (String word : words) {
             List<PracticeWordSetExerciseMapping> alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(word, wordSetId);
@@ -77,7 +77,7 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public String peekByWordSetIdAnyWord(String wordSetId) {
+    public String peekByWordSetIdAnyWord(int wordSetId) {
         WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
         List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
         PracticeWordSetExerciseMapping mapping = exercises.get(0);
@@ -87,13 +87,13 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public String getCurrentWord(String wordSetId) {
+    public String getCurrentWord(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         return current.get(0).getWord();
     }
 
     @Override
-    public Sentence getCurrentSentence(String wordSetId) {
+    public Sentence getCurrentSentence(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         String sentenceJSON = current.get(0).getSentenceJSON();
         try {
@@ -104,7 +104,7 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public void putOffCurrentWord(String wordSetId) {
+    public void putOffCurrentWord(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setCurrent(false);
@@ -112,7 +112,7 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     }
 
     @Override
-    public void moveCurrentWordToNextState(String wordSetId) {
+    public void moveCurrentWordToNextState(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setStatus(next(mapping.getStatus()));

@@ -45,7 +45,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
 
     @Test
     public void rightAnswerTouched_whenSentenceIsNotInitializedYetNPE() {
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
         when(state.getWordSetId()).thenReturn(wordSetId);
         when(interactor.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerTouched();
@@ -53,7 +53,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
 
     @Test
     public void rightAnswerUntouched_whenSentenceIsNotInitializedYetNPE() {
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
         when(state.getWordSetId()).thenReturn(wordSetId);
         when(interactor.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerUntouched();

@@ -6,5 +6,5 @@ public interface WordSetExperienceDao {
 
     void createNewOrUpdate(WordSetExperienceMapping experience);
 
-    WordSetExperienceMapping findById(String id);
+    WordSetExperienceMapping findById(int id);
 }

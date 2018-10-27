@@ -17,7 +17,7 @@ public class SentenceProviderImpl implements SentenceProvider {
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
         return currentStrategy.findByWordAndWordSetId(word, wordSetId);
     }
 

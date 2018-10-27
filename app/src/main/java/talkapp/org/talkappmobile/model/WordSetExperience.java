@@ -7,16 +7,16 @@ import java.util.Objects;
  * @author Budnikau Aliaksandr
  */
 public class WordSetExperience implements Serializable {
-    private String id;
+    private int id;
     private int trainingExperience;
     private int maxTrainingExperience;
     private WordSetExperienceStatus status;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

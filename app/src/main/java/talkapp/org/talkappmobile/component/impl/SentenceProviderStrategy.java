@@ -13,7 +13,7 @@ public class SentenceProviderStrategy {
         this.server = server;
     }
 
-    public List<Sentence> findByWordAndWordSetId(String word, String wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
         return server.findSentencesByWords(word, WORDS_NUMBER);
     }
 }

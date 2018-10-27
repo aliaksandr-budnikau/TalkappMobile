@@ -24,7 +24,7 @@ public class PracticeWordSetPresenterCurrentState {
         this.voiceRecordUri = voiceRecordUri;
     }
 
-    public String getWordSetId() {
+    public int getWordSetId() {
         return wordSet.getId();
     }
 }

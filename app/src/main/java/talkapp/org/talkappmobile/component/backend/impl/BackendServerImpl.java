@@ -157,7 +157,7 @@ public class BackendServerImpl implements BackendServer {
     }
 
     @Override
-    public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(String wordSetId, String language) {
+    public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordSetIdAndByLanguage(wordSetId, language, authSign);
         List<WordTranslation> body = execute(call).body();
         if (body == null) {

@@ -9,17 +9,17 @@ import java.util.Objects;
  * @author Budnikau Aliaksandr
  */
 public class WordSet implements Serializable {
-    private String id;
+    private int id;
 
     private String topicId;
 
     private List<String> words;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -22,10 +22,10 @@ public class TestDatabaseModule extends DatabaseModule {
             private Set<PracticeWordSetExerciseMapping> storage = new HashSet<>();
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, String wordSetId) {
+            public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId) {
                 LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
                 for (PracticeWordSetExerciseMapping mapping : storage) {
-                    if (mapping.getWord().equals(word) && mapping.getWordSetId().equals(wordSetId)) {
+                    if (mapping.getWord().equals(word) && mapping.getWordSetId() == wordSetId) {
                         result.add(mapping);
                     }
                 }
@@ -39,11 +39,11 @@ public class TestDatabaseModule extends DatabaseModule {
             }
 
             @Override
-            public void cleanByWordSetId(String wordSetId) {
+            public void cleanByWordSetId(int wordSetId) {
                 Set<PracticeWordSetExerciseMapping> old = storage;
                 storage = new HashSet<>();
                 for (PracticeWordSetExerciseMapping mapping : old) {
-                    if (mapping.getWordSetId().equals(wordSetId)) {
+                    if (mapping.getWordSetId() == wordSetId) {
                         continue;
                     }
                     storage.add(mapping);
@@ -57,10 +57,10 @@ public class TestDatabaseModule extends DatabaseModule {
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, String wordSetId) {
+            public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId) {
                 LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
                 for (PracticeWordSetExerciseMapping mapping : storage) {
-                    if (mapping.getStatus() == status && mapping.getWordSetId().equals(wordSetId)) {
+                    if (mapping.getStatus() == status && mapping.getWordSetId() == wordSetId) {
                         result.add(mapping);
                     }
                 }
@@ -68,10 +68,10 @@ public class TestDatabaseModule extends DatabaseModule {
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(String wordSetId) {
+            public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId) {
                 LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
                 for (PracticeWordSetExerciseMapping mapping : storage) {
-                    if (mapping.getWordSetId().equals(wordSetId) && mapping.isCurrent()) {
+                    if (mapping.getWordSetId() == wordSetId && mapping.isCurrent()) {
                         result.add(mapping);
                     }
                 }
@@ -91,9 +91,9 @@ public class TestDatabaseModule extends DatabaseModule {
             }
 
             @Override
-            public WordSetExperienceMapping findById(String id) {
+            public WordSetExperienceMapping findById(int id) {
                 for (WordSetExperienceMapping mapping : storage) {
-                    if (mapping.getId().equals(id)) {
+                    if (mapping.getId() == id) {
                         return mapping;
                     }
                 }

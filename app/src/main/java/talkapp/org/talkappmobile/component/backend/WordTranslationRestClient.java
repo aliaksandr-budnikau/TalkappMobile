@@ -14,5 +14,5 @@ import talkapp.org.talkappmobile.model.WordTranslation;
  */
 public interface WordTranslationRestClient {
     @GET("/wordtranslation")
-    Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Query("wordSetId") String wordSetId, @Query("language") String language, @HeaderMap Map<String, String> headers);
+    Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Query("wordSetId") int wordSetId, @Query("language") String language, @HeaderMap Map<String, String> headers);
 }

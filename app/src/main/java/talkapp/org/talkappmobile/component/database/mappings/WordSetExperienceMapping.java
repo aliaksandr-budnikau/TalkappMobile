@@ -17,7 +17,7 @@ public class WordSetExperienceMapping {
     public static final String STATUS_FN = "status";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
-    private String id;
+    private int id;
 
     @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
     private int trainingExperience;
@@ -28,11 +28,11 @@ public class WordSetExperienceMapping {
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetExperienceStatus status = STUDYING;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

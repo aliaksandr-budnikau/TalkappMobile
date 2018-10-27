@@ -19,7 +19,7 @@ public class PracticeWordSetExerciseMapping {
     private int id;
 
     @DatabaseField(canBeNull = false, columnName = WORD_SET_ID_FN)
-    private String wordSetId;
+    private int wordSetId;
 
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String word;
@@ -49,11 +49,11 @@ public class PracticeWordSetExerciseMapping {
         this.word = word;
     }
 
-    public String getWordSetId() {
+    public int getWordSetId() {
         return wordSetId;
     }
 
-    public void setWordSetId(String wordSetId) {
+    public void setWordSetId(int wordSetId) {
         this.wordSetId = wordSetId;
     }
 

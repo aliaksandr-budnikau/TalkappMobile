@@ -9,15 +9,15 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 public interface PracticeWordSetExerciseDao {
 
-    List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, String wordSetId);
+    List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId);
 
     Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise);
 
-    void cleanByWordSetId(String wordSetId);
+    void cleanByWordSetId(int wordSetId);
 
     int createAll(List<PracticeWordSetExerciseMapping> words);
 
-    List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, String wordSetId);
+    List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId);
 
-    List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(String wordSetId);
+    List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId);
 }

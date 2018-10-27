@@ -5,21 +5,21 @@ import java.util.Set;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public interface PracticeWordSetExerciseRepository {
-    Sentence findByWordAndWordSetId(String word, String wordSetId);
+    Sentence findByWordAndWordSetId(String word, int wordSetId);
 
-    void save(String word, String wordSetId, Sentence sentence);
+    void save(String word, int wordSetId, Sentence sentence);
 
-    void cleanByWordSetId(String wordSetId);
+    void cleanByWordSetId(int wordSetId);
 
-    void createSomeIfNecessary(Set<String> words, String wordSetId);
+    void createSomeIfNecessary(Set<String> words, int wordSetId);
 
-    String peekByWordSetIdAnyWord(String wordSetId);
+    String peekByWordSetIdAnyWord(int wordSetId);
 
-    String getCurrentWord(String wordSetId);
+    String getCurrentWord(int wordSetId);
 
-    Sentence getCurrentSentence(String wordSetId);
+    Sentence getCurrentSentence(int wordSetId);
 
-    void putOffCurrentWord(String wordSetId);
+    void putOffCurrentWord(int wordSetId);
 
-    void moveCurrentWordToNextState(String wordSetId);
+    void moveCurrentWordToNextState(int wordSetId);
 }

@@ -30,7 +30,7 @@ public class SentenceProviderStrategyTest {
     public void findByWord_sentenceFound() {
         // setup
         String word = "word";
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
 
         Sentence sentence1 = new Sentence();
         sentence1.setId("fds32ddd");
@@ -53,7 +53,7 @@ public class SentenceProviderStrategyTest {
     public void findByWord_sentenceNotFound() {
         // setup
         String word = "word";
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
 
         List<Sentence> sentences = emptyList();
 
@@ -69,7 +69,7 @@ public class SentenceProviderStrategyTest {
     public void findByWord_exception() {
         // setup
         String word = "word";
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
 
         // when
         doThrow(RuntimeException.class).when(backendServer.findSentencesByWords(word, WORDS_NUMBER));

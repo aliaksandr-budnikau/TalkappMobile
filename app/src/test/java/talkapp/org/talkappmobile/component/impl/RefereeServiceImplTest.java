@@ -66,7 +66,7 @@ public class RefereeServiceImplTest {
         UncheckedAnswer answer = new UncheckedAnswer();
         answer.setActualAnswer("Who is duty today?");
         answer.setExpectedAnswer("Who is duty today?");
-        answer.setWordSetExperienceId("233");
+        answer.setWordSetExperienceId(3);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setTrainingExperience(0);

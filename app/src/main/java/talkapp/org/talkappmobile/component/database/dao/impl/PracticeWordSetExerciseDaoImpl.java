@@ -23,7 +23,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, String wordSetId) {
+    public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -47,7 +47,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public void cleanByWordSetId(String wordSetId) {
+    public void cleanByWordSetId(int wordSetId) {
         try {
             DeleteBuilder<PracticeWordSetExerciseMapping, Integer> builder = deleteBuilder();
             builder.where().eq(WORD_SET_ID_FN, wordSetId);
@@ -67,7 +67,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, String wordSetId) {
+    public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -82,7 +82,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(String wordSetId) {
+    public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId) {
         try {
             return this.query(
                     queryBuilder()

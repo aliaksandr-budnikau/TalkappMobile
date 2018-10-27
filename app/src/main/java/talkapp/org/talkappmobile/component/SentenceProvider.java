@@ -5,7 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public interface SentenceProvider {
-    List<Sentence> findByWordAndWordSetId(String word, String wordSetId);
+    List<Sentence> findByWordAndWordSetId(String word, int wordSetId);
 
     void enableRepetitionMode();
 

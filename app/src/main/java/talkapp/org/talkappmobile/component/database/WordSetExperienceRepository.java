@@ -6,11 +6,11 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 public interface WordSetExperienceRepository {
 
-    WordSetExperience findById(String id);
+    WordSetExperience findById(int id);
 
     WordSetExperience createNew(WordSet wordSet);
 
-    WordSetExperience increaseExperience(String id, int value);
+    WordSetExperience increaseExperience(int id, int value);
 
-    WordSetExperience moveToAnotherState(String id, WordSetExperienceStatus value);
+    WordSetExperience moveToAnotherState(int id, WordSetExperienceStatus value);
 }

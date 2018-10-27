@@ -90,7 +90,7 @@ public class PracticeWordSetInteractor {
         logger.i(TAG, "word sequence was initialized");
     }
 
-    public void initialiseSentence(String word, String wordSetId, final OnPracticeWordSetListener listener) {
+    public void initialiseSentence(String word, int wordSetId, final OnPracticeWordSetListener listener) {
         logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
         List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
         logger.i(TAG, "sentences size {}", sentences.size());
@@ -181,19 +181,19 @@ public class PracticeWordSetInteractor {
         }
     }
 
-    public Sentence getCurrentSentence(String wordSetId) {
+    public Sentence getCurrentSentence(int wordSetId) {
         return exerciseRepository.getCurrentSentence(wordSetId);
     }
 
-    public String peekByWordSetIdAnyWord(String wordSetId) {
+    public String peekByWordSetIdAnyWord(int wordSetId) {
         return exerciseRepository.peekByWordSetIdAnyWord(wordSetId);
     }
 
-    public String getCurrentWord(String wordSetId) {
+    public String getCurrentWord(int wordSetId) {
         return exerciseRepository.getCurrentWord(wordSetId);
     }
 
-    public void pronounceRightAnswer(String wordSetId, OnPracticeWordSetListener listener) {
+    public void pronounceRightAnswer(int wordSetId, OnPracticeWordSetListener listener) {
         Sentence currentSentence = exerciseRepository.getCurrentSentence(wordSetId);
         if (currentSentence == null) {
             return;

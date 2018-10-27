@@ -82,10 +82,10 @@ public class PracticeWordSetInteractorTest {
     public void initialiseExperience_experienceIsNull() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setId("3243");
+        wordSet.setId(1);
 
         WordSetExperience experience = new WordSetExperience();
-        experience.setId("323423");
+        experience.setId(3);
         experience.setStatus(STUDYING);
 
         // when
@@ -102,7 +102,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void initialiseExperience_experienceIsNotNullAndStatusRepetition() {
         // setup
-        String id = "3243";
+        int id = 2;
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
@@ -125,7 +125,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void initialiseExperience_experienceIsNotNullAndStatusNotRepetition() {
         // setup
-        String id = "3243";
+        int id = 3;
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
@@ -150,7 +150,7 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setWords(asList("fdsfs", "sdfs"));
-        wordSet.setId("3243");
+        wordSet.setId(4);
 
         HashSet<String> words = new HashSet<>(wordSet.getWords());
 
@@ -174,7 +174,7 @@ public class PracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
         String word = "sdfs";
-        String wordSetId = "sdfsId";
+        int wordSetId = 3;
 
         // when
         when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
@@ -193,7 +193,7 @@ public class PracticeWordSetInteractorTest {
         selectedSentence.setId("fds32");
 
         String word = "SDFDS";
-        String wordSetId = "SDFDSId";
+        int wordSetId = 3;
 
         // when
         when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(Collections.<Sentence>emptyList());
@@ -208,7 +208,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void checkAnswer_answerIsOk() {
         // setup
-        String id = "3243";
+        int id = 3;
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -253,7 +253,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void checkAnswer_answerIsOkAndFinish() {
         // setup
-        String id = "3243";
+        int id = 3;
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -299,7 +299,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void checkAnswer_accuracyTooLowError() {
         // setup
-        String id = "3243";
+        int id = 3;
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -343,7 +343,7 @@ public class PracticeWordSetInteractorTest {
     @Test
     public void checkAnswer_spellingOrGrammarError() {
         // setup
-        String id = "3243";
+        int id = 3;
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -390,10 +390,10 @@ public class PracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         WordSetExperience experience = new WordSetExperience();
-        experience.setId("23234");
+        experience.setId(3);
         experience.setMaxTrainingExperience(12);
         experience.setTrainingExperience(0);
-        wordSet.setId("3243");
+        wordSet.setId(4);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");

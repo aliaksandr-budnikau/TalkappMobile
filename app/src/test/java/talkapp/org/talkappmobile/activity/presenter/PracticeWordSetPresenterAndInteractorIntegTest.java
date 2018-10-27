@@ -42,7 +42,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     }
 
     private void createPresenter(PracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
-        String id = "qwe0";
+        int id = 1;
         wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setWords(asList("age", "anniversary", "birth"));

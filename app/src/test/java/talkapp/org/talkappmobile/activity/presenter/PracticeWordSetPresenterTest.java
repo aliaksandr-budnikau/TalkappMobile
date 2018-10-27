@@ -161,7 +161,7 @@ public class PracticeWordSetPresenterTest {
     public void onNextButtonClick() {
         // setup
         String word1 = "sdfsd";
-        String wordSetId = "sdfsdId";
+        int wordSetId = 3;
 
         // when
         when(interactor.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
@@ -191,7 +191,7 @@ public class PracticeWordSetPresenterTest {
     public void onCheckAnswerButtonClick() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setId("dsfs");
+        wordSet.setId(3);
         String answer = "sdfsd";
 
         Sentence sentence = new Sentence();
@@ -255,7 +255,7 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
 
-        String wordSetId = "wordSetId";
+        int wordSetId = 4;
 
         // when
         when(state.getWordSetId()).thenReturn(wordSetId);
@@ -271,7 +271,7 @@ public class PracticeWordSetPresenterTest {
         // setup
         Sentence sentence = new Sentence();
         String word = "word";
-        String wordSetId = "wordSetId";
+        int wordSetId = 3;
 
         // when
         when(state.getWordSetId()).thenReturn(wordSetId);
