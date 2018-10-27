@@ -53,6 +53,7 @@ public class LoginPresenter implements OnLoginListener {
     @Override
     public void onRegistrationFailed() {
         view.setEmailError("Already exists");
+        view.requestEmailFocus();
     }
 
     @Override
@@ -62,7 +63,7 @@ public class LoginPresenter implements OnLoginListener {
 
     @Override
     public void onRegistrationSucceed(String email, String password) {
-        interactor.signInButtonClick(email, password, this);
+        view.signInButtonClick();
     }
 
     @Override

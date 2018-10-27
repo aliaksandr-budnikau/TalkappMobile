@@ -17,4 +17,6 @@ public interface LoginView {
     void setPasswordError(String text);
 
     void requestEmailFocus();
+
+    void signInButtonClick();
 }

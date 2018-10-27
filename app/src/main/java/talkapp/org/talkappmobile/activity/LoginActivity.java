@@ -332,6 +332,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         });
     }
 
+    @Override
+    public void signInButtonClick() {
+        signIn();
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
