@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class LoginPresenterAndInteractorIntegTest {
     @Mock
-    private LoginView view;
+    private LoginActivityView view;
     private LoginInteractor interactor;
     @Mock
     private Context context;

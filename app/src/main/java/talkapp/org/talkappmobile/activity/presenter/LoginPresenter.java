@@ -5,11 +5,11 @@ import android.content.Context;
 import talkapp.org.talkappmobile.R;
 
 public class LoginPresenter implements OnLoginListener {
-    private final LoginView view;
+    private final LoginActivityView view;
     private final LoginInteractor interactor;
     private final Context context;
 
-    public LoginPresenter(Context context, LoginView view, LoginInteractor interactor) {
+    public LoginPresenter(Context context, LoginActivityView view, LoginInteractor interactor) {
         this.context = context;
         this.view = view;
         this.interactor = interactor;

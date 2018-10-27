@@ -37,7 +37,7 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
-import talkapp.org.talkappmobile.activity.presenter.LoginView;
+import talkapp.org.talkappmobile.activity.presenter.LoginActivityView;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 
@@ -46,7 +46,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>, LoginView {
+public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>, LoginActivityView {
     /**
      * Id to identity READ_CONTACTS permission request.
      */

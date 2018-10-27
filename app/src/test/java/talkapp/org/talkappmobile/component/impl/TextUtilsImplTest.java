@@ -8,6 +8,8 @@ import talkapp.org.talkappmobile.model.GrammarError;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.module.GameplayModule.ARTICLES;
 import static talkapp.org.talkappmobile.module.GameplayModule.LAST_SYMBOLS;
 import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
@@ -349,5 +351,33 @@ public class TextUtilsImplTest {
                 " name for " + PLACEHOLDER + " that " + PLACEHOLDER, actual);
         assertEquals(intervalsOrigin, intervals);
         assertEquals(textOriginal, text);
+    }
+
+    @Test
+    public void validateEmail() {
+        TextUtilsImpl utils = new TextUtilsImpl("", new String[]{}, new String[]{}, new String[]{});
+
+        assertTrue(utils.validateEmail("sasha-ne@tut.by"));
+        assertTrue(utils.validateEmail("sasha-ne@gmail.com"));
+        assertFalse(utils.validateEmail("sasha-negmail.com"));
+        assertFalse(utils.validateEmail("sasha-ne@gmail"));
+        assertFalse(utils.validateEmail("sasha-ne@@gmail.com"));
+        assertFalse(utils.validateEmail("s"));
+        assertFalse(utils.validateEmail(""));
+    }
+
+    @Test
+    public void validatePassword() {
+        TextUtilsImpl utils = new TextUtilsImpl("", new String[]{}, new String[]{}, new String[]{});
+
+        assertFalse(utils.validatePassword("password"));
+        assertFalse(utils.validatePassword("passwor"));
+        assertFalse(utils.validatePassword("s"));
+        assertFalse(utils.validatePassword(""));
+        assertTrue(utils.validatePassword("password0A"));
+        assertTrue(utils.validatePassword("Password0"));
+        assertFalse(utils.validatePassword("sasha-negmail.com"));
+        assertFalse(utils.validatePassword("PASSWORD0"));
+        assertFalse(utils.validatePassword("password0"));
     }
 }

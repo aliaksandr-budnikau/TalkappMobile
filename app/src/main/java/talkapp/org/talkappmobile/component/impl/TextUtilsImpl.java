@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -17,6 +18,16 @@ import talkapp.org.talkappmobile.model.GrammarError;
  * @author Budnikau Aliaksandr
  */
 public class TextUtilsImpl implements TextUtils {
+
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_PASSWORD_ADDRESS_REGEX = Pattern.compile(
+            "^" + // start-of-string
+                    "(?=.*[0-9])" + // a digit must occur at least once
+                    "(?=.*[a-z])" + // a lower case letter must occur at least once
+                    "(?=.*[A-Z])" + // an upper case letter must occur at least once
+                    ".{8,}" + // anything, at least eight places though
+                    "$" // end-of-string
+    );
 
     private final Set<String> words;
     private final Set<String> lastSymbols;
@@ -28,6 +39,14 @@ public class TextUtilsImpl implements TextUtils {
         this.words = new HashSet<>(Arrays.asList(words));
         this.lastSymbols = new HashSet<>(Arrays.asList(lastSymbols));
         this.punctuationMarks = new HashSet<>(Arrays.asList(punctuationMarks));
+    }
+
+    public boolean validateEmail(String email) {
+        return VALID_EMAIL_ADDRESS_REGEX.matcher(email).find();
+    }
+
+    public boolean validatePassword(String password) {
+        return VALID_PASSWORD_ADDRESS_REGEX.matcher(password).find();
     }
 
     @Override
