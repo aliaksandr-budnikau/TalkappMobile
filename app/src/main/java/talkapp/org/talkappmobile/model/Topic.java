@@ -3,14 +3,14 @@ package talkapp.org.talkappmobile.model;
 import java.util.Objects;
 
 public class Topic {
-    private String id;
+    private int id;
     private String name;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

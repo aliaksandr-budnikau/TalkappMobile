@@ -59,9 +59,9 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         wordSetsListView.setOnItemLongClickListener(this);
 
         Bundle arguments = AllWordSetsFragment.this.getArguments();
-        String topicId = null;
+        int topicId = -1;
         if (arguments != null) {
-            topicId = (String) arguments.get(TOPIC_ID_MAPPING);
+            topicId = arguments.getInt(TOPIC_ID_MAPPING);
         }
 
         presenter = new AllWordSetsPresenter(topicId, this, interactor);

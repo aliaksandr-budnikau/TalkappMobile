@@ -21,7 +21,7 @@ public class AllWordSetsPresenterTest {
     @Test
     public void constructor_NPEInteractorNull() {
         // setup
-        String topicId = "topic";
+        int topicId = 1;
 
         // when
         AllWordSetsPresenter presenter = new AllWordSetsPresenter(topicId, view, interactor);

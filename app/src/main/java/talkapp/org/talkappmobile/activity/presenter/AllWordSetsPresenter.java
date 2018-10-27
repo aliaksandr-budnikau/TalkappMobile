@@ -6,11 +6,11 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class AllWordSetsPresenter implements OnAllWordSetsListener {
-    private final String topicId;
+    private final int topicId;
     private final AllWordSetsView view;
     private final AllWordSetsInteractor interactor;
 
-    public AllWordSetsPresenter(String topicId, AllWordSetsView view, AllWordSetsInteractor interactor) {
+    public AllWordSetsPresenter(int topicId, AllWordSetsView view, AllWordSetsInteractor interactor) {
         this.topicId = topicId;
         this.view = view;
         this.interactor = interactor;

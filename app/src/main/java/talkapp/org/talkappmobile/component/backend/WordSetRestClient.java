@@ -18,5 +18,5 @@ public interface WordSetRestClient {
     Call<List<WordSet>> findAll(@HeaderMap Map<String, String> headers);
 
     @GET("/wordset")
-    Call<List<WordSet>> findByTopicId(@Query("topicId") String topicId, @HeaderMap Map<String, String> headers);
+    Call<List<WordSet>> findByTopicId(@Query("topicId") int topicId, @HeaderMap Map<String, String> headers);
 }

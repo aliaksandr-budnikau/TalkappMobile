@@ -66,7 +66,7 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
         FragmentManager fragmentManager = getFragmentManager();
         AllWordSetsFragment fragment = new AllWordSetsFragment();
         Bundle args = new Bundle();
-        args.putString(TOPIC_ID_MAPPING, topic.getId());
+        args.putInt(TOPIC_ID_MAPPING, topic.getId());
         fragment.setArguments(args);
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }

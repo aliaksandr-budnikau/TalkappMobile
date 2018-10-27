@@ -147,7 +147,7 @@ public class BackendServerImpl implements BackendServer {
     }
 
     @Override
-    public List<WordSet> findWordSetsByTopicId(String topicId) {
+    public List<WordSet> findWordSetsByTopicId(int topicId) {
         Call<List<WordSet>> call = wordSetRestClient.findByTopicId(topicId, authSign);
         List<WordSet> body = execute(call).body();
         if (body == null) {

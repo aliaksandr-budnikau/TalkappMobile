@@ -21,9 +21,9 @@ public class AllWordSetsInteractor {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public void initializeWordSets(String topicId, OnAllWordSetsListener listener) {
+    public void initializeWordSets(int topicId, OnAllWordSetsListener listener) {
         List<WordSet> wordSets;
-        if (topicId == null) {
+        if (topicId == -1) {
             wordSets = server.findAllWordSets();
         } else {
             wordSets = server.findWordSetsByTopicId(topicId);
