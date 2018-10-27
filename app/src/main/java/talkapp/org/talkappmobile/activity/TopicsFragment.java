@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,36 +14,32 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentInteractor;
+import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
+import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentView;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_ID_MAPPING;
 
-public class TopicsFragment extends Fragment implements AdapterView.OnItemClickListener {
-    @Inject
-    BackendServer server;
+public class TopicsFragment extends Fragment implements AdapterView.OnItemClickListener, TopicsFragmentView {
     @Inject
     AdaptersFactory adaptersFactory;
-    private ListView topicsListView;
+    @Inject
+    TopicsFragmentInteractor interactor;
+    @Inject
+    Executor executor;
+    @Inject
+    Handler uiEventHandler;
     private ArrayAdapter<Topic> adapter;
 
-    private AsyncTask<String, Object, List<Topic>> loadingTopics = new AsyncTask<String, Object, List<Topic>>() {
-        @Override
-        protected List<Topic> doInBackground(String... params) {
-            return server.findAllTopics();
-        }
-
-        @Override
-        protected void onPostExecute(List<Topic> topics) {
-            adapter.addAll(topics);
-        }
-    };
+    private TopicsFragmentPresenter presenter;
 
     @Nullable
     @Override
@@ -52,22 +49,45 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
 
         adapter = adaptersFactory.createTopicListAdapter(this.getActivity());
 
-        topicsListView = view.findViewById(R.id.topicsListView);
+        ListView topicsListView = view.findViewById(R.id.topicsListView);
         topicsListView.setAdapter(adapter);
         topicsListView.setOnItemClickListener(this);
 
-        loadingTopics.execute();
+        presenter = new TopicsFragmentPresenter(this, interactor);
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                presenter.initialize();
+                return null;
+            }
+        }.executeOnExecutor(executor);
         return view;
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Topic topic = adapter.getItem(position);
-        FragmentManager fragmentManager = getFragmentManager();
-        AllWordSetsFragment fragment = new AllWordSetsFragment();
+        presenter.onTopicClick(topic);
+    }
+
+    @Override
+    public void setTopics(final List<Topic> topics) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.addAll(topics);
+            }
+        });
+    }
+
+    @Override
+    public void openTopicWordSetsFragment(Topic topic) {
         Bundle args = new Bundle();
         args.putInt(TOPIC_ID_MAPPING, topic.getId());
+        AllWordSetsFragment fragment = new AllWordSetsFragment();
         fragment.setArguments(args);
+        FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 }

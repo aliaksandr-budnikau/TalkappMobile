@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
@@ -122,6 +123,12 @@ public class GameplayModule {
     @Singleton
     public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
         return new PracticeWordSetVocabularyInteractor();
+    }
+
+    @Provides
+    @Singleton
+    public TopicsFragmentInteractor provideTopicsFragmentInteractor(BackendServer server) {
+        return new TopicsFragmentInteractor(server);
     }
 
     @Provides
