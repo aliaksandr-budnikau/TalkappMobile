@@ -12,6 +12,8 @@ import org.powermock.reflect.Whitebox;
 import java.util.Random;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
+import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.model.LoginCredentials;

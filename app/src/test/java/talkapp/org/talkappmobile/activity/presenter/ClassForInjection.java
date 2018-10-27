@@ -4,6 +4,8 @@ import android.content.Context;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;

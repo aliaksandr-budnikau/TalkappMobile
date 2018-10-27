@@ -6,6 +6,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
+import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

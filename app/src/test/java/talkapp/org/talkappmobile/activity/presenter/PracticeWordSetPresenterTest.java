@@ -13,6 +13,7 @@ import org.powermock.reflect.Whitebox;
 import java.util.HashMap;
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;

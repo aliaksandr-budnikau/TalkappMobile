@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity.presenter;
+package talkapp.org.talkappmobile.activity.listener;
 
 public interface OnLoginListener {
     void onLoginFailed();

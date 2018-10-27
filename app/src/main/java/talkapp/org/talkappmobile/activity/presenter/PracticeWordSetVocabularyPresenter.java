@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;

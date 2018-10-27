@@ -35,9 +35,9 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
+import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
-import talkapp.org.talkappmobile.activity.presenter.LoginActivityView;
+import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 

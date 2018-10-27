@@ -20,9 +20,9 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentInteractor;
+import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
-import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentView;
+import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 

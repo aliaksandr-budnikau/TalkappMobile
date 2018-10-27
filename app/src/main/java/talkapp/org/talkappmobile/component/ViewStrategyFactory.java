@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.component;
 
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetView;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
 

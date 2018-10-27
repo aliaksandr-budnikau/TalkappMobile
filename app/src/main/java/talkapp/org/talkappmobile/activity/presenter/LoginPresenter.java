@@ -3,6 +3,9 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnLoginListener;
+import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 
 public class LoginPresenter implements OnLoginListener {
     private final LoginActivityView view;

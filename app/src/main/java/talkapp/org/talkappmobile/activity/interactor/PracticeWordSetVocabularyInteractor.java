@@ -1,9 +1,10 @@
-package talkapp.org.talkappmobile.activity.presenter;
+package talkapp.org.talkappmobile.activity.interactor;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.config.DIContextUtils;

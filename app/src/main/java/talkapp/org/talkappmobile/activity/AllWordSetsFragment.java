@@ -23,9 +23,9 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
-import talkapp.org.talkappmobile.activity.presenter.AllWordSetsView;
+import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;

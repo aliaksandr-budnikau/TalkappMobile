@@ -6,11 +6,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.activity.presenter.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.presenter.LoginInteractor;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyInteractor;
-import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentInteractor;
+import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;

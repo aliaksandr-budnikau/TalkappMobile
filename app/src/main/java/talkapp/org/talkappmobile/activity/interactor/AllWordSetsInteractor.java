@@ -1,7 +1,8 @@
-package talkapp.org.talkappmobile.activity.presenter;
+package talkapp.org.talkappmobile.activity.interactor;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;

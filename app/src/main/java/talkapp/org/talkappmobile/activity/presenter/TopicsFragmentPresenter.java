@@ -2,6 +2,9 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnTopicsFragmentPresenterListener;
+import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.model.Topic;
 
 public class TopicsFragmentPresenter implements OnTopicsFragmentPresenterListener {

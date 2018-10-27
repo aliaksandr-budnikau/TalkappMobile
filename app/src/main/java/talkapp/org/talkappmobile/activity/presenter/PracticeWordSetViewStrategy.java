@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.GrammarError;

@@ -22,9 +22,9 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetView;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;

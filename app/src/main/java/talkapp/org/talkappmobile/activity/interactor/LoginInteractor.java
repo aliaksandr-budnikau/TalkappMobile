@@ -1,7 +1,8 @@
-package talkapp.org.talkappmobile.activity.presenter;
+package talkapp.org.talkappmobile.activity.interactor;
 
 import android.util.Log;
 
+import talkapp.org.talkappmobile.activity.listener.OnLoginListener;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.backend.BackendServer;

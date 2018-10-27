@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity.presenter;
+package talkapp.org.talkappmobile.activity.view;
 
 import java.util.List;
 
