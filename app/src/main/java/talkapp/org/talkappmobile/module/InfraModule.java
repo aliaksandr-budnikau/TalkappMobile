@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.module;
 
+import android.content.Context;
 import android.os.Handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.activity.view.impl.ExceptionHandlerViewImpl;
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.impl.InfraComponentsFactoryImpl;
@@ -43,5 +46,11 @@ public class InfraModule {
     @Singleton
     public ObjectMapper provideObjectMapper() {
         return new ObjectMapper();
+    }
+
+    @Provides
+    @Singleton
+    public ExceptionHandlerView provideExceptionHandlerView(Context context, Handler uiEventHandler) {
+        return new ExceptionHandlerViewImpl(context, uiEventHandler);
     }
 }
