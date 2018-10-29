@@ -3,14 +3,17 @@ package talkapp.org.talkappmobile.activity.presenter;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
+import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.module.AndroidModule;
@@ -47,8 +50,14 @@ public class ClassForInjection {
     PracticeWordSetVocabularyInteractor practiceWordSetVocabularyInteractor;
     @Inject
     Speaker speaker;
+    @Inject
+    InfraComponentsFactory componentsFactory;
+    @Inject
+    ExceptionHandlerInteractor exceptionHandlerInteractor;
+    @Inject
+    TopicRestClient topicRestClient;
 
-    public ClassForInjection() {
+    public ClassForInjection(BackEndServiceModule backEndServiceModule) {
         TestDIContext context = DaggerTestDIContext.builder()
                 .databaseModule(new TestDatabaseModule())
                 .androidModule(new AndroidModule(new TalkappMobileApplication()))
@@ -58,11 +67,15 @@ public class ClassForInjection {
                 .dataModule(new TestDataModule())
                 .infraModule(new InfraModule())
                 .languageModule(new LanguageModule())
-                .backEndServiceModule(new BackEndServiceModule())
+                .backEndServiceModule(backEndServiceModule)
                 .itemsListModule(new ItemsListModule())
                 .build();
 
         context.inject(this);
+    }
+
+    public ClassForInjection() {
+        this(new BackEndServiceModule());
     }
 
     public BackendServer getServer() {
@@ -103,5 +116,17 @@ public class ClassForInjection {
 
     public Speaker getSpeaker() {
         return speaker;
+    }
+
+    public InfraComponentsFactory getComponentsFactory() {
+        return componentsFactory;
+    }
+
+    public ExceptionHandlerInteractor getExceptionHandlerInteractor() {
+        return exceptionHandlerInteractor;
+    }
+
+    public TopicRestClient getTopicRestClient() {
+        return topicRestClient;
     }
 }

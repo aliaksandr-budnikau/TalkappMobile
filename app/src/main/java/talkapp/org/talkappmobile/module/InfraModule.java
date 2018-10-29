@@ -50,7 +50,7 @@ public class InfraModule {
 
     @Provides
     @Singleton
-    public ExceptionHandlerView provideExceptionHandlerView(Context context, Handler uiEventHandler) {
-        return new ExceptionHandlerViewImpl(context, uiEventHandler);
+    public ExceptionHandlerView provideExceptionHandlerView(Context context, Handler uiEventHandler, Logger logger) {
+        return new ExceptionHandlerViewImpl(context, uiEventHandler, logger);
     }
 }

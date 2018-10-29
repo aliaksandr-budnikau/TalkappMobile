@@ -15,7 +15,7 @@ public class AuthorizationInterceptor implements Interceptor {
         if (pathSegments == null || pathSegments.isEmpty() || pathSegments.get(0).equals("login")) {
             return mainResponse;
         }
-        if (mainResponse.code() == 401) {
+        if (mainResponse.code() == 401 || mainResponse.code() == 403) {
             throw new AuthorizationException("Authorization is required!");
         }
         return mainResponse;
