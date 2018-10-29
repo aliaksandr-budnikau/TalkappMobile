@@ -134,8 +134,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public ExceptionHandlerInteractor provideExceptionHandlerInteractor() {
-        return new ExceptionHandlerInteractor();
+    public ExceptionHandlerInteractor provideExceptionHandlerInteractor(Logger logger) {
+        return new ExceptionHandlerInteractor(logger);
     }
 
     @Provides
