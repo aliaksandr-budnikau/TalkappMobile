@@ -6,4 +6,6 @@ public interface ExceptionHandlerView {
     void openLoginActivity();
 
     void openCrashActivity(Throwable e, String errorReport);
+
+    void killCurrentActivity();
 }

@@ -48,4 +48,10 @@ public class ExceptionHandlerViewImpl implements ExceptionHandlerView {
         intent.putExtra(STACK_TRACE, errorReport);
         context.startActivity(intent);
     }
+
+    @Override
+    public void killCurrentActivity() {
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(10);
+    }
 }

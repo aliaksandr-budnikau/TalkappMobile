@@ -28,6 +28,7 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     @Override
     public void onUnauthorizedAccess() {
         view.openLoginActivity();
+        view.killCurrentActivity();
     }
 
     @Override
@@ -44,6 +45,7 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
                 "Release: " + Build.VERSION.RELEASE + LINE_SEPARATOR +
                 "Incremental: " + Build.VERSION.INCREMENTAL + LINE_SEPARATOR;
         view.openCrashActivity(e, errorReport);
+        view.killCurrentActivity();
     }
 
     public void handleAuthorizationException(Thread t, Throwable e, Throwable cause) {

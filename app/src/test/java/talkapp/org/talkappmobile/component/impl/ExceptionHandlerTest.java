@@ -59,6 +59,7 @@ public class ExceptionHandlerTest {
             server.findAllTopics();
         } catch (InternetConnectionLostException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
+            verify(view, times(0)).killCurrentActivity();
             verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
             verify(view, times(0)).openLoginActivity();
             verify(view).showToastMessage("Internet connection was lost");
@@ -80,6 +81,7 @@ public class ExceptionHandlerTest {
             server.findAllTopics();
         } catch (InternetConnectionLostException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
+            verify(view, times(0)).killCurrentActivity();
             verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
             verify(view, times(0)).openLoginActivity();
             verify(view).showToastMessage("Internet connection was lost");
@@ -103,6 +105,7 @@ public class ExceptionHandlerTest {
         } catch (RuntimeException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
             verify(view).openCrashActivity(any(Throwable.class), anyString());
+            verify(view).killCurrentActivity();
             verify(view, times(0)).openLoginActivity();
             verify(view, times(0)).showToastMessage("Internet connection was lost");
             return;
@@ -122,6 +125,7 @@ public class ExceptionHandlerTest {
             verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
             verify(view, times(0)).showToastMessage("Internet connection was lost");
             verify(view).openLoginActivity();
+            verify(view).killCurrentActivity();
             return;
         }
         fail();
