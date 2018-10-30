@@ -34,19 +34,19 @@ public class ExceptionHandlerViewImpl implements ExceptionHandlerView {
     }
 
     @Override
-    public void openLoginActivity() {
-        Intent intent = new Intent(context, LoginActivity.class);
-        context.startActivity(intent);
+    public void openLoginActivity(Context currentActivityContext) {
+        Intent intent = new Intent(currentActivityContext, LoginActivity.class);
+        currentActivityContext.startActivity(intent);
     }
 
     @Override
-    public void openCrashActivity(Throwable e, String errorReport) {
+    public void openCrashActivity(Context currentActivityContext, Throwable e, String errorReport) {
         StringWriter stackTrace = new StringWriter();
         e.printStackTrace();
         e.printStackTrace(new PrintWriter(stackTrace));
-        Intent intent = new Intent(context, CrashActivity.class);
+        Intent intent = new Intent(currentActivityContext, CrashActivity.class);
         intent.putExtra(STACK_TRACE, errorReport);
-        context.startActivity(intent);
+        currentActivityContext.startActivity(intent);
     }
 
     @Override

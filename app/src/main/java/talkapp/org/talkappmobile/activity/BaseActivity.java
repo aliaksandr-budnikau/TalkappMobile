@@ -23,6 +23,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DIContextUtils.get().inject(this);
-        Thread.setDefaultUncaughtExceptionHandler(componentsFactory.createExceptionHandler(exceptionHandlerView, interactor));
+        Thread.setDefaultUncaughtExceptionHandler(componentsFactory.createExceptionHandler(this, exceptionHandlerView, interactor));
     }
 }

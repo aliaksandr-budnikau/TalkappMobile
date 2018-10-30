@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
 import android.os.Build;
 
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
@@ -7,11 +8,12 @@ import talkapp.org.talkappmobile.activity.listener.ExceptionHandlerListner;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 
 public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
-    private final String LINE_SEPARATOR = "\n";
     private final ExceptionHandlerInteractor interactor;
     private final ExceptionHandlerView view;
+    private final Context currentActivityContext;
 
-    public ExceptionHandlerPresenter(ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
+    public ExceptionHandlerPresenter(Context currentActivityContext, ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
+        this.currentActivityContext = currentActivityContext;
         this.view = view;
         this.interactor = interactor;
     }
@@ -27,24 +29,25 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
 
     @Override
     public void onUnauthorizedAccess() {
-        view.openLoginActivity();
+        view.openLoginActivity(currentActivityContext);
         view.killCurrentActivity();
     }
 
     @Override
     public void onUncaughtException(Throwable e) {
+        String lineSeparator = "\n";
         String errorReport = "************ CAUSE OF ERROR ************\n\n" +
                 "\n************ DEVICE INFORMATION ***********\n" +
-                "Brand: " + Build.BRAND + LINE_SEPARATOR +
-                "Device: " + Build.DEVICE + LINE_SEPARATOR +
-                "Model: " + Build.MODEL + LINE_SEPARATOR +
-                "Id: " + Build.ID + LINE_SEPARATOR +
-                "Product: " + Build.PRODUCT + LINE_SEPARATOR +
+                "Brand: " + Build.BRAND + lineSeparator +
+                "Device: " + Build.DEVICE + lineSeparator +
+                "Model: " + Build.MODEL + lineSeparator +
+                "Id: " + Build.ID + lineSeparator +
+                "Product: " + Build.PRODUCT + lineSeparator +
                 "\n************ FIRMWARE ************\n" +
-                "SDK: " + Build.VERSION.SDK + LINE_SEPARATOR +
-                "Release: " + Build.VERSION.RELEASE + LINE_SEPARATOR +
-                "Incremental: " + Build.VERSION.INCREMENTAL + LINE_SEPARATOR;
-        view.openCrashActivity(e, errorReport);
+                "SDK: " + Build.VERSION.SDK + lineSeparator +
+                "Release: " + Build.VERSION.RELEASE + lineSeparator +
+                "Incremental: " + Build.VERSION.INCREMENTAL + lineSeparator;
+        view.openCrashActivity(currentActivityContext, e, errorReport);
         view.killCurrentActivity();
     }
 

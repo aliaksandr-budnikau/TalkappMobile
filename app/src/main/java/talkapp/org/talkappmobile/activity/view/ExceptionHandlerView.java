@@ -1,11 +1,13 @@
 package talkapp.org.talkappmobile.activity.view;
 
+import android.content.Context;
+
 public interface ExceptionHandlerView {
     void showToastMessage(String text);
 
-    void openLoginActivity();
+    void openLoginActivity(Context currentActivityContext);
 
-    void openCrashActivity(Throwable e, String errorReport);
+    void openCrashActivity(Context currentActivityContext, Throwable e, String errorReport);
 
     void killCurrentActivity();
 }

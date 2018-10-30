@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import android.content.Context;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
@@ -12,8 +14,8 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
 
     private final ExceptionHandlerPresenter presenter;
 
-    public ExceptionHandler(ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
-        presenter = new ExceptionHandlerPresenter(view, interactor);
+    public ExceptionHandler(Context currentActivityContext, ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
+        presenter = new ExceptionHandlerPresenter(currentActivityContext, view, interactor);
     }
 
     @Override
