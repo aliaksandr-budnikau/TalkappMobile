@@ -41,9 +41,6 @@ public class ExceptionHandlerViewImpl implements ExceptionHandlerView {
 
     @Override
     public void openCrashActivity(Context currentActivityContext, Throwable e, String errorReport) {
-        StringWriter stackTrace = new StringWriter();
-        e.printStackTrace();
-        e.printStackTrace(new PrintWriter(stackTrace));
         Intent intent = new Intent(currentActivityContext, CrashActivity.class);
         intent.putExtra(STACK_TRACE, errorReport);
         currentActivityContext.startActivity(intent);

@@ -21,7 +21,7 @@ public class ExceptionHandlerInteractor {
     }
 
     public void handleUncaughtException(ExceptionHandlerListner listner, Throwable e) {
-        logger.e(TAG, e.getMessage(), e);
+        logger.e(TAG, e, e.getMessage());
         listner.onUncaughtException(e);
     }
 }

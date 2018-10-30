@@ -3,6 +3,9 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 import android.os.Build;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.listener.ExceptionHandlerListner;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
@@ -36,7 +39,9 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     @Override
     public void onUncaughtException(Throwable e) {
         String lineSeparator = "\n";
-        String errorReport = "************ CAUSE OF ERROR ************\n\n" +
+        StringWriter stackTrace = new StringWriter();
+        e.printStackTrace(new PrintWriter(stackTrace));
+        String errorReport = "************ CAUSE OF ERROR ************\n\n" + stackTrace.toString() +
                 "\n************ DEVICE INFORMATION ***********\n" +
                 "Brand: " + Build.BRAND + lineSeparator +
                 "Device: " + Build.DEVICE + lineSeparator +
