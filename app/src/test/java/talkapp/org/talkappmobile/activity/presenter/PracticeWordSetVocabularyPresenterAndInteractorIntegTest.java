@@ -48,7 +48,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
         List<String> words = asList("age", "anniversary", "birth");
 
-        int id = 1;
+        int id = -1;
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setWords(words);
