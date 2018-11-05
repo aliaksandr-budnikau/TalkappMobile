@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -32,6 +34,8 @@ import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
  */
 @Module
 public class BackEndServiceModule {
+
+    public static final int TIMEOUT = 10;
 
     @Provides
     @Singleton
@@ -96,7 +100,11 @@ public class BackEndServiceModule {
     @Provides
     @Singleton
     public OkHttpClient provideOkHttpClient(AuthorizationInterceptor authorizationInterceptor) {
-        return new OkHttpClient().newBuilder().addInterceptor(authorizationInterceptor).build();
+        return new OkHttpClient().newBuilder()
+                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(authorizationInterceptor).build();
     }
 
     @Provides
