@@ -2,11 +2,11 @@ package talkapp.org.talkappmobile;
 
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -26,109 +26,20 @@ import static junit.framework.Assert.fail;
 public class StressServerTest extends PresenterAndInteractorIntegTest implements Runnable {
 
     public static final Random RANDOM = new Random();
-    private Set<String> badWords = new HashSet<>(asList(
-            "camerawoman",
-            "waterpark",
-            "backpacking",
-            "seaquake",
-            "pinata",
-            "starlet",
-            "storyline",
-            "frisbee",
-            "petrol",
-            "hardball",
-            "ecoterrorism",
-            "goodie",
-            "biodiversity",
-            "ecotourism",
-            "catalytic",
-            "waterski",
-            "waterspout",
-            "horse-trading",
-            "subplot",
-            "photoelectric",
-            "floodwater",
-            "actor-manager",
-            "sundress",
-            "july",
-            "voice-over",
-            "wingding",
-            "aftershock",
-            "AC",
-            "superhero",
-            "cameo",
-            "conservancy",
-            "cameo",
-            "conservationist",
-            "magnitude",
-            "heart-throb",
-            "leverage",
-            "biofuel",
-            "tidal",
-            "stuntman",
-            "epicentre",
-            "tidal",
-            "matinee",
-            "environmentally",
-            "DC",
-            "temblor",
-            "smog",
-            "Gaia",
-            "climatology",
-            "breeder",
-            "biodegradable",
-            "environmental",
-            "sunhat",
-            "backstory",
-            "stuntwoman",
-            "sulphur",
-            "film-goer",
-            "camerawork",
-            "megastar",
-            "baddy",
-            "low-impact",
-            "biodegradable",
-            "fictionalize",
-            "cinematography",
-            "unleaded",
-            "swimsuit",
-            "outdoor",
-            "popsicle",
-            "usherette",
-            "Hollywood",
-            "cupcake",
-            "favors",
-            "greenwash",
-            "biohazard",
-            "reef",
-            "toy",
-            "refinery",
-            "gaffer",
-            "rainforest",
-            "particulate",
-            "CFC",
-            "non-biodegradable",
-            "cataclysm",
-            "feature-length",
-            "airlift",
-            "eco-friendly",
-            "windstorm",
-            "june",
-            "zoris",
-            "leach",
-            "miscast",
-            "plume",
-            "colorize",
-            "sandcastle"));
+    private Set<String> badWords = new ConcurrentSkipListSet<>();
 
     //@Test
     public void stress() throws InterruptedException {
         LinkedList<Thread> threads = new LinkedList<>();
-        for (int i = 0; i < 1400; i++) {
+        for (int i = 0; i < 14000; i++) {
             Thread thread = new Thread(this);
             threads.add(thread);
             Thread.sleep(1000);
             thread.start();
+            for (String word : badWords) {
+                System.out.print("\"" + word + "\", ");
+            }
+            System.out.println();
         }
         long timeMillis = System.currentTimeMillis();
         for (Thread thread : threads) {
@@ -203,7 +114,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
                 }
                 List<Sentence> sentences = server.findSentencesByWords(word, 6);
                 if (sentences.isEmpty()) {
-                    System.out.println("Sentences for word '" + word + "' were not found.");
+                    badWords.add(word);
                     fail();
                 }
                 Sentence sentence = sentences.get(RANDOM.nextInt(sentences.size()));
