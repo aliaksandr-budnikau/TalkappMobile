@@ -124,19 +124,26 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onNextButtonStart() {
+        view.setEnableRightAnswerTextView(false);
+        view.setEnablePronounceRightAnswerButton(false);
         view.setEnableNextButton(false);
     }
 
     public void onNextButtonFinish() {
+        view.setEnableRightAnswerTextView(true);
+        view.setEnablePronounceRightAnswerButton(true);
         view.setEnableNextButton(true);
     }
 
     public void onCheckAnswerStart() {
+        view.setEnableRightAnswerTextView(false);
+        view.setEnablePronounceRightAnswerButton(false);
         view.setEnableCheckButton(false);
     }
 
     public void onCheckAnswerFinish() {
+        view.setEnableRightAnswerTextView(true);
+        view.setEnablePronounceRightAnswerButton(true);
         view.setEnableCheckButton(true);
-
     }
 }

@@ -423,4 +423,14 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             }
         });
     }
+
+    @Override
+    public void setEnableRightAnswerTextView(final boolean value) {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                rightAnswer.setEnabled(value);
+            }
+        });
+    }
 }

@@ -41,4 +41,6 @@ public interface PracticeWordSetView {
     void showSpellingOrGrammarErrorPanel(String errorMessage);
 
     void hideSpellingOrGrammarErrorPanel();
+
+    void setEnableRightAnswerTextView(boolean value);
 }
