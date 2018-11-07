@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -20,13 +21,13 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-import static java.util.Arrays.asList;
 import static junit.framework.Assert.fail;
 
 public class StressServerTest extends PresenterAndInteractorIntegTest implements Runnable {
 
     public static final Random RANDOM = new Random();
     private Set<String> badWords = new ConcurrentSkipListSet<>();
+    private AtomicInteger numberThreadsInWork = new AtomicInteger();
 
     //@Test
     public void stress() throws InterruptedException {
@@ -34,7 +35,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
         for (int i = 0; i < 14000; i++) {
             Thread thread = new Thread(this);
             threads.add(thread);
-            Thread.sleep(1000);
+            Thread.sleep(30);
             thread.start();
             for (String word : badWords) {
                 System.out.print("\"" + word + "\", ");
@@ -50,6 +51,15 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
 
     @Override
     public void run() {
+        try {
+            System.out.println(numberThreadsInWork.incrementAndGet());
+            doActivity();
+        } finally {
+            System.out.println(numberThreadsInWork.decrementAndGet());
+        }
+    }
+
+    private void doActivity() {
         BackendServer server = getClassForInjection().getServer();
         String email = "sasha-ne@tut.by" + RANDOM.nextInt();
         String password = "password0";
