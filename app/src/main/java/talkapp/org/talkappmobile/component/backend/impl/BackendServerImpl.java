@@ -3,8 +3,8 @@ package talkapp.org.talkappmobile.component.backend.impl;
 import android.content.Context;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class BackendServerImpl implements BackendServer {
     private <T> Response<T> execute(Call<T> call) {
         try {
             return call.execute();
-        } catch (ConnectException | SocketTimeoutException e) {
+        } catch (SocketException | SocketTimeoutException e) {
             logger.e(TAG, e, e.getMessage());
             throw new InternetConnectionLostException("Internet connection was lost");
         } catch (IOException e) {
