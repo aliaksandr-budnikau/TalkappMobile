@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.os.AsyncTask;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
+import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -18,8 +21,10 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -33,12 +38,14 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
     private ViewStrategyFactory viewStrategyFactory;
+    private Speaker speaker;
 
     @Before
     public void setup() {
         viewStrategyFactory = getClassForInjection().getViewStrategyFactory();
         interactor = getClassForInjection().getPracticeWordSetInteractor();
         exerciseRepository = getClassForInjection().getExerciseRepository();
+        speaker = getClassForInjection().getSpeaker();
     }
 
     private void createPresenter(PracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
@@ -720,6 +727,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.checkAnswerButtonClick(sentence.getText());
 
         // can fail here
+        when(speaker.speak(sentence.getText())).thenReturn(mock(AsyncTask.class));
         presenter.pronounceRightAnswerButtonClick();
         // and here
         presenter.rightAnswerTouched();

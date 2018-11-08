@@ -164,7 +164,7 @@ public class PracticeWordSetPresenterTest {
         int wordSetId = 3;
 
         // when
-        when(interactor.peekByWordSetIdAnyWord(wordSetId)).thenReturn(word1);
+        when(interactor.peekAnyNewWordByWordSetId(wordSetId)).thenReturn(word1);
         when(state.getWordSetId()).thenReturn(wordSetId);
         presenter.nextButtonClick();
 

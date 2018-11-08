@@ -112,7 +112,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void nextButtonClick() {
         try {
             viewStrategy.onNextButtonStart();
-            String word = interactor.peekByWordSetIdAnyWord(state.getWordSetId());
+            String word = interactor.peekAnyNewWordByWordSetId(state.getWordSetId());
             interactor.initialiseSentence(word, state.getWordSetId(), this);
         } finally {
             viewStrategy.onNextButtonFinish();

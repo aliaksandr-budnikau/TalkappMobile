@@ -37,6 +37,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -238,7 +239,6 @@ public class PracticeWordSetInteractorTest {
         // then
         verify(listener).onUpdateProgress(experience);
         verify(listener).onRightAnswer(sentence);
-        verify(exerciseRepository).putOffCurrentWord(wordSet.getId());
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAccuracyTooLowError();
@@ -292,7 +292,6 @@ public class PracticeWordSetInteractorTest {
         verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository).putOffCurrentWord(wordSet.getId());
         verify(exerciseRepository).moveCurrentWordToNextState(wordSet.getId());
     }
 
@@ -497,5 +496,20 @@ public class PracticeWordSetInteractorTest {
         verify(mediaPlayer).setDataSource(context, empty);
         verify(mediaPlayer).prepare();
         verify(mediaPlayer, times(0)).isPlaying();
+    }
+
+    @Test
+    public void peekAnyNewWordByWordSetId() {
+        // setup
+        int wordSetId = 5;
+        String value = "dsfs";
+
+        // when
+        when(exerciseRepository.peekByWordSetIdAnyWord(wordSetId)).thenReturn(value);
+        String actual = interactor.peekAnyNewWordByWordSetId(wordSetId);
+
+        // then
+        assertEquals(value, actual);
+        verify(exerciseRepository).putOffCurrentWord(wordSetId);
     }
 }

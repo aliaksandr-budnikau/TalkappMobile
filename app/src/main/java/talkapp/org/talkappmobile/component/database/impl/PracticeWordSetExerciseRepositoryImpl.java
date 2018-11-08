@@ -106,6 +106,9 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
     @Override
     public void putOffCurrentWord(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        if (isNotThereCurrentExercise(current)) {
+            return;
+        }
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setCurrent(false);
         exerciseDao.createNewOrUpdate(mapping);
@@ -117,5 +120,9 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setStatus(next(mapping.getStatus()));
         exerciseDao.createNewOrUpdate(mapping);
+    }
+
+    private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {
+        return current.isEmpty();
     }
 }

@@ -137,7 +137,6 @@ public class PracticeWordSetInteractor {
         listener.onUpdateProgress(exp);
 
         exerciseRepository.moveCurrentWordToNextState(wordSet.getId());
-        exerciseRepository.putOffCurrentWord(wordSet.getId());
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
             experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
@@ -185,7 +184,8 @@ public class PracticeWordSetInteractor {
         return exerciseRepository.getCurrentSentence(wordSetId);
     }
 
-    public String peekByWordSetIdAnyWord(int wordSetId) {
+    public String peekAnyNewWordByWordSetId(int wordSetId) {
+        exerciseRepository.putOffCurrentWord(wordSetId);
         return exerciseRepository.peekByWordSetIdAnyWord(wordSetId);
     }
 
