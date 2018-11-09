@@ -1,7 +1,11 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -24,9 +28,9 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -55,6 +59,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private Button pronounceRightAnswerButton;
     private LinearLayout spellingGrammarErrorsListView;
     private PracticeWordSetPresenter presenter;
+    private ProgressBar pleaseWaitProgressBar;
+    private View wordSetPractiseForm;
 
     private View.OnClickListener nextButtonListener = new View.OnClickListener() {
         @Override
@@ -164,6 +170,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         speakButton = inflate.findViewById(R.id.speakButton);
         playButton = inflate.findViewById(R.id.playButton);
         pronounceRightAnswerButton = inflate.findViewById(R.id.pronounceRightAnswerButton);
+        pleaseWaitProgressBar = inflate.findViewById(R.id.please_wait_progress_bar);
+        wordSetPractiseForm = inflate.findViewById(R.id.word_set_practise_form);
 
         nextButton.setOnClickListener(nextButtonListener);
         checkButton.setOnClickListener(checkAnswerButtonListener);
@@ -234,6 +242,26 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             @Override
             public void run() {
                 nextButton.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    public void showPleaseWaitProgressBar() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(true);
+            }
+        });
+    }
+
+    @Override
+    public void hidePleaseWaitProgressBar() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                showProgress(false);
             }
         });
     }
@@ -430,6 +458,35 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
             @Override
             public void run() {
                 rightAnswer.setEnabled(value);
+            }
+        });
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        wordSetPractiseForm.setVisibility(show ? View.GONE : View.VISIBLE);
+        wordSetPractiseForm.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                wordSetPractiseForm.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        pleaseWaitProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        pleaseWaitProgressBar.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                pleaseWaitProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
             }
         });
     }

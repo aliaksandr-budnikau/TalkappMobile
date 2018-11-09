@@ -6,6 +6,10 @@ public interface PracticeWordSetView {
 
     void hideNextButton();
 
+    void showPleaseWaitProgressBar();
+
+    void hidePleaseWaitProgressBar();
+
     void showCheckButton();
 
     void hideCheckButton();
