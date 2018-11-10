@@ -22,6 +22,8 @@ import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -36,6 +38,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     Handler uiEventHandler;
     @Inject
     PracticeWordSetVocabularyInteractor interactor;
+    @Inject
+    WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    private WaitingForProgressBarManager waitingForProgressBarManager;
 
     private ArrayAdapter<WordTranslation> adapter;
     private PracticeWordSetVocabularyPresenter presenter;
@@ -60,6 +66,9 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         wordSetsListView.setAdapter(adapter);
         wordSetsListView.setOnItemClickListener(this);
         WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
+
+        View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
         presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
 
@@ -92,5 +101,25 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WordTranslation translation = adapter.getItem(position);
         presenter.onPronounceWordButtonClick(translation);
+    }
+
+    @Override
+    public void onInitializeBeginning() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.showProgressBar();
+            }
+        });
+    }
+
+    @Override
+    public void onInitializeEnd() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.hideProgressBar();
+            }
+        });
     }
 }

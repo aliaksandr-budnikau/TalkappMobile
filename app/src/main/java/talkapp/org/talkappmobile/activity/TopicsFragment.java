@@ -23,6 +23,8 @@ import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 
@@ -37,6 +39,11 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
     Executor executor;
     @Inject
     Handler uiEventHandler;
+    @Inject
+    WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    private WaitingForProgressBarManager waitingForProgressBarManager;
+
     private ArrayAdapter<Topic> adapter;
 
     private TopicsFragmentPresenter presenter;
@@ -52,6 +59,9 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
         ListView topicsListView = view.findViewById(R.id.topicsListView);
         topicsListView.setAdapter(adapter);
         topicsListView.setOnItemClickListener(this);
+
+        View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, topicsListView);
 
         presenter = new TopicsFragmentPresenter(this, interactor);
 
@@ -89,5 +99,25 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
         fragment.setArguments(args);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
+
+    @Override
+    public void onInitializeBeginning() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.showProgressBar();
+            }
+        });
+    }
+
+    @Override
+    public void onInitializeEnd() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.hideProgressBar();
+            }
+        });
     }
 }

@@ -18,7 +18,12 @@ public class TopicsFragmentPresenter implements OnTopicsFragmentPresenterListene
 
 
     public void initialize() {
-        interactor.loadTopics(this);
+        try {
+            view.onInitializeBeginning();
+            interactor.loadTopics(this);
+        } finally {
+            view.onInitializeEnd();
+        }
     }
 
     public void onTopicClick(Topic topic) {

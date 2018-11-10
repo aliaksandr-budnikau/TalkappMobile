@@ -20,7 +20,12 @@ public class AllWordSetsPresenter implements OnAllWordSetsListener {
     }
 
     public void initialize() {
-        interactor.initializeWordSets(topicId, this);
+        try {
+            view.onInitializeBeginning();
+            interactor.initializeWordSets(topicId, this);
+        } finally {
+            view.onInitializeEnd();
+        }
     }
 
     @Override

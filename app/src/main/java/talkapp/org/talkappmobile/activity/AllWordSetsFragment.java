@@ -26,6 +26,8 @@ import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
 import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
 import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -41,7 +43,11 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     AllWordSetsInteractor interactor;
     @Inject
     Handler uiEventHandler;
-    private ListView wordSetsListView;
+    @Inject
+    WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    private WaitingForProgressBarManager waitingForProgressBarManager;
+
     private ArrayAdapter<WordSet> adapter;
     private AllWordSetsPresenter presenter;
 
@@ -53,7 +59,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
 
         adapter = adaptersFactory.createWordSetListAdapter(this.getActivity());
 
-        wordSetsListView = view.findViewById(R.id.wordSetsListView);
+        ListView wordSetsListView = view.findViewById(R.id.wordSetsListView);
         wordSetsListView.setAdapter(adapter);
         wordSetsListView.setOnItemClickListener(this);
         wordSetsListView.setOnItemLongClickListener(this);
@@ -63,6 +69,9 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         if (arguments != null) {
             topicId = arguments.getInt(TOPIC_ID_MAPPING);
         }
+
+        View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
         presenter = new AllWordSetsPresenter(topicId, this, interactor);
 
@@ -141,5 +150,25 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         startActivity(intent);
+    }
+
+    @Override
+    public void onInitializeBeginning() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.showProgressBar();
+            }
+        });
+    }
+
+    @Override
+    public void onInitializeEnd() {
+        uiEventHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                waitingForProgressBarManager.hideProgressBar();
+            }
+        });
     }
 }

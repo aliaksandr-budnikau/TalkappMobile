@@ -8,4 +8,8 @@ public interface TopicsFragmentView {
     void setTopics(List<Topic> topics);
 
     void openTopicWordSetsFragment(Topic topic);
+
+    void onInitializeBeginning();
+
+    void onInitializeEnd();
 }

@@ -6,4 +6,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface PracticeWordSetVocabularyView {
     void setWordSetVocabularyList(List<WordTranslation> wordTranslations);
+
+    void onInitializeBeginning();
+
+    void onInitializeEnd();
 }

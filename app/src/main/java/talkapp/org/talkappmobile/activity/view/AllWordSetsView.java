@@ -15,4 +15,8 @@ public interface AllWordSetsView {
     void onWordSetNotFinished(WordSet wordSet);
 
     void onItemLongClick(WordSet wordSet);
+
+    void onInitializeBeginning();
+
+    void onInitializeEnd();
 }
