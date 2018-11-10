@@ -33,6 +33,7 @@ import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
+import talkapp.org.talkappmobile.module.ViewModule;
 
 @Singleton
 @Component(modules = {
@@ -44,6 +45,7 @@ import talkapp.org.talkappmobile.module.LanguageModule;
         AudioModule.class,
         InfraModule.class,
         LanguageModule.class,
+        ViewModule.class,
         DatabaseModule.class,
         ItemsListModule.class
 })

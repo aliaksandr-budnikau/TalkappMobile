@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
+import talkapp.org.talkappmobile.module.ViewModule;
 
 public class DIContextUtils {
 
@@ -22,6 +23,7 @@ public class DIContextUtils {
             instance = DaggerDIContext.builder()
                     .androidModule(new AndroidModule(application))
                     .audioModule(new AudioModule())
+                    .viewModule(new ViewModule())
                     .gameplayModule(new GameplayModule())
                     .concurrentModule(new ConcurrentModule())
                     .dataModule(new DataModule())
