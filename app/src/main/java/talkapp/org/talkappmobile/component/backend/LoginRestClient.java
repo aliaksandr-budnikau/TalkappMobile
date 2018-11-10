@@ -10,6 +10,8 @@ import talkapp.org.talkappmobile.model.LoginCredentials;
  */
 public interface LoginRestClient {
 
-    @POST("/login")
+    String LOGIN_PATH = "/login";
+
+    @POST(LOGIN_PATH)
     Call<Boolean> login(@Body LoginCredentials credentials);
 }

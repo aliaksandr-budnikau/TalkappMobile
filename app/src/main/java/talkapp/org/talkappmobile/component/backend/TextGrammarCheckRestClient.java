@@ -15,7 +15,9 @@ import talkapp.org.talkappmobile.model.GrammarError;
  */
 public interface TextGrammarCheckRestClient {
 
-    @POST("/grammar/check")
+    String GRAMMAR_CHECK_PATH = "/grammar/check";
+
+    @POST(GRAMMAR_CHECK_PATH)
     @Headers("Content-Type: text/plain")
     Call<List<GrammarError>> check(@Body String text, @HeaderMap Map<String, String> headers);
 }

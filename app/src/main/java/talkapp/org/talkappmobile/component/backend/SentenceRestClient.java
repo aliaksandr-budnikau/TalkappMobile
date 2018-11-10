@@ -14,6 +14,8 @@ import talkapp.org.talkappmobile.model.Sentence;
  */
 public interface SentenceRestClient {
 
-    @GET("/sentence")
+    String SENTENCE_PATH = "/sentence";
+
+    @GET(SENTENCE_PATH)
     Call<List<Sentence>> findByWords(@Query("words") String words, @Query("wordsNumber") int wordsNumber, @HeaderMap Map<String, String> headers);
 }

@@ -14,9 +14,11 @@ import talkapp.org.talkappmobile.model.WordSet;
  */
 public interface WordSetRestClient {
 
-    @GET("/wordset")
+    String WORD_SET_PATH = "/wordset";
+
+    @GET(WORD_SET_PATH)
     Call<List<WordSet>> findAll(@HeaderMap Map<String, String> headers);
 
-    @GET("/wordset")
+    @GET(WORD_SET_PATH)
     Call<List<WordSet>> findByTopicId(@Query("topicId") int topicId, @HeaderMap Map<String, String> headers);
 }

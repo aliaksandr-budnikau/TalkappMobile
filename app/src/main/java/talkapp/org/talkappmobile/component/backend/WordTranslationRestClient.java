@@ -13,6 +13,9 @@ import talkapp.org.talkappmobile.model.WordTranslation;
  * @author Budnikau Aliaksandr
  */
 public interface WordTranslationRestClient {
-    @GET("/wordtranslation")
+
+    String WORD_TRANSLATION_PATH = "/wordtranslation";
+
+    @GET(WORD_TRANSLATION_PATH)
     Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Query("wordSetId") int wordSetId, @Query("language") String language, @HeaderMap Map<String, String> headers);
 }

@@ -13,6 +13,8 @@ import talkapp.org.talkappmobile.model.Topic;
  */
 public interface TopicRestClient {
 
-    @GET("/topic")
+    String TOPIC_PATH = "/topic";
+
+    @GET(TOPIC_PATH)
     Call<List<Topic>> findAll(@HeaderMap Map<String, String> headers);
 }

@@ -10,6 +10,8 @@ import talkapp.org.talkappmobile.model.Account;
  */
 public interface AccountRestClient {
 
-    @POST("/account")
+    String ACCOUNT_PATH = "/account";
+
+    @POST(ACCOUNT_PATH)
     Call<Void> register(@Body Account account);
 }
