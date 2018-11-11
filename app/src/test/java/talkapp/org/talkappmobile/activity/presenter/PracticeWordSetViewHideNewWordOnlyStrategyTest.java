@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,6 +58,44 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
 
         // then
         verify(textUtils).hideIntervalsInText(sentence.getText(), asList(8, 12));
+    }
+
+    @Test
+    public void hideRightAnswer_oneWordBugWithIcing() {
+        // setup
+        Sentence sentence = new Sentence();
+        sentence.setText("Ice the girl and beat it.");
+        sentence.getTokens().addAll(singletonList(new TextToken()));
+        sentence.getTokens().get(0).setToken("ice");
+        sentence.getTokens().get(0).setStartOffset(0);
+        sentence.getTokens().get(0).setEndOffset(3);
+        sentence.getTokens().get(0).setPosition(0);
+        String word = "icing";
+
+        // when
+        strategy.hideRightAnswer(sentence, word);
+
+        // then
+        verify(textUtils).hideIntervalsInText(sentence.getText(), asList(0, 3));
+    }
+
+    @Test
+    public void hideRightAnswer_oneWordBugWithGreeting() {
+        // setup
+        Sentence sentence = new Sentence();
+        sentence.setText("Greetings to your parents.");
+        sentence.getTokens().addAll(singletonList(new TextToken()));
+        sentence.getTokens().get(0).setToken("greet");
+        sentence.getTokens().get(0).setStartOffset(0);
+        sentence.getTokens().get(0).setEndOffset(9);
+        sentence.getTokens().get(0).setPosition(0);
+        String word = "greeting";
+
+        // when
+        strategy.hideRightAnswer(sentence, word);
+
+        // then
+        verify(textUtils).hideIntervalsInText(sentence.getText(), asList(0, 9));
     }
 
     @Test
