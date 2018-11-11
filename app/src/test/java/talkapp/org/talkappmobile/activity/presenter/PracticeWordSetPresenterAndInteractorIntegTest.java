@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
-    private static final String PLACEHOLDER_REGEX = "\\.\\.\\.";
+    private static final String PLACEHOLDER_REGEX = "\\*\\*\\*";
     private static final String NOT_ENGLISH = "[^a-zA-Z]{5,}";
     private static final String ENGLISH = ".*[a-zA-Z]{3,}.*";
     @Mock

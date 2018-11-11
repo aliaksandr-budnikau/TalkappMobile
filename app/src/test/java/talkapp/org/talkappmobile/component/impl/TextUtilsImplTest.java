@@ -22,10 +22,10 @@ public class TextUtilsImplTest {
     private TextUtilsImpl utils = new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
 
     @Test
-    public void screenTextWith_withoutChanges() throws Exception {
+    public void screenTextWith_withoutChanges() {
         // setup
         String text = "sdfsdf safasad fsdffa sdf sfs s";
-        String expected = "... ... ... ... ... ...";
+        String expected = PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER;
 
         // when
         String actual = utils.screenTextWith(text);
@@ -35,10 +35,10 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void screenTextWith_withChanges() throws Exception {
+    public void screenTextWith_withChanges() {
         // setup
         String text = "sdthefsdf a safasad an fsandffa the sdf sfs s";
-        String expected = "... a ... an ... the ... ... ...";
+        String expected = PLACEHOLDER + " a " + PLACEHOLDER + " an " + PLACEHOLDER + " the " + PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER;
 
         // when
         String actual = utils.screenTextWith(text);
@@ -48,10 +48,10 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void screenTextWith_withChangesAndCase() throws Exception {
+    public void screenTextWith_withChangesAndCase() {
         // setup
         String text = "The A An sdthefsdf a safasad an fsandffa the sdf sfs s";
-        String expected = "The A An ... a ... an ... the ... ... ...";
+        String expected = "The A An " + PLACEHOLDER + " a " + PLACEHOLDER + " an " + PLACEHOLDER + " the " + PLACEHOLDER + " " + PLACEHOLDER + " " + PLACEHOLDER;
 
         // when
         String actual = utils.screenTextWith(text);
@@ -61,10 +61,10 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void screenTextWith_comma() throws Exception {
+    public void screenTextWith_comma() {
         // setup
         String text = "Happy anniversary, Mike.";
-        String expected = "... ..., ....";
+        String expected = PLACEHOLDER + " " + PLACEHOLDER + ", " + PLACEHOLDER + ".";
 
         // when
         String actual = utils.screenTextWith(text);
@@ -74,7 +74,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void toUpperCaseFirstLetter_whenAlreadyUpperCase() throws Exception {
+    public void toUpperCaseFirstLetter_whenAlreadyUpperCase() {
         // setup
         String text = "Safasad an fsandffa the sdf sfs s";
         String expected = "Safasad an fsandffa the sdf sfs s";
@@ -87,7 +87,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void toUpperCaseFirstLetter_whenNotAlreadyUpperCase() throws Exception {
+    public void toUpperCaseFirstLetter_whenNotAlreadyUpperCase() {
         // setup
         String text = "safasad an fsandffa the sdf sfs s";
         String expected = "Safasad an fsandffa the sdf sfs s";
@@ -100,7 +100,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void appendLastSymbol_question() throws Exception {
+    public void appendLastSymbol_question() {
         // setup
         String text = "safasad an fsandffa the sdf sfs s";
         String translation = "safasad an fsandffa the sdf sfs s?";
@@ -113,7 +113,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void appendLastSymbol_normalSentens() throws Exception {
+    public void appendLastSymbol_normalSentens() {
         // setup
         String text = "safasad an fsandffa the sdf sfs s";
         String translation = "safasad an fsandffa the sdf sfs s.";
@@ -126,7 +126,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void appendLastSymbol_exclamation() throws Exception {
+    public void appendLastSymbol_exclamation() {
         // setup
         String text = "safasad an fsandffa the sdf sfs s";
         String translation = "safasad an fsandffa the sdf sfs s!";
@@ -139,7 +139,7 @@ public class TextUtilsImplTest {
     }
 
     @Test
-    public void appendLastSymbol_alreadyAdded() throws Exception {
+    public void appendLastSymbol_alreadyAdded() {
         // setup
         String text = "safasad an fsandffa the sdf sfs s!";
         String translation = "safasad an fsandffa the sdf sfs s!";
@@ -153,7 +153,7 @@ public class TextUtilsImplTest {
 
 
     @Test
-    public void appendLastSymbol_diffInLength() throws Exception {
+    public void appendLastSymbol_diffInLength() {
         // setup
         String text = "safasad an the sdf sfs s";
         String translation = "safasad an fsandffa the sdf sfs s!";
