@@ -47,7 +47,7 @@ public class GameplayModule {
     public static final String[] ARTICLES = new String[]{"a", "an", "the"};
     public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
     public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
-    public static final String PLACEHOLDER = "...";
+    public static final String PLACEHOLDER = "***";
 
     @Provides
     @Singleton
