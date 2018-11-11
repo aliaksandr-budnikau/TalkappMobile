@@ -72,19 +72,15 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
         presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
 
-        return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                presenter.onResume();
+                presenter.initialise();
                 return null;
             }
         }.executeOnExecutor(executor);
+
+        return view;
     }
 
     @Override

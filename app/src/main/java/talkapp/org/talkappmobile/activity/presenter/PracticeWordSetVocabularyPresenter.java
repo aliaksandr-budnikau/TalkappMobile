@@ -20,7 +20,7 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
         this.interactor = interactor;
     }
 
-    public void onResume() {
+    public void initialise() {
         try {
             view.onInitializeBeginning();
             interactor.initialiseVocabulary(wordSet, this);

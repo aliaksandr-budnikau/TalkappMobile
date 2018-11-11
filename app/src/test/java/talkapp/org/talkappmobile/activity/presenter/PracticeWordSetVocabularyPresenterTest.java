@@ -28,7 +28,7 @@ public class PracticeWordSetVocabularyPresenterTest {
 
         // when
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
-        presenter.onResume();
+        presenter.initialise();
 
         // then
         verify(view).onInitializeBeginning();
@@ -45,7 +45,7 @@ public class PracticeWordSetVocabularyPresenterTest {
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
-            presenter.onResume();
+            presenter.initialise();
         } finally {
             // then
             verify(interactor, times(0)).initialiseVocabulary(wordSet, presenter);

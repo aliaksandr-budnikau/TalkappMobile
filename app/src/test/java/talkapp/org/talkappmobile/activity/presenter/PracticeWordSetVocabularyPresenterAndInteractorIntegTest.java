@@ -56,7 +56,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
 
-        presenter.onResume();
+        presenter.initialise();
         ArgumentCaptor<List<WordTranslation>> wordTranslationsCaptor = forClass(List.class);
         verify(view).setWordSetVocabularyList(wordTranslationsCaptor.capture());
         assertFalse(wordTranslationsCaptor.getValue().isEmpty());
