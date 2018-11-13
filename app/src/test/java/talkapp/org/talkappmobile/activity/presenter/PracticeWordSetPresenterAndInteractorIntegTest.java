@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
@@ -52,7 +53,17 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         int id = -1;
         wordSet = new WordSet();
         wordSet.setId(id);
-        wordSet.setWords(asList("age", "anniversary", "birth"));
+
+        Word2Tokens age = new Word2Tokens("age");
+        age.setTokens("age");
+
+        Word2Tokens anniversary = new Word2Tokens("anniversary");
+        anniversary.setTokens("anniversary");
+
+        Word2Tokens birth = new Word2Tokens("birth");
+        birth.setTokens("birth");
+
+        wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
         PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(view);
         PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(view);

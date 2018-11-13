@@ -10,6 +10,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -29,7 +30,7 @@ public class SentenceProviderStrategyTest {
     @Test
     public void findByWord_sentenceFound() {
         // setup
-        String word = "word";
+        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
 
         Sentence sentence1 = new Sentence();
@@ -52,7 +53,7 @@ public class SentenceProviderStrategyTest {
     @Test
     public void findByWord_sentenceNotFound() {
         // setup
-        String word = "word";
+        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
 
         List<Sentence> sentences = emptyList();
@@ -68,7 +69,7 @@ public class SentenceProviderStrategyTest {
     @Test(expected = RuntimeException.class)
     public void findByWord_exception() {
         // setup
-        String word = "word";
+        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
 
         // when

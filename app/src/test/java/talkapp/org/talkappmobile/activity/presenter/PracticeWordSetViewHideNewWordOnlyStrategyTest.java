@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -51,7 +52,8 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
         sentence.getTokens().get(1).setToken("know");
         sentence.getTokens().get(2).setToken("");
 
-        String word = "know";
+        Word2Tokens word = new Word2Tokens("know");
+        word.setTokens("know");
 
         // when
         strategy.hideRightAnswer(sentence, word);
@@ -70,7 +72,8 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(3);
         sentence.getTokens().get(0).setPosition(0);
-        String word = "icing";
+        Word2Tokens word = new Word2Tokens("icing");
+        word.setTokens("icing,ice");
 
         // when
         strategy.hideRightAnswer(sentence, word);
@@ -89,7 +92,8 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(9);
         sentence.getTokens().get(0).setPosition(0);
-        String word = "greeting";
+        Word2Tokens word = new Word2Tokens("greeting");
+        word.setTokens("greeting,greet");
 
         // when
         strategy.hideRightAnswer(sentence, word);
@@ -110,7 +114,8 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
         sentence.getTokens().get(1).setToken("know2");
         sentence.getTokens().get(2).setToken("");
 
-        String word = "know";
+        Word2Tokens word = new Word2Tokens("know");
+        word.setTokens("know");
 
         // when
         strategy.hideRightAnswer(sentence, word);

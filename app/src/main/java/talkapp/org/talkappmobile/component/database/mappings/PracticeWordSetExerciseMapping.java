@@ -22,7 +22,7 @@ public class PracticeWordSetExerciseMapping {
     private int wordSetId;
 
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
-    private String word;
+    private String wordJSON;
 
     @DatabaseField
     private String sentenceJSON;
@@ -41,12 +41,12 @@ public class PracticeWordSetExerciseMapping {
         this.id = id;
     }
 
-    public String getWord() {
-        return word;
+    public String getWordJSON() {
+        return wordJSON;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public void setWordJSON(String wordJSON) {
+        this.wordJSON = wordJSON;
     }
 
     public int getWordSetId() {
@@ -87,20 +87,20 @@ public class PracticeWordSetExerciseMapping {
         if (o == null || getClass() != o.getClass()) return false;
         PracticeWordSetExerciseMapping that = (PracticeWordSetExerciseMapping) o;
         return id == that.id &&
-                Objects.equals(word, that.word) &&
+                Objects.equals(wordJSON, that.wordJSON) &&
                 Objects.equals(sentenceJSON, that.sentenceJSON);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, word, sentenceJSON);
+        return Objects.hash(id, wordJSON, sentenceJSON);
     }
 
     @Override
     public String toString() {
         return "PracticeWordSetExerciseMapping{" +
                 "id=" + id +
-                ", word='" + word + '\'' +
+                ", word='" + wordJSON + '\'' +
                 ", wordSetId='" + wordSetId + '\'' +
                 ", sentenceJSON='" + sentenceJSON + '\'' +
                 '}';

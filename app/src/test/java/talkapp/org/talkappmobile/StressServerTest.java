@@ -18,6 +18,7 @@ import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -26,7 +27,7 @@ import static junit.framework.Assert.fail;
 public class StressServerTest extends PresenterAndInteractorIntegTest implements Runnable {
 
     public static final Random RANDOM = new Random();
-    private Set<String> badWords = new ConcurrentSkipListSet<>();
+    private Set<Word2Tokens> badWords = new ConcurrentSkipListSet<>();
     private AtomicInteger numberThreadsInWork = new AtomicInteger();
 
     //@Test
@@ -37,7 +38,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
             threads.add(thread);
             Thread.sleep(30);
             thread.start();
-            for (String word : badWords) {
+            for (Word2Tokens word : badWords) {
                 System.out.print("\"" + word + "\", ");
             }
             System.out.println();
@@ -116,9 +117,9 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
                 fail();
             }
 
-            List<String> words = wordSet.getWords();
+            List<Word2Tokens> words = wordSet.getWords();
             for (int i = 0; i < words.size(); i++) {
-                String word = words.get(i);
+                Word2Tokens word = words.get(i);
                 if (badWords.contains(word)) {
                     continue;
                 }

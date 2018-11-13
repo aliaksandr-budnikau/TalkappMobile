@@ -8,6 +8,7 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -35,7 +36,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onSentencesFound(final Sentence sentence, String word) {
+    public void onSentencesFound(final Sentence sentence, Word2Tokens word) {
         viewStrategy.onSentencesFound(sentence, word);
     }
 
@@ -112,7 +113,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void nextButtonClick() {
         try {
             viewStrategy.onNextButtonStart();
-            String word = interactor.peekAnyNewWordByWordSetId(state.getWordSetId());
+            Word2Tokens word = interactor.peekAnyNewWordByWordSetId(state.getWordSetId());
             interactor.initialiseSentence(word, state.getWordSetId(), this);
         } finally {
             viewStrategy.onNextButtonFinish();
@@ -147,7 +148,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void rightAnswerUntouched() {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         if (currentSentence != null) {
-            String currentWord = interactor.getCurrentWord(state.getWordSetId());
+            Word2Tokens currentWord = interactor.getCurrentWord(state.getWordSetId());
             viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
         }
     }

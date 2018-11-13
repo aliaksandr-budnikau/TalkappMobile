@@ -13,7 +13,7 @@ public class WordSet implements Serializable {
 
     private String topicId;
 
-    private List<String> words;
+    private List<Word2Tokens> words;
 
     public int getId() {
         return id;
@@ -23,11 +23,11 @@ public class WordSet implements Serializable {
         this.id = id;
     }
 
-    public List<String> getWords() {
+    public List<Word2Tokens> getWords() {
         return words;
     }
 
-    public void setWords(List<String> words) {
+    public void setWords(List<Word2Tokens> words) {
         this.words = words;
     }
 

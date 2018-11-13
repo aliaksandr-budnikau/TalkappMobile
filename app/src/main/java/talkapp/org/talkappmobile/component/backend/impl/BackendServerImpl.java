@@ -27,6 +27,7 @@ import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -97,8 +98,8 @@ public class BackendServerImpl implements BackendServer {
     }
 
     @Override
-    public List<Sentence> findSentencesByWords(String words, int wordsNumber) {
-        Call<List<Sentence>> call = sentenceRestClient.findByWords(words, wordsNumber, authSign);
+    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
+        Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
         List<Sentence> body = execute(call).body();
         if (body == null) {
             return new LinkedList<>();

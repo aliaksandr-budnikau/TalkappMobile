@@ -4,6 +4,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public class SentenceProviderStrategy {
     public static final int WORDS_NUMBER = 6;
@@ -13,7 +14,7 @@ public class SentenceProviderStrategy {
         this.server = server;
     }
 
-    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
         return server.findSentencesByWords(word, WORDS_NUMBER);
     }
 }

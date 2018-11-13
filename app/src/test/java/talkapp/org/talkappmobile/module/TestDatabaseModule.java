@@ -25,7 +25,7 @@ public class TestDatabaseModule extends DatabaseModule {
             public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId) {
                 LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
                 for (PracticeWordSetExerciseMapping mapping : storage) {
-                    if (mapping.getWord().equals(word) && mapping.getWordSetId() == wordSetId) {
+                    if (mapping.getWordJSON().equals(word) && mapping.getWordSetId() == wordSetId) {
                         result.add(mapping);
                     }
                 }

@@ -18,6 +18,7 @@ import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -67,7 +68,7 @@ public class PracticeWordSetPresenterTest {
         sentence.setTranslations(new HashMap<String, String>());
         sentence.getTranslations().put("russian", "fsdfsfs");
 
-        String word = "word";
+        Word2Tokens word = new Word2Tokens("word");
 
         // when
         presenter.onSentencesFound(sentence, word);
@@ -160,7 +161,7 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void onNextButtonClick() {
         // setup
-        String word1 = "sdfsd";
+        Word2Tokens word1 = new Word2Tokens("sdfsd");
         int wordSetId = 3;
 
         // when
@@ -270,7 +271,7 @@ public class PracticeWordSetPresenterTest {
     public void rightAnswerUntouched() {
         // setup
         Sentence sentence = new Sentence();
-        String word = "word";
+        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
 
         // when

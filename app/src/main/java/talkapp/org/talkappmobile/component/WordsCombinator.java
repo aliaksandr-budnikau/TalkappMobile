@@ -3,10 +3,12 @@ package talkapp.org.talkappmobile.component;
 import java.util.List;
 import java.util.Set;
 
+import talkapp.org.talkappmobile.model.Word2Tokens;
+
 /**
  * @author Budnikau Aliaksandr
  */
 public interface WordsCombinator {
 
-    Set<String> combineWords(List<String> words);
+    Set<Word2Tokens> combineWords(List<Word2Tokens> words);
 }

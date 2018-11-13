@@ -3,19 +3,20 @@ package talkapp.org.talkappmobile.component.database;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public interface PracticeWordSetExerciseRepository {
-    Sentence findByWordAndWordSetId(String word, int wordSetId);
+    Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId);
 
-    void save(String word, int wordSetId, Sentence sentence);
+    void save(Word2Tokens word, int wordSetId, Sentence sentence);
 
     void cleanByWordSetId(int wordSetId);
 
-    void createSomeIfNecessary(Set<String> words, int wordSetId);
+    void createSomeIfNecessary(Set<Word2Tokens> words, int wordSetId);
 
-    String peekByWordSetIdAnyWord(int wordSetId);
+    Word2Tokens peekByWordSetIdAnyWord(int wordSetId);
 
-    String getCurrentWord(int wordSetId);
+    Word2Tokens getCurrentWord(int wordSetId);
 
     Sentence getCurrentSentence(int wordSetId);
 

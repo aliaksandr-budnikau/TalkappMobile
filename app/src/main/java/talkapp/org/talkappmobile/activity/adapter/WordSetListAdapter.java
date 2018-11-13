@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.LinkedList;
+
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -43,7 +46,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         convertView = inflater.inflate(R.layout.row_word_sets_list, parent, false);
         TextView wordSetRow = convertView.findViewById(R.id.wordSetRow);
-        String label = StringUtils.joinWith(", ", wordSet.getWords().toArray());
+        LinkedList<String> words = new LinkedList<>();
+        for (Word2Tokens word2Tokens : wordSet.getWords()) {
+            words.add(word2Tokens.getWord());
+        }
+        String label = StringUtils.joinWith(", ", words.toArray());
         wordSetRow.setText(label);
 
         ProgressBar wordSetProgress = convertView.findViewById(R.id.wordSetProgress);

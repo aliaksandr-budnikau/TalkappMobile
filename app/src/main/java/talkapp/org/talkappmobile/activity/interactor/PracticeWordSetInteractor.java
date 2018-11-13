@@ -20,6 +20,7 @@ import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -84,13 +85,13 @@ public class PracticeWordSetInteractor {
 
     public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
         logger.i(TAG, "initialise words sequence {}", wordSet);
-        Set<String> words = wordsCombinator.combineWords(wordSet.getWords());
+        Set<Word2Tokens> words = wordsCombinator.combineWords(wordSet.getWords());
         logger.i(TAG, "words sequence {}", words);
         exerciseRepository.createSomeIfNecessary(words, wordSet.getId());
         logger.i(TAG, "word sequence was initialized");
     }
 
-    public void initialiseSentence(String word, int wordSetId, final OnPracticeWordSetListener listener) {
+    public void initialiseSentence(Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
         logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
         List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
         logger.i(TAG, "sentences size {}", sentences.size());
@@ -184,12 +185,12 @@ public class PracticeWordSetInteractor {
         return exerciseRepository.getCurrentSentence(wordSetId);
     }
 
-    public String peekAnyNewWordByWordSetId(int wordSetId) {
+    public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
         exerciseRepository.putOffCurrentWord(wordSetId);
         return exerciseRepository.peekByWordSetIdAnyWord(wordSetId);
     }
 
-    public String getCurrentWord(int wordSetId) {
+    public Word2Tokens getCurrentWord(int wordSetId) {
         return exerciseRepository.getCurrentWord(wordSetId);
     }
 

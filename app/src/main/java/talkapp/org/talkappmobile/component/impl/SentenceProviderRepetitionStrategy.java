@@ -5,6 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 
@@ -17,7 +18,7 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
         return asList(repository.findByWordAndWordSetId(word, wordSetId));
     }
 }

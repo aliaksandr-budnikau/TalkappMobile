@@ -4,6 +4,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public class SentenceProviderImpl implements SentenceProvider {
     private final BackendSentenceProviderStrategy backendStrategy;
@@ -17,7 +18,7 @@ public class SentenceProviderImpl implements SentenceProvider {
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(String word, int wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
         return currentStrategy.findByWordAndWordSetId(word, wordSetId);
     }
 

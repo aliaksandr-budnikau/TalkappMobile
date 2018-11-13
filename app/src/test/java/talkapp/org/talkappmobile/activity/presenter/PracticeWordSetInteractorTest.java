@@ -33,6 +33,7 @@ import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -150,10 +151,10 @@ public class PracticeWordSetInteractorTest {
     public void initialiseWordsSequence() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setWords(asList("fdsfs", "sdfs"));
+        wordSet.setWords(asList(new Word2Tokens("fdsfs"), new Word2Tokens("sdfs")));
         wordSet.setId(4);
 
-        HashSet<String> words = new HashSet<>(wordSet.getWords());
+        HashSet<Word2Tokens> words = new HashSet<>(wordSet.getWords());
 
         // when
         when(wordsCombinator.combineWords(wordSet.getWords())).thenReturn(words);
@@ -174,7 +175,7 @@ public class PracticeWordSetInteractorTest {
 
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
-        String word = "sdfs";
+        Word2Tokens word = new Word2Tokens("sdfs");
         int wordSetId = 3;
 
         // when
@@ -193,7 +194,7 @@ public class PracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
 
-        String word = "SDFDS";
+        Word2Tokens word = new Word2Tokens("SDFDS");
         int wordSetId = 3;
 
         // when
@@ -502,11 +503,11 @@ public class PracticeWordSetInteractorTest {
     public void peekAnyNewWordByWordSetId() {
         // setup
         int wordSetId = 5;
-        String value = "dsfs";
+        Word2Tokens value = new Word2Tokens("dsfs");
 
         // when
         when(exerciseRepository.peekByWordSetIdAnyWord(wordSetId)).thenReturn(value);
-        String actual = interactor.peekAnyNewWordByWordSetId(wordSetId);
+        Word2Tokens actual = interactor.peekAnyNewWordByWordSetId(wordSetId);
 
         // then
         assertEquals(value, actual);

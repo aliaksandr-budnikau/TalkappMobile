@@ -9,6 +9,7 @@ import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -18,7 +19,7 @@ public interface BackendServer {
 
     boolean loginUser(LoginCredentials credentials) throws LoginException;
 
-    List<Sentence> findSentencesByWords(String words, int wordsNumber);
+    List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber);
 
     List<GrammarError> checkText(String text);
 

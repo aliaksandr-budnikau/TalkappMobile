@@ -9,11 +9,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashSet;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -46,7 +48,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     public void test() {
         login();
 
-        List<String> words = asList("age", "anniversary", "birth");
+        List<Word2Tokens> words = asList(new Word2Tokens("age"), new Word2Tokens("anniversary"), new Word2Tokens("birth"));
 
         int id = -1;
         WordSet wordSet = new WordSet();
@@ -63,7 +65,11 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         assertEquals(words.size(), wordTranslationsCaptor.getValue().size());
         List<WordTranslation> translations = wordTranslationsCaptor.getValue();
         for (WordTranslation translation : translations) {
-            assertTrue(words.contains(translation.getWord()));
+            HashSet<String> wordsForCheck = new HashSet<>();
+            for (Word2Tokens word2Tokens : words) {
+                wordsForCheck.add(word2Tokens.getWord());
+            }
+            assertTrue(wordsForCheck.contains(translation.getWord()));
         }
         verify(speaker, times(0)).speak(anyString());
         reset(view);

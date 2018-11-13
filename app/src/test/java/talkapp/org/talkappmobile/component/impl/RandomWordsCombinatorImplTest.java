@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,17 +21,17 @@ public class RandomWordsCombinatorImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void combineWords_empty() throws Exception {
-        combinator.combineWords(new ArrayList<String>());
+        combinator.combineWords(new ArrayList<Word2Tokens>());
     }
 
     @Test
     public void combineWords_count1() throws Exception {
         // setup
-        ArrayList<String> words = new ArrayList<>();
-        words.add("word1");
+        ArrayList<Word2Tokens> words = new ArrayList<>();
+        words.add(new Word2Tokens("word1"));
 
         // when
-        Set<String> set = combinator.combineWords(words);
+        Set<Word2Tokens> set = combinator.combineWords(words);
 
         // then
         assertEquals(new HashSet<>(words), set);
@@ -39,14 +40,14 @@ public class RandomWordsCombinatorImplTest {
     @Test
     public void combineWords_count2() throws Exception {
         // setup
-        ArrayList<String> words = new ArrayList<>();
-        String word1 = "word1";
-        String word2 = "word2";
+        ArrayList<Word2Tokens> words = new ArrayList<>();
+        Word2Tokens word1 = new Word2Tokens("word1");
+        Word2Tokens word2 = new Word2Tokens("word2");
         words.add(word1);
         words.add(word2);
 
         // when
-        Set<String> set = combinator.combineWords(words);
+        Set<Word2Tokens> set = combinator.combineWords(words);
 
         // then
         assertEquals(2, set.size());
@@ -57,16 +58,16 @@ public class RandomWordsCombinatorImplTest {
     @Test
     public void combineWords_count3() throws Exception {
         // setup
-        ArrayList<String> words = new ArrayList<>();
-        String word1 = "word1";
-        String word2 = "word2";
-        String word3 = "word3";
+        ArrayList<Word2Tokens> words = new ArrayList<>();
+        Word2Tokens word1 = new Word2Tokens("word1");
+        Word2Tokens word2 = new Word2Tokens("word2");
+        Word2Tokens word3 = new Word2Tokens("word3");
         words.add(word1);
         words.add(word2);
         words.add(word3);
 
         // when
-        Set<String> set = combinator.combineWords(words);
+        Set<Word2Tokens> set = combinator.combineWords(words);
 
         // then
         assertEquals(3, set.size());
