@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -42,7 +43,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
     public void test_withoutTopic() {
         login();
 
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(-1, view, allWordSetsInteractor);
+        AllWordSetsPresenter presenter = new AllWordSetsPresenter(null, view, allWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture());
@@ -80,7 +81,9 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
     public void test_withTopic() {
         login();
 
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(1, view, allWordSetsInteractor);
+        Topic topic = new Topic();
+        topic.setId(1);
+        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, allWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture());

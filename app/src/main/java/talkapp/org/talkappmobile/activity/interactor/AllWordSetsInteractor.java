@@ -6,6 +6,7 @@ import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -22,12 +23,12 @@ public class AllWordSetsInteractor {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public void initializeWordSets(int topicId, OnAllWordSetsListener listener) {
+    public void initializeWordSets(Topic topic, OnAllWordSetsListener listener) {
         List<WordSet> wordSets;
-        if (topicId == -1) {
+        if (topic == null) {
             wordSets = server.findAllWordSets();
         } else {
-            wordSets = server.findWordSetsByTopicId(topicId);
+            wordSets = server.findWordSetsByTopicId(topic.getId());
         }
         listener.onWordSetsInitialized(wordSets);
     }

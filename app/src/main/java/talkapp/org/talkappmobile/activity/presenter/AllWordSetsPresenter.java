@@ -5,16 +5,17 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class AllWordSetsPresenter implements OnAllWordSetsListener {
-    private final int topicId;
+    private final Topic topic;
     private final AllWordSetsView view;
     private final AllWordSetsInteractor interactor;
 
-    public AllWordSetsPresenter(int topicId, AllWordSetsView view, AllWordSetsInteractor interactor) {
-        this.topicId = topicId;
+    public AllWordSetsPresenter(Topic topic, AllWordSetsView view, AllWordSetsInteractor interactor) {
+        this.topic = topic;
         this.view = view;
         this.interactor = interactor;
     }
@@ -22,7 +23,7 @@ public class AllWordSetsPresenter implements OnAllWordSetsListener {
     public void initialize() {
         try {
             view.onInitializeBeginning();
-            interactor.initializeWordSets(topicId, this);
+            interactor.initializeWordSets(topic, this);
         } finally {
             view.onInitializeEnd();
         }

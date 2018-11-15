@@ -8,6 +8,7 @@ import org.powermock.reflect.Whitebox;
 
 import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.model.Topic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,13 +28,15 @@ public class AllWordSetsPresenterTest {
     public void constructor_NPEInteractorNull() {
         // setup
         int topicId = 1;
+        Topic topic = new Topic();
+        topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topicId, view, interactor);
+        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
         presenter.initialize();
 
         // then
-        assertEquals(topicId, Whitebox.getInternalState(presenter, "topicId"));
+        assertEquals(topic, Whitebox.getInternalState(presenter, "topic"));
         assertEquals(view, Whitebox.getInternalState(presenter, "view"));
         assertNotNull(Whitebox.getInternalState(presenter, "interactor"));
     }
@@ -42,14 +45,16 @@ public class AllWordSetsPresenterTest {
     public void initialize_ordinaryCase() {
         // setup
         int topicId = 1;
+        Topic topic = new Topic();
+        topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topicId, view, interactor);
+        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
         presenter.initialize();
 
         // then
         verify(view).onInitializeBeginning();
-        verify(interactor).initializeWordSets(topicId, presenter);
+        verify(interactor).initializeWordSets(topic, presenter);
         verify(view).onInitializeEnd();
     }
 
@@ -57,15 +62,17 @@ public class AllWordSetsPresenterTest {
     public void initialize_ordinaryException() {
         // setup
         int topicId = 1;
+        Topic topic = new Topic();
+        topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topicId, view, interactor);
+        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
             presenter.initialize();
         } finally {
             // then
-            verify(interactor, times(0)).initializeWordSets(topicId, presenter);
+            verify(interactor, times(0)).initializeWordSets(topic, presenter);
             verify(view).onInitializeEnd();
         }
     }

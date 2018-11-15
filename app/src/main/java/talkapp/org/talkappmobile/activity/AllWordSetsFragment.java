@@ -29,11 +29,12 @@ import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AllWordSetsView {
-    public static final String TOPIC_ID_MAPPING = "topicId";
+    public static final String TOPIC_MAPPING = "topic";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
     @Inject
     Executor executor;
@@ -65,15 +66,15 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
         wordSetsListView.setOnItemLongClickListener(this);
 
         Bundle arguments = AllWordSetsFragment.this.getArguments();
-        int topicId = -1;
+        Topic topic = null;
         if (arguments != null) {
-            topicId = arguments.getInt(TOPIC_ID_MAPPING);
+            topic = (Topic) arguments.getSerializable(TOPIC_MAPPING);
         }
 
         View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
-        presenter = new AllWordSetsPresenter(topicId, this, interactor);
+        presenter = new AllWordSetsPresenter(topic, this, interactor);
 
         new AsyncTask<Void, Void, Void>() {
             @Override
