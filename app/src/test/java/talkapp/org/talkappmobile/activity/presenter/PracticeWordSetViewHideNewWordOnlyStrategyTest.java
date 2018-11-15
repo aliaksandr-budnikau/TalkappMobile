@@ -123,4 +123,32 @@ public class PracticeWordSetViewHideNewWordOnlyStrategyTest {
         // then
         verify(textUtils).hideIntervalsInText(sentence.getText(), Collections.<Integer>emptyList());
     }
+
+    @Test
+    public void hideRightAnswer_earthEarBug() {
+        // setup
+        Sentence sentence = new Sentence();
+        sentence.setText("We visited earth.");
+        sentence.getTokens().addAll(asList(new TextToken(), new TextToken(), new TextToken(), new TextToken()));
+        sentence.getTokens().get(0).setToken("");
+        sentence.getTokens().get(1).setToken("");
+
+        sentence.getTokens().get(2).setStartOffset(11);
+        sentence.getTokens().get(2).setEndOffset(15);
+        sentence.getTokens().get(2).setToken("earth");
+
+        sentence.getTokens().get(3).setStartOffset(11);
+        sentence.getTokens().get(3).setEndOffset(15);
+        sentence.getTokens().get(3).setToken("ear");
+
+        Word2Tokens word = new Word2Tokens("earth");
+        word.setWord("earth");
+        word.setTokens("earth,ear");
+
+        // when
+        strategy.hideRightAnswer(sentence, word);
+
+        // then
+        verify(textUtils).hideIntervalsInText("We visited earth.", asList(11, 15));
+    }
 }

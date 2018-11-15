@@ -27,8 +27,10 @@ public class PracticeWordSetViewHideNewWordOnlyStrategy extends PracticeWordSetV
         for (TextToken token : sentence.getTokens()) {
             HashSet<String> tokens = new HashSet<>(asList(word.getTokens().split(",")));
             if (token.getToken().equals(word.getWord()) || tokens.contains(token.getToken())) {
-                intervalsToHide.add(token.getStartOffset());
-                intervalsToHide.add(token.getEndOffset());
+                if (intervalsToHide.size() == 0 || intervalsToHide.getLast() < token.getStartOffset()) {
+                    intervalsToHide.add(token.getStartOffset());
+                    intervalsToHide.add(token.getEndOffset());
+                }
             }
         }
         return textUtils.hideIntervalsInText(sentence.getText(), intervalsToHide);

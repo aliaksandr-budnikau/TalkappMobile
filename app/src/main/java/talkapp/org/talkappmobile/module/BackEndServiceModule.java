@@ -35,7 +35,7 @@ import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
 @Module
 public class BackEndServiceModule {
 
-    public static final int TIMEOUT = 10;
+    public static final int TIMEOUT = 20;
 
     @Provides
     @Singleton
