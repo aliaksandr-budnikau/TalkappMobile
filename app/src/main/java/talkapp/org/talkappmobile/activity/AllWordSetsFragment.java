@@ -126,8 +126,8 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     }
 
     @Override
-    public void onWordSetNotFinished(WordSet wordSet) {
-        startWordSetActivity(wordSet);
+    public void onWordSetNotFinished(Topic topic, WordSet wordSet) {
+        startWordSetActivity(topic, wordSet);
     }
 
     @Override
@@ -147,8 +147,9 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
                 .setNegativeButton(android.R.string.no, null).show();
     }
 
-    private void startWordSetActivity(WordSet wordSet) {
+    private void startWordSetActivity(Topic topic, WordSet wordSet) {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
+        intent.putExtra(PracticeWordSetActivity.TOPIC_MAPPING, topic);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         startActivity(intent);
     }

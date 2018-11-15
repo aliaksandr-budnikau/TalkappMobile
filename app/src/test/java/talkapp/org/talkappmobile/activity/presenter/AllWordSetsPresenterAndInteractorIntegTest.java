@@ -51,7 +51,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
 
         List<WordSet> wordSets = setsCaptor.getValue();
         presenter.itemClick(wordSets.get(0));
-        verify(view).onWordSetNotFinished(wordSets.get(0));
+        verify(view).onWordSetNotFinished(null, wordSets.get(0));
         verify(view, times(0)).onWordSetFinished(wordSets.get(0));
         reset(view);
 
@@ -61,7 +61,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
         wordSetExperienceDao.createNewOrUpdate(experience);
         presenter.itemClick(wordSets.get(0));
         verify(view).onWordSetFinished(wordSets.get(0));
-        verify(view, times(0)).onWordSetNotFinished(wordSets.get(0));
+        verify(view, times(0)).onWordSetNotFinished(null, wordSets.get(0));
         reset(view);
 
         presenter.itemLongClick(wordSets.get(0));
@@ -91,7 +91,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
 
         List<WordSet> wordSets = setsCaptor.getValue();
         presenter.itemClick(wordSets.get(0));
-        verify(view).onWordSetNotFinished(wordSets.get(0));
+        verify(view).onWordSetNotFinished(topic, wordSets.get(0));
         verify(view, times(0)).onWordSetFinished(wordSets.get(0));
         reset(view);
 
@@ -101,7 +101,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
         wordSetExperienceDao.createNewOrUpdate(experience);
         presenter.itemClick(wordSets.get(0));
         verify(view).onWordSetFinished(wordSets.get(0));
-        verify(view, times(0)).onWordSetNotFinished(wordSets.get(0));
+        verify(view, times(0)).onWordSetNotFinished(topic, wordSets.get(0));
         reset(view);
 
         presenter.itemLongClick(wordSets.get(0));

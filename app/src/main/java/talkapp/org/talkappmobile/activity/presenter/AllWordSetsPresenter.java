@@ -45,12 +45,12 @@ public class AllWordSetsPresenter implements OnAllWordSetsListener {
     }
 
     @Override
-    public void onWordSetNotFinished(WordSet wordSet) {
-        view.onWordSetNotFinished(wordSet);
+    public void onWordSetNotFinished(Topic topic, WordSet wordSet) {
+        view.onWordSetNotFinished(topic, wordSet);
     }
 
     public void itemClick(WordSet wordSet) {
-        interactor.itemClick(wordSet, this);
+        interactor.itemClick(topic, wordSet, this);
     }
 
     public void resetExperienceClick(WordSet wordSet) {

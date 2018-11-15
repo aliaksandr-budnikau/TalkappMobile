@@ -11,6 +11,7 @@ import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.verify;
@@ -46,11 +47,14 @@ public class AllWordSetsInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
 
+        Topic topic = new Topic();
+        topic.setId(1);
+
         // when
         when(experienceRepository.findById(wordSet.getId())).thenReturn(null);
-        interactor.itemClick(wordSet, listener);
+        interactor.itemClick(topic, wordSet, listener);
 
         // then
-        verify(listener).onWordSetNotFinished(wordSet);
+        verify(listener).onWordSetNotFinished(topic, wordSet);
     }
 }

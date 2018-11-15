@@ -33,12 +33,12 @@ public class AllWordSetsInteractor {
         listener.onWordSetsInitialized(wordSets);
     }
 
-    public void itemClick(WordSet wordSet, OnAllWordSetsListener listener) {
+    public void itemClick(Topic topic, WordSet wordSet, OnAllWordSetsListener listener) {
         WordSetExperience experience = experienceRepository.findById(wordSet.getId());
         if (experience != null && FINISHED.equals(experience.getStatus())) {
             listener.onWordSetFinished(wordSet);
         } else {
-            listener.onWordSetNotFinished(wordSet);
+            listener.onWordSetNotFinished(topic, wordSet);
         }
     }
 
