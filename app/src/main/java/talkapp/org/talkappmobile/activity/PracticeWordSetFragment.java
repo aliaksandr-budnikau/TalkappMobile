@@ -202,12 +202,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void onDestroy() {
-        presenter.destroy();
-        super.onDestroy();
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {
             return;

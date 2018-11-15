@@ -153,12 +153,6 @@ public class PracticeWordSetPresenterTest {
     }
 
     @Test
-    public void onDestroy() {
-        presenter.destroy();
-        assertNull(Whitebox.getInternalState(presenter, "viewStrategy"));
-    }
-
-    @Test
     public void onNextButtonClick() {
         // setup
         Word2Tokens word1 = new Word2Tokens("sdfsd");

@@ -106,10 +106,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         interactor.initialiseWordsSequence(state.getWordSet(), this);
     }
 
-    public void destroy() {
-        viewStrategy = null;
-    }
-
     public void nextButtonClick() {
         try {
             viewStrategy.onNextButtonStart();
