@@ -157,4 +157,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
             viewStrategy.onStopSpeaking();
         }
     }
+
+    public void checkRightAnswerCommandRecognized() {
+        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
+        checkAnswerButtonClick(currentSentence.getText());
+    }
 }

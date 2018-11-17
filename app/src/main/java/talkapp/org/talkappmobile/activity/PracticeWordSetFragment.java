@@ -37,6 +37,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
+    private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
+    private final StringBuilder SIGNAL_SEQUENCE = new StringBuilder("12345678");
     @Inject
     Executor executor;
     @Inject
@@ -85,6 +87,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                     return null;
                 }
             }.executeOnExecutor(executor);
+            sendCheatSignal("C");
         }
     };
 
@@ -98,6 +101,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                     return null;
                 }
             }.executeOnExecutor(executor);
+            sendCheatSignal("P");
         }
     };
 
@@ -140,6 +144,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                     return null;
                 }
             }.executeOnExecutor(executor);
+            sendCheatSignal("L");
         }
     };
 
@@ -456,5 +461,19 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                 rightAnswer.setEnabled(value);
             }
         });
+    }
+
+    private void sendCheatSignal(final String signal) {
+        SIGNAL_SEQUENCE.deleteCharAt(0);
+        SIGNAL_SEQUENCE.append(signal);
+        if (CHEAT_SEND_WRITE_ANSWER.equals(SIGNAL_SEQUENCE.toString())) {
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    presenter.checkRightAnswerCommandRecognized();
+                    return null;
+                }
+            }.executeOnExecutor(executor);
+        }
     }
 }
