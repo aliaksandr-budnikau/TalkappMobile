@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
@@ -37,7 +36,6 @@ public class MainActivity extends BaseActivity
     @Inject
     MainActivityInteractor interactor;
     @Inject
-    @Named("executor")
     Executor executor;
     private MainActivityPresenter presenter;
 
