@@ -109,6 +109,26 @@ public class WordSetExperienceDaoImplTest {
     }
 
     @Test
+    public void createNewOrUpdate_onlyStatusNotNull() {
+        // setup
+        WordSetExperienceMapping exp = new WordSetExperienceMapping();
+        exp.setStatus(STUDYING);
+
+        // when
+        experienceDao.createNewOrUpdate(exp);
+
+        // then
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_SET_EXPERIENCE_TABLE), new String[]{});
+        cursor.moveToNext();
+
+        assertEquals(exp.getId(), cursor.getInt(cursor.getColumnIndex(ID_FN)));
+        assertEquals(exp.getTrainingExperience(), cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
+        assertEquals(exp.getMaxTrainingExperience(), cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
+        assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
+        assertEquals(1, cursor.getCount());
+    }
+
+    @Test
     public void findById_ordinaryCase() {
         String sql = format("INSERT INTO %s (%s,%s,%s,%s) VALUES ('%s','%s','%s','%s')", WORD_SET_EXPERIENCE_TABLE,
                 ID_FN, TRAINING_EXPERIENCE_FN, MAX_TRAINING_EXPERIENCE_FN, STATUS_FN,
