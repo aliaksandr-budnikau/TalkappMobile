@@ -7,14 +7,16 @@ import java.util.Objects;
 
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping.WORD_SET_EXPERIENCE_TABLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
-@DatabaseTable(tableName = "WordSetExperience")
+@DatabaseTable(tableName = WORD_SET_EXPERIENCE_TABLE)
 public class WordSetExperienceMapping {
     public static final String ID_FN = "id";
     public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
     public static final String MAX_TRAINING_EXPERIENCE_FN = "maxTrainingExperience";
     public static final String STATUS_FN = "status";
+    public static final String WORD_SET_EXPERIENCE_TABLE = "WordSetExperience";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private int id;
@@ -27,6 +29,16 @@ public class WordSetExperienceMapping {
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetExperienceStatus status = STUDYING;
+
+    public WordSetExperienceMapping() {
+    }
+
+    public WordSetExperienceMapping(int id, int trainingExperience, int maxTrainingExperience, WordSetExperienceStatus status) {
+        this.id = id;
+        this.trainingExperience = trainingExperience;
+        this.maxTrainingExperience = maxTrainingExperience;
+        this.status = status;
+    }
 
     public int getId() {
         return id;
