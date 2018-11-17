@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
@@ -31,6 +32,7 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, AdapterView.OnItemClickListener {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
+    @Named("executor")
     Executor executor;
     @Inject
     AdaptersFactory adaptersFactory;

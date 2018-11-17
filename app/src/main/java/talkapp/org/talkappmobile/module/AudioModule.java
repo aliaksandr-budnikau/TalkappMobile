@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.concurrent.Executor;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,7 +28,8 @@ public class AudioModule {
 
     @Provides
     @Singleton
-    public Speaker provideSpeaker(Context context, Executor executor) {
+    public Speaker provideSpeaker(Context context,
+                                  @Named("executor") Executor executor) {
         return new SpeakerImpl(context, executor);
     }
 }

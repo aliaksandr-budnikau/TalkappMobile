@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
@@ -37,6 +38,7 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     public static final String TOPIC_MAPPING = "topic";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
     @Inject
+    @Named("executor")
     Executor executor;
     @Inject
     AdaptersFactory adaptersFactory;

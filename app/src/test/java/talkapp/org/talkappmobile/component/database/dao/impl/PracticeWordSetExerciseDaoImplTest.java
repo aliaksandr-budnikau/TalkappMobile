@@ -120,7 +120,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         exerciseDao.createNewOrUpdate(exe);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void createNewOrUpdate_sentenceNull() {
         PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON", null, STUDYING, true);
         exerciseDao.createNewOrUpdate(exe);

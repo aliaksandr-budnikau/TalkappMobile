@@ -28,7 +28,7 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String wordJSON;
 
-    @DatabaseField(canBeNull = false, columnName = SENTENCE_FN)
+    @DatabaseField(columnName = SENTENCE_FN)
     private String sentenceJSON;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)

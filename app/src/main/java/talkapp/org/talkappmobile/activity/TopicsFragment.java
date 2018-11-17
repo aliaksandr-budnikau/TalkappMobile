@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
@@ -36,6 +37,7 @@ public class TopicsFragment extends Fragment implements AdapterView.OnItemClickL
     @Inject
     TopicsFragmentInteractor interactor;
     @Inject
+    @Named("executor")
     Executor executor;
     @Inject
     Handler uiEventHandler;

@@ -7,6 +7,8 @@ import android.speech.tts.TextToSpeech;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 
+import javax.inject.Named;
+
 import talkapp.org.talkappmobile.component.Speaker;
 
 public class SpeakerImpl implements Speaker, TextToSpeech.OnInitListener {
@@ -14,7 +16,8 @@ public class SpeakerImpl implements Speaker, TextToSpeech.OnInitListener {
     private final TextToSpeech speech;
     private final Executor executor;
 
-    public SpeakerImpl(Context context, Executor executor) {
+    public SpeakerImpl(Context context,
+                       @Named("executor") Executor executor) {
         this.speech = new TextToSpeech(context, this);
         this.executor = executor;
     }

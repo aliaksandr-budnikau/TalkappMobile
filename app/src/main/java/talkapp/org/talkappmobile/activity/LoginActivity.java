@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
@@ -58,6 +59,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @Inject
     LoginInteractor interactor;
     @Inject
+    @Named("executor")
     Executor executor;
     @Inject
     Context context;
