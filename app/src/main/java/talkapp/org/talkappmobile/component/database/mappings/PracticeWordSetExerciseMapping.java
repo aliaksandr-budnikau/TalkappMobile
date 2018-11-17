@@ -7,15 +7,19 @@ import java.util.Objects;
 
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
-@DatabaseTable(tableName = "PracticeWordSetExercise")
+@DatabaseTable(tableName = PRACTICE_WORD_SET_EXERCISE_TABLE)
 public class PracticeWordSetExerciseMapping {
+    public static final String ID_FN = "id";
     public static final String WORD_FN = "word";
+    public static final String SENTENCE_FN = "sentence";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
-    @DatabaseField(generatedId = true)
+    public static final String PRACTICE_WORD_SET_EXERCISE_TABLE = "PracticeWordSetExercise";
+    @DatabaseField(generatedId = true, columnName = ID_FN)
     private int id;
 
     @DatabaseField(canBeNull = false, columnName = WORD_SET_ID_FN)
@@ -24,7 +28,7 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String wordJSON;
 
-    @DatabaseField
+    @DatabaseField(canBeNull = false, columnName = SENTENCE_FN)
     private String sentenceJSON;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
@@ -32,6 +36,18 @@ public class PracticeWordSetExerciseMapping {
 
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
+
+    public PracticeWordSetExerciseMapping() {
+    }
+
+    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceJSON, WordSetExperienceStatus status, boolean current) {
+        this.id = id;
+        this.wordSetId = wordSetId;
+        this.wordJSON = wordJSON;
+        this.sentenceJSON = sentenceJSON;
+        this.status = status;
+        this.current = current;
+    }
 
     public int getId() {
         return id;

@@ -38,9 +38,9 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
+    public void createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
         try {
-            return super.createOrUpdate(exercise);
+            super.createOrUpdate(exercise);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

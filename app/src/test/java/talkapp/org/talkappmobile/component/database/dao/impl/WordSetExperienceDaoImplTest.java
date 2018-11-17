@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -35,7 +36,7 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 public class WordSetExperienceDaoImplTest {
 
     private DatabaseHelper databaseHelper;
-    private WordSetExperienceDaoImpl experienceDao;
+    private WordSetExperienceDao experienceDao;
 
     @Before
     public void setup() throws SQLException {
@@ -69,7 +70,6 @@ public class WordSetExperienceDaoImplTest {
 
     @Test
     public void createNewOrUpdate_ordinaryCaseOfUpdate() {
-        // setup
         WordSetExperienceMapping exp;
         exp = new WordSetExperienceMapping(1, 0, 3, STUDYING);
         experienceDao.createNewOrUpdate(exp);
@@ -121,9 +121,9 @@ public class WordSetExperienceDaoImplTest {
         Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_SET_EXPERIENCE_TABLE), new String[]{});
         cursor.moveToNext();
 
-        assertEquals(exp.getId(), cursor.getInt(cursor.getColumnIndex(ID_FN)));
-        assertEquals(exp.getTrainingExperience(), cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(exp.getMaxTrainingExperience(), cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
+        assertEquals(0, cursor.getInt(cursor.getColumnIndex(ID_FN)));
+        assertEquals(0, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
+        assertEquals(0, cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
         assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getCount());
     }

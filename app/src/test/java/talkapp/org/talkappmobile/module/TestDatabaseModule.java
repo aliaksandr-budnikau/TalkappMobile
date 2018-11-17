@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.module;
 
-import com.j256.ormlite.dao.Dao;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +31,8 @@ public class TestDatabaseModule extends DatabaseModule {
             }
 
             @Override
-            public Dao.CreateOrUpdateStatus createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
+            public void createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
                 storage.add(exercise);
-                return new Dao.CreateOrUpdateStatus(false, false, 0);
             }
 
             @Override
