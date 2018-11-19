@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 26
@@ -12,6 +11,9 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
@@ -34,6 +36,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -51,8 +57,8 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:5.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.21.0'
-    testCompile('org.powermock:powermock-reflect:1.6.1')
+    testCompile 'org.powermock:powermock-reflect:1.6.1'
     testCompile 'org.robolectric:robolectric:3.0'
-    apt 'com.google.dagger:dagger-compiler:2.4'
-    testApt 'com.google.dagger:dagger-compiler:2.4'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
+    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.4'
 }
