@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -264,18 +263,14 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void rightAnswerUntouched() {
         // setup
-        Sentence sentence = new Sentence();
-        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
 
         // when
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(interactor.getCurrentWord(wordSetId)).thenReturn(word);
-        when(interactor.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerUntouched();
 
         // then
-        verify(viewStrategy).rightAnswerUntouched(sentence, word);
+        verify(interactor).rightAnswerUntouched(wordSetId, presenter);
     }
 
     @Test
@@ -283,5 +278,18 @@ public class PracticeWordSetPresenterTest {
         Object viewStrategy = Whitebox.getInternalState(presenter, "viewStrategy");
         presenter.onEnableRepetitionMode();
         assertNotEquals(viewStrategy, Whitebox.getInternalState(presenter, "viewStrategy"));
+    }
+
+    @Test
+    public void onHideRightAnswer() {
+        // setup
+        Word2Tokens word = new Word2Tokens();
+        Sentence sentence = new Sentence();
+
+        // when
+        presenter.onHideRightAnswer(sentence, word);
+
+        // then
+        verify(viewStrategy).rightAnswerUntouched(sentence, word);
     }
 }

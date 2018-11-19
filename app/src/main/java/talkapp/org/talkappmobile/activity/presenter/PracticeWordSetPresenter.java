@@ -96,6 +96,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         this.viewStrategy = newWordOnlyStrategy;
     }
 
+    @Override
+    public void onHideRightAnswer(Sentence sentence, Word2Tokens word) {
+        viewStrategy.rightAnswerUntouched(sentence, word);
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -142,11 +147,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void rightAnswerUntouched() {
-        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
-        if (currentSentence != null) {
-            Word2Tokens currentWord = interactor.getCurrentWord(state.getWordSetId());
-            viewStrategy.rightAnswerUntouched(currentSentence, currentWord);
-        }
+        interactor.rightAnswerUntouched(state.getWordSetId(), this);
     }
 
     public void pronounceRightAnswerButtonClick() {

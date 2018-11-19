@@ -33,4 +33,6 @@ public interface OnPracticeWordSetListener {
     void onEnableRepetitionMode();
 
     void onDisableRepetitionMode();
+
+    void onHideRightAnswer(Sentence currentSentence, Word2Tokens currentWord);
 }

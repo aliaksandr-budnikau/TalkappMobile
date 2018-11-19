@@ -23,4 +23,6 @@ public interface PracticeWordSetExerciseRepository {
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);
+
+    boolean isCurrentExerciseAnswered(int wordSetId);
 }

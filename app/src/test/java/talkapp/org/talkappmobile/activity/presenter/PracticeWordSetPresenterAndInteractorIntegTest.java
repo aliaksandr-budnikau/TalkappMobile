@@ -9,6 +9,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
@@ -19,13 +20,16 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.matches;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -742,5 +746,23 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.pronounceRightAnswerButtonClick();
         // and here
         presenter.rightAnswerTouched();
+    }
+
+    @Test
+    public void testPracticeWordSet_rightAnswerCheckedTouchRightAnswerUntouchBug() {
+        createPresenter(interactor, viewStrategyFactory);
+        login();
+
+        presenter.initialise();
+        presenter.nextButtonClick();
+        Sentence sentence = exerciseRepository.getCurrentSentence(wordSet.getId());
+        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.rightAnswerTouched();
+        presenter.rightAnswerUntouched();
+
+        ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
+        verify(view, atLeastOnce()).setRightAnswer(arg.capture());
+        List<String> allValues = arg.getAllValues();
+        assertFalse(allValues.get(allValues.size() - 1).contains(PLACEHOLDER));
     }
 }

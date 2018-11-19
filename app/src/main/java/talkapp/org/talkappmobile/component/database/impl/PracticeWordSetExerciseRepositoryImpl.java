@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
@@ -148,6 +149,20 @@ public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExe
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setStatus(next(mapping.getStatus()));
         exerciseDao.createNewOrUpdate(mapping);
+    }
+
+    @Override
+    public boolean isCurrentExerciseAnswered(int wordSetId) {
+        WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
+        WordSetExperienceStatus generalStatus = exp.getStatus();
+        List<PracticeWordSetExerciseMapping> currentExes = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        if (currentExes.isEmpty()) {
+            return false;
+        }
+
+        WordSetExperienceStatus exeStatus = currentExes.get(0).getStatus();
+
+        return next(generalStatus) == exeStatus;
     }
 
     private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {

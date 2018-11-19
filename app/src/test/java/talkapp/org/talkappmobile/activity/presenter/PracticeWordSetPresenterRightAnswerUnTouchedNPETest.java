@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -52,10 +53,10 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     }
 
     @Test
-    public void rightAnswerUntouched_whenSentenceIsNotInitializedYetNPE() {
+    public void rightAnswerUntouched() {
         int wordSetId = 3;
         when(state.getWordSetId()).thenReturn(wordSetId);
-        when(interactor.getCurrentSentence(wordSetId)).thenReturn(null);
         presenter.rightAnswerUntouched();
+        verify(interactor).rightAnswerUntouched(wordSetId, presenter);
     }
 }

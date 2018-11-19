@@ -207,4 +207,14 @@ public class PracticeWordSetInteractor {
         }
         logger.i(TAG, "stop speaking");
     }
+
+    public void rightAnswerUntouched(int wordSetId, OnPracticeWordSetListener listener) {
+        boolean answered = exerciseRepository.isCurrentExerciseAnswered(wordSetId);
+        if (answered) {
+            return;
+        }
+        Sentence currentSentence = exerciseRepository.getCurrentSentence(wordSetId);
+        Word2Tokens currentWord = exerciseRepository.getCurrentWord(wordSetId);
+        listener.onHideRightAnswer(currentSentence, currentWord);
+    }
 }
