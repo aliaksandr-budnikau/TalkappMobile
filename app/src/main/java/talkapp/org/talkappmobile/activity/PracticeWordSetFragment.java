@@ -21,6 +21,11 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTouch;
+import butterknife.Unbinder;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
@@ -39,6 +44,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String WORD_SET_MAPPING = "wordSet";
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     private final StringBuilder SIGNAL_SEQUENCE = new StringBuilder("12345678");
+
     @Inject
     Executor executor;
     @Inject
@@ -50,103 +56,34 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
+    @BindView(R.id.originalText)
+    TextView originalText;
+    @BindView(R.id.rightAnswer)
+    TextView rightAnswer;
+    @BindView(R.id.answerText)
+    TextView answerText;
+    @BindView(R.id.wordSetProgress)
+    ProgressBar wordSetProgress;
+    @BindView(R.id.nextButton)
+    Button nextButton;
+    @BindView(R.id.checkButton)
+    Button checkButton;
+    @BindView(R.id.speakButton)
+    Button speakButton;
+    @BindView(R.id.playButton)
+    Button playButton;
+    @BindView(R.id.pronounceRightAnswerButton)
+    Button pronounceRightAnswerButton;
+    @BindView(R.id.please_wait_progress_bar)
+    View pleaseWaitProgressBar;
+    @BindView(R.id.word_set_practise_form)
+    View wordSetPractiseForm;
+    @BindView(R.id.spellingGrammarErrorsListView)
+    LinearLayout spellingGrammarErrorsListView;
+
     private WaitingForProgressBarManager waitingForProgressBarManager;
-
-    private TextView originalText;
-    private TextView rightAnswer;
-    private TextView answerText;
-    private ProgressBar wordSetProgress;
-    private Button nextButton;
-    private Button checkButton;
-    private Button speakButton;
-    private Button playButton;
-    private Button pronounceRightAnswerButton;
-    private LinearLayout spellingGrammarErrorsListView;
+    private Unbinder unbinder;
     private PracticeWordSetPresenter presenter;
-
-    private View.OnClickListener nextButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    presenter.nextButtonClick();
-                    return null;
-                }
-            }.executeOnExecutor(executor);
-        }
-    };
-
-    private View.OnClickListener checkAnswerButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    presenter.checkAnswerButtonClick(answerText.getText().toString());
-                    return null;
-                }
-            }.executeOnExecutor(executor);
-            sendCheatSignal("C");
-        }
-    };
-
-    private View.OnClickListener pronounceRightAnswerButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    presenter.pronounceRightAnswerButtonClick();
-                    return null;
-                }
-            }.executeOnExecutor(executor);
-            sendCheatSignal("P");
-        }
-    };
-
-    private View.OnTouchListener rightAnswerOnTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    presenter.rightAnswerTouched();
-                    return true; // if you want to handle the touch event
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    presenter.rightAnswerUntouched();
-                    return true; // if you want to handle the touch event
-            }
-            return false;
-        }
-    };
-
-    private View.OnClickListener recogniseVoiceButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
-            intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, PracticeWordSetFragment.class.getPackage().getName());
-            intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
-            intent.putExtra("android.speech.extra.GET_AUDIO", true);
-            startActivityForResult(intent, 3000);
-        }
-    };
-
-    private View.OnClickListener playVoiceButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    presenter.playVoiceButtonClick();
-                    return null;
-                }
-            }.executeOnExecutor(executor);
-            sendCheatSignal("L");
-        }
-    };
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -165,24 +102,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                              Bundle savedInstanceState) {
         DIContextUtils.get().inject(this);
         View inflate = inflater.inflate(R.layout.word_set_practice_activity_fragment, container, false);
-
-        originalText = inflate.findViewById(R.id.originalText);
-        rightAnswer = inflate.findViewById(R.id.rightAnswer);
-        answerText = inflate.findViewById(R.id.answerText);
-        wordSetProgress = inflate.findViewById(R.id.wordSetProgress);
-        nextButton = inflate.findViewById(R.id.nextButton);
-        checkButton = inflate.findViewById(R.id.checkButton);
-        speakButton = inflate.findViewById(R.id.speakButton);
-        playButton = inflate.findViewById(R.id.playButton);
-        pronounceRightAnswerButton = inflate.findViewById(R.id.pronounceRightAnswerButton);
-        View pleaseWaitProgressBar = inflate.findViewById(R.id.please_wait_progress_bar);
-        View wordSetPractiseForm = inflate.findViewById(R.id.word_set_practise_form);
-
-        nextButton.setOnClickListener(nextButtonListener);
-        checkButton.setOnClickListener(checkAnswerButtonListener);
-        speakButton.setOnClickListener(recogniseVoiceButtonListener);
-        playButton.setOnClickListener(playVoiceButtonListener);
-        pronounceRightAnswerButton.setOnClickListener(pronounceRightAnswerButtonListener);
+        unbinder = ButterKnife.bind(this, inflate);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, wordSetPractiseForm);
 
@@ -192,18 +112,67 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
         presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
 
-        spellingGrammarErrorsListView = inflate.findViewById(R.id.spellingGrammarErrorsListView);
-        rightAnswer.setOnTouchListener(rightAnswerOnTouchListener);
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                presenter.initialise();
-                presenter.nextButtonClick();
-                return null;
-            }
-        }.executeOnExecutor(executor);
+        new MyAsyncTask(() -> {
+            presenter.initialise();
+            presenter.nextButtonClick();
+        }).executeOnExecutor(executor);
         return inflate;
+    }
+
+    @OnTouch(R.id.rightAnswer)
+    public boolean onRightAnswerOnTouch(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                presenter.rightAnswerTouched();
+                return true; // if you want to handle the touch event
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                presenter.rightAnswerUntouched();
+                return true; // if you want to handle the touch event
+        }
+        return false;
+    }
+
+    @OnClick(R.id.nextButton)
+    public void onNextButtonClick() {
+        new MyAsyncTask(() -> {
+            presenter.nextButtonClick();
+        }).executeOnExecutor(executor);
+    }
+
+    @OnClick(R.id.playButton)
+    public void onPlayVoiceButtonClick() {
+        new MyAsyncTask(() -> {
+            presenter.playVoiceButtonClick();
+        }).executeOnExecutor(executor);
+        sendCheatSignal("L");
+    }
+
+    @OnClick(R.id.pronounceRightAnswerButton)
+    public void onPronounceRightAnswerButtonClick() {
+        new MyAsyncTask(() -> {
+            presenter.pronounceRightAnswerButtonClick();
+        }).executeOnExecutor(executor);
+        sendCheatSignal("P");
+    }
+
+    @OnClick(R.id.checkButton)
+    public void onCheckAnswerButtonClick() {
+        new MyAsyncTask(() -> {
+            presenter.checkAnswerButtonClick(answerText.getText().toString());
+        }).executeOnExecutor(executor);
+        sendCheatSignal("C");
+    }
+
+    @OnClick(R.id.speakButton)
+    public void onRecogniseVoiceButtonClick() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, PracticeWordSetFragment.class.getPackage().getName());
+        intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
+        intent.putExtra("android.speech.extra.GET_AUDIO", true);
+        startActivityForResult(intent, 3000);
     }
 
     @Override
@@ -228,73 +197,44 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     public void showNextButton() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                nextButton.setVisibility(View.VISIBLE);
-            }
-        });
+        uiEventHandler.post(() -> nextButton.setVisibility(View.VISIBLE));
     }
 
     @Override
     public void hideNextButton() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                nextButton.setVisibility(View.GONE);
-            }
-        });
+        uiEventHandler.post(() -> nextButton.setVisibility(View.GONE));
     }
 
     @Override
     public void showPleaseWaitProgressBar() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.showProgressBar();
-            }
-        });
+        uiEventHandler.post(() -> waitingForProgressBarManager.showProgressBar());
     }
 
     @Override
     public void hidePleaseWaitProgressBar() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.hideProgressBar();
-            }
-        });
+        uiEventHandler.post(() -> waitingForProgressBarManager.hideProgressBar());
     }
 
     @Override
     public void showCheckButton() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                checkButton.setVisibility(View.VISIBLE);
-            }
-        });
+        uiEventHandler.post(() -> checkButton.setVisibility(View.VISIBLE));
     }
 
     @Override
     public void hideCheckButton() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                checkButton.setVisibility(View.GONE);
-            }
-        });
+        uiEventHandler.post(() -> checkButton.setVisibility(View.GONE));
     }
 
     @Override
     public void setRightAnswer(final String text) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                rightAnswer.setText(text);
-            }
-        });
+        uiEventHandler.post(() -> rightAnswer.setText(text));
     }
 
     @Override
@@ -304,176 +244,111 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     public void setOriginalText(final String text) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                originalText.setText(text);
-            }
-        });
+        uiEventHandler.post(() -> originalText.setText(text));
     }
 
     @Override
     public void showMessageAnswerEmpty() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), "Answer can't be empty.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        uiEventHandler.post(() -> Toast.makeText(getContext(), "Answer can't be empty.", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void showMessageSpellingOrGrammarError() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
-            }
-        });
+        uiEventHandler.post(() -> Toast.makeText(getContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show());
     }
 
     @Override
     public void showMessageAccuracyTooLow() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), "Accuracy too low", Toast.LENGTH_LONG).show();
-            }
-        });
+        uiEventHandler.post(() -> Toast.makeText(getContext(), "Accuracy too low", Toast.LENGTH_LONG).show());
     }
 
     @Override
     public void showCongratulationMessage() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), "Congratulations! You won!", Toast.LENGTH_LONG).show();
-            }
-        });
+        uiEventHandler.post(() -> Toast.makeText(getContext(), "Congratulations! You won!", Toast.LENGTH_LONG).show());
     }
 
     @Override
     public void closeActivity() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                getActivity().finish();
-            }
-        });
+        uiEventHandler.post(() -> getActivity().finish());
     }
 
     @Override
     public void openAnotherActivity() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
-            }
+        uiEventHandler.post(() -> {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            startActivity(intent);
         });
     }
 
     @Override
     public void setEnableVoiceRecButton(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                speakButton.setEnabled(value);
-            }
-        });
+        uiEventHandler.post(() -> speakButton.setEnabled(value));
     }
 
     @Override
     public void setEnablePronounceRightAnswerButton(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                pronounceRightAnswerButton.setEnabled(value);
-            }
-        });
+        uiEventHandler.post(() -> pronounceRightAnswerButton.setEnabled(value));
     }
 
     @Override
     public void setEnableCheckButton(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                checkButton.setEnabled(value);
-            }
-        });
+        uiEventHandler.post(() -> checkButton.setEnabled(value));
     }
 
     @Override
     public void setEnableNextButton(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                nextButton.setEnabled(value);
-            }
-        });
+        uiEventHandler.post(() -> nextButton.setEnabled(value));
     }
 
     @Override
     public void setAnswerText(final String text) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                answerText.setText(text);
-            }
-        });
+        uiEventHandler.post(() -> answerText.setText(text));
     }
 
     @Override
     public void showSpellingOrGrammarErrorPanel(final String errorMessage) {
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                View vi = inflater.inflate(R.layout.row_spelling_grammar_errors_list_item, null);
-                vi.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                    }
-                });
-                TextView textView = vi.findViewById(R.id.errorRow);
-                textView.setText(errorMessage);
-                spellingGrammarErrorsListView.addView(vi);
-            }
+        uiEventHandler.post(() -> {
+            View vi = inflater.inflate(R.layout.row_spelling_grammar_errors_list_item, null);
+            vi.setOnClickListener(v -> Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show());
+            TextView textView = vi.findViewById(R.id.errorRow);
+            textView.setText(errorMessage);
+            spellingGrammarErrorsListView.addView(vi);
         });
     }
 
     @Override
     public void hideSpellingOrGrammarErrorPanel() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                spellingGrammarErrorsListView.removeAllViews();
-            }
-        });
+        uiEventHandler.post(() -> spellingGrammarErrorsListView.removeAllViews());
     }
 
     @Override
     public void setEnableRightAnswerTextView(final boolean value) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                rightAnswer.setEnabled(value);
-            }
-        });
+        uiEventHandler.post(() -> rightAnswer.setEnabled(value));
     }
 
     private void sendCheatSignal(final String signal) {
         SIGNAL_SEQUENCE.deleteCharAt(0);
         SIGNAL_SEQUENCE.append(signal);
         if (CHEAT_SEND_WRITE_ANSWER.equals(SIGNAL_SEQUENCE.toString())) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    presenter.checkRightAnswerCommandRecognized();
-                    return null;
-                }
-            }.executeOnExecutor(executor);
+            new MyAsyncTask(() -> {
+                presenter.checkRightAnswerCommandRecognized();
+            }).executeOnExecutor(executor);
+        }
+    }
+
+    private static class MyAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private final Runnable runnable;
+
+        MyAsyncTask(Runnable runnable) {
+            this.runnable = runnable;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            runnable.run();
+            return null;
         }
     }
 }
