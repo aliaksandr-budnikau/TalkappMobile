@@ -1,19 +1,19 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -28,18 +28,20 @@ import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, AdapterView.OnItemClickListener {
+@EFragment(value = R.layout.word_translations_layout)
+public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Inject
-    Executor executor;
-    @Inject
     AdaptersFactory adaptersFactory;
-    @Inject
-    Handler uiEventHandler;
     @Inject
     PracticeWordSetVocabularyInteractor interactor;
     @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    @ViewById(R.id.wordTranslationsListView)
+    ListView wordSetsListView;
+    @ViewById(R.id.please_wait_progress_bar)
+    View progressBarView;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
@@ -47,75 +49,54 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     private PracticeWordSetVocabularyPresenter presenter;
 
     public static PracticeWordSetVocabularyFragment newInstance(WordSet wordSet) {
-        PracticeWordSetVocabularyFragment fragment = new PracticeWordSetVocabularyFragment();
+        PracticeWordSetVocabularyFragment fragment = new PracticeWordSetVocabularyFragment_();
         Bundle args = new Bundle();
         args.putSerializable(WORD_SET_MAPPING, wordSet);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    @AfterViews
+    public void init() {
         DIContextUtils.get().inject(this);
-        View view = inflater.inflate(R.layout.word_translations_layout, container, false);
 
         adapter = adaptersFactory.createWordTranslationListAdapter(this.getActivity());
-
-        ListView wordSetsListView = view.findViewById(R.id.wordTranslationsListView);
         wordSetsListView.setAdapter(adapter);
-        wordSetsListView.setOnItemClickListener(this);
-        WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
 
-        View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
+        WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
         presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                presenter.initialise();
-                return null;
-            }
-        }.executeOnExecutor(executor);
+        initPresenter();
+    }
 
-        return view;
+    @Background
+    public void initPresenter() {
+        presenter.initialise();
     }
 
     @Override
+    @UiThread
     public void setWordSetVocabularyList(final List<WordTranslation> wordTranslations) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.addAll(wordTranslations);
-            }
-        });
+        adapter.addAll(wordTranslations);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @ItemClick(R.id.wordTranslationsListView)
+    public void onItemClick(int position) {
         WordTranslation translation = adapter.getItem(position);
         presenter.onPronounceWordButtonClick(translation);
     }
 
     @Override
+    @UiThread
     public void onInitializeBeginning() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.showProgressBar();
-            }
-        });
+        waitingForProgressBarManager.showProgressBar();
     }
 
     @Override
+    @UiThread
     public void onInitializeEnd() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.hideProgressBar();
-            }
-        });
+        waitingForProgressBarManager.hideProgressBar();
     }
 }
