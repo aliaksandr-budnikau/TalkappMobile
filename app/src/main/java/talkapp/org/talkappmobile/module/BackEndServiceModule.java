@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -16,7 +19,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -28,14 +30,19 @@ import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 /**
  * @author Budnikau Aliaksandr
  */
 @Module
+@EBean
 public class BackEndServiceModule {
 
     public static final int TIMEOUT = 20;
+
+    @Bean
+    LoggerBean logger;
 
     @Provides
     @Singleton
@@ -81,7 +88,7 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public BackendServer provideBackendServer(Logger logger, AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
+    public BackendServer provideBackendServer(AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
         return new BackendServerImpl(logger, authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
     }
 
@@ -120,6 +127,6 @@ public class BackEndServiceModule {
     @Provides
     @Named("serverUrl")
     public String provideServerUrl() {
-        return "http://192.168.0.101:8080";
+        return "http://192.168.100.54:8080";
     }
 }

@@ -2,6 +2,9 @@ package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -16,7 +19,6 @@ import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
-import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
@@ -30,6 +32,7 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepos
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
@@ -43,11 +46,15 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
  * @author Budnikau Aliaksandr
  */
 @Module
+@EBean
 public class GameplayModule {
     public static final String[] ARTICLES = new String[]{"a", "an", "the"};
     public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
     public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
     public static final String PLACEHOLDER = "***";
+
+    @Bean
+    LoggerBean logger;
 
     @Provides
     @Singleton
@@ -105,7 +112,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, Logger logger, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceRepository, exerciseRepository, context, audioStuffFactory, speaker);
     }
 
@@ -117,7 +124,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public LoginInteractor provideLoginInteractor(Logger logger, BackendServer server, TextUtils textUtils) {
+    public LoginInteractor provideLoginInteractor(BackendServer server, TextUtils textUtils) {
         return new LoginInteractor(logger, server, textUtils);
     }
 
@@ -135,7 +142,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public ExceptionHandlerInteractor provideExceptionHandlerInteractor(Logger logger) {
+    public ExceptionHandlerInteractor provideExceptionHandlerInteractor() {
         return new ExceptionHandlerInteractor(logger);
     }
 

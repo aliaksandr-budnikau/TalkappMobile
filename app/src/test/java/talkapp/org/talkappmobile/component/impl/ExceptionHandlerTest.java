@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -45,7 +46,9 @@ public class ExceptionHandlerTest {
 
     @Before
     public void setup() {
-        ClassForInjection injection = new ClassForInjection(new TestBackEndServiceModule());
+        TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
+        Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerBean.class));
+        ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
         componentsFactory = injection.getComponentsFactory();
         interactor = injection.getExceptionHandlerInteractor();

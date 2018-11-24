@@ -18,11 +18,12 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepos
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
+import talkapp.org.talkappmobile.module.BackEndServiceModule_;
 import talkapp.org.talkappmobile.module.DaggerTestDIContext;
-import talkapp.org.talkappmobile.module.GameplayModule;
+import talkapp.org.talkappmobile.module.GameplayModule_;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
-import talkapp.org.talkappmobile.module.LanguageModule;
+import talkapp.org.talkappmobile.module.LanguageModule_;
 import talkapp.org.talkappmobile.module.TestAudioModule;
 import talkapp.org.talkappmobile.module.TestDIContext;
 import talkapp.org.talkappmobile.module.TestDataModule;
@@ -55,16 +56,17 @@ public class ClassForInjection {
     ExceptionHandlerInteractor exceptionHandlerInteractor;
     @Inject
     TopicRestClient topicRestClient;
+    private static TalkappMobileApplication application = new TalkappMobileApplication();
 
-    public ClassForInjection(BackEndServiceModule backEndServiceModule) {
+    public  ClassForInjection(BackEndServiceModule backEndServiceModule) {
         TestDIContext context = DaggerTestDIContext.builder()
                 .databaseModule(new TestDatabaseModule())
-                .androidModule(new AndroidModule(new TalkappMobileApplication()))
+                .androidModule(new AndroidModule(application))
                 .audioModule(new TestAudioModule())
-                .gameplayModule(new GameplayModule())
+                .gameplayModule(GameplayModule_.getInstance_(application))
                 .dataModule(new TestDataModule())
                 .infraModule(new InfraModule())
-                .languageModule(new LanguageModule())
+                .languageModule(LanguageModule_.getInstance_(application))
                 .backEndServiceModule(backEndServiceModule)
                 .itemsListModule(new ItemsListModule())
                 .build();
@@ -73,7 +75,7 @@ public class ClassForInjection {
     }
 
     public ClassForInjection() {
-        this(new BackEndServiceModule());
+        this(BackEndServiceModule_.getInstance_(application));
     }
 
     public BackendServer getServer() {

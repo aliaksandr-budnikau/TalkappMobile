@@ -4,10 +4,10 @@ import android.app.Application;
 
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
-import talkapp.org.talkappmobile.module.BackEndServiceModule;
+import talkapp.org.talkappmobile.module.BackEndServiceModule_;
 import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
-import talkapp.org.talkappmobile.module.GameplayModule;
+import talkapp.org.talkappmobile.module.GameplayModule_;
 import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
@@ -23,12 +23,12 @@ public class DIContextUtils {
                     .androidModule(new AndroidModule(application))
                     .audioModule(new AudioModule())
                     .viewModule(new ViewModule())
-                    .gameplayModule(new GameplayModule())
+                    .gameplayModule(GameplayModule_.getInstance_(application))
                     .dataModule(new DataModule())
                     .infraModule(new InfraModule())
                     .languageModule(new LanguageModule())
                     .databaseModule(new DatabaseModule())
-                    .backEndServiceModule(new BackEndServiceModule())
+                    .backEndServiceModule(BackEndServiceModule_.getInstance_(application))
                     .itemsListModule(new ItemsListModule())
                     .build();
         }

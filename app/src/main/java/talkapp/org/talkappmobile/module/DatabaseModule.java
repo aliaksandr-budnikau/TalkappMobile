@@ -5,13 +5,15 @@ import android.content.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.sql.SQLException;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
@@ -23,12 +25,16 @@ import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExercise
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceRepositoryImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 /**
  * @author Budnikau Aliaksandr
  */
 @Module
+@EBean
 public class DatabaseModule {
+    @Bean
+    LoggerBean logger;
 
     @Provides
     @Singleton
@@ -64,7 +70,7 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public WordSetExperienceRepository provideWordSetExperienceRepository(WordSetExperienceDao experienceDao, Logger logger) {
+    public WordSetExperienceRepository provideWordSetExperienceRepository(WordSetExperienceDao experienceDao) {
         return new WordSetExperienceRepositoryImpl(experienceDao, logger);
     }
 }
