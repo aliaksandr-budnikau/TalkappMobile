@@ -20,21 +20,21 @@
         android:supportsRtl="true">
         <!-- android:theme="@style/AppTheme"> -->
         <activity
-            android:name=".activity.PracticeWordSetActivity"
+            android:name=".activity.PracticeWordSetActivity_"
             android:label="Используй слова"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".activity.MainActivity_"
             android:theme="@style/Theme.AppCompat">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".activity.MainActivity_" />
         </activity>
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.LoginActivity_"
             android:label="@string/title_activity_login"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.MainActivity_"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -44,10 +44,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CrashActivity"
+            android:name=".activity.CrashActivity_"
             android:label="@string/title_crash_main"
-            android:theme="@style/Theme.AppCompat"
-            />
+            android:theme="@style/Theme.AppCompat" />
     </application>
 
 </manifest>

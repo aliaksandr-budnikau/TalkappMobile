@@ -9,6 +9,7 @@ import android.widget.ListView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -43,8 +44,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
 
-    private WaitingForProgressBarManager waitingForProgressBarManager;
+    @FragmentArg(WORD_SET_MAPPING)
+    WordSet wordSet;
 
+    private WaitingForProgressBarManager waitingForProgressBarManager;
     private ArrayAdapter<WordTranslation> adapter;
     private PracticeWordSetVocabularyPresenter presenter;
 
@@ -65,14 +68,12 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
-        WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
-        presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
-
         initPresenter();
     }
 
     @Background
     public void initPresenter() {
+        presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
         presenter.initialise();
     }
 

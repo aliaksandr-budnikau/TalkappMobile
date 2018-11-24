@@ -5,11 +5,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.widget.Toast;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import talkapp.org.talkappmobile.activity.CrashActivity;
-import talkapp.org.talkappmobile.activity.LoginActivity;
+import talkapp.org.talkappmobile.activity.CrashActivity_;
+import talkapp.org.talkappmobile.activity.LoginActivity_;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 
 import static talkapp.org.talkappmobile.activity.CrashActivity.STACK_TRACE;
@@ -35,13 +32,13 @@ public class ExceptionHandlerViewImpl implements ExceptionHandlerView {
 
     @Override
     public void openLoginActivity(Context currentActivityContext) {
-        Intent intent = new Intent(currentActivityContext, LoginActivity.class);
+        Intent intent = new Intent(currentActivityContext, LoginActivity_.class);
         currentActivityContext.startActivity(intent);
     }
 
     @Override
     public void openCrashActivity(Context currentActivityContext, Throwable e, String errorReport) {
-        Intent intent = new Intent(currentActivityContext, CrashActivity.class);
+        Intent intent = new Intent(currentActivityContext, CrashActivity_.class);
         intent.putExtra(STACK_TRACE, errorReport);
         currentActivityContext.startActivity(intent);
     }

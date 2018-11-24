@@ -17,6 +17,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -76,6 +77,10 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @ViewById(R.id.spellingGrammarErrorsListView)
     LinearLayout spellingGrammarErrorsListView;
 
+
+    @FragmentArg(WORD_SET_MAPPING)
+    WordSet wordSet;
+
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetPresenter presenter;
 
@@ -97,17 +102,14 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, wordSetPractiseForm);
 
-        WordSet wordSet = (WordSet) getArguments().get(WORD_SET_MAPPING);
-
-        PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
-        PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
-
         initPresenter();
     }
 
     @Background
     public void initPresenter() {
+        PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
+        PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
     }
@@ -271,7 +273,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     @UiThread
     public void openAnotherActivity() {
-        Intent intent = new Intent(getContext(), MainActivity.class);
+        Intent intent = new Intent(getContext(), MainActivity_.class);
         startActivity(intent);
     }
 

@@ -9,26 +9,28 @@ import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -36,6 +38,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
+import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
@@ -46,6 +49,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
+@EActivity(R.layout.activity_login)
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>, LoginActivityView {
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -54,35 +58,34 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @Inject
     BackendServer server;
     @Inject
-    talkapp.org.talkappmobile.component.TextUtils textUtils;
+    TextUtils textUtils;
     @Inject
     LoginInteractor interactor;
     @Inject
-    Executor executor;
-    @Inject
     Context context;
     @Inject
-    Handler uiEventHandler;
-    @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    @ViewById(R.id.email)
+    AutoCompleteTextView emailView;
+    @ViewById(R.id.password)
+    EditText passwordView;
+    @ViewById(R.id.login_form)
+    View loginFormView;
+    @ViewById(R.id.login_progress)
+    View progressView;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
     // UI references.
-    private AutoCompleteTextView emailView;
-    private EditText passwordView;
     private LoginPresenter presenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    @AfterViews
+    public void init() {
         DIContextUtils.get().inject(this);
         // Set up the login form.
-        emailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
-        passwordView = (EditText) findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -94,52 +97,32 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Store values at the time of the login attempt.
-                signIn();
-            }
-        });
-
-        Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
-        mEmailSignUpButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Store values at the time of the login attempt.
-                signUp();
-            }
-        });
-
-        View loginFormView = findViewById(R.id.login_form);
-        View progressView = findViewById(R.id.login_progress);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressView, loginFormView);
         presenter = new LoginPresenter(context, this, interactor);
     }
 
-    private void signUp() {
+    @Background
+    public void signUp() {
         final String email = emailView.getText().toString();
         final String password = passwordView.getText().toString();
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                presenter.signUpButtonClick(email, password);
-                return null;
-            }
-        }.executeOnExecutor(executor);
+        presenter.signUpButtonClick(email, password);
     }
 
-    private void signIn() {
+    @Background
+    public void signIn() {
         final String email = emailView.getText().toString();
         final String password = passwordView.getText().toString();
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                presenter.signInButtonClick(email, password);
-                return null;
-            }
-        }.executeOnExecutor(executor);
+        presenter.signInButtonClick(email, password);
+    }
+
+    @Click(R.id.email_sign_in_button)
+    public void onSignInClick() {
+        signIn();
+    }
+
+    @Click(R.id.email_sign_up_button)
+    public void onSignUpClick() {
+        signUp();
     }
 
     private void populateAutoComplete() {
@@ -229,13 +212,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     @Override
+    @UiThread
     public void requestPasswordFocus() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                passwordView.requestFocus();
-            }
-        });
+        passwordView.requestFocus();
     }
 
     @Override
@@ -245,58 +224,38 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @Override
     public void openMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainActivity_.class);
         startActivity(intent);
     }
 
     @Override
+    @UiThread
     public void hideProgress() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.hideProgressBar();
-            }
-        });
+        waitingForProgressBarManager.hideProgressBar();
     }
 
     @Override
+    @UiThread
     public void showProgress() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.showProgressBar();
-            }
-        });
+        waitingForProgressBarManager.showProgressBar();
     }
 
     @Override
+    @UiThread
     public void setEmailError(final String text) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                emailView.setError(text);
-            }
-        });
+        emailView.setError(text);
     }
 
     @Override
+    @UiThread
     public void setPasswordError(final String text) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                passwordView.setError(text);
-            }
-        });
+        passwordView.setError(text);
     }
 
     @Override
+    @UiThread
     public void requestEmailFocus() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                emailView.requestFocus();
-            }
-        });
+        emailView.requestFocus();
     }
 
     @Override
@@ -311,6 +270,5 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 }

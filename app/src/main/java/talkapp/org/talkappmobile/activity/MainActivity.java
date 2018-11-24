@@ -2,8 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,9 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -27,27 +28,31 @@ import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 
-public class MainActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainActivityView {
+@EActivity(R.layout.activity_main)
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityView {
     @Inject
     AuthSign authSign;
     @Inject
     SaveSharedPreference saveSharedPreference;
     @Inject
     MainActivityInteractor interactor;
-    @Inject
-    Executor executor;
+
+    @ViewById(R.id.toolbar)
+    Toolbar toolbar;
+    @ViewById(R.id.drawer_layout)
+    DrawerLayout drawer;
+    @ViewById(R.id.nav_view)
+    NavigationView navigationView;
+
     private MainActivityPresenter presenter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    @AfterViews
+    public void init() {
         DIContextUtils.get().inject(this);
 
         String headerKey = saveSharedPreference.getAuthorizationHeaderKey(MainActivity.this);
         if (StringUtils.isEmpty(headerKey)) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
             finish();
             startActivity(intent);
             return;
@@ -55,35 +60,48 @@ public class MainActivity extends BaseActivity
             authSign.put(headerKey);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        presenter = new MainActivityPresenter(this, interactor);
+        initPresenter();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Handle navigation view item clicks here.
+                int id = item.getItemId();
+                FragmentManager fragmentManager = getFragmentManager();
+                if (id == R.id.word_set_practise) {
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment_()).commit();
+                } else if (id == R.id.topic_practise) {
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
+                } else if (id == R.id.nav_manage) {
+                    Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
+                } else if (id == R.id.nav_exit) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
+                    finish();
+                    startActivity(intent);
+                    saveSharedPreference.clear(MainActivity.this);
+                }
+
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                presenter.checkServerAvailability();
-                return null;
-            }
-        }.executeOnExecutor(executor);
+    @Background
+    public void initPresenter() {
+        presenter = new MainActivityPresenter(this, interactor);
+        presenter.checkServerAvailability();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -120,13 +138,13 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
         FragmentManager fragmentManager = getFragmentManager();
         if (id == R.id.word_set_practise) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment_()).commit();
         } else if (id == R.id.topic_practise) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment()).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
         } else if (id == R.id.nav_manage) {
             Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
         } else if (id == R.id.nav_exit) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
             finish();
             startActivity(intent);
             saveSharedPreference.clear(MainActivity.this);

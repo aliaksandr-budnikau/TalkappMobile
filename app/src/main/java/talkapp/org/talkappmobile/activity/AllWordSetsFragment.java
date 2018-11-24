@@ -3,21 +3,22 @@ package talkapp.org.talkappmobile.activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.ItemLongClick;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
@@ -33,83 +34,61 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AllWordSetsView {
+@EFragment(value = R.layout.all_word_sets_layout)
+public class AllWordSetsFragment extends Fragment implements AllWordSetsView {
     public static final String TOPIC_MAPPING = "topic";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
-    @Inject
-    Executor executor;
     @Inject
     AdaptersFactory adaptersFactory;
     @Inject
     AllWordSetsInteractor interactor;
     @Inject
-    Handler uiEventHandler;
-    @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+
+    @ViewById(R.id.wordSetsListView)
+    ListView wordSetsListView;
+    @ViewById(R.id.please_wait_progress_bar)
+    View progressBarView;
+
+    @FragmentArg(TOPIC_MAPPING)
+    Topic topic;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
     private ArrayAdapter<WordSet> adapter;
     private AllWordSetsPresenter presenter;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.all_word_sets_layout, container, false);
+    @AfterViews
+    public void init() {
         DIContextUtils.get().inject(this);
 
         adapter = adaptersFactory.createWordSetListAdapter(this.getActivity());
-
-        ListView wordSetsListView = view.findViewById(R.id.wordSetsListView);
         wordSetsListView.setAdapter(adapter);
-        wordSetsListView.setOnItemClickListener(this);
-        wordSetsListView.setOnItemLongClickListener(this);
 
-        Bundle arguments = AllWordSetsFragment.this.getArguments();
-        Topic topic = null;
-        if (arguments != null) {
-            topic = (Topic) arguments.getSerializable(TOPIC_MAPPING);
-        }
-
-        View progressBarView = view.findViewById(R.id.please_wait_progress_bar);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
-        presenter = new AllWordSetsPresenter(topic, this, interactor);
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                presenter.initialize();
-                return null;
-            }
-        }.executeOnExecutor(executor);
-
-        return view;
+        initPresenter();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        THREAD_LOCAL.set(view);
+    @Background
+    public void initPresenter() {
+        presenter = new AllWordSetsPresenter(topic, this, interactor);
+        presenter.initialize();
+    }
+
+    @ItemClick(R.id.wordSetsListView)
+    public void onItemClick(int position) {
+        THREAD_LOCAL.set(adapter.getView(position, null, wordSetsListView));
         WordSet wordSet = adapter.getItem(position);
         presenter.itemClick(wordSet);
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position, long id) {
-        THREAD_LOCAL.set(view);
+    @ItemLongClick(R.id.wordSetsListView)
+    public boolean onItemLongClick(final int position) {
+        THREAD_LOCAL.set(adapter.getView(position, null, wordSetsListView));
         WordSet wordSet = adapter.getItem(position);
         presenter.itemLongClick(wordSet);
         return true;
-    }
-
-    @Override
-    public void onWordSetsInitialized(final List<WordSet> wordSets) {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.addAll(wordSets);
-            }
-        });
     }
 
     @Override
@@ -148,29 +127,27 @@ public class AllWordSetsFragment extends Fragment implements AdapterView.OnItemC
     }
 
     private void startWordSetActivity(Topic topic, WordSet wordSet) {
-        Intent intent = new Intent(getActivity(), PracticeWordSetActivity.class);
+        Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
         intent.putExtra(PracticeWordSetActivity.TOPIC_MAPPING, topic);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         startActivity(intent);
     }
 
     @Override
-    public void onInitializeBeginning() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.showProgressBar();
-            }
-        });
+    @UiThread
+    public void onWordSetsInitialized(final List<WordSet> wordSets) {
+        adapter.addAll(wordSets);
     }
 
     @Override
+    @UiThread
+    public void onInitializeBeginning() {
+        waitingForProgressBarManager.showProgressBar();
+    }
+
+    @Override
+    @UiThread
     public void onInitializeEnd() {
-        uiEventHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                waitingForProgressBarManager.hideProgressBar();
-            }
-        });
+        waitingForProgressBarManager.hideProgressBar();
     }
 }
