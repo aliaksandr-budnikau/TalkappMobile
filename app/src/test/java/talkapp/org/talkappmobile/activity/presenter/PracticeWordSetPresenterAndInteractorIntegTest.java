@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import android.os.AsyncTask;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +23,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -742,10 +738,10 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.checkAnswerButtonClick(sentence.getText());
 
         // can fail here
-        when(speaker.speak(sentence.getText())).thenReturn(mock(AsyncTask.class));
         presenter.pronounceRightAnswerButtonClick();
         // and here
         presenter.rightAnswerTouched();
+        verify(speaker).speak(sentence.getText());
     }
 
     @Test

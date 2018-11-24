@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,8 +15,6 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.impl.InfraComponentsFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 
-import static android.os.Looper.getMainLooper;
-
 /**
  * @author Budnikau Aliaksandr
  */
@@ -28,12 +25,6 @@ public class InfraModule {
     @Singleton
     public Logger provideLogger() {
         return new LoggerImpl();
-    }
-
-    @Provides
-    @Singleton
-    public Handler provideHandler() {
-        return new Handler(getMainLooper());
     }
 
     @Provides
@@ -50,7 +41,7 @@ public class InfraModule {
 
     @Provides
     @Singleton
-    public ExceptionHandlerView provideExceptionHandlerView(Context context, Handler uiEventHandler) {
-        return new ExceptionHandlerViewImpl(context, uiEventHandler);
+    public ExceptionHandlerView provideExceptionHandlerView(Context context) {
+        return new ExceptionHandlerViewImpl(context);
     }
 }

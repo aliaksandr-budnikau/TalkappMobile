@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -75,13 +74,6 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         reset(view);
         reset(speaker);
 
-        value = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                return null;
-            }
-        };
-        when(speaker.speak(translations.get(0).getWord())).thenReturn(value);
         presenter.onPronounceWordButtonClick(translations.get(0));
         verify(speaker).speak(translations.get(0).getWord());
         reset(view);

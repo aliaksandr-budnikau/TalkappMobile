@@ -201,7 +201,7 @@ public class PracticeWordSetInteractor {
         }
         logger.i(TAG, "start speaking {}", currentSentence.getText());
         try {
-            speaker.speak(currentSentence.getText()).get();
+            speaker.speak(currentSentence.getText());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -2,8 +2,6 @@ package talkapp.org.talkappmobile.module;
 
 import android.content.Context;
 
-import java.util.concurrent.Executor;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -27,7 +25,7 @@ public class AudioModule {
 
     @Provides
     @Singleton
-    public Speaker provideSpeaker(Context context, Executor executor) {
-        return new SpeakerImpl(context, executor);
+    public Speaker provideSpeaker(Context context) {
+        return new SpeakerImpl(context);
     }
 }

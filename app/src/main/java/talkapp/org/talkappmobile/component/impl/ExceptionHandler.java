@@ -23,7 +23,6 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
         Throwable cause = getCause(e);
         if (cause instanceof InternetConnectionLostException) {
             presenter.handleInternetConnectionLostException(t, e, cause);
-            return;
         } else if (cause instanceof AuthorizationException) {
             presenter.handleAuthorizationException(t, e, cause);
         } else {

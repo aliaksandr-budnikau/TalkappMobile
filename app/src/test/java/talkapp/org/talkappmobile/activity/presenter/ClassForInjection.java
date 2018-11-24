@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepos
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
-import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DaggerTestDIContext;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
@@ -63,7 +62,6 @@ public class ClassForInjection {
                 .androidModule(new AndroidModule(new TalkappMobileApplication()))
                 .audioModule(new TestAudioModule())
                 .gameplayModule(new GameplayModule())
-                .concurrentModule(new ConcurrentModule())
                 .dataModule(new TestDataModule())
                 .infraModule(new InfraModule())
                 .languageModule(new LanguageModule())

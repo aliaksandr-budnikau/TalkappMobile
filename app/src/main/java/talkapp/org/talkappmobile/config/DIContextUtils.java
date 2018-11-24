@@ -5,7 +5,6 @@ import android.app.Application;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
-import talkapp.org.talkappmobile.module.ConcurrentModule;
 import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
@@ -25,7 +24,6 @@ public class DIContextUtils {
                     .audioModule(new AudioModule())
                     .viewModule(new ViewModule())
                     .gameplayModule(new GameplayModule())
-                    .concurrentModule(new ConcurrentModule())
                     .dataModule(new DataModule())
                     .infraModule(new InfraModule())
                     .languageModule(new LanguageModule())

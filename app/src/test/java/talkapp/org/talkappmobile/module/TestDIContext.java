@@ -9,7 +9,6 @@ import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
 @Component(modules = {
         BackEndServiceModule.class,
         GameplayModule.class,
-        ConcurrentModule.class,
         AndroidModule.class,
         DataModule.class,
         AudioModule.class,
