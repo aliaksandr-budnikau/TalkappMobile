@@ -15,8 +15,8 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -35,8 +35,8 @@ public class PracticeWordSetInteractor {
     private final SentenceSelector sentenceSelector;
     private final RefereeService refereeService;
     private final Logger logger;
-    private final WordSetExperienceRepository experienceRepository;
-    private final PracticeWordSetExerciseRepository exerciseRepository;
+    private final WordSetExperienceService experienceService;
+    private final PracticeWordSetExerciseService exerciseService;
     private final Context context;
     private final AudioStuffFactory audioStuffFactory;
     private final Speaker speaker;
@@ -46,8 +46,8 @@ public class PracticeWordSetInteractor {
                                      SentenceSelector sentenceSelector,
                                      RefereeService refereeService,
                                      Logger logger,
-                                     WordSetExperienceRepository experienceRepository,
-                                     PracticeWordSetExerciseRepository exerciseRepository,
+                                     WordSetExperienceService experienceService,
+                                     PracticeWordSetExerciseService exerciseService,
                                      Context context,
                                      AudioStuffFactory audioStuffFactory,
                                      Speaker speaker) {
@@ -56,19 +56,19 @@ public class PracticeWordSetInteractor {
         this.sentenceSelector = sentenceSelector;
         this.refereeService = refereeService;
         this.logger = logger;
-        this.experienceRepository = experienceRepository;
-        this.exerciseRepository = exerciseRepository;
+        this.experienceService = experienceService;
+        this.exerciseService = exerciseService;
         this.context = context;
         this.audioStuffFactory = audioStuffFactory;
         this.speaker = speaker;
     }
 
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
-        WordSetExperience exp = experienceRepository.findById(wordSet.getId());
+        WordSetExperience exp = experienceService.findById(wordSet.getId());
         logger.i(TAG, "find experience by id {}, word set {}", exp, wordSet);
         if (exp == null) {
             logger.i(TAG, "create new experience");
-            exp = experienceRepository.createNew(wordSet);
+            exp = experienceService.createNew(wordSet);
         }
         if (REPETITION.equals(exp.getStatus())) {
             logger.i(TAG, "enable repetition mode");
@@ -87,7 +87,7 @@ public class PracticeWordSetInteractor {
         logger.i(TAG, "initialise words sequence {}", wordSet);
         Set<Word2Tokens> words = wordsCombinator.combineWords(wordSet.getWords());
         logger.i(TAG, "words sequence {}", words);
-        exerciseRepository.createSomeIfNecessary(words, wordSet.getId());
+        exerciseService.createSomeIfNecessary(words, wordSet.getId());
         logger.i(TAG, "word sequence was initialized");
     }
 
@@ -101,7 +101,7 @@ public class PracticeWordSetInteractor {
         }
         final Sentence sentence = sentenceSelector.getSentence(sentences);
         logger.i(TAG, "chosen sentence {}", sentences);
-        exerciseRepository.save(word, wordSetId, sentence);
+        exerciseService.save(word, wordSetId, sentence);
         listener.onSentencesFound(sentence, word);
         logger.i(TAG, "sentence was initialized");
     }
@@ -133,20 +133,20 @@ public class PracticeWordSetInteractor {
         }
 
         logger.i(TAG, "accuracy is ok");
-        WordSetExperience exp = experienceRepository.increaseExperience(wordSet.getId(), 1);
+        WordSetExperience exp = experienceService.increaseExperience(wordSet.getId(), 1);
         logger.i(TAG, "experience is {}", exp);
         listener.onUpdateProgress(exp);
 
-        exerciseRepository.moveCurrentWordToNextState(wordSet.getId());
+        exerciseService.moveCurrentWordToNextState(wordSet.getId());
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
-            experienceRepository.moveToAnotherState(wordSet.getId(), REPETITION);
+            experienceService.moveToAnotherState(wordSet.getId(), REPETITION);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
         } else if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");
-            experienceRepository.moveToAnotherState(wordSet.getId(), FINISHED);
+            experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();
         } else {
             logger.i(TAG, "right answer");
@@ -182,20 +182,20 @@ public class PracticeWordSetInteractor {
     }
 
     public Sentence getCurrentSentence(int wordSetId) {
-        return exerciseRepository.getCurrentSentence(wordSetId);
+        return exerciseService.getCurrentSentence(wordSetId);
     }
 
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
-        exerciseRepository.putOffCurrentWord(wordSetId);
-        return exerciseRepository.peekByWordSetIdAnyWord(wordSetId);
+        exerciseService.putOffCurrentWord(wordSetId);
+        return exerciseService.peekByWordSetIdAnyWord(wordSetId);
     }
 
     public Word2Tokens getCurrentWord(int wordSetId) {
-        return exerciseRepository.getCurrentWord(wordSetId);
+        return exerciseService.getCurrentWord(wordSetId);
     }
 
     public void pronounceRightAnswer(int wordSetId, OnPracticeWordSetListener listener) {
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(wordSetId);
+        Sentence currentSentence = exerciseService.getCurrentSentence(wordSetId);
         if (currentSentence == null) {
             return;
         }
@@ -209,12 +209,12 @@ public class PracticeWordSetInteractor {
     }
 
     public void rightAnswerUntouched(int wordSetId, OnPracticeWordSetListener listener) {
-        boolean answered = exerciseRepository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = exerciseService.isCurrentExerciseAnswered(wordSetId);
         if (answered) {
             return;
         }
-        Sentence currentSentence = exerciseRepository.getCurrentSentence(wordSetId);
-        Word2Tokens currentWord = exerciseRepository.getCurrentWord(wordSetId);
+        Sentence currentSentence = exerciseService.getCurrentSentence(wordSetId);
+        Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
         listener.onHideRightAnswer(currentSentence, currentWord);
     }
 }

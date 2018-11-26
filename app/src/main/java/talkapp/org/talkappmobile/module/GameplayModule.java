@@ -28,8 +28,8 @@ import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -70,8 +70,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(BackendServer server, PracticeWordSetExerciseRepository repository) {
-        return new SentenceProviderRepetitionStrategy(server, repository);
+    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(BackendServer server, PracticeWordSetExerciseService exerciseService) {
+        return new SentenceProviderRepetitionStrategy(server, exerciseService);
     }
 
     @Provides
@@ -112,14 +112,14 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
-        return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceRepository, exerciseRepository, context, audioStuffFactory, speaker);
+    public PracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+        return new PracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public AllWordSetsInteractor provideAllWordSetsInteractor(BackendServer server, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository) {
-        return new AllWordSetsInteractor(server, experienceRepository, exerciseRepository);
+    public AllWordSetsInteractor provideAllWordSetsInteractor(BackendServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
+        return new AllWordSetsInteractor(server, experienceService, exerciseService);
     }
 
     @Provides

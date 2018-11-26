@@ -4,8 +4,8 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -14,13 +14,13 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
 public class AllWordSetsInteractor {
     private final BackendServer server;
-    private final WordSetExperienceRepository experienceRepository;
-    private final PracticeWordSetExerciseRepository exerciseRepository;
+    private final WordSetExperienceService experienceService;
+    private final PracticeWordSetExerciseService exerciseService;
 
-    public AllWordSetsInteractor(BackendServer server, WordSetExperienceRepository experienceRepository, PracticeWordSetExerciseRepository exerciseRepository) {
+    public AllWordSetsInteractor(BackendServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
         this.server = server;
-        this.experienceRepository = experienceRepository;
-        this.exerciseRepository = exerciseRepository;
+        this.experienceService = experienceService;
+        this.exerciseService = exerciseService;
     }
 
     public void initializeWordSets(Topic topic, OnAllWordSetsListener listener) {
@@ -34,7 +34,7 @@ public class AllWordSetsInteractor {
     }
 
     public void itemClick(Topic topic, WordSet wordSet, OnAllWordSetsListener listener) {
-        WordSetExperience experience = experienceRepository.findById(wordSet.getId());
+        WordSetExperience experience = experienceService.findById(wordSet.getId());
         if (experience != null && FINISHED.equals(experience.getStatus())) {
             listener.onWordSetFinished(wordSet);
         } else {
@@ -43,8 +43,8 @@ public class AllWordSetsInteractor {
     }
 
     public void resetExperienceClick(WordSet wordSet, OnAllWordSetsListener listener) {
-        exerciseRepository.cleanByWordSetId(wordSet.getId());
-        WordSetExperience experience = experienceRepository.createNew(wordSet);
+        exerciseService.cleanByWordSetId(wordSet.getId());
+        WordSetExperience experience = experienceService.createNew(wordSet);
         listener.onResetExperienceClick(experience);
     }
 }

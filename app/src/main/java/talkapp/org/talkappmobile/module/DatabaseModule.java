@@ -15,14 +15,14 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetExperienceDaoImpl;
-import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseRepositoryImpl;
-import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceRepositoryImpl;
+import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -64,13 +64,13 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetExerciseRepository providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
-        return new PracticeWordSetExerciseRepositoryImpl(exerciseDao, experienceDao, mapper);
+    public PracticeWordSetExerciseService providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
+        return new PracticeWordSetExerciseServiceImpl(exerciseDao, experienceDao, mapper);
     }
 
     @Provides
     @Singleton
-    public WordSetExperienceRepository provideWordSetExperienceRepository(WordSetExperienceDao experienceDao) {
-        return new WordSetExperienceRepositoryImpl(experienceDao, logger);
+    public WordSetExperienceService provideWordSetExperienceRepository(WordSetExperienceDao experienceDao) {
+        return new WordSetExperienceServiceImpl(experienceDao, logger);
     }
 }

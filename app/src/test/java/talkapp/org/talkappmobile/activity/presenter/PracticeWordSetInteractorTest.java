@@ -26,8 +26,8 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -55,7 +55,7 @@ public class PracticeWordSetInteractorTest {
     @Mock
     AudioStuffFactory audioStuffFactory;
     @Mock
-    PracticeWordSetExerciseRepository exerciseRepository;
+    PracticeWordSetExerciseService exerciseService;
     @Mock
     private WordsCombinator wordsCombinator;
     @Mock
@@ -67,7 +67,7 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private OnPracticeWordSetListener listener;
     @Mock
-    private WordSetExperienceRepository wordSetExperienceRepository;
+    private WordSetExperienceService wordSetExperienceService;
     @Mock
     private Context context;
     @Mock
@@ -91,8 +91,8 @@ public class PracticeWordSetInteractorTest {
         experience.setStatus(STUDYING);
 
         // when
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(null);
-        when(wordSetExperienceRepository.createNew(wordSet)).thenReturn(experience);
+        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(null);
+        when(wordSetExperienceService.createNew(wordSet)).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -114,11 +114,11 @@ public class PracticeWordSetInteractorTest {
         wordSet.setId(id);
 
         // when
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
+        verify(wordSetExperienceService, times(0)).createNew(wordSet);
         verify(sentenceProvider).enableRepetitionMode();
         verify(listener).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
@@ -137,11 +137,11 @@ public class PracticeWordSetInteractorTest {
         wordSet.setId(id);
 
         // when
-        when(wordSetExperienceRepository.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetExperienceRepository, times(0)).createNew(wordSet);
+        verify(wordSetExperienceService, times(0)).createNew(wordSet);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
@@ -161,7 +161,7 @@ public class PracticeWordSetInteractorTest {
         interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
-        verify(exerciseRepository).createSomeIfNecessary(words, wordSet.getId());
+        verify(exerciseService).createSomeIfNecessary(words, wordSet.getId());
     }
 
     @Test
@@ -184,7 +184,7 @@ public class PracticeWordSetInteractorTest {
         interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
-        verify(exerciseRepository).save(word, wordSetId, selectedSentence);
+        verify(exerciseService).save(word, wordSetId, selectedSentence);
         verify(listener).onSentencesFound(selectedSentence, word);
     }
 
@@ -203,7 +203,7 @@ public class PracticeWordSetInteractorTest {
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
-        verify(exerciseRepository, times(0)).save(word, wordSetId, selectedSentence);
+        verify(exerciseService, times(0)).save(word, wordSetId, selectedSentence);
         verify(sentenceSelector, times(0)).getSentence(any(List.class));
     }
 
@@ -234,7 +234,7 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        when(wordSetExperienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
+        when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
@@ -245,8 +245,8 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
     }
@@ -278,22 +278,22 @@ public class PracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        when(wordSetExperienceRepository.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
+        when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
 
         // then
         verify(listener).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener).onTrainingFinished();
-        verify(wordSetExperienceRepository).moveToAnotherState(wordSet.getId(), FINISHED);
+        verify(wordSetExperienceService).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository).moveCurrentWordToNextState(wordSet.getId());
+        verify(exerciseService).moveCurrentWordToNextState(wordSet.getId());
     }
 
     @Test
@@ -334,10 +334,10 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
+        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -379,10 +379,10 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
+        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -419,10 +419,10 @@ public class PracticeWordSetInteractorTest {
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceRepository, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
+        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), REPETITION);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseRepository, times(0)).putOffCurrentWord(wordSet.getId());
+        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -506,12 +506,12 @@ public class PracticeWordSetInteractorTest {
         Word2Tokens value = new Word2Tokens("dsfs");
 
         // when
-        when(exerciseRepository.peekByWordSetIdAnyWord(wordSetId)).thenReturn(value);
+        when(exerciseService.peekByWordSetIdAnyWord(wordSetId)).thenReturn(value);
         Word2Tokens actual = interactor.peekAnyNewWordByWordSetId(wordSetId);
 
         // then
         assertEquals(value, actual);
-        verify(exerciseRepository).putOffCurrentWord(wordSetId);
+        verify(exerciseService).putOffCurrentWord(wordSetId);
     }
 
     @Test
@@ -520,7 +520,7 @@ public class PracticeWordSetInteractorTest {
         int wordSetId = 5;
 
         // when
-        when(exerciseRepository.isCurrentExerciseAnswered(wordSetId)).thenReturn(true);
+        when(exerciseService.isCurrentExerciseAnswered(wordSetId)).thenReturn(true);
         interactor.rightAnswerUntouched(wordSetId, listener);
 
         // then
@@ -535,9 +535,9 @@ public class PracticeWordSetInteractorTest {
         Word2Tokens word = new Word2Tokens();
 
         // when
-        when(exerciseRepository.isCurrentExerciseAnswered(wordSetId)).thenReturn(false);
-        when(exerciseRepository.getCurrentSentence(wordSetId)).thenReturn(sentence);
-        when(exerciseRepository.getCurrentWord(wordSetId)).thenReturn(word);
+        when(exerciseService.isCurrentExerciseAnswered(wordSetId)).thenReturn(false);
+        when(exerciseService.getCurrentSentence(wordSetId)).thenReturn(sentence);
+        when(exerciseService.getCurrentWord(wordSetId)).thenReturn(word);
         interactor.rightAnswerUntouched(wordSetId, listener);
 
         // then

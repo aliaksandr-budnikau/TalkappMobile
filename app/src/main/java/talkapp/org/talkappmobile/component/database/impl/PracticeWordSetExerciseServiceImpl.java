@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
@@ -20,12 +20,12 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
-public class PracticeWordSetExerciseRepositoryImpl implements PracticeWordSetExerciseRepository {
+public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
     private PracticeWordSetExerciseDao exerciseDao;
     private WordSetExperienceDao experienceDao;
     private ObjectMapper mapper;
 
-    public PracticeWordSetExerciseRepositoryImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
+    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
         this.experienceDao = experienceDao;
         this.mapper = mapper;

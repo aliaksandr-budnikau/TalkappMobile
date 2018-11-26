@@ -14,7 +14,7 @@ import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
@@ -41,7 +41,7 @@ public class ClassForInjection {
     @Inject
     BackendServer server;
     @Inject
-    PracticeWordSetExerciseRepository exerciseRepository;
+    PracticeWordSetExerciseService exerciseService;
     @Inject
     AllWordSetsInteractor allWordSetsInteractor;
     @Inject
@@ -94,8 +94,8 @@ public class ClassForInjection {
         return viewStrategyFactory;
     }
 
-    public PracticeWordSetExerciseRepository getExerciseRepository() {
-        return exerciseRepository;
+    public PracticeWordSetExerciseService getExerciseService() {
+        return exerciseService;
     }
 
     public TopicsFragmentInteractor getTopicsFragmentInteractor() {

@@ -5,7 +5,7 @@ import java.util.Set;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
-public interface PracticeWordSetExerciseRepository {
+public interface PracticeWordSetExerciseService {
     Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId);
 
     void save(Word2Tokens word, int wordSetId, Sentence sentence);

@@ -9,8 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseRepository;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -22,9 +22,9 @@ public class AllWordSetsInteractorTest {
     @Mock
     private BackendServer server;
     @Mock
-    private WordSetExperienceRepository experienceRepository;
+    private WordSetExperienceService experienceRepository;
     @Mock
-    private PracticeWordSetExerciseRepository exerciseRepository;
+    private PracticeWordSetExerciseService exerciseRepository;
     @Mock
     private OnAllWordSetsListener listener;
 

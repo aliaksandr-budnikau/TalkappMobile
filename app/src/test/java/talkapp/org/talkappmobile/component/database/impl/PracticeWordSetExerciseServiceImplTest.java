@@ -22,13 +22,13 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PracticeWordSetExerciseRepositoryImplTest {
+public class PracticeWordSetExerciseServiceImplTest {
     @Mock
     private PracticeWordSetExerciseDao exerciseDao;
     @Mock
     private WordSetExperienceDao experienceDao;
     @InjectMocks
-    private PracticeWordSetExerciseRepositoryImpl repository;
+    private PracticeWordSetExerciseServiceImpl service;
 
     @Test
     public void isCurrentExerciseAnswered_trueInBeginning() {
@@ -44,7 +44,7 @@ public class PracticeWordSetExerciseRepositoryImplTest {
         // when
         when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
         when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = repository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
 
         // then
         assertTrue(answered);
@@ -64,7 +64,7 @@ public class PracticeWordSetExerciseRepositoryImplTest {
         // when
         when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
         when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = repository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
 
         // then
         assertFalse(answered);
@@ -85,7 +85,7 @@ public class PracticeWordSetExerciseRepositoryImplTest {
         // when
         when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
         when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = repository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
 
         // then
         assertTrue(answered);
@@ -105,7 +105,7 @@ public class PracticeWordSetExerciseRepositoryImplTest {
         // when
         when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
         when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = repository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
 
         // then
         assertFalse(answered);
@@ -125,7 +125,7 @@ public class PracticeWordSetExerciseRepositoryImplTest {
         // when
         when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
         when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(Collections.<PracticeWordSetExerciseMapping>emptyList());
-        boolean answered = repository.isCurrentExerciseAnswered(wordSetId);
+        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
 
         // then
         assertFalse(answered);

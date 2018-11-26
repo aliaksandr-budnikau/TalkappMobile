@@ -2,22 +2,21 @@ package talkapp.org.talkappmobile.component.database.impl;
 
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceRepository;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
-public class WordSetExperienceRepositoryImpl implements WordSetExperienceRepository {
+public class WordSetExperienceServiceImpl implements WordSetExperienceService {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
     private final WordSetExperienceDao experienceDao;
     private final Logger logger;
 
-    public WordSetExperienceRepositoryImpl(WordSetExperienceDao experienceDao, Logger logger) {
+    public WordSetExperienceServiceImpl(WordSetExperienceDao experienceDao, Logger logger) {
         this.experienceDao = experienceDao;
         this.logger = logger;
     }
