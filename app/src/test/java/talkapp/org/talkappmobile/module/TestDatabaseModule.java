@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.module;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -73,6 +74,11 @@ public class TestDatabaseModule extends DatabaseModule {
                     }
                 }
                 return result;
+            }
+
+            @Override
+            public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
+                return null;
             }
         };
     }

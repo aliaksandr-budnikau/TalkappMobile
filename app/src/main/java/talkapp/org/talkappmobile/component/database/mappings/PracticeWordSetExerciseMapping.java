@@ -1,12 +1,16 @@
 package talkapp.org.talkappmobile.component.database.mappings;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
 import java.util.Objects;
 
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static java.util.Calendar.getInstance;
+import static okhttp3.internal.Util.UTC;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
@@ -19,6 +23,7 @@ public class PracticeWordSetExerciseMapping {
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
     public static final String PRACTICE_WORD_SET_EXERCISE_TABLE = "PracticeWordSetExercise";
+    public static final String UPDATED_DATE_FN = "updatedDate";
     @DatabaseField(generatedId = true, columnName = ID_FN)
     private int id;
 
@@ -37,16 +42,24 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
 
+    @DatabaseField(canBeNull = false, columnName = UPDATED_DATE_FN, dataType = DataType.DATE_STRING, format = "EEE MMM d HH:mm:ss Z yyyy")
+    private Date updatedDate;
+
     public PracticeWordSetExerciseMapping() {
     }
 
     public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceJSON, WordSetExperienceStatus status, boolean current) {
+        this(id, wordSetId, wordJSON, sentenceJSON, status, current, getInstance(UTC).getTime());
+    }
+
+    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceJSON, WordSetExperienceStatus status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordJSON = wordJSON;
         this.sentenceJSON = sentenceJSON;
         this.status = status;
         this.current = current;
+        this.updatedDate = updatedDate;
     }
 
     public int getId() {
@@ -95,6 +108,14 @@ public class PracticeWordSetExerciseMapping {
 
     public void setCurrent(boolean current) {
         this.current = current;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     @Override

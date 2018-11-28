@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.component.database.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
@@ -18,4 +19,6 @@ public interface PracticeWordSetExerciseDao {
     List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId);
 
     List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId);
+
+    List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours);
 }

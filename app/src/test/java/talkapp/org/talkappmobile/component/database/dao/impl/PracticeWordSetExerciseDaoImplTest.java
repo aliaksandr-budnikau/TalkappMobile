@@ -12,6 +12,9 @@ import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +26,10 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Calendar.HOUR;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.getInstance;
+import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
@@ -30,6 +37,7 @@ import static talkapp.org.talkappmobile.component.database.mappings.PracticeWord
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
@@ -139,6 +147,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         exe.setWordJSON("wordJSON");
         exe.setSentenceJSON("sentenceJSON");
         exe.setStatus(STUDYING);
+        exe.setUpdatedDate(getInstance(UTC).getTime());
 
         // when
         exerciseDao.createNewOrUpdate(exe);
@@ -283,11 +292,11 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByStatusAndByWordSetId_ordinaryCase() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "1");
-        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", "FINISHED", "0");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
+        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 2);
         assertEquals(2, result.size());
@@ -309,11 +318,11 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByStatusAndByWordSetId_ordinaryCaseButNothingReturn() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "1");
-        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", "FINISHED", "0");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
+        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 4);
         assertEquals(0, result.size());
@@ -327,11 +336,11 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByCurrentAndByWordSetId_ordinaryCase() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "1");
-        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", "FINISHED", "1");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
+        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "1");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
         assertEquals(2, result.size());
@@ -354,11 +363,11 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByCurrentAndByWordSetId_ordinaryCaseButNothingReturn() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "0");
-        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", "FINISHED", "0");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "0");
+        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
         assertEquals(0, result.size());
@@ -373,11 +382,11 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByWordAndWordSetId_ordinaryCase() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "1");
-        insertExercise(3, 2, "wordJSON4", "sentenceJSON22", "FINISHED", "1");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
+        insertExercise(3, 2, "wordJSON4", "sentenceJSON22", FINISHED.name(), "1");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByWordAndWordSetId("wordJSON4", 2);
         assertEquals(2, result.size());
@@ -400,20 +409,189 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void findByWordAndWordSetId_ordinaryCaseButNothingReturn() {
-        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", "FINISHED", "1");
-        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", "REPETITION", "0");
-        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", "STUDYING", "1");
-        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", "FINISHED", "0");
-        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", "FINISHED", "0");
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1");
+        insertExercise(25, 2, "wordJSON2", "sentenceJSON3", REPETITION.name(), "0");
+        insertExercise(232, 3, "wordJSON4", "sentenceJSON2", STUDYING.name(), "1");
+        insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "0");
+        insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
         List<PracticeWordSetExerciseMapping> result = exerciseDao.findByWordAndWordSetId("wordJSONsdds4", 2);
         assertEquals(0, result.size());
     }
 
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_emptyDB() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+
+        // when
+        instance = getInstance(UTC);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+
+        // then
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyNewExercise() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(MINUTE, -30);
+        insertExercise(1, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -119);
+        insertExercise(2, 5, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+
+        // when
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+
+        // then
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyOneOldExercise() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(MINUTE, -30);
+        insertExercise(1, 1, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -119);
+        insertExercise(2, 2, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -121);
+        Date expectedDate = instance.getTime();
+        insertExercise(3, 3, "wordJSON3", "sentenceJSON3", FINISHED.name(), "0", instance.getTime());
+
+        // when
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(1, instance.getTime());
+
+        // then
+        assertEquals(1, result.size());
+        assertEquals(3, result.get(0).getId());
+        assertEquals(3, result.get(0).getWordSetId());
+        assertEquals("wordJSON3", result.get(0).getWordJSON());
+        assertEquals("sentenceJSON3", result.get(0).getSentenceJSON());
+        assertEquals(FINISHED, result.get(0).getStatus());
+        assertEquals(false, result.get(0).isCurrent());
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyOneOldExerciseButNotFINISHED() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(MINUTE, -30);
+        insertExercise(1, 1, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -119);
+        insertExercise(2, 2, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -121);
+        Date expectedDate = instance.getTime();
+        insertExercise(3, 3, "wordJSON3", "sentenceJSON3", STUDYING.name(), "0", instance.getTime());
+
+        // when
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+
+        // then
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyOneOldExerciseButLimit0() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(MINUTE, -30);
+        insertExercise(1, 1, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -119);
+        insertExercise(2, 2, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -121);
+        Date expectedDate = instance.getTime();
+        insertExercise(3, 3, "wordJSON3", "sentenceJSON3", FINISHED.name(), "0", instance.getTime());
+
+        // when
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(0, instance.getTime());
+
+        // then
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyTreeOldExercise() {
+        // setup
+        Calendar instance = getInstance(UTC);
+        instance.add(MINUTE, -119);
+        insertExercise(2, 2, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -30);
+        insertExercise(1, 1, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -121);
+        insertExercise(3, 3, "wordJSON3", "sentenceJSON3", FINISHED.name(), "0", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -1021);
+        insertExercise(5, 3, "wordJSON3", "sentenceJSON3", FINISHED.name(), "0", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -131);
+        insertExercise(4, 3, "wordJSON3", "sentenceJSON3", FINISHED.name(), "0", instance.getTime());
+
+        // when
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(5, instance.getTime());
+
+        // then
+        assertEquals(3, result.size());
+        Iterator<PracticeWordSetExerciseMapping> iterator = result.iterator();
+        PracticeWordSetExerciseMapping current = iterator.next();
+        while (iterator.hasNext()) {
+            assertEquals(FINISHED, current.getStatus());
+            Date olderDate = current.getUpdatedDate();
+            current = iterator.next();
+            assertTrue(olderDate.after(current.getUpdatedDate()));
+        }
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate() {
+        Calendar instance = getInstance(UTC);
+        instance.add(HOUR, -1);
+        insertExercise(1, 5, "wordJSON0", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(HOUR, -3);
+        insertExercise(2, 5, "wordJSON1", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -130);
+        insertExercise(3, 5, "wordJSON2", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+        instance = getInstance(UTC);
+        instance.add(MINUTE, -140);
+        insertExercise(4, 5, "wordJSON3", "sentenceJSON1", FINISHED.name(), "1", instance.getTime());
+
+        instance = getInstance(UTC);
+        instance.add(HOUR, -2);
+        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+        assertEquals(2, result.size());
+    }
+
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current) {
-        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
-                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN,
-                id, wordSetId, word, sentence, status, current);
+        insertExercise(id, wordSetId, word, sentence, status, current, new Date());
+    }
+
+    private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate) {
+        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
+                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN,
+                id, wordSetId, word, sentence, status, current, updatedDate);
         databaseHelper.getWritableDatabase().execSQL(sql);
     }
 }

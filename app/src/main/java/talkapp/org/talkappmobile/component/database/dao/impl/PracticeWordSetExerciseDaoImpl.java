@@ -2,9 +2,11 @@ package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
@@ -13,8 +15,10 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
 public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetExerciseMapping, Integer> implements PracticeWordSetExerciseDao {
 
@@ -91,6 +95,24 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
                             .and()
                             .eq(WORD_SET_ID_FN, wordSetId).prepare()
             );
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
+        try {
+            QueryBuilder<PracticeWordSetExerciseMapping, Integer> builder = queryBuilder();
+            builder
+                    .where()
+                    .eq(STATUS_FN, FINISHED)
+                    .and()
+                    .lt(UPDATED_DATE_FN, olderThenInHours);
+            builder
+                    .orderBy(UPDATED_DATE_FN, false)
+                    .limit(limit);
+            return this.query(builder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
