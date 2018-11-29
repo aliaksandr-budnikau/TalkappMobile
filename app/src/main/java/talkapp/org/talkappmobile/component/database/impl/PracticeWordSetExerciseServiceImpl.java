@@ -69,6 +69,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
     }
 
@@ -175,6 +176,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         PracticeWordSetExerciseMapping mapping = current.get(0);
         mapping.setStatus(next(mapping.getStatus()));
+        mapping.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(mapping);
     }
 
