@@ -29,7 +29,7 @@ import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, MainActivityView {
+public class MainActivity extends BaseActivity implements MainActivityView {
     @Inject
     AuthSign authSign;
     @Inject
@@ -129,29 +129,5 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        FragmentManager fragmentManager = getFragmentManager();
-        if (id == R.id.word_set_practise) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment_()).commit();
-        } else if (id == R.id.topic_practise) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_exit) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
-            finish();
-            startActivity(intent);
-            saveSharedPreference.clear(MainActivity.this);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }
