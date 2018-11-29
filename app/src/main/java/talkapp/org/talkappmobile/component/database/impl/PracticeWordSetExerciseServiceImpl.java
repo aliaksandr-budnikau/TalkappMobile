@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +16,12 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
+import static java.util.Calendar.getInstance;
+import static okhttp3.internal.Util.UTC;
+import static org.apache.commons.collections4.ListUtils.partition;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
@@ -24,6 +29,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     private PracticeWordSetExerciseDao exerciseDao;
     private WordSetExperienceDao experienceDao;
     private ObjectMapper mapper;
+    private int wordSetSize = 12;
 
     public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
@@ -130,6 +136,27 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours) {
+        Calendar cal = getInstance(UTC);
+        cal.add(Calendar.HOUR, -olderThenInHours);
+        List<PracticeWordSetExerciseMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
+        List<WordSet> wordSets = new LinkedList<>();
+        for (List<PracticeWordSetExerciseMapping> exercises : partition(words, wordSetSize)) {
+            WordSet set = new WordSet();
+            set.setWords(new LinkedList<Word2Tokens>());
+            for (PracticeWordSetExerciseMapping mapping : exercises) {
+                try {
+                    set.getWords().add(mapper.readValue(mapping.getWordJSON(), Word2Tokens.class));
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }
+            wordSets.add(set);
+        }
+        return wordSets;
     }
 
     @Override

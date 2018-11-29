@@ -1,9 +1,11 @@
 package talkapp.org.talkappmobile.component.database;
 
+import java.util.List;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 
 public interface PracticeWordSetExerciseService {
     Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId);
@@ -19,6 +21,8 @@ public interface PracticeWordSetExerciseService {
     Word2Tokens getCurrentWord(int wordSetId);
 
     Sentence getCurrentSentence(int wordSetId);
+
+    List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours);
 
     void putOffCurrentWord(int wordSetId);
 
