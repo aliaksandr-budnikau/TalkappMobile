@@ -7,6 +7,7 @@ import talkapp.org.talkappmobile.activity.AllWordSetsFragment;
 import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
+import talkapp.org.talkappmobile.activity.MainActivityDefaultFragment;
 import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
@@ -87,4 +88,6 @@ public interface DIContext {
     void inject(SentenceProviderImpl target);
 
     void inject(GrammarCheckServiceImpl target);
+
+    void inject(MainActivityDefaultFragment target);
 }

@@ -69,12 +69,12 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
         initPresenter();
 
+        final FragmentManager fragmentManager = getFragmentManager();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Handle navigation view item clicks here.
                 int id = item.getItemId();
-                FragmentManager fragmentManager = getFragmentManager();
                 if (id == R.id.word_set_practise) {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment_()).commit();
                 } else if (id == R.id.topic_practise) {
@@ -92,6 +92,8 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 return true;
             }
         });
+
+        fragmentManager.beginTransaction().replace(R.id.content_frame, new MainActivityDefaultFragment_()).commit();
     }
 
     @Background
