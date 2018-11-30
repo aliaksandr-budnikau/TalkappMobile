@@ -24,6 +24,8 @@ public interface PracticeWordSetExerciseService {
 
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours);
 
+    List<WordSet> findFinishedWordSetsSortByUpdatedDate(int olderThenInHours);
+
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);

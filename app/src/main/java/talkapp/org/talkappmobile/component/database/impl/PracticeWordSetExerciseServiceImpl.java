@@ -161,6 +161,11 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     }
 
     @Override
+    public List<WordSet> findFinishedWordSetsSortByUpdatedDate(int olderThenInHours) {
+        return findFinishedWordSetsSortByUpdatedDate(Integer.MAX_VALUE, olderThenInHours);
+    }
+
+    @Override
     public void putOffCurrentWord(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         if (isNotThereCurrentExercise(current)) {
