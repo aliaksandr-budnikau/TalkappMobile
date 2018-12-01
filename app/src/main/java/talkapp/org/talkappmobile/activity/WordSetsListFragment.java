@@ -24,6 +24,8 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
@@ -37,11 +39,14 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 @EFragment(value = R.layout.word_sets_list_layout)
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
+    public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
     @Inject
     AdaptersFactory adaptersFactory;
     @Inject
-    StudyingWordSetsListInteractor studyingWordSetsInteractor;
+    StudyingWordSetsListInteractor studyingWordSetsListInteractor;
+    @Inject
+    RepetitionWordSetsListInteractor repetitionWordSetsListInteractor;
     @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -52,6 +57,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
+    @FragmentArg(REPETITION_MODE_MAPPING)
+    boolean repetitionMode;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
@@ -72,7 +79,11 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Background
     public void initPresenter() {
-        presenter = new WordSetsListPresenter(topic, this, studyingWordSetsInteractor);
+        WordSetsListInteractor interactor = studyingWordSetsListInteractor;
+        if (repetitionMode) {
+            interactor = repetitionWordSetsListInteractor;
+        }
+        presenter = new WordSetsListPresenter(topic, this, interactor);
         presenter.initialize();
     }
 

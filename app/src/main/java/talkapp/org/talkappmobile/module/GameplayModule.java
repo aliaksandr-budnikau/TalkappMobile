@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
@@ -121,6 +122,12 @@ public class GameplayModule {
     @Singleton
     public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor(BackendServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
         return new StudyingWordSetsListInteractor(server, experienceService, exerciseService);
+    }
+
+    @Provides
+    @Singleton
+    public RepetitionWordSetsListInteractor provideRepetitionWordSetsListInteractor(PracticeWordSetExerciseService exerciseService) {
+        return new RepetitionWordSetsListInteractor(exerciseService);
     }
 
     @Provides
