@@ -1,8 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
 
 import java.util.List;
 import java.util.Set;
@@ -29,7 +27,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
 
-public class StudyingPracticeWordSetInteractor implements PracticeWordSetInteractor {
+public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
     private final WordsCombinator wordsCombinator;
     private final SentenceProvider sentenceProvider;
@@ -38,9 +36,6 @@ public class StudyingPracticeWordSetInteractor implements PracticeWordSetInterac
     private final Logger logger;
     private final WordSetExperienceService experienceService;
     private final PracticeWordSetExerciseService exerciseService;
-    private final Context context;
-    private final AudioStuffFactory audioStuffFactory;
-    private final Speaker speaker;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                              SentenceProvider sentenceProvider,
@@ -52,6 +47,7 @@ public class StudyingPracticeWordSetInteractor implements PracticeWordSetInterac
                                              Context context,
                                              AudioStuffFactory audioStuffFactory,
                                              Speaker speaker) {
+        super(logger, context, audioStuffFactory, speaker);
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
@@ -59,9 +55,6 @@ public class StudyingPracticeWordSetInteractor implements PracticeWordSetInterac
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
-        this.context = context;
-        this.audioStuffFactory = audioStuffFactory;
-        this.speaker = speaker;
     }
 
     @Override
@@ -160,34 +153,6 @@ public class StudyingPracticeWordSetInteractor implements PracticeWordSetInterac
     }
 
     @Override
-    public void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
-        if (voiceRecordUri == null) {
-            logger.i(TAG, "voice record uri is empty");
-            return;
-        }
-        MediaPlayer mp = null;
-        try {
-            listener.onStartPlaying();
-            try {
-                mp = audioStuffFactory.createMediaPlayer();
-                mp.setDataSource(context, voiceRecordUri);
-                mp.prepare();
-                mp.start();
-                logger.i(TAG, "start playing {}", voiceRecordUri);
-                while (mp.isPlaying()) {
-                    logger.i(TAG, "playing...");
-                    Thread.sleep(500);
-                }
-                logger.i(TAG, "stop playing");
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        } finally {
-            listener.onStopPlaying();
-        }
-    }
-
-    @Override
     public Sentence getCurrentSentence(int wordSetId) {
         return exerciseService.getCurrentSentence(wordSetId);
     }
@@ -196,21 +161,6 @@ public class StudyingPracticeWordSetInteractor implements PracticeWordSetInterac
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
         exerciseService.putOffCurrentWord(wordSetId);
         return exerciseService.peekByWordSetIdAnyWord(wordSetId);
-    }
-
-    @Override
-    public void pronounceRightAnswer(int wordSetId, OnPracticeWordSetListener listener) {
-        Sentence currentSentence = exerciseService.getCurrentSentence(wordSetId);
-        if (currentSentence == null) {
-            return;
-        }
-        logger.i(TAG, "start speaking {}", currentSentence.getText());
-        try {
-            speaker.speak(currentSentence.getText());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        logger.i(TAG, "stop speaking");
     }
 
     @Override

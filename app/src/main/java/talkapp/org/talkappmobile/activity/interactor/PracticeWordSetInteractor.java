@@ -24,5 +24,5 @@ public interface PracticeWordSetInteractor {
 
     void rightAnswerUntouched(int wordSetId, OnPracticeWordSetListener listener);
 
-    void pronounceRightAnswer(int wordSetId, OnPracticeWordSetListener listener);
+    void pronounceRightAnswer(Sentence sentence, OnPracticeWordSetListener listener);
 }
