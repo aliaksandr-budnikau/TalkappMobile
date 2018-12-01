@@ -42,7 +42,7 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
 
-    @DatabaseField(canBeNull = false, columnName = UPDATED_DATE_FN, dataType = DataType.DATE_STRING, format = "EEE MMM d HH:mm:ss Z yyyy")
+    @DatabaseField(canBeNull = false, columnName = UPDATED_DATE_FN, dataType = DataType.DATE_LONG)
     private Date updatedDate;
 
     public PracticeWordSetExerciseMapping() {

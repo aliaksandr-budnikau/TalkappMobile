@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.database.dao.impl;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -104,11 +105,15 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
         try {
             QueryBuilder<PracticeWordSetExerciseMapping, Integer> builder = queryBuilder();
-            builder
-                    .where()
-                    .eq(STATUS_FN, FINISHED)
-                    .and()
-                    .lt(UPDATED_DATE_FN, olderThenInHours);
+            Where<PracticeWordSetExerciseMapping, Integer> where = builder.where();
+            where.and(
+                    where.eq(STATUS_FN, FINISHED),
+                    where.or(
+                            where.lt(UPDATED_DATE_FN, olderThenInHours),
+                            where.eq(UPDATED_DATE_FN, new Date(0)),
+                            where.isNull(UPDATED_DATE_FN)
+                    )
+            );
             builder
                     .orderBy(UPDATED_DATE_FN, false)
                     .limit(limit);

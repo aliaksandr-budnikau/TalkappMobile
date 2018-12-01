@@ -591,7 +591,7 @@ public class PracticeWordSetExerciseDaoImplTest {
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate) {
         String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
                 ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN,
-                id, wordSetId, word, sentence, status, current, updatedDate);
+                id, wordSetId, word, sentence, status, current, updatedDate.getTime());
         databaseHelper.getWritableDatabase().execSQL(sql);
     }
 }
