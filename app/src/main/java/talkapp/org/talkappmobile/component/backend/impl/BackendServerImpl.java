@@ -167,4 +167,14 @@ public class BackendServerImpl implements BackendServer {
         }
         return body;
     }
+
+    @Override
+    public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
+        Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordsAndByLanguage(words, language, authSign);
+        List<WordTranslation> body = execute(call).body();
+        if (body == null) {
+            return new LinkedList<>();
+        }
+        return body;
+    }
 }

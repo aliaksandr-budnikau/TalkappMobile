@@ -30,4 +30,6 @@ public interface BackendServer {
     List<WordSet> findWordSetsByTopicId(int topicId);
 
     List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language);
+
+    List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
 }
