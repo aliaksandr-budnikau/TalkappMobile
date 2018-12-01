@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 // Handle navigation view item clicks here.
                 int id = item.getItemId();
                 if (id == R.id.word_set_practise) {
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, new AllWordSetsFragment_()).commit();
+                    fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
                 } else if (id == R.id.topic_practise) {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
                 } else if (id == R.id.nav_manage) {

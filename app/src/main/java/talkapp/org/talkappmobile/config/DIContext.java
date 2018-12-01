@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.config;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import talkapp.org.talkappmobile.activity.AllWordSetsFragment;
+import talkapp.org.talkappmobile.activity.WordSetsListFragment;
 import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
@@ -59,7 +59,7 @@ public interface DIContext {
 
     void inject(MainActivity mainActivity);
 
-    void inject(AllWordSetsFragment allWordSetsFragment);
+    void inject(WordSetsListFragment wordSetsListFragment);
 
     void inject(TopicsFragment topicsFragment);
 

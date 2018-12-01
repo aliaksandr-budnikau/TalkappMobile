@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AllWordSetsInteractorTest {
+public class StudyingWordSetsListInteractorTest {
     @Mock
     private BackendServer server;
     @Mock
@@ -26,13 +26,13 @@ public class AllWordSetsInteractorTest {
     @Mock
     private PracticeWordSetExerciseService exerciseRepository;
     @Mock
-    private OnAllWordSetsListener listener;
+    private OnWordSetsListListener listener;
 
-    private AllWordSetsInteractor interactor;
+    private StudyingWordSetsListInteractor interactor;
 
     @Before
     public void setUp() {
-        interactor = new AllWordSetsInteractor(
+        interactor = new StudyingWordSetsListInteractor(
                 server,
                 experienceRepository,
                 exerciseRepository

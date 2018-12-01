@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFact
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 
-import static talkapp.org.talkappmobile.activity.AllWordSetsFragment.TOPIC_MAPPING;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.TOPIC_MAPPING;
 
 @EFragment(value = R.layout.all_topics_layout)
 public class TopicsFragment extends Fragment implements TopicsFragmentView {
@@ -83,7 +83,7 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
     public void openTopicWordSetsFragment(Topic topic) {
         Bundle args = new Bundle();
         args.putSerializable(TOPIC_MAPPING, topic);
-        AllWordSetsFragment fragment = new AllWordSetsFragment_();
+        WordSetsListFragment fragment = new WordSetsListFragment_();
         fragment.setArguments(args);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();

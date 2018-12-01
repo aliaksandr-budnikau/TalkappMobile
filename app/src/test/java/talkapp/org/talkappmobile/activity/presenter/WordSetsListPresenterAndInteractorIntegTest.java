@@ -9,8 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.Topic;
@@ -27,15 +27,15 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
+public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     @Mock
-    private AllWordSetsView view;
-    private AllWordSetsInteractor allWordSetsInteractor;
+    private WordSetsListView view;
+    private StudyingWordSetsListInteractor studyingWordSetsInteractor;
     private WordSetExperienceDao wordSetExperienceDao;
 
     @Before
     public void setup() {
-        allWordSetsInteractor = getClassForInjection().getAllWordSetsInteractor();
+        studyingWordSetsInteractor = getClassForInjection().getStudyingWordSetsListInteractor();
         wordSetExperienceDao = getClassForInjection().getWordSetExperienceDao();
     }
 
@@ -43,7 +43,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
     public void test_withoutTopic() {
         login();
 
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(null, view, allWordSetsInteractor);
+        WordSetsListPresenter presenter = new WordSetsListPresenter(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture());
@@ -83,7 +83,7 @@ public class AllWordSetsPresenterAndInteractorIntegTest extends PresenterAndInte
 
         Topic topic = new Topic();
         topic.setId(1);
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, allWordSetsInteractor);
+        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture());

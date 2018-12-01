@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
@@ -43,7 +43,7 @@ public class ClassForInjection {
     @Inject
     PracticeWordSetExerciseService exerciseService;
     @Inject
-    AllWordSetsInteractor allWordSetsInteractor;
+    StudyingWordSetsListInteractor studyingWordSetsListInteractor;
     @Inject
     WordSetExperienceDao wordSetExperienceDao;
     @Inject
@@ -102,8 +102,8 @@ public class ClassForInjection {
         return topicsFragmentInteractor;
     }
 
-    public AllWordSetsInteractor getAllWordSetsInteractor() {
-        return allWordSetsInteractor;
+    public StudyingWordSetsListInteractor getStudyingWordSetsListInteractor() {
+        return studyingWordSetsListInteractor;
     }
 
     public WordSetExperienceDao getWordSetExperienceDao() {

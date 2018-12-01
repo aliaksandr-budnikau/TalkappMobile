@@ -6,8 +6,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.model.Topic;
 
 import static org.junit.Assert.assertEquals;
@@ -17,12 +17,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AllWordSetsPresenterTest {
+public class WordSetsListPresenterTest {
 
     @Mock
-    private AllWordSetsInteractor interactor;
+    private StudyingWordSetsListInteractor interactor;
     @Mock
-    private AllWordSetsView view;
+    private WordSetsListView view;
 
     @Test
     public void constructor_NPEInteractorNull() {
@@ -32,7 +32,7 @@ public class AllWordSetsPresenterTest {
         topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
+        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
         presenter.initialize();
 
         // then
@@ -49,7 +49,7 @@ public class AllWordSetsPresenterTest {
         topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
+        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
         presenter.initialize();
 
         // then
@@ -66,7 +66,7 @@ public class AllWordSetsPresenterTest {
         topic.setId(topicId);
 
         // when
-        AllWordSetsPresenter presenter = new AllWordSetsPresenter(topic, view, interactor);
+        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
             presenter.initialize();

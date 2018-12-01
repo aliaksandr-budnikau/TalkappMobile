@@ -2,19 +2,19 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.listener.OnAllWordSetsListener;
-import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
+import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public class AllWordSetsPresenter implements OnAllWordSetsListener {
+public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;
-    private final AllWordSetsView view;
-    private final AllWordSetsInteractor interactor;
+    private final WordSetsListView view;
+    private final WordSetsListInteractor interactor;
 
-    public AllWordSetsPresenter(Topic topic, AllWordSetsView view, AllWordSetsInteractor interactor) {
+    public WordSetsListPresenter(Topic topic, WordSetsListView view, WordSetsListInteractor interactor) {
         this.topic = topic;
         this.view = view;
         this.interactor = interactor;

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity.view;
+package talkapp.org.talkappmobile.activity.listener;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public interface AllWordSetsView {
+public interface OnWordSetsListListener {
     void onWordSetsInitialized(List<WordSet> wordSets);
 
     void onWordSetFinished(WordSet wordSet);
@@ -14,10 +14,4 @@ public interface AllWordSetsView {
     void onResetExperienceClick(WordSetExperience experience);
 
     void onWordSetNotFinished(Topic topic, WordSet wordSet);
-
-    void onItemLongClick(WordSet wordSet);
-
-    void onInitializeBeginning();
-
-    void onInitializeEnd();
 }

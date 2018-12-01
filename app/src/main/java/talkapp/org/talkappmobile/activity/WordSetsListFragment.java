@@ -24,9 +24,9 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
-import talkapp.org.talkappmobile.activity.interactor.AllWordSetsInteractor;
-import talkapp.org.talkappmobile.activity.presenter.AllWordSetsPresenter;
-import talkapp.org.talkappmobile.activity.view.AllWordSetsView;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
+import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
@@ -34,14 +34,14 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-@EFragment(value = R.layout.all_word_sets_layout)
-public class AllWordSetsFragment extends Fragment implements AllWordSetsView {
+@EFragment(value = R.layout.word_sets_list_layout)
+public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
     @Inject
     AdaptersFactory adaptersFactory;
     @Inject
-    AllWordSetsInteractor interactor;
+    StudyingWordSetsListInteractor studyingWordSetsInteractor;
     @Inject
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -56,7 +56,7 @@ public class AllWordSetsFragment extends Fragment implements AllWordSetsView {
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
     private ArrayAdapter<WordSet> adapter;
-    private AllWordSetsPresenter presenter;
+    private WordSetsListPresenter presenter;
 
     @AfterViews
     public void init() {
@@ -72,7 +72,7 @@ public class AllWordSetsFragment extends Fragment implements AllWordSetsView {
 
     @Background
     public void initPresenter() {
-        presenter = new AllWordSetsPresenter(topic, this, interactor);
+        presenter = new WordSetsListPresenter(topic, this, studyingWordSetsInteractor);
         presenter.initialize();
     }
 
