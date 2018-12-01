@@ -99,6 +99,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             }
             exercise.setStatus(STUDYING);
             exercise.setWordSetId(wordSetId);
+            exercise.setUpdatedDate(getInstance(UTC).getTime());
             wordsEx.add(exercise);
         }
         exerciseDao.createAll(wordsEx);
