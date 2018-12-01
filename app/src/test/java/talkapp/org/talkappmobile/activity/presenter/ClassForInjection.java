@@ -2,12 +2,12 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.Speaker;
@@ -30,8 +30,9 @@ import talkapp.org.talkappmobile.module.TestDataModule;
 import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 public class ClassForInjection {
+    private static TalkappMobileApplication application = new TalkappMobileApplication();
     @Inject
-    PracticeWordSetInteractor practiceWordSetInteractor;
+    StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
     @Inject
     LoginInteractor loginInteractor;
     @Inject
@@ -56,9 +57,8 @@ public class ClassForInjection {
     ExceptionHandlerInteractor exceptionHandlerInteractor;
     @Inject
     TopicRestClient topicRestClient;
-    private static TalkappMobileApplication application = new TalkappMobileApplication();
 
-    public  ClassForInjection(BackEndServiceModule backEndServiceModule) {
+    public ClassForInjection(BackEndServiceModule backEndServiceModule) {
         TestDIContext context = DaggerTestDIContext.builder()
                 .databaseModule(new TestDatabaseModule())
                 .androidModule(new AndroidModule(application))
@@ -82,8 +82,8 @@ public class ClassForInjection {
         return server;
     }
 
-    public PracticeWordSetInteractor getPracticeWordSetInteractor() {
-        return practiceWordSetInteractor;
+    public StudyingPracticeWordSetInteractor getStudyingPracticeWordSetInteractor() {
+        return studyingPracticeWordSetInteractor;
     }
 
     public LoginInteractor getLoginInteractor() {

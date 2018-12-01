@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
@@ -37,19 +37,19 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private PracticeWordSetPresenter presenter;
     private PracticeWordSetExerciseService exerciseService;
     private WordSet wordSet;
-    private PracticeWordSetInteractor interactor;
+    private StudyingPracticeWordSetInteractor interactor;
     private ViewStrategyFactory viewStrategyFactory;
     private Speaker speaker;
 
     @Before
     public void setup() {
         viewStrategyFactory = getClassForInjection().getViewStrategyFactory();
-        interactor = getClassForInjection().getPracticeWordSetInteractor();
+        interactor = getClassForInjection().getStudyingPracticeWordSetInteractor();
         exerciseService = getClassForInjection().getExerciseService();
         speaker = getClassForInjection().getSpeaker();
     }
 
-    private void createPresenter(PracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
+    private void createPresenter(StudyingPracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
         int id = -1;
         wordSet = new WordSet();
         wordSet.setId(id);

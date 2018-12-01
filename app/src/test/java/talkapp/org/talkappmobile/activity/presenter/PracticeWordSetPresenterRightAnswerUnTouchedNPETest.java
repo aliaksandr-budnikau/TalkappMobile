@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.config.DIContextUtils;
@@ -22,7 +22,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     @Mock
     private TextUtils textUtils;
     @Mock
-    private PracticeWordSetInteractor interactor;
+    private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetPresenterCurrentState state;
     @Mock

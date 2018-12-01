@@ -13,7 +13,7 @@ import org.powermock.reflect.Whitebox;
 import java.util.HashMap;
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
     @Mock
-    private PracticeWordSetInteractor interactor;
+    private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetViewHideNewWordOnlyStrategy viewStrategy;
     @Mock

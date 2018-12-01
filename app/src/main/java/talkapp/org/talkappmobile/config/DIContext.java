@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.config;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import talkapp.org.talkappmobile.activity.WordSetsListFragment;
 import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.activity.LoginActivity;
 import talkapp.org.talkappmobile.activity.MainActivity;
@@ -12,10 +11,11 @@ import talkapp.org.talkappmobile.activity.PracticeWordSetActivity;
 import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
+import talkapp.org.talkappmobile.activity.WordSetsListFragment;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
@@ -65,7 +65,7 @@ public interface DIContext {
 
     void inject(PracticeWordSetPresenter target);
 
-    void inject(PracticeWordSetInteractor target);
+    void inject(StudyingPracticeWordSetInteractor target);
 
     void inject(BaseActivity target);
 

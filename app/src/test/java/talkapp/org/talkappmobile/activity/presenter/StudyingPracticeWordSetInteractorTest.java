@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
@@ -50,7 +50,7 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PracticeWordSetInteractorTest {
+public class StudyingPracticeWordSetInteractorTest {
 
     @Mock
     AudioStuffFactory audioStuffFactory;
@@ -73,7 +73,7 @@ public class PracticeWordSetInteractorTest {
     @Mock
     private Logger logger;
     @InjectMocks
-    private PracticeWordSetInteractor interactor;
+    private StudyingPracticeWordSetInteractor interactor;
 
     @BeforeClass
     public static void setUp() {

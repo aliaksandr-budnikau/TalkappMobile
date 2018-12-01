@@ -27,7 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
@@ -46,7 +46,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     private final StringBuilder SIGNAL_SEQUENCE = new StringBuilder("12345678");
     @Inject
-    PracticeWordSetInteractor interactor;
+    StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
     @Inject
     ViewStrategyFactory viewStrategyFactory;
     @Inject
@@ -109,7 +109,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public void initPresenter() {
         PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
         PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
+        presenter = new PracticeWordSetPresenter(wordSet, studyingPracticeWordSetInteractor, newWordOnlyStrategy, hideAllStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
     }
