@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.matches;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
+import static talkapp.org.talkappmobile.component.impl.TextUtilsImpl.PLACEHOLDER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {

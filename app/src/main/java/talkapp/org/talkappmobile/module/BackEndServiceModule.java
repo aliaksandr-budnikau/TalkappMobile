@@ -19,6 +19,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -30,7 +31,7 @@ import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -41,8 +42,8 @@ public class BackEndServiceModule {
 
     public static final int TIMEOUT = 20;
 
-    @Bean
-    LoggerBean logger;
+    @Bean(LoggerImpl.class)
+    Logger logger;
 
     @Provides
     @Singleton

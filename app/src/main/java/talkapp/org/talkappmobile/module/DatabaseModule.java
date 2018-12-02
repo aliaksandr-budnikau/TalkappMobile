@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
@@ -25,7 +26,7 @@ import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExercise
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 
 /**
  * @author Budnikau Aliaksandr
@@ -33,8 +34,8 @@ import talkapp.org.talkappmobile.component.impl.LoggerBean;
 @Module
 @EBean
 public class DatabaseModule {
-    @Bean
-    LoggerBean logger;
+    @Bean(LoggerImpl.class)
+    Logger logger;
 
     @Provides
     @Singleton

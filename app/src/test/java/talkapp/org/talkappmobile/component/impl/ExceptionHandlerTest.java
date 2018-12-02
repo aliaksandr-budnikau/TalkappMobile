@@ -47,7 +47,7 @@ public class ExceptionHandlerTest {
     @Before
     public void setup() {
         TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
-        Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerBean.class));
+        Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerImpl.class));
         ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
         componentsFactory = injection.getComponentsFactory();

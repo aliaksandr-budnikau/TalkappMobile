@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListIn
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
+import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
@@ -34,7 +35,7 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
@@ -50,13 +51,11 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 @Module
 @EBean
 public class GameplayModule {
-    public static final String[] ARTICLES = new String[]{"a", "an", "the"};
-    public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
-    public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
-    public static final String PLACEHOLDER = "***";
 
-    @Bean
-    LoggerBean logger;
+    @Bean(LoggerImpl.class)
+    Logger logger;
+    @Bean(TextUtilsImpl.class)
+    TextUtils textUtils;
 
     @Provides
     @Singleton
@@ -86,12 +85,6 @@ public class GameplayModule {
     @Singleton
     public WordsCombinator provideWordsCombinator() {
         return new RandomWordsCombinatorImpl();
-    }
-
-    @Provides
-    @Singleton
-    public TextUtils provideTextUtils() {
-        return new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
     }
 
     @Provides
@@ -132,7 +125,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public LoginInteractor provideLoginInteractor(BackendServer server, TextUtils textUtils) {
+    public LoginInteractor provideLoginInteractor(BackendServer server) {
         return new LoginInteractor(logger, server, textUtils);
     }
 
@@ -168,7 +161,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public ViewStrategyFactory provideViewStrategyFactory(TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
+    public ViewStrategyFactory provideViewStrategyFactory(WordSetExperienceUtils experienceUtils) {
         return new ViewStrategyFactoryImpl(textUtils, experienceUtils);
     }
 }

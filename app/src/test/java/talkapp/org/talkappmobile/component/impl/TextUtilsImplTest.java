@@ -10,16 +10,13 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static talkapp.org.talkappmobile.module.GameplayModule.ARTICLES;
-import static talkapp.org.talkappmobile.module.GameplayModule.LAST_SYMBOLS;
-import static talkapp.org.talkappmobile.module.GameplayModule.PLACEHOLDER;
-import static talkapp.org.talkappmobile.module.GameplayModule.PUNCTUATION_MARKS;
+import static talkapp.org.talkappmobile.component.impl.TextUtilsImpl.PLACEHOLDER;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public class TextUtilsImplTest {
-    private TextUtilsImpl utils = new TextUtilsImpl(PLACEHOLDER, ARTICLES, LAST_SYMBOLS, PUNCTUATION_MARKS);
+    private TextUtilsImpl utils = new TextUtilsImpl();
 
     @Test
     public void screenTextWith_withoutChanges() {
@@ -355,7 +352,7 @@ public class TextUtilsImplTest {
 
     @Test
     public void validateEmail() {
-        TextUtilsImpl utils = new TextUtilsImpl("", new String[]{}, new String[]{}, new String[]{});
+        TextUtilsImpl utils = new TextUtilsImpl();
 
         assertTrue(utils.validateEmail("sasha-ne@tut.by"));
         assertTrue(utils.validateEmail("sasha-ne@gmail.com"));
@@ -368,7 +365,7 @@ public class TextUtilsImplTest {
 
     @Test
     public void validatePassword() {
-        TextUtilsImpl utils = new TextUtilsImpl("", new String[]{}, new String[]{}, new String[]{});
+        TextUtilsImpl utils = new TextUtilsImpl();
 
         assertFalse(utils.validatePassword("password"));
         assertFalse(utils.validatePassword("passwor"));

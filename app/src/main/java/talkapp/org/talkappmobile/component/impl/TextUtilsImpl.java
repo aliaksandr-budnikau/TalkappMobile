@@ -1,8 +1,8 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.androidannotations.annotations.EBean;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,10 +14,18 @@ import java.util.regex.Pattern;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 
+import static java.util.Arrays.asList;
+
 /**
  * @author Budnikau Aliaksandr
  */
+@EBean
 public class TextUtilsImpl implements TextUtils {
+
+    public static final String[] ARTICLES = new String[]{"a", "an", "the"};
+    public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
+    public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
+    public static final String PLACEHOLDER = "***";
 
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_PASSWORD_ADDRESS_REGEX = Pattern.compile(
@@ -34,11 +42,11 @@ public class TextUtilsImpl implements TextUtils {
     private final Set<String> punctuationMarks;
     private final String placeholder;
 
-    public TextUtilsImpl(String placeholder, String[] words, String[] lastSymbols, String[] punctuationMarks) {
-        this.placeholder = placeholder;
-        this.words = new HashSet<>(Arrays.asList(words));
-        this.lastSymbols = new HashSet<>(Arrays.asList(lastSymbols));
-        this.punctuationMarks = new HashSet<>(Arrays.asList(punctuationMarks));
+    public TextUtilsImpl() {
+        this.placeholder = PLACEHOLDER;
+        this.words = new HashSet<>(asList(ARTICLES));
+        this.lastSymbols = new HashSet<>(asList(LAST_SYMBOLS));
+        this.punctuationMarks = new HashSet<>(asList(PUNCTUATION_MARKS));
     }
 
     public boolean validateEmail(String email) {
