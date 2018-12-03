@@ -30,8 +30,9 @@ public class PracticeWordSetViewStrategy {
         view.hideNextButton();
         view.showCheckButton();
         view.setOriginalText(sentence.getTranslations().get("russian"));
-        String hiddenRightAnswer = hideRightAnswer(sentence, word);
-        view.setRightAnswer(hiddenRightAnswer);
+        view.setRightAnswerModel(sentence, word);
+        view.unlockRightAnswer();
+        hideRightAnswer(view);
         view.setAnswerText("");
     }
 
@@ -66,6 +67,7 @@ public class PracticeWordSetViewStrategy {
 
     public void onRightAnswer(Sentence sentence) {
         view.setRightAnswer(sentence.getText());
+        view.lockRightAnswer();
         view.showNextButton();
         view.hideCheckButton();
         view.hideSpellingOrGrammarErrorPanel();
@@ -103,21 +105,20 @@ public class PracticeWordSetViewStrategy {
         view.setAnswerText(textWithLastSymbol);
     }
 
-    public void rightAnswerTouched(Sentence sentence) {
-        view.setRightAnswer(sentence.getText());
+    public void rightAnswerTouched() {
+        view.unmaskRightAnswer();
     }
 
-    public void rightAnswerUntouched(Sentence sentence, Word2Tokens word) {
-        String hiddenRightAnswer = hideRightAnswer(sentence, word);
-        view.setRightAnswer(hiddenRightAnswer);
+    public void rightAnswerUntouched() {
+        hideRightAnswer(view);
     }
 
     public PracticeWordSetView getView() {
         return view;
     }
 
-    protected String hideRightAnswer(Sentence sentence, Word2Tokens word) {
-        return textUtils.screenTextWith(sentence.getText());
+    protected void hideRightAnswer(PracticeWordSetView view) {
+        view.maskRightAnswerEntirely();
     }
 
     public void onTrainingHalfFinished() {

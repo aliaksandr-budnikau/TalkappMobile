@@ -27,6 +27,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
@@ -36,6 +37,8 @@ import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static android.app.Activity.RESULT_OK;
@@ -55,7 +58,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @ViewById(R.id.originalText)
     TextView originalText;
     @ViewById(R.id.rightAnswer)
-    TextView rightAnswer;
+    RightAnswerTextView rightAnswer;
     @ViewById(R.id.answerText)
     TextView answerText;
     @ViewById(R.id.wordSetProgress)
@@ -333,6 +336,36 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @UiThread
     public void setEnableRightAnswerTextView(final boolean value) {
         rightAnswer.setEnabled(value);
+    }
+
+    @Override
+    public void setRightAnswerModel(Sentence sentence, Word2Tokens word) {
+        rightAnswer.setModel(sentence, word);
+    }
+
+    @Override
+    public void maskRightAnswerEntirely() {
+        rightAnswer.maskEntirely();
+    }
+
+    @Override
+    public void maskRightAnswerOnlyWord() {
+        rightAnswer.maskOnlyWord();
+    }
+
+    @Override
+    public void unmaskRightAnswer() {
+        rightAnswer.unmask();
+    }
+
+    @Override
+    public void lockRightAnswer() {
+        rightAnswer.lock();
+    }
+
+    @Override
+    public void unlockRightAnswer() {
+        rightAnswer.unlock();
     }
 
     private void sendCheatSignal(final String signal) {

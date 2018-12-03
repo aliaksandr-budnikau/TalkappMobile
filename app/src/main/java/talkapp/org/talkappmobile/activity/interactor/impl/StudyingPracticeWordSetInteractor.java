@@ -162,15 +162,4 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         exerciseService.putOffCurrentWord(wordSetId);
         return exerciseService.peekByWordSetIdAnyWord(wordSetId);
     }
-
-    @Override
-    public void rightAnswerUntouched(int wordSetId, OnPracticeWordSetListener listener) {
-        boolean answered = exerciseService.isCurrentExerciseAnswered(wordSetId);
-        if (answered) {
-            return;
-        }
-        Sentence currentSentence = exerciseService.getCurrentSentence(wordSetId);
-        Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
-        listener.onHideRightAnswer(currentSentence, currentWord);
-    }
 }

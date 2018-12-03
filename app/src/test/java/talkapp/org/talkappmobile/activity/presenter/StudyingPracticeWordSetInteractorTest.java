@@ -513,34 +513,4 @@ public class StudyingPracticeWordSetInteractorTest {
         assertEquals(value, actual);
         verify(exerciseService).putOffCurrentWord(wordSetId);
     }
-
-    @Test
-    public void rightAnswerUntouched_answered() {
-        // setup
-        int wordSetId = 5;
-
-        // when
-        when(exerciseService.isCurrentExerciseAnswered(wordSetId)).thenReturn(true);
-        interactor.rightAnswerUntouched(wordSetId, listener);
-
-        // then
-        verify(listener, times(0)).onHideRightAnswer(any(Sentence.class), any(Word2Tokens.class));
-    }
-
-    @Test
-    public void rightAnswerUntouched_notAnswered() {
-        // setup
-        int wordSetId = 5;
-        Sentence sentence = new Sentence();
-        Word2Tokens word = new Word2Tokens();
-
-        // when
-        when(exerciseService.isCurrentExerciseAnswered(wordSetId)).thenReturn(false);
-        when(exerciseService.getCurrentSentence(wordSetId)).thenReturn(sentence);
-        when(exerciseService.getCurrentWord(wordSetId)).thenReturn(word);
-        interactor.rightAnswerUntouched(wordSetId, listener);
-
-        // then
-        verify(listener).onHideRightAnswer(sentence, word);
-    }
 }

@@ -1,5 +1,8 @@
 package talkapp.org.talkappmobile.activity.view;
 
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+
 public interface PracticeWordSetView {
 
     void showNextButton();
@@ -47,4 +50,16 @@ public interface PracticeWordSetView {
     void hideSpellingOrGrammarErrorPanel();
 
     void setEnableRightAnswerTextView(boolean value);
+
+    void setRightAnswerModel(Sentence sentence, Word2Tokens word);
+
+    void maskRightAnswerEntirely();
+
+    void maskRightAnswerOnlyWord();
+
+    void unmaskRightAnswer();
+
+    void lockRightAnswer();
+
+    void unlockRightAnswer();
 }

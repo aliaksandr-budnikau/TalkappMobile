@@ -18,8 +18,6 @@ public interface PracticeWordSetExerciseService {
 
     Word2Tokens peekByWordSetIdAnyWord(int wordSetId);
 
-    Word2Tokens getCurrentWord(int wordSetId);
-
     Sentence getCurrentSentence(int wordSetId);
 
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours);
@@ -29,6 +27,4 @@ public interface PracticeWordSetExerciseService {
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);
-
-    boolean isCurrentExerciseAnswered(int wordSetId);
 }

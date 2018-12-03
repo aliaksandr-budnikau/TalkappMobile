@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMa
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
@@ -120,16 +119,6 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     }
 
     @Override
-    public Word2Tokens getCurrentWord(int wordSetId) {
-        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        try {
-            return mapper.readValue(current.get(0).getWordJSON(), Word2Tokens.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    @Override
     public Sentence getCurrentSentence(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         String sentenceJSON = current.get(0).getSentenceJSON();
@@ -184,20 +173,6 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         mapping.setStatus(next(mapping.getStatus()));
         mapping.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(mapping);
-    }
-
-    @Override
-    public boolean isCurrentExerciseAnswered(int wordSetId) {
-        WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
-        WordSetExperienceStatus generalStatus = exp.getStatus();
-        List<PracticeWordSetExerciseMapping> currentExes = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        if (currentExes.isEmpty()) {
-            return false;
-        }
-
-        WordSetExperienceStatus exeStatus = currentExes.get(0).getStatus();
-
-        return next(generalStatus) == exeStatus;
     }
 
     private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {

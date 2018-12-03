@@ -57,7 +57,7 @@
                     android:textColor="@color/color.text.origin"
                     android:textSize="14pt" />
 
-                <TextView
+                <talkapp.org.talkappmobile.activity.custom.RightAnswerTextView_
                     android:id="@+id/rightAnswer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

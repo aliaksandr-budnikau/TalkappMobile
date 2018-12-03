@@ -20,25 +20,18 @@ import java.util.List;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.getInstance;
-import static java.util.Collections.singletonList;
 import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetExerciseServiceImplTest {
@@ -48,107 +41,6 @@ public class PracticeWordSetExerciseServiceImplTest {
     private WordSetExperienceDao experienceDao;
     @InjectMocks
     private PracticeWordSetExerciseServiceImpl service;
-
-    @Test
-    public void isCurrentExerciseAnswered_trueInBeginning() {
-        // setup
-        int wordSetId = 3;
-
-        WordSetExperienceMapping experienceMapping = new WordSetExperienceMapping();
-        experienceMapping.setStatus(STUDYING);
-
-        PracticeWordSetExerciseMapping exerciseMapping = new PracticeWordSetExerciseMapping();
-        exerciseMapping.setStatus(REPETITION);
-
-        // when
-        when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
-        when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
-
-        // then
-        assertTrue(answered);
-    }
-
-    @Test
-    public void isCurrentExerciseAnswered_falseInBeginning() {
-        // setup
-        int wordSetId = 3;
-
-        WordSetExperienceMapping experienceMapping = new WordSetExperienceMapping();
-        experienceMapping.setStatus(STUDYING);
-
-        PracticeWordSetExerciseMapping exerciseMapping = new PracticeWordSetExerciseMapping();
-        exerciseMapping.setStatus(STUDYING);
-
-        // when
-        when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
-        when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
-
-        // then
-        assertFalse(answered);
-    }
-
-
-    @Test
-    public void isCurrentExerciseAnswered_trueInEnd() {
-        // setup
-        int wordSetId = 3;
-
-        WordSetExperienceMapping experienceMapping = new WordSetExperienceMapping();
-        experienceMapping.setStatus(REPETITION);
-
-        PracticeWordSetExerciseMapping exerciseMapping = new PracticeWordSetExerciseMapping();
-        exerciseMapping.setStatus(FINISHED);
-
-        // when
-        when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
-        when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
-
-        // then
-        assertTrue(answered);
-    }
-
-    @Test
-    public void isCurrentExerciseAnswered_falseInEnd() {
-        // setup
-        int wordSetId = 3;
-
-        WordSetExperienceMapping experienceMapping = new WordSetExperienceMapping();
-        experienceMapping.setStatus(REPETITION);
-
-        PracticeWordSetExerciseMapping exerciseMapping = new PracticeWordSetExerciseMapping();
-        exerciseMapping.setStatus(REPETITION);
-
-        // when
-        when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
-        when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(singletonList(exerciseMapping));
-        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
-
-        // then
-        assertFalse(answered);
-    }
-
-    @Test
-    public void isCurrentExerciseAnswered_noCurrent() {
-        // setup
-        int wordSetId = 3;
-
-        WordSetExperienceMapping experienceMapping = new WordSetExperienceMapping();
-        experienceMapping.setStatus(REPETITION);
-
-        PracticeWordSetExerciseMapping exerciseMapping = new PracticeWordSetExerciseMapping();
-        exerciseMapping.setStatus(REPETITION);
-
-        // when
-        when(experienceDao.findById(wordSetId)).thenReturn(experienceMapping);
-        when(exerciseDao.findByCurrentAndByWordSetId(wordSetId)).thenReturn(Collections.<PracticeWordSetExerciseMapping>emptyList());
-        boolean answered = service.isCurrentExerciseAnswered(wordSetId);
-
-        // then
-        assertFalse(answered);
-    }
 
     @Test
     public void findFinishedWordSetsSortByUpdatedDate_emptyDB() {

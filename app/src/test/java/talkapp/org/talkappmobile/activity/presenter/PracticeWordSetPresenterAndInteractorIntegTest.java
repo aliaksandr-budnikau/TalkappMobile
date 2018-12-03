@@ -3,11 +3,9 @@ package talkapp.org.talkappmobile.activity.presenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
@@ -18,14 +16,11 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.matches;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.component.impl.TextUtilsImpl.PLACEHOLDER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -81,16 +76,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 1
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -117,6 +112,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -125,16 +121,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 2
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -161,6 +157,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -169,16 +166,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 3
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -205,23 +202,32 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
+        presenter.rightAnswerTouched();
+        presenter.rightAnswerUntouched();
+
+        verify(view).unmaskRightAnswer();
+        verify(view).maskRightAnswerEntirely();
+        reset(view);
+
         // sentence 4
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -248,6 +254,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -256,15 +263,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 5
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -291,6 +299,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -299,15 +308,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 6
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -351,16 +361,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 1
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -387,6 +397,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -395,16 +406,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 2
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -419,16 +430,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -455,6 +466,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -463,16 +475,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 3
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -487,16 +499,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        verify(view).setRightAnswer(matches(ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length <= 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -523,23 +535,32 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
+        presenter.rightAnswerTouched();
+        presenter.rightAnswerUntouched();
+
+        verify(view).unmaskRightAnswer();
+        verify(view).maskRightAnswerEntirely();
+        reset(view);
+
         // sentence 4
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -554,15 +575,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -589,6 +611,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -597,15 +620,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 5
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -620,15 +644,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -655,6 +680,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
+        verify(view).lockRightAnswer();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -663,15 +689,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         // sentence 6
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -686,15 +713,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         presenter.nextButtonClick();
+        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(matches(NOT_ENGLISH));
-        arg = ArgumentCaptor.forClass(String.class);
-        verify(view).setRightAnswer(arg.capture());
-        assertTrue(arg.getValue().split(PLACEHOLDER_REGEX).length > 2);
+        verify(view).setRightAnswerModel(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).unlockRightAnswer();
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
@@ -751,14 +779,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         presenter.initialise();
         presenter.nextButtonClick();
+
+        verify(view).unlockRightAnswer();
+        reset(view);
+
         Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
         presenter.checkAnswerButtonClick(sentence.getText());
+
+        verify(view).lockRightAnswer();
+        reset(view);
+
         presenter.rightAnswerTouched();
         presenter.rightAnswerUntouched();
 
-        ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
-        verify(view, atLeastOnce()).setRightAnswer(arg.capture());
-        List<String> allValues = arg.getAllValues();
-        assertFalse(allValues.get(allValues.size() - 1).contains(PLACEHOLDER));
+        verify(view).unmaskRightAnswer();
+        verify(view).maskRightAnswerOnlyWord();
     }
 }

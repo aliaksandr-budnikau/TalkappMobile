@@ -246,31 +246,11 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void rightAnswerTouched() {
-        // setup
-        Sentence sentence = new Sentence();
-
-        int wordSetId = 4;
-
         // when
-        when(state.getWordSetId()).thenReturn(wordSetId);
-        when(interactor.getCurrentSentence(wordSetId)).thenReturn(sentence);
         presenter.rightAnswerTouched();
 
         // then
-        verify(viewStrategy).rightAnswerTouched(sentence);
-    }
-
-    @Test
-    public void rightAnswerUntouched() {
-        // setup
-        int wordSetId = 3;
-
-        // when
-        when(state.getWordSetId()).thenReturn(wordSetId);
-        presenter.rightAnswerUntouched();
-
-        // then
-        verify(interactor).rightAnswerUntouched(wordSetId, presenter);
+        verify(viewStrategy).rightAnswerTouched();
     }
 
     @Test
@@ -282,14 +262,11 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onHideRightAnswer() {
-        // setup
-        Word2Tokens word = new Word2Tokens();
-        Sentence sentence = new Sentence();
 
         // when
-        presenter.onHideRightAnswer(sentence, word);
+        presenter.onHideRightAnswer();
 
         // then
-        verify(viewStrategy).rightAnswerUntouched(sentence, word);
+        verify(viewStrategy).rightAnswerUntouched();
     }
 }

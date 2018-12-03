@@ -22,7 +22,5 @@ public interface PracticeWordSetInteractor {
 
     void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 
-    void rightAnswerUntouched(int wordSetId, OnPracticeWordSetListener listener);
-
     void pronounceRightAnswer(Sentence sentence, OnPracticeWordSetListener listener);
 }

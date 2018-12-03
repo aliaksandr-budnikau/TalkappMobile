@@ -74,7 +74,8 @@ public class PracticeWordSetViewStrategyTest {
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(origText);
-        verify(view).setRightAnswer(sentence.getText());
+        verify(view).setRightAnswerModel(sentence, word);
+        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
     }
 
@@ -173,31 +174,19 @@ public class PracticeWordSetViewStrategyTest {
 
     @Test
     public void rightAnswerTouched() {
-        // setup
-        Sentence sentence = new Sentence();
-        sentence.setText("sdds");
-
         // when
-        strategy.rightAnswerTouched(sentence);
+        strategy.rightAnswerTouched();
 
         // then
-        verify(view).setRightAnswer(sentence.getText());
+        verify(view).unmaskRightAnswer();
     }
 
     @Test
     public void rightAnswerUntouched() {
-        // setup
-        String hiddenRightAnswer = "sdfsdf";
-        Sentence sentence = new Sentence();
-        sentence.setText("sdds");
-
-        Word2Tokens word = new Word2Tokens("word");
-
         // when
-        when(textUtils.screenTextWith(sentence.getText())).thenReturn(hiddenRightAnswer);
-        strategy.rightAnswerUntouched(sentence, word);
+        strategy.rightAnswerUntouched();
 
         // then
-        verify(view).setRightAnswer(hiddenRightAnswer);
+        verify(view).maskRightAnswerEntirely();
     }
 }
