@@ -80,6 +80,16 @@ public class TestDatabaseModule extends DatabaseModule {
             public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
                 return null;
             }
+
+            @Override
+            public List<PracticeWordSetExerciseMapping> findByWordAndByStatus(String word, WordSetExperienceStatus status) {
+                return null;
+            }
+
+            @Override
+            public List<PracticeWordSetExerciseMapping> findByWordAndBySentenceAndByStatus(String s, String s1, WordSetExperienceStatus finished) {
+                return null;
+            }
         };
     }
 

@@ -11,10 +11,12 @@ import talkapp.org.talkappmobile.model.WordSet;
 public class PracticeWordSetPagerAdapter extends FragmentPagerAdapter {
 
     private final WordSet wordSet;
+    private final boolean repetitionMode;
 
-    public PracticeWordSetPagerAdapter(FragmentManager fm, WordSet wordSet) {
+    public PracticeWordSetPagerAdapter(FragmentManager fm, WordSet wordSet, boolean repetitionMode) {
         super(fm);
         this.wordSet = wordSet;
+        this.repetitionMode = repetitionMode;
     }
 
     @Override
@@ -22,7 +24,7 @@ public class PracticeWordSetPagerAdapter extends FragmentPagerAdapter {
         if (position == 0) {
             return PracticeWordSetVocabularyFragment.newInstance(wordSet);
         } else {
-            return PracticeWordSetFragment.newInstance(wordSet);
+            return PracticeWordSetFragment.newInstance(wordSet, repetitionMode);
         }
     }
 

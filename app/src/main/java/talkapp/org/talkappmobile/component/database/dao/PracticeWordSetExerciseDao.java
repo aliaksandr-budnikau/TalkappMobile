@@ -21,4 +21,8 @@ public interface PracticeWordSetExerciseDao {
     List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId);
 
     List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours);
+
+    List<PracticeWordSetExerciseMapping> findByWordAndByStatus(String word, WordSetExperienceStatus status);
+
+    List<PracticeWordSetExerciseMapping> findByWordAndBySentenceAndByStatus(String word, String sentence, WordSetExperienceStatus status);
 }

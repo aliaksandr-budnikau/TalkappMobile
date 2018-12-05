@@ -141,6 +141,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
         intent.putExtra(PracticeWordSetActivity.TOPIC_MAPPING, topic);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
+        intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, repetitionMode);
         startActivity(intent);
     }
 

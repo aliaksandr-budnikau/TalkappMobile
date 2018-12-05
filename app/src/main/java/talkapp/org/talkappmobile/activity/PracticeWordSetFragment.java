@@ -27,6 +27,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
@@ -46,10 +48,13 @@ import static android.app.Activity.RESULT_OK;
 @EFragment(value = R.layout.word_set_practice_activity_fragment)
 public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
+    public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     private final StringBuilder SIGNAL_SEQUENCE = new StringBuilder("12345678");
     @Inject
     StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
+    @Inject
+    RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
     @Inject
     ViewStrategyFactory viewStrategyFactory;
     @Inject
@@ -83,6 +88,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @FragmentArg(WORD_SET_MAPPING)
     WordSet wordSet;
+    @FragmentArg(REPETITION_MODE_MAPPING)
+    boolean repetitionMode;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetPresenter presenter;
@@ -91,10 +98,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PracticeWordSetFragment newInstance(WordSet wordSet) {
+    public static PracticeWordSetFragment newInstance(WordSet wordSet, boolean repetitionMode) {
         PracticeWordSetFragment fragment = new PracticeWordSetFragment_();
         Bundle args = new Bundle();
         args.putSerializable(WORD_SET_MAPPING, wordSet);
+        args.putBoolean(REPETITION_MODE_MAPPING, repetitionMode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -112,7 +120,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public void initPresenter() {
         PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
         PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
-        presenter = new PracticeWordSetPresenter(wordSet, studyingPracticeWordSetInteractor, newWordOnlyStrategy, hideAllStrategy);
+        PracticeWordSetInteractor interactor = studyingPracticeWordSetInteractor;
+        if (repetitionMode) {
+            interactor = repetitionPracticeWordSetInteractor;
+        }
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
     }

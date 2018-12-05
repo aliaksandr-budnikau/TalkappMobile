@@ -17,10 +17,13 @@ import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMa
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static java.util.Calendar.getInstance;
+import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
 import static org.apache.commons.collections4.ListUtils.partition;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
@@ -132,7 +135,8 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours) {
         Calendar cal = getInstance(UTC);
-        cal.add(Calendar.HOUR, -olderThenInHours);
+        cal.add(Calendar.SECOND, -olderThenInHours);
+        //cal.add(Calendar.HOUR, -olderThenInHours);
         List<PracticeWordSetExerciseMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
         List<WordSet> wordSets = new LinkedList<>();
         for (List<PracticeWordSetExerciseMapping> exercises : partition(words, wordSetSize)) {
@@ -173,6 +177,45 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         mapping.setStatus(next(mapping.getStatus()));
         mapping.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(mapping);
+    }
+
+    @Override
+    public List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetExperienceStatus status) {
+        List<PracticeWordSetExerciseMapping> exercises;
+        try {
+            exercises = exerciseDao.findByWordAndByStatus(mapper.writeValueAsString(word), status);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        if (exercises.isEmpty()) {
+            return emptyList();
+        }
+        LinkedList<Sentence> sentences = new LinkedList<>();
+        for (PracticeWordSetExerciseMapping exercise : exercises) {
+            try {
+                sentences.add(mapper.readValue(exercise.getSentenceJSON(), Sentence.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
+        return sentences;
+    }
+
+    @Override
+    public void markAsRepeated(Word2Tokens word, Sentence sentence) {
+        List<PracticeWordSetExerciseMapping> exercises;
+        try {
+            exercises = exerciseDao.findByWordAndBySentenceAndByStatus(
+                    mapper.writeValueAsString(word),
+                    mapper.writeValueAsString(sentence),
+                    FINISHED
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        PracticeWordSetExerciseMapping exercise = exercises.get(0);
+        exercise.setUpdatedDate(getInstance(UTC).getTime());
+        exerciseDao.createNewOrUpdate(exercise);
     }
 
     private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {

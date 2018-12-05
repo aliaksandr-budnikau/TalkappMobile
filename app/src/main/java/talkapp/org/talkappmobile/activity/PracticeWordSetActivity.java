@@ -17,6 +17,7 @@ public class PracticeWordSetActivity extends BaseActivity {
 
     public static final String TOPIC_MAPPING = "topic";
     public static final String WORD_SET_MAPPING = "wordSet";
+    public static final String REPETITION_MODE_MAPPING = "repetitionMode";
 
     @ViewById(R.id.container)
     ViewPager viewPager;
@@ -25,13 +26,15 @@ public class PracticeWordSetActivity extends BaseActivity {
     Topic topic;
     @Extra(WORD_SET_MAPPING)
     WordSet wordSet;
+    @Extra(REPETITION_MODE_MAPPING)
+    boolean repetitionMode;
 
     @AfterViews
     public void init() {
         if (topic != null) {
             setTitle(topic.getName());
         }
-        PracticeWordSetPagerAdapter sectionsPagerAdapter = new PracticeWordSetPagerAdapter(getSupportFragmentManager(), wordSet);
+        PracticeWordSetPagerAdapter sectionsPagerAdapter = new PracticeWordSetPagerAdapter(getSupportFragmentManager(), wordSet, repetitionMode);
 
         viewPager.setAdapter(sectionsPagerAdapter);
     }

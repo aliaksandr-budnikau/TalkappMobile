@@ -16,14 +16,11 @@ import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
-import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
 
@@ -32,7 +29,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordsCombinator wordsCombinator;
     private final SentenceProvider sentenceProvider;
     private final SentenceSelector sentenceSelector;
-    private final RefereeService refereeService;
     private final Logger logger;
     private final WordSetExperienceService experienceService;
     private final PracticeWordSetExerciseService exerciseService;
@@ -47,11 +43,10 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              Context context,
                                              AudioStuffFactory audioStuffFactory,
                                              Speaker speaker) {
-        super(logger, context, audioStuffFactory, speaker);
+        super(logger, context, refereeService, audioStuffFactory, speaker);
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
-        this.refereeService = refereeService;
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
@@ -104,33 +99,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public void checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, final OnPracticeWordSetListener listener) {
-        logger.i(TAG, "check answer {} ", answer);
-        if (isEmpty(answer)) {
-            logger.i(TAG, "answer is empty");
-            listener.onAnswerEmpty();
-            return;
-        }
-        UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
-        uncheckedAnswer.setActualAnswer(answer);
-        uncheckedAnswer.setExpectedAnswer(sentence.getText());
-
-        logger.i(TAG, "checking ... {}", uncheckedAnswer);
-        AnswerCheckingResult result = refereeService.checkAnswer(uncheckedAnswer);
-        if (!result.getErrors().isEmpty()) {
-            logger.i(TAG, "errors were found ... {}", result.getErrors());
-            listener.onSpellingOrGrammarError(result.getErrors());
-            return;
+    public boolean checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, final OnPracticeWordSetListener listener) {
+        if (!super.checkAnswer(answer, wordSet, sentence, listener)) {
+            return false;
         }
 
-        if (result.isAccuracyTooLow()) {
-            logger.i(TAG, "accuracy is too low");
-            listener.onAccuracyTooLowError();
-            return;
-        }
-
-        logger.i(TAG, "accuracy is ok");
         WordSetExperience exp = experienceService.increaseExperience(wordSet.getId(), 1);
         logger.i(TAG, "experience is {}", exp);
         listener.onUpdateProgress(exp);
@@ -150,6 +123,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             logger.i(TAG, "right answer");
             listener.onRightAnswer(sentence);
         }
+        return true;
     }
 
     @Override

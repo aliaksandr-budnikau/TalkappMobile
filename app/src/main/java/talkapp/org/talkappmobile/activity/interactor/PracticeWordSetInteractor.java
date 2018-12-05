@@ -18,7 +18,7 @@ public interface PracticeWordSetInteractor {
 
     void initialiseSentence(Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
 
-    void checkAnswer(String answer, WordSet wordSet, Sentence currentSentence, OnPracticeWordSetListener listener);
+    boolean checkAnswer(String answer, WordSet wordSet, Sentence currentSentence, OnPracticeWordSetListener listener);
 
     void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 

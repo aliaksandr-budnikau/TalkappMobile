@@ -7,7 +7,8 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
 public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy {
     private final PracticeWordSetExerciseService exerciseService;
@@ -19,6 +20,9 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
 
     @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
-        return asList(exerciseService.findByWordAndWordSetId(word, wordSetId));
+        if (wordSetId == 0) {
+            return exerciseService.findByWordAndByStatus(word, FINISHED);
+        }
+        return singletonList(exerciseService.findByWordAndWordSetId(word, wordSetId));
     }
 }

@@ -2,7 +2,9 @@ package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
@@ -15,6 +17,7 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
@@ -118,6 +121,42 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
                     .orderBy(UPDATED_DATE_FN, false)
                     .limit(limit);
             return this.query(builder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PracticeWordSetExerciseMapping> findByWordAndByStatus(String word, WordSetExperienceStatus status) {
+        try {
+            SelectArg selectWord = new SelectArg();
+            PreparedQuery<PracticeWordSetExerciseMapping> prepare = queryBuilder()
+                    .where()
+                    .eq(STATUS_FN, status)
+                    .and()
+                    .eq(WORD_FN, selectWord).prepare();
+            selectWord.setValue(word);
+            return this.query(prepare);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<PracticeWordSetExerciseMapping> findByWordAndBySentenceAndByStatus(String word, String sentence, WordSetExperienceStatus status) {
+        try {
+            SelectArg selectWord = new SelectArg();
+            SelectArg selectSentence = new SelectArg();
+            PreparedQuery<PracticeWordSetExerciseMapping> prepare = queryBuilder()
+                    .where()
+                    .eq(STATUS_FN, status)
+                    .and()
+                    .eq(WORD_FN, selectWord)
+                    .and()
+                    .eq(SENTENCE_FN, selectSentence).prepare();
+            selectWord.setValue(word);
+            selectSentence.setValue(sentence);
+            return this.query(prepare);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

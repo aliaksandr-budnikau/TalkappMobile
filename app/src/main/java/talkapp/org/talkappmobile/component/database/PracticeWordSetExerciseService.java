@@ -6,6 +6,7 @@ import java.util.Set;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 public interface PracticeWordSetExerciseService {
     Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId);
@@ -27,4 +28,8 @@ public interface PracticeWordSetExerciseService {
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);
+
+    List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetExperienceStatus status);
+
+    void markAsRepeated(Word2Tokens word, Sentence sentence);
 }
