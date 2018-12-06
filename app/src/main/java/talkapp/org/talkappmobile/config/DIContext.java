@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
 import talkapp.org.talkappmobile.activity.WordSetsListFragment;
 import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
-import talkapp.org.talkappmobile.activity.adapter.WordSetListAdapter;
+import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;

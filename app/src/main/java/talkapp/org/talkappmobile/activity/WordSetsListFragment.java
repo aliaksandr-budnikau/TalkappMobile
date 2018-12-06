@@ -5,12 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ItemClick;
@@ -23,7 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
@@ -41,8 +41,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
-    @Inject
-    AdaptersFactory adaptersFactory;
+    @Bean
+    WordSetListAdapter adapter;
     @Inject
     StudyingWordSetsListInteractor studyingWordSetsListInteractor;
     @Inject
@@ -59,17 +59,12 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     Topic topic;
     @FragmentArg(REPETITION_MODE_MAPPING)
     boolean repetitionMode;
-
     private WaitingForProgressBarManager waitingForProgressBarManager;
-
-    private ArrayAdapter<WordSet> adapter;
     private WordSetsListPresenter presenter;
 
     @AfterViews
     public void init() {
         DIContextUtils.get().inject(this);
-
-        adapter = adaptersFactory.createWordSetListAdapter(this.getActivity());
         wordSetsListView.setAdapter(adapter);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
