@@ -3,33 +3,22 @@ package talkapp.org.talkappmobile.activity.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.LinkedList;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView;
+import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView_;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.config.DIContextUtils;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
  * @author Budnikau Aliaksandr
  */
 public class WordSetListAdapter extends ArrayAdapter<WordSet> {
-    @Inject
-    WordSetExperienceUtils experienceUtils;
     @Inject
     WordSetExperienceService experienceService;
 
@@ -41,26 +30,18 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        WordSet wordSet = this.getItem(position);
-
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        convertView = inflater.inflate(R.layout.row_word_sets_list, parent, false);
-        TextView wordSetRow = convertView.findViewById(R.id.wordSetRow);
-        LinkedList<String> words = new LinkedList<>();
-        for (Word2Tokens word2Tokens : wordSet.getWords()) {
-            words.add(word2Tokens.getWord());
-        }
-        String label = StringUtils.joinWith(", ", words.toArray());
-        wordSetRow.setText(label);
-
-        ProgressBar wordSetProgress = convertView.findViewById(R.id.wordSetProgress);
-        WordSetExperience experience = experienceService.findById(wordSet.getId());
-        if (experience == null) {
-            wordSetProgress.setProgress(0);
+        WordSetsListItemView itemView;
+        if (convertView == null) {
+            itemView = WordSetsListItemView_.build(getContext());
         } else {
-            wordSetProgress.setProgress(experienceUtils.getProgress(experience));
+            itemView = (WordSetsListItemView) convertView;
         }
-
-        return convertView;
+        WordSet wordSet = this.getItem(position);
+        itemView.setModel(wordSet, experienceService.findById(wordSet.getId()));
+        if (wordSet.getId() == 0) {
+            itemView.hideProgress();
+        }
+        itemView.refreshModel();
+        return itemView;
     }
 }

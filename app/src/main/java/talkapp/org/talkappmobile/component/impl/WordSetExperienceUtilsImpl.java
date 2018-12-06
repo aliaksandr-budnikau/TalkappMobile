@@ -1,11 +1,16 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import talkapp.org.talkappmobile.model.WordSetExperience;
+import org.androidannotations.annotations.EBean;
+
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.model.WordSetExperience;
+
+import static org.androidannotations.annotations.EBean.Scope.Singleton;
 
 /**
  * @author Budnikau Aliaksandr
  */
+@EBean(scope = Singleton)
 public class WordSetExperienceUtilsImpl implements WordSetExperienceUtils {
 
     @Override

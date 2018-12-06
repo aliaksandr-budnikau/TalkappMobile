@@ -57,6 +57,8 @@ public class GameplayModule {
     Logger logger;
     @Bean(TextUtilsImpl.class)
     TextUtils textUtils;
+    @Bean(WordSetExperienceUtilsImpl.class)
+    WordSetExperienceUtils experienceUtils;
 
     @Provides
     @Singleton
@@ -103,7 +105,7 @@ public class GameplayModule {
     @Provides
     @Singleton
     public WordSetExperienceUtils provideWordSetExperienceUtils() {
-        return new WordSetExperienceUtilsImpl();
+        return experienceUtils;
     }
 
     @Provides
@@ -168,7 +170,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public ViewStrategyFactory provideViewStrategyFactory(WordSetExperienceUtils experienceUtils) {
+    public ViewStrategyFactory provideViewStrategyFactory() {
         return new ViewStrategyFactoryImpl(textUtils, experienceUtils);
     }
 }
