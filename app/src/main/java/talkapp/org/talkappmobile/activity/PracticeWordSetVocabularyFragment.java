@@ -3,11 +3,11 @@ package talkapp.org.talkappmobile.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ItemClick;
@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.activity.custom.PracticeWordSetVocabularyListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
@@ -32,8 +32,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 @EFragment(value = R.layout.word_translations_layout)
 public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView {
     public static final String WORD_SET_MAPPING = "wordSet";
-    @Inject
-    AdaptersFactory adaptersFactory;
+    @Bean
+    PracticeWordSetVocabularyListAdapter adapter;
     @Inject
     PracticeWordSetVocabularyInteractor interactor;
     @Inject
@@ -48,7 +48,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     WordSet wordSet;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
-    private ArrayAdapter<WordTranslation> adapter;
     private PracticeWordSetVocabularyPresenter presenter;
 
     public static PracticeWordSetVocabularyFragment newInstance(WordSet wordSet) {
@@ -63,7 +62,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void init() {
         DIContextUtils.get().inject(this);
 
-        adapter = adaptersFactory.createWordTranslationListAdapter(this.getActivity());
         wordSetsListView.setAdapter(adapter);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);

@@ -9,7 +9,6 @@ import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.DatabaseModule_;
 import talkapp.org.talkappmobile.module.GameplayModule_;
 import talkapp.org.talkappmobile.module.InfraModule;
-import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule_;
 import talkapp.org.talkappmobile.module.ViewModule;
 
@@ -29,7 +28,6 @@ public class DIContextUtils {
                     .languageModule(LanguageModule_.getInstance_(application))
                     .databaseModule(DatabaseModule_.getInstance_(application))
                     .backEndServiceModule(BackEndServiceModule_.getInstance_(application))
-                    .itemsListModule(new ItemsListModule())
                     .build();
         }
         return instance;

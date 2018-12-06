@@ -14,8 +14,7 @@ import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
         AudioModule.class,
         InfraModule.class,
         LanguageModule.class,
-        DatabaseModule.class,
-        ItemsListModule.class
+        DatabaseModule.class
 })
 public interface TestDIContext {
     void inject(ClassForInjection target);

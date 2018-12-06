@@ -12,7 +12,6 @@ import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
 import talkapp.org.talkappmobile.activity.TopicsFragment;
 import talkapp.org.talkappmobile.activity.WordSetsListFragment;
-import talkapp.org.talkappmobile.activity.adapter.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -31,7 +30,6 @@ import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
-import talkapp.org.talkappmobile.module.ItemsListModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
 import talkapp.org.talkappmobile.module.ViewModule;
 
@@ -45,8 +43,7 @@ import talkapp.org.talkappmobile.module.ViewModule;
         InfraModule.class,
         LanguageModule.class,
         ViewModule.class,
-        DatabaseModule.class,
-        ItemsListModule.class
+        DatabaseModule.class
 })
 public interface DIContext {
     void inject(PracticeWordSetActivity target);
@@ -54,8 +51,6 @@ public interface DIContext {
     void inject(LoginActivity target);
 
     void inject(WordSetListAdapter target);
-
-    void inject(TopicListAdapter target);
 
     void inject(MainActivity mainActivity);
 

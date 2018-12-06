@@ -4,11 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.adapter.AdaptersFactory;
+import talkapp.org.talkappmobile.activity.custom.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
@@ -32,8 +32,8 @@ import static talkapp.org.talkappmobile.activity.WordSetsListFragment.TOPIC_MAPP
 
 @EFragment(value = R.layout.all_topics_layout)
 public class TopicsFragment extends Fragment implements TopicsFragmentView {
-    @Inject
-    AdaptersFactory adaptersFactory;
+    @Bean
+    TopicListAdapter adapter;
     @Inject
     TopicsFragmentInteractor interactor;
     @Inject
@@ -45,14 +45,12 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
     View progressBarView;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
-    private ArrayAdapter<Topic> adapter;
     private TopicsFragmentPresenter presenter;
 
     @AfterViews
     public void init() {
         DIContextUtils.get().inject(this);
 
-        adapter = adaptersFactory.createTopicListAdapter(this.getActivity());
         topicsListView.setAdapter(adapter);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, topicsListView);
