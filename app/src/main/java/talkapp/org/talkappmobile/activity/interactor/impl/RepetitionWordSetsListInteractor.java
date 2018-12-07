@@ -17,7 +17,7 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
 
     @Override
     public void initializeWordSets(Topic topic, OnWordSetsListListener listener) {
-        List<WordSet> wordSets = exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 5);
+        List<WordSet> wordSets = exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2);
         listener.onWordSetsInitialized(wordSets);
     }
 
