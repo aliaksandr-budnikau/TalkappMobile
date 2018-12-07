@@ -64,9 +64,18 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
         presenter.hideProgress();
     }
 
+    public void showProgress() {
+        presenter.showProgress();
+    }
+
     @Override
     public void hideProgressBar() {
         wordSetProgress.setVisibility(INVISIBLE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        wordSetProgress.setVisibility(VISIBLE);
     }
 
     @Override

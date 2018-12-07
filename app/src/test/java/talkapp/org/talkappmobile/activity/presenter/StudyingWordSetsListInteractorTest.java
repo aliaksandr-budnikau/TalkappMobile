@@ -52,7 +52,7 @@ public class StudyingWordSetsListInteractorTest {
 
         // when
         when(experienceRepository.findById(wordSet.getId())).thenReturn(null);
-        interactor.itemClick(topic, wordSet, listener);
+        interactor.itemClick(topic, wordSet, 3, listener);
 
         // then
         verify(listener).onWordSetNotFinished(topic, wordSet);

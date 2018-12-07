@@ -35,13 +35,13 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     @Override
-    public void onWordSetFinished(WordSet wordSet) {
-        view.onWordSetFinished(wordSet);
+    public void onWordSetFinished(WordSet wordSet, int clickedItemNumber) {
+        view.onWordSetFinished(wordSet, clickedItemNumber);
     }
 
     @Override
-    public void onResetExperienceClick(WordSetExperience experience) {
-        view.onResetExperienceClick(experience);
+    public void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber) {
+        view.onResetExperienceClick(wordSet, experience, clickedItemNumber);
     }
 
     @Override
@@ -49,15 +49,15 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetNotFinished(topic, wordSet);
     }
 
-    public void itemClick(WordSet wordSet) {
-        interactor.itemClick(topic, wordSet, this);
+    public void itemClick(WordSet wordSet, int clickedItemNumber) {
+        interactor.itemClick(topic, wordSet, clickedItemNumber, this);
     }
 
-    public void resetExperienceClick(WordSet wordSet) {
-        interactor.resetExperienceClick(wordSet, this);
+    public void resetExperienceClick(WordSet wordSet, int clickedItemNumber) {
+        interactor.resetExperienceClick(wordSet, clickedItemNumber, this);
     }
 
-    public void itemLongClick(WordSet wordSet) {
-        view.onItemLongClick(wordSet);
+    public void itemLongClick(WordSet wordSet, int clickedItemNumber) {
+        view.onItemLongClick(wordSet, clickedItemNumber);
     }
 }

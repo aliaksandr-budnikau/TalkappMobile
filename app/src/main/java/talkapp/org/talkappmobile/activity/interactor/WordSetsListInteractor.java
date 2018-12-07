@@ -7,7 +7,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 public interface WordSetsListInteractor {
     void initializeWordSets(Topic topic, OnWordSetsListListener listener);
 
-    void itemClick(Topic topic, WordSet wordSet, OnWordSetsListListener listener);
+    void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 
-    void resetExperienceClick(WordSet wordSet, OnWordSetsListListener listener);
+    void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 }

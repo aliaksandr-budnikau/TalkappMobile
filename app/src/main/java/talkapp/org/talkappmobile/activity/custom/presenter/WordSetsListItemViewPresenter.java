@@ -30,6 +30,10 @@ public class WordSetsListItemViewPresenter implements OnWordSetsListItemViewList
         view.hideProgressBar();
     }
 
+    public void showProgress() {
+        view.showProgressBar();
+    }
+
     @Override
     public void onModelPrepared(String wordSetRowValue, int progressValue) {
         view.setWordSetRowValue(wordSetRowValue);

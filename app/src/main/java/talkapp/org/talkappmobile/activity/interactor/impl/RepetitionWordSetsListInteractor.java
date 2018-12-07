@@ -22,11 +22,11 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
     }
 
     @Override
-    public void itemClick(Topic topic, WordSet wordSet, OnWordSetsListListener listener) {
+    public void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         listener.onWordSetNotFinished(topic, wordSet);
     }
 
     @Override
-    public void resetExperienceClick(WordSet wordSet, OnWordSetsListListener listener) {
+    public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
     }
 }

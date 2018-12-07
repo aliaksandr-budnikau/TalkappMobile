@@ -5,12 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ItemClick;
@@ -23,7 +20,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
+import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView;
+import talkapp.org.talkappmobile.activity.custom.WordSetsListListView;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
@@ -41,8 +39,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
-    @Bean
-    WordSetListAdapter adapter;
     @Inject
     StudyingWordSetsListInteractor studyingWordSetsListInteractor;
     @Inject
@@ -51,7 +47,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.wordSetsListView)
-    ListView wordSetsListView;
+    WordSetsListListView wordSetsListView;
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
 
@@ -65,7 +61,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @AfterViews
     public void init() {
         DIContextUtils.get().inject(this);
-        wordSetsListView.setAdapter(adapter);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
@@ -84,30 +79,27 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @ItemClick(R.id.wordSetsListView)
     public void onItemClick(int position) {
-        THREAD_LOCAL.set(adapter.getView(position, null, wordSetsListView));
-        WordSet wordSet = adapter.getItem(position);
-        presenter.itemClick(wordSet);
+        WordSet wordSet = wordSetsListView.getWordSet(position);
+        presenter.itemClick(wordSet, position);
     }
 
     @ItemLongClick(R.id.wordSetsListView)
-    public boolean onItemLongClick(final int position) {
-        THREAD_LOCAL.set(adapter.getView(position, null, wordSetsListView));
-        WordSet wordSet = adapter.getItem(position);
-        presenter.itemLongClick(wordSet);
-        return true;
+    public void onItemLongClick(final int position) {
+        WordSet wordSet = wordSetsListView.getWordSet(position);
+        presenter.itemLongClick(wordSet, position);
     }
 
     @Override
-    public void onWordSetFinished(WordSet wordSet) {
-        askToResetExperience(wordSet);
+    public void onWordSetFinished(WordSet wordSet, int clickedItemNumber) {
+        askToResetExperience(wordSet, clickedItemNumber);
     }
 
     @Override
-    public void onResetExperienceClick(WordSetExperience experience) {
-        View view = THREAD_LOCAL.get();
-        THREAD_LOCAL.remove();
-        ProgressBar wordSetProgress = view.findViewById(R.id.wordSetProgress);
-        wordSetProgress.setProgress(experience.getTrainingExperience());
+    public void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber) {
+        WordSetsListItemView itemView = (WordSetsListItemView) wordSetsListView.getChildAt(clickedItemNumber);
+        itemView.setModel(wordSet, experience);
+        itemView.refreshModel();
+        itemView.hideProgress();
     }
 
     @Override
@@ -116,17 +108,17 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     }
 
     @Override
-    public void onItemLongClick(WordSet wordSet) {
-        askToResetExperience(wordSet);
+    public void onItemLongClick(WordSet wordSet, int clickedItemNumber) {
+        askToResetExperience(wordSet, clickedItemNumber);
     }
 
-    private void askToResetExperience(final WordSet wordSet) {
+    private void askToResetExperience(final WordSet wordSet, final int clickedItemNumber) {
         new AlertDialog.Builder(getActivity())
                 .setMessage("Do you want to reset your progress?")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        presenter.resetExperienceClick(wordSet);
+                        presenter.resetExperienceClick(wordSet, clickedItemNumber);
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();
@@ -143,8 +135,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @Override
     @UiThread
     public void onWordSetsInitialized(final List<WordSet> wordSets) {
-        adapter.addAll(wordSets);
-        adapter.refreshModel();
+        wordSetsListView.addAll(wordSets);
+        wordSetsListView.refreshModel();
     }
 
     @Override

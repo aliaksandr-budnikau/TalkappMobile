@@ -36,19 +36,19 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     }
 
     @Override
-    public void itemClick(Topic topic, WordSet wordSet, OnWordSetsListListener listener) {
+    public void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         WordSetExperience experience = experienceService.findById(wordSet.getId());
         if (experience != null && FINISHED.equals(experience.getStatus())) {
-            listener.onWordSetFinished(wordSet);
+            listener.onWordSetFinished(wordSet, clickedItemNumber);
         } else {
             listener.onWordSetNotFinished(topic, wordSet);
         }
     }
 
     @Override
-    public void resetExperienceClick(WordSet wordSet, OnWordSetsListListener listener) {
+    public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         exerciseService.cleanByWordSetId(wordSet.getId());
         WordSetExperience experience = experienceService.createNew(wordSet);
-        listener.onResetExperienceClick(experience);
+        listener.onResetExperienceClick(wordSet, experience, clickedItemNumber);
     }
 }

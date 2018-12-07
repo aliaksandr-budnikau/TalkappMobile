@@ -57,8 +57,10 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
         WordSet wordSet = presenter.getWordSet(position);
         WordSetExperience experience = presenter.getWordSetExperience(position);
         itemView.setModel(wordSet, experience);
-        if (wordSet.getId() == 0) {
+        if (wordSet.getId() == 0 || experience == null || experience.getTrainingExperience() == 0) {
             itemView.hideProgress();
+        } else {
+            itemView.showProgress();
         }
         itemView.refreshModel();
         return itemView;

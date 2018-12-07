@@ -9,9 +9,9 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public interface OnWordSetsListListener {
     void onWordSetsInitialized(List<WordSet> wordSets);
 
-    void onWordSetFinished(WordSet wordSet);
+    void onWordSetFinished(WordSet wordSet, int clickedItemNumber);
 
-    void onResetExperienceClick(WordSetExperience experience);
+    void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber);
 
     void onWordSetNotFinished(Topic topic, WordSet wordSet);
 }
