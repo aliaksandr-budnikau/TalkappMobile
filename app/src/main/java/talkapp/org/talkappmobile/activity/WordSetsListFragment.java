@@ -144,6 +144,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @UiThread
     public void onWordSetsInitialized(final List<WordSet> wordSets) {
         adapter.addAll(wordSets);
+        adapter.refreshModel();
     }
 
     @Override

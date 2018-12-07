@@ -11,29 +11,38 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterInteractor;
+import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPresenter;
+import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
  * @author Budnikau Aliaksandr
  */
 @EBean
-public class WordSetListAdapter extends ArrayAdapter<WordSet> {
+public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSetListAdapterView {
     @Inject
     WordSetExperienceService experienceService;
     @RootContext
     Context context;
+    private WordSetListAdapterPresenter presenter;
 
     public WordSetListAdapter(@NonNull final Context context) {
         super(context, android.R.layout.simple_list_item_1);
     }
 
     @AfterInject
-    public void initAdapter() {
+    public void init() {
         DIContextUtils.get().inject(this);
+        WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor(experienceService);
+        presenter = new WordSetListAdapterPresenter(interactor, this);
     }
 
     @NonNull
@@ -45,12 +54,34 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> {
         } else {
             itemView = (WordSetsListItemView) convertView;
         }
-        WordSet wordSet = this.getItem(position);
-        itemView.setModel(wordSet, experienceService.findById(wordSet.getId()));
+        WordSet wordSet = presenter.getWordSet(position);
+        WordSetExperience experience = presenter.getWordSetExperience(position);
+        itemView.setModel(wordSet, experience);
         if (wordSet.getId() == 0) {
             itemView.hideProgress();
         }
         itemView.refreshModel();
         return itemView;
+    }
+
+    public WordSet getWordSet(int position) {
+        return presenter.getWordSet(position);
+    }
+
+    public WordSetExperience getWordSetExperience(int position) {
+        return presenter.getWordSetExperience(position);
+    }
+
+    public void addAll(List<WordSet> wordSetList) {
+        presenter.setModel(wordSetList);
+    }
+
+    public void refreshModel() {
+        presenter.refreshModel();
+    }
+
+    @Override
+    public void onModelPrepared(List<WordSet> wordSetList) {
+        super.addAll(wordSetList);
     }
 }
