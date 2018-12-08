@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -82,6 +83,7 @@ public class PracticeWordSetExerciseServiceImplTest {
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.get(0).setId(1);
         expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 12;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
@@ -125,10 +127,13 @@ public class PracticeWordSetExerciseServiceImplTest {
         LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
@@ -142,6 +147,58 @@ public class PracticeWordSetExerciseServiceImplTest {
         assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
         assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
         assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(1).getWords().get(0)));
+
+        ArgumentCaptor<Date> captor = forClass(Date.class);
+        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+    }
+
+    @Test
+    public void findFinishedWordSetsSortByUpdatedDate_limitIsBigAndThereIsAlreadyRepeatedWord() throws JsonProcessingException {
+        // setup
+        long limit = 2;
+        int olderThenInHours = 4;
+        Calendar cal = getInstance(UTC);
+        cal.add(HOUR, -4);
+
+        // when
+        ObjectMapper mapper = new ObjectMapper();
+
+        Word2Tokens value1 = new Word2Tokens();
+        value1.setWord("ddd1");
+        value1.setTokens("sss1");
+
+        Word2Tokens value2 = new Word2Tokens();
+        value2.setWord("ddd2");
+        value2.setTokens("sss2");
+
+        Word2Tokens value3 = new Word2Tokens();
+        value3.setWord("ddd3");
+        value3.setTokens("sss3");
+
+        LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setRepetitionCounter(1);
+        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+
+        int wordSetSize = 2;
+        Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+                .thenReturn(new ArrayList<>(expectedWordSets));
+        Whitebox.setInternalState(service, "mapper", mapper);
+        List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
+
+        // then
+        assertEquals(1, wordSets.size());
+        assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
+        assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
@@ -170,8 +227,10 @@ public class PracticeWordSetExerciseServiceImplTest {
         LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.add(new PracticeWordSetExerciseMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);

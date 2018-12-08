@@ -20,6 +20,7 @@ public class PracticeWordSetExerciseMapping {
     public static final String WORD_FN = "word";
     public static final String SENTENCE_FN = "sentence";
     public static final String WORD_SET_ID_FN = "wordSetId";
+    public static final String REPETITION_COUNTER_FN = "repetitionCounter";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
     public static final String PRACTICE_WORD_SET_EXERCISE_TABLE = "PracticeWordSetExercise";
@@ -44,6 +45,9 @@ public class PracticeWordSetExerciseMapping {
 
     @DatabaseField(canBeNull = false, columnName = UPDATED_DATE_FN, dataType = DataType.DATE_LONG)
     private Date updatedDate;
+
+    @DatabaseField(canBeNull = false, columnName = REPETITION_COUNTER_FN)
+    private int repetitionCounter;
 
     public PracticeWordSetExerciseMapping() {
     }
@@ -116,6 +120,14 @@ public class PracticeWordSetExerciseMapping {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public int getRepetitionCounter() {
+        return repetitionCounter;
+    }
+
+    public void setRepetitionCounter(int repetitionCounter) {
+        this.repetitionCounter = repetitionCounter;
     }
 
     @Override

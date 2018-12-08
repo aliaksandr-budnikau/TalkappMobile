@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -135,9 +136,20 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours) {
         Calendar cal = getInstance(UTC);
-        cal.add(Calendar.SECOND, -olderThenInHours);
-        //cal.add(Calendar.HOUR, -olderThenInHours);
+        //cal.add(Calendar.SECOND, -olderThenInHours);
+        cal.add(Calendar.HOUR, -olderThenInHours);
         List<PracticeWordSetExerciseMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
+        Iterator<PracticeWordSetExerciseMapping> iterator = words.iterator();
+        while (iterator.hasNext()) {
+            PracticeWordSetExerciseMapping exe = iterator.next();
+            cal = getInstance(UTC);
+            // 5, 7, 13, 23, 37,
+            //cal.add(Calendar.SECOND, -(olderThenInHours + 48 * exe.getRepetitionCounter() * exe.getRepetitionCounter()));
+            cal.add(Calendar.HOUR, -(olderThenInHours + 48 * exe.getRepetitionCounter() * exe.getRepetitionCounter()));
+            if (exe.getUpdatedDate().after(cal.getTime())) {
+                iterator.remove();
+            }
+        }
         List<WordSet> wordSets = new LinkedList<>();
         for (List<PracticeWordSetExerciseMapping> exercises : partition(words, wordSetSize)) {
             WordSet set = new WordSet();
@@ -214,6 +226,9 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             throw new RuntimeException(e.getMessage(), e);
         }
         PracticeWordSetExerciseMapping exercise = exercises.get(0);
+        int counter = exercise.getRepetitionCounter();
+        counter++;
+        exercise.setRepetitionCounter(counter);
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
     }

@@ -35,6 +35,7 @@ import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.REPETITION_COUNTER_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
@@ -585,13 +586,17 @@ public class PracticeWordSetExerciseDaoImplTest {
     }
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current) {
-        insertExercise(id, wordSetId, word, sentence, status, current, new Date());
+        insertExercise(id, wordSetId, word, sentence, status, current, new Date(), 0);
     }
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate) {
-        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
-                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN,
-                id, wordSetId, word, sentence, status, current, updatedDate.getTime());
+        insertExercise(id, wordSetId, word, sentence, status, current, updatedDate, 0);
+    }
+
+    private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate, int repCount) {
+        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
+                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN,
+                id, wordSetId, word, sentence, status, current, updatedDate.getTime(), repCount);
         databaseHelper.getWritableDatabase().execSQL(sql);
     }
 }
