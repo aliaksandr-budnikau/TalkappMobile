@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 
 import javax.inject.Singleton;
 
@@ -60,6 +61,9 @@ public class GameplayModule {
     @Bean(WordSetExperienceUtilsImpl.class)
     WordSetExperienceUtils experienceUtils;
 
+    @RootContext
+    Context context;
+
     @Provides
     @Singleton
     public SentenceSelector provideSentenceSelector() {
@@ -110,13 +114,13 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, PracticeWordSetExerciseService exerciseService, Context context, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, exerciseService, context, audioStuffFactory, speaker);
     }
 
@@ -159,7 +163,7 @@ public class GameplayModule {
     @Provides
     @Singleton
     public MainActivityInteractor provideMainActivityInteractor(BackendServer server) {
-        return new MainActivityInteractor(server);
+        return new MainActivityInteractor(server, context);
     }
 
     @Provides

@@ -16,4 +16,13 @@ public class MainActivityPresenter implements OnMainActivityListener {
     public void checkServerAvailability() {
         interactor.checkServerAvailability();
     }
+
+    public void initAppVersion() {
+        interactor.initAppVersion(this);
+    }
+
+    @Override
+    public void onAppVersionInitialized(String packageName) {
+        view.setAppVersion("v" + packageName);
+    }
 }

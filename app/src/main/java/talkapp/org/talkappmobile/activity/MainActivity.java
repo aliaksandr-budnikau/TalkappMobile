@@ -10,11 +10,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.apache.commons.lang3.StringUtils;
 
@@ -102,6 +104,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     public void initPresenter() {
         presenter = new MainActivityPresenter(this, interactor);
         presenter.checkServerAvailability();
+        presenter.initAppVersion();
     }
 
     @Override
@@ -133,5 +136,12 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    @UiThread
+    public void setAppVersion(String packageName) {
+        TextView applicationVersion = navigationView.getHeaderView(0).findViewById(R.id.applicationVersion);
+        applicationVersion.setText(packageName);
     }
 }
