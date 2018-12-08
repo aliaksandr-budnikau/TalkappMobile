@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity.custom;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,6 +33,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
     WordSetExperienceService experienceService;
     @RootContext
     Context context;
+    private SparseArray<WordSetsListItemView> childViews;
     private WordSetListAdapterPresenter presenter;
 
     public WordSetListAdapter(@NonNull final Context context) {
@@ -50,7 +52,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         WordSetsListItemView itemView;
         if (convertView == null) {
-            itemView = WordSetsListItemView_.build(context);
+            itemView = childViews.get(position);
+            if (itemView == null) {
+                itemView = WordSetsListItemView_.build(context);
+                childViews.put(position, itemView);
+            }
         } else {
             itemView = (WordSetsListItemView) convertView;
         }
@@ -75,6 +81,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
     }
 
     public void addAll(List<WordSet> wordSetList) {
+        childViews = new SparseArray<>(wordSetList.size());
         presenter.setModel(wordSetList);
     }
 

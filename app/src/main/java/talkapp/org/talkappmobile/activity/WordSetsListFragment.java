@@ -38,7 +38,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
-    private final ThreadLocal<View> THREAD_LOCAL = new ThreadLocal<>();
     @Inject
     StudyingWordSetsListInteractor studyingWordSetsListInteractor;
     @Inject
@@ -96,7 +95,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Override
     public void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber) {
-        WordSetsListItemView itemView = (WordSetsListItemView) wordSetsListView.getChildAt(clickedItemNumber);
+        WordSetsListItemView itemView = (WordSetsListItemView) wordSetsListView.getClickedItemView(clickedItemNumber);
         itemView.setModel(wordSet, experience);
         itemView.refreshModel();
         itemView.hideProgress();

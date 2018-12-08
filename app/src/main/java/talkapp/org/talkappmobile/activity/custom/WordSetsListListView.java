@@ -45,4 +45,8 @@ public class WordSetsListListView extends ListView {
     public WordSet getWordSet(int position) {
         return adapter.getWordSet(position);
     }
+
+    public WordSetsListItemView getClickedItemView(int clickedItemNumber) {
+        return (WordSetsListItemView) adapter.getView(clickedItemNumber, null, this);
+    }
 }
