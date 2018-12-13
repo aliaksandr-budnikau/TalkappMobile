@@ -10,6 +10,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
@@ -33,6 +34,8 @@ import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
+
+import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.word_sets_list_layout)
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
@@ -133,6 +136,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void onWordSetsInitialized(final List<WordSet> wordSets) {
         wordSetsListView.addAll(wordSets);
         wordSetsListView.refreshModel();
