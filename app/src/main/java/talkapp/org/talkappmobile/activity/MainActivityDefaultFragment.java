@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import javax.inject.Inject;
@@ -37,18 +35,10 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         DIContextUtils.get().inject(this);
 
         presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
-
-        initPresenter();
-    }
-
-    @Background
-    public void initPresenter() {
         presenter.init();
     }
 
-
     @Override
-    @UiThread
     public void onWordsForRepetitionCounted(int counter) {
         wordsForRepetitionTextView.setText(format("Words for repetition %s", counter));
     }

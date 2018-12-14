@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.UiThread;
 
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
@@ -66,6 +67,7 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     }
 
     @Override
+    @UiThread
     public void onNewValue(String newValue) {
         setText(newValue);
     }

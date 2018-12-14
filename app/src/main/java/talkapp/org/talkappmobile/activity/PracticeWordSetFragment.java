@@ -18,6 +18,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -44,6 +45,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static android.app.Activity.RESULT_OK;
+import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.word_set_practice_activity_fragment)
 public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
@@ -210,6 +212,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void hideNextButton() {
         nextButton.setVisibility(View.GONE);
     }
@@ -228,6 +231,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void showCheckButton() {
         checkButton.setVisibility(View.VISIBLE);
     }
@@ -251,6 +255,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setOriginalText(final String text) {
         originalText.setText(text);
     }
@@ -318,6 +323,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setAnswerText(final String text) {
         answerText.setText(text);
     }
@@ -346,21 +352,25 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableRightAnswerTextView(final boolean value) {
         rightAnswer.setEnabled(value);
     }
 
     @Override
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setRightAnswerModel(Sentence sentence, Word2Tokens word) {
         rightAnswer.setModel(sentence, word);
     }
 
     @Override
+    @IgnoreWhen(VIEW_DESTROYED)
     public void maskRightAnswerEntirely() {
         rightAnswer.maskEntirely();
     }
 
     @Override
+    @IgnoreWhen(VIEW_DESTROYED)
     public void maskRightAnswerOnlyWord() {
         rightAnswer.maskOnlyWord();
     }
@@ -376,6 +386,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
+    @IgnoreWhen(VIEW_DESTROYED)
     public void unlockRightAnswer() {
         rightAnswer.unlock();
     }
