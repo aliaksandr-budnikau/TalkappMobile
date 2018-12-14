@@ -14,6 +14,7 @@ public class Sentence {
     private String text;
     private Map<String, String> translations = new HashMap<>();
     private List<TextToken> tokens = new LinkedList<>();
+    private SentenceContentScore contentScore;
 
     public String getId() {
         return id;
@@ -45,6 +46,14 @@ public class Sentence {
 
     public void setTokens(List<TextToken> tokens) {
         this.tokens = tokens;
+    }
+
+    public SentenceContentScore getContentScore() {
+        return contentScore;
+    }
+
+    public void setContentScore(SentenceContentScore contentScore) {
+        this.contentScore = contentScore;
     }
 
     @Override
