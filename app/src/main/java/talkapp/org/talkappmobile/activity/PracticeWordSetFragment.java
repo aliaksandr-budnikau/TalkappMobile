@@ -1,9 +1,11 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,14 +25,15 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
@@ -41,6 +44,7 @@ import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -129,6 +133,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
+    }
+
+    @Click(R.id.originalText)
+    public void onOriginalTextClick() {
+        presenter.onOriginalTextClick();
     }
 
     @Touch(R.id.rightAnswer)
@@ -389,6 +398,44 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void unlockRightAnswer() {
         rightAnswer.unlock();
+    }
+
+    @Override
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void openDialogForSentenceScoring(final Sentence sentence) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        List<String> strings = new LinkedList<>();
+        for (SentenceContentScore value : SentenceContentScore.values()) {
+            strings.add(value.name());
+        }
+        String[] items = strings.toArray(new String[SentenceContentScore.values().length]);
+        builder.setTitle(R.string.pick_sentence_score)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        scoreSentence(which, sentence);
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
+    }
+
+    @Background
+    public void scoreSentence(int which, Sentence sentence) {
+        presenter.scoreSentence(sentence, SentenceContentScore.values()[which]);
+    }
+
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void showScoringSuccessfulMessage() {
+        Toast.makeText(getContext(), "Thank you for your help", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void showScoringUnsuccessfulMessage() {
+        Toast.makeText(getContext(), "Try again later", Toast.LENGTH_LONG).show();
     }
 
     private void sendCheatSignal(final String signal) {

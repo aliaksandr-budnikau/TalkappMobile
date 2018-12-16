@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -23,4 +24,6 @@ public interface PracticeWordSetInteractor {
     void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 
     void pronounceRightAnswer(Sentence sentence, OnPracticeWordSetListener listener);
+
+    void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener);
 }

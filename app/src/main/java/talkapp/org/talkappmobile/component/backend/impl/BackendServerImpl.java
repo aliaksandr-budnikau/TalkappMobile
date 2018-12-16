@@ -177,4 +177,11 @@ public class BackendServerImpl implements BackendServer {
         }
         return body;
     }
+
+    @Override
+    public boolean saveSentenceScore(Sentence sentence) {
+        Call<Boolean> call = sentenceRestClient.saveSentenceScore(sentence, authSign);
+        Boolean body = execute(call).body();
+        return body != null;
+    }
 }

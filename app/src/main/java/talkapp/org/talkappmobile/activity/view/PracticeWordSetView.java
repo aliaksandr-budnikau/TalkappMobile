@@ -62,4 +62,10 @@ public interface PracticeWordSetView {
     void lockRightAnswer();
 
     void unlockRightAnswer();
+
+    void openDialogForSentenceScoring(Sentence sentence);
+
+    void showScoringSuccessfulMessage();
+
+    void showScoringUnsuccessfulMessage();
 }

@@ -152,4 +152,16 @@ public class PracticeWordSetViewStrategy {
         view.setEnablePronounceRightAnswerButton(true);
         view.setEnableCheckButton(true);
     }
+
+    public void onFoundSentenceForScoring(Sentence sentence) {
+        view.openDialogForSentenceScoring(sentence);
+    }
+
+    public void onScoringUnsuccessful() {
+        view.showScoringUnsuccessfulMessage();
+    }
+
+    public void onScoringSuccessful() {
+        view.showScoringSuccessfulMessage();
+    }
 }

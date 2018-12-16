@@ -6,6 +6,7 @@ import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.model.GrammarError;
+import talkapp.org.talkappmobile.model.Sentence;
 
 public class GrammarCheckServiceImpl implements GrammarCheckService {
     private static final String TAG = GrammarCheckServiceImpl.class.getSimpleName();
@@ -23,5 +24,10 @@ public class GrammarCheckServiceImpl implements GrammarCheckService {
         List<GrammarError> result = server.checkText(text);
         logger.d(TAG, "Checking result: {}", result);
         return result;
+    }
+
+    @Override
+    public boolean score(Sentence sentence) {
+        return server.saveSentenceScore(sentence);
     }
 }

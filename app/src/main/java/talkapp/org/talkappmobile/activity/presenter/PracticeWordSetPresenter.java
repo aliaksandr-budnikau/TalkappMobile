@@ -8,6 +8,7 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -101,6 +102,16 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.rightAnswerUntouched();
     }
 
+    @Override
+    public void onScoringUnsuccessful() {
+        viewStrategy.onScoringUnsuccessful();
+    }
+
+    @Override
+    public void onScoringSuccessful() {
+        viewStrategy.onScoringSuccessful();
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -162,5 +173,14 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void checkRightAnswerCommandRecognized() {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         checkAnswerButtonClick(currentSentence.getText());
+    }
+
+    public void onOriginalTextClick() {
+        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
+        viewStrategy.onFoundSentenceForScoring(currentSentence);
+    }
+
+    public void scoreSentence(Sentence sentence, SentenceContentScore score) {
+        interactor.scoreSentence(sentence, score, this);
     }
 }

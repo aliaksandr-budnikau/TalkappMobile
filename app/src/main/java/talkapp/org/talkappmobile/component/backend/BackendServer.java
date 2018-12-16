@@ -32,4 +32,6 @@ public interface BackendServer {
     List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language);
 
     List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
+
+    boolean saveSentenceScore(Sentence sentence);
 }

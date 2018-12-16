@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -104,5 +105,15 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
             throw new RuntimeException(e.getMessage(), e);
         }
         logger.i(TAG, "stop speaking");
+    }
+
+    @Override
+    public void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener) {
+        sentence.setContentScore(score);
+        if (refereeService.scoreCurrentSentence(sentence)) {
+            listener.onScoringSuccessful();
+        } else {
+            listener.onScoringUnsuccessful();
+        }
     }
 }

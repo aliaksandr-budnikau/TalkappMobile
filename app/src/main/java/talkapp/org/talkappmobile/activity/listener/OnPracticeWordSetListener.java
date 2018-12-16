@@ -35,4 +35,8 @@ public interface OnPracticeWordSetListener {
     void onDisableRepetitionMode();
 
     void onHideRightAnswer();
+
+    void onScoringUnsuccessful();
+
+    void onScoringSuccessful();
 }
