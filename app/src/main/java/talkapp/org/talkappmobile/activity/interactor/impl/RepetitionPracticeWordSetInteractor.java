@@ -82,7 +82,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             logger.w(TAG, "Sentences haven't been found with words '{}'. Check the db.", word);
             return;
         }
-        currentSentence = sentenceSelector.getSentence(sentences);
+        currentSentence = sentenceSelector.selectSentence(sentences);
         logger.i(TAG, "chosen currentSentence {}", currentSentence);
         listener.onSentencesFound(currentSentence, word);
         logger.i(TAG, "currentSentence was initialized");

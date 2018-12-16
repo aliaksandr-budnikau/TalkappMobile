@@ -91,7 +91,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             logger.w(TAG, "Sentences haven't been found with words '{}'. Fill the storage.", word);
             return;
         }
-        final Sentence sentence = sentenceSelector.getSentence(sentences);
+        sentenceSelector.orderByScore(sentences);
+        final Sentence sentence = sentenceSelector.selectSentence(sentences);
         logger.i(TAG, "chosen sentence {}", sentences);
         exerciseService.save(word, wordSetId, sentence);
         listener.onSentencesFound(sentence, word);

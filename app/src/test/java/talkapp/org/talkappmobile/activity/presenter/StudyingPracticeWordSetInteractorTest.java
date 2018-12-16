@@ -180,7 +180,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
-        when(sentenceSelector.getSentence(sentences)).thenReturn(selectedSentence);
+        when(sentenceSelector.selectSentence(sentences)).thenReturn(selectedSentence);
         interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
@@ -204,7 +204,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
         verify(exerciseService, times(0)).save(word, wordSetId, selectedSentence);
-        verify(sentenceSelector, times(0)).getSentence(any(List.class));
+        verify(sentenceSelector, times(0)).selectSentence(any(List.class));
     }
 
     @Test

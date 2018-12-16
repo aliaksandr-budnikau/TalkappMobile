@@ -3,13 +3,20 @@ package talkapp.org.talkappmobile.component.impl;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 /**
  * @author Budnikau Aliaksandr
@@ -19,7 +26,7 @@ public class RandomSentenceSelectorImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getSentence_empty() throws Exception {
-        sentenceSelector.getSentence(new ArrayList<Sentence>());
+        sentenceSelector.selectSentence(new ArrayList<Sentence>());
     }
 
     @Test
@@ -30,7 +37,7 @@ public class RandomSentenceSelectorImplTest {
         sentences.add(e);
 
         // when
-        Sentence sentence = sentenceSelector.getSentence(sentences);
+        Sentence sentence = sentenceSelector.selectSentence(sentences);
 
         // then
         assertEquals(e, sentence);
@@ -46,9 +53,55 @@ public class RandomSentenceSelectorImplTest {
         sentences.add(e2);
 
         // when
-        Sentence sentence = sentenceSelector.getSentence(sentences);
+        Sentence sentence = sentenceSelector.selectSentence(sentences);
 
         // then
         assertTrue(sentence == e1 || sentence == e2);
+    }
+
+    @Test
+    public void orderByScore() {
+        // setup
+        LinkedList<Sentence> sentences = new LinkedList<>();
+        for (SentenceContentScore score : SentenceContentScore.values()) {
+            Sentence sentence = new Sentence();
+            sentence.setContentScore(score);
+            sentences.addFirst(sentence);
+        }
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+
+        Collections.shuffle(sentences);
+
+        // when
+        sentenceSelector.orderByScore(sentences);
+
+        // then
+        Iterator<Sentence> iterator = sentences.iterator();
+        Sentence sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(POOR, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(CORRUPTED, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(INSULT, sentence.getContentScore());
     }
 }
