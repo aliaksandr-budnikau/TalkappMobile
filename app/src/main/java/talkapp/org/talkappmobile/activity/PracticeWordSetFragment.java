@@ -404,11 +404,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void openDialogForSentenceScoring(final Sentence sentence) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        List<String> strings = new LinkedList<>();
+        List<String> options = new LinkedList<>();
+        options.add("JUST_CHANGE");
         for (SentenceContentScore value : SentenceContentScore.values()) {
-            strings.add(value.name());
+            options.add(value.name());
         }
-        String[] items = strings.toArray(new String[SentenceContentScore.values().length]);
+        String[] items = options.toArray(new String[SentenceContentScore.values().length]);
         builder.setTitle(R.string.pick_sentence_score)
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -421,7 +422,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void scoreSentence(int which, Sentence sentence) {
-        presenter.scoreSentence(sentence, SentenceContentScore.values()[which]);
+        presenter.scoreSentence(sentence, which);
     }
 
     @Override
@@ -436,6 +437,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void showScoringUnsuccessfulMessage() {
         Toast.makeText(getContext(), "Try again later", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSentenceInRepetitionModeUnsupportedMessage() {
+        Toast.makeText(getContext(), "Unsupported in repetition mode", Toast.LENGTH_LONG).show();
     }
 
     private void sendCheatSignal(final String signal) {

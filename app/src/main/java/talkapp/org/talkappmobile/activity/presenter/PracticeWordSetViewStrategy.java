@@ -164,4 +164,20 @@ public class PracticeWordSetViewStrategy {
     public void onScoringSuccessful() {
         view.showScoringSuccessfulMessage();
     }
+
+    public void onScoreSentenceStart() {
+        view.showPleaseWaitProgressBar();
+        view.setEnableCheckButton(false);
+        view.setEnableNextButton(false);
+    }
+
+    public void onScoreSentenceFinish() {
+        view.hidePleaseWaitProgressBar();
+        view.setEnableCheckButton(true);
+        view.setEnableNextButton(true);
+    }
+
+    public void onChangeSentenceInRepetitionMode() {
+        view.showSentenceInRepetitionModeUnsupportedMessage();
+    }
 }

@@ -68,4 +68,6 @@ public interface PracticeWordSetView {
     void showScoringSuccessfulMessage();
 
     void showScoringUnsuccessfulMessage();
+
+    void showSentenceInRepetitionModeUnsupportedMessage();
 }

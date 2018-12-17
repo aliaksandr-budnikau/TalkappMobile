@@ -26,4 +26,6 @@ public interface PracticeWordSetInteractor {
     void pronounceRightAnswer(Sentence sentence, OnPracticeWordSetListener listener);
 
     void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener);
+
+    void changeSentence(int wordSetId, OnPracticeWordSetListener listener);
 }

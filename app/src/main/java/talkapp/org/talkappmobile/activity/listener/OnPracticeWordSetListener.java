@@ -39,4 +39,6 @@ public interface OnPracticeWordSetListener {
     void onScoringUnsuccessful();
 
     void onScoringSuccessful();
+
+    void onChangeSentenceInRepetitionMode();
 }

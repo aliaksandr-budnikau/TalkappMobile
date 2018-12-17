@@ -183,6 +183,20 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     }
 
     @Override
+    public Word2Tokens getCurrentWord(int wordSetId) {
+        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        if (isNotThereCurrentExercise(current)) {
+            return null;
+        }
+        PracticeWordSetExerciseMapping mapping = current.get(0);
+        try {
+            return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void moveCurrentWordToNextState(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         PracticeWordSetExerciseMapping mapping = current.get(0);
