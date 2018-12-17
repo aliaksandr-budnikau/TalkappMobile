@@ -51,6 +51,26 @@ public class SentenceProviderStrategyTest {
     }
 
     @Test
+    public void findByWord_sentenceInImmutableList() {
+        // setup
+        Word2Tokens word = new Word2Tokens("word");
+        int wordSetId = 3;
+
+        Sentence sentence1 = new Sentence();
+        sentence1.setId("fds32ddd");
+        Sentence sentence2 = new Sentence();
+        sentence2.setId("fds32ddddsas");
+        List<Sentence> sentences = asList(sentence1, sentence2);
+
+        // when
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
+        List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
+
+        // then
+        sentencesActual.clear();
+    }
+
+    @Test
     public void findByWord_sentenceNotFound() {
         // setup
         Word2Tokens word = new Word2Tokens("word");

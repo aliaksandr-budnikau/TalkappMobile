@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -23,6 +24,6 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
         if (wordSetId == 0) {
             return exerciseService.findByWordAndByStatus(word, FINISHED);
         }
-        return singletonList(exerciseService.findByWordAndWordSetId(word, wordSetId));
+        return new ArrayList<>(singletonList(exerciseService.findByWordAndWordSetId(word, wordSetId)));
     }
 }

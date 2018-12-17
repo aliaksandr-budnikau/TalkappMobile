@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.impl;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -30,6 +31,6 @@ public class SentenceProviderStrategy {
             cachedSentences = server.findSentencesByWords(word, WORDS_NUMBER);
             cache.put(word.getWord(), cachedSentences);
         }
-        return cachedSentences;
+        return new ArrayList<>(cachedSentences);
     }
 }
