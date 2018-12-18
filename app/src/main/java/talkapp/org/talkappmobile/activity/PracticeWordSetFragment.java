@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -24,7 +25,9 @@ import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -91,6 +94,16 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @ViewById(R.id.spellingGrammarErrorsListView)
     LinearLayout spellingGrammarErrorsListView;
 
+    @StringRes(R.string.score_sentence_dialog_title)
+    String scoreSentenceDialogTitle;
+    @StringRes(R.string.another_sentence_option)
+    String anotherSentenceOption;
+    @StringRes(R.string.poor_sentence_option)
+    String poorSentenceOption;
+    @StringRes(R.string.corrupted_sentence_option)
+    String corruptedSentenceOption;
+    @StringRes(R.string.insult_sentence_option)
+    String insultSentenceOption;
 
     @FragmentArg(WORD_SET_MAPPING)
     WordSet wordSet;
@@ -99,6 +112,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetPresenter presenter;
+    private HashMap<SentenceContentScore, String> enumToTexts = new HashMap<>();
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -118,6 +132,10 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         DIContextUtils.get().inject(this);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, wordSetPractiseForm);
+
+        enumToTexts.put(SentenceContentScore.POOR, poorSentenceOption);
+        enumToTexts.put(SentenceContentScore.CORRUPTED, corruptedSentenceOption);
+        enumToTexts.put(SentenceContentScore.INSULT, insultSentenceOption);
 
         initPresenter();
     }
@@ -404,20 +422,24 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void openDialogForSentenceScoring(final Sentence sentence) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        List<String> options = new LinkedList<>();
-        options.add("JUST_CHANGE");
-        for (SentenceContentScore value : SentenceContentScore.values()) {
-            options.add(value.name());
-        }
-        String[] items = options.toArray(new String[SentenceContentScore.values().length]);
-        builder.setTitle(R.string.pick_sentence_score)
-                .setItems(items, new DialogInterface.OnClickListener() {
+        builder.setTitle(scoreSentenceDialogTitle)
+                .setItems(getOptions(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         scoreSentence(which, sentence);
                         dialog.cancel();
                     }
                 });
         builder.create().show();
+    }
+
+    @NonNull
+    private String[] getOptions() {
+        List<String> options = new LinkedList<>();
+        options.add(anotherSentenceOption);
+        for (SentenceContentScore value : SentenceContentScore.values()) {
+            options.add(enumToTexts.get(value));
+        }
+        return options.toArray(new String[SentenceContentScore.values().length]);
     }
 
     @Background

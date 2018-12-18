@@ -130,7 +130,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
         Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        sentenceProvider.findByWordAndWordSetId(word, wordSetId);
         initialiseSentence(word, wordSetId, listener);
     }
 
