@@ -1,12 +1,12 @@
 package talkapp.org.talkappmobile.component;
 
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetSecondCycleViewStrategy;
 
 public interface ViewStrategyFactory {
 
-    PracticeWordSetViewHideNewWordOnlyStrategy createPracticeWordSetViewHideNewWordOnlyStrategy(PracticeWordSetView view);
+    PracticeWordSetFirstCycleViewStrategy createPracticeWordSetFirstCycleViewStrategy(PracticeWordSetView view);
 
-    PracticeWordSetViewHideAllStrategy createPracticeWordSetViewHideAllStrategy(PracticeWordSetView view);
+    PracticeWordSetSecondCycleViewStrategy createPracticeWordSetSecondCycleViewStrategy(PracticeWordSetView view);
 }

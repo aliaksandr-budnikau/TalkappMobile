@@ -39,8 +39,8 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideAllStrategy;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetSecondCycleViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
@@ -142,13 +142,13 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy = viewStrategyFactory.createPracticeWordSetViewHideNewWordOnlyStrategy(this);
-        PracticeWordSetViewHideAllStrategy hideAllStrategy = viewStrategyFactory.createPracticeWordSetViewHideAllStrategy(this);
+        PracticeWordSetFirstCycleViewStrategy firstStrategy = viewStrategyFactory.createPracticeWordSetFirstCycleViewStrategy(this);
+        PracticeWordSetSecondCycleViewStrategy secondStrategy = viewStrategyFactory.createPracticeWordSetSecondCycleViewStrategy(this);
         PracticeWordSetInteractor interactor = studyingPracticeWordSetInteractor;
         if (repetitionMode) {
             interactor = repetitionPracticeWordSetInteractor;
         }
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, newWordOnlyStrategy, hideAllStrategy);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstStrategy, secondStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
     }

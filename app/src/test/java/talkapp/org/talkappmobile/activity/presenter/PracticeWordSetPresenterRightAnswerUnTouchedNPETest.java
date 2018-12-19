@@ -23,9 +23,9 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
     @Mock
     private PracticeWordSetPresenterCurrentState state;
     @Mock
-    private PracticeWordSetViewHideNewWordOnlyStrategy newWordOnlyStrategy;
+    private PracticeWordSetFirstCycleViewStrategy firstCycleViewStrategy;
     @Mock
-    private PracticeWordSetViewHideAllStrategy hideAllStrategy;
+    private PracticeWordSetSecondCycleViewStrategy secondCycleViewStrategy;
     private PracticeWordSetPresenter presenter;
 
     @BeforeClass
@@ -35,7 +35,7 @@ public class PracticeWordSetPresenterRightAnswerUnTouchedNPETest {
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, newWordOnlyStrategy, hideAllStrategy);
+        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, firstCycleViewStrategy, secondCycleViewStrategy);
         PracticeWordSetViewStrategy strategy = Whitebox.getInternalState(presenter, "viewStrategy");
         Whitebox.setInternalState(strategy, "textUtils", textUtils);
         Whitebox.setInternalState(presenter, "state", state);

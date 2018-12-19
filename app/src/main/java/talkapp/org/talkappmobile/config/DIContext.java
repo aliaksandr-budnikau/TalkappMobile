@@ -16,7 +16,7 @@ import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewHideNewWordOnlyStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
@@ -74,7 +74,7 @@ public interface DIContext {
 
     void inject(PracticeWordSetViewStrategy target);
 
-    void inject(PracticeWordSetViewHideNewWordOnlyStrategy target);
+    void inject(PracticeWordSetFirstCycleViewStrategy target);
 
     void inject(SentenceProviderStrategy target);
 

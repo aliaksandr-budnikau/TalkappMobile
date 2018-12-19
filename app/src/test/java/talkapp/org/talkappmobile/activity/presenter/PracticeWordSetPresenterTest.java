@@ -33,7 +33,7 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
-    private PracticeWordSetViewHideNewWordOnlyStrategy viewStrategy;
+    private PracticeWordSetFirstCycleViewStrategy viewStrategy;
     @Mock
     private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;

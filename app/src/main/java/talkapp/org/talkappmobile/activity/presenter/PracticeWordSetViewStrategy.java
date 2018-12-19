@@ -10,7 +10,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public class PracticeWordSetViewStrategy {
+public abstract class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
     private final WordSetExperienceUtils experienceUtils;
     private final TextUtils textUtils;

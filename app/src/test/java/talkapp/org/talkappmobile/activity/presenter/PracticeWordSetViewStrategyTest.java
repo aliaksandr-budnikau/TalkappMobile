@@ -33,7 +33,7 @@ public class PracticeWordSetViewStrategyTest {
     @Mock
     private TextUtils textUtils;
     @InjectMocks
-    private PracticeWordSetViewStrategy strategy;
+    private PracticeWordSetSecondCycleViewStrategy strategy;
 
     @BeforeClass
     public static void setUpContext() {

@@ -4,9 +4,9 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 
-public class PracticeWordSetViewHideNewWordOnlyStrategy extends PracticeWordSetViewStrategy {
+public class PracticeWordSetFirstCycleViewStrategy extends PracticeWordSetViewStrategy {
 
-    public PracticeWordSetViewHideNewWordOnlyStrategy(PracticeWordSetView view, TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
+    public PracticeWordSetFirstCycleViewStrategy(PracticeWordSetView view, TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
         super(view, textUtils, experienceUtils);
     }
 
