@@ -185,7 +185,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         checkAnswerButtonClick(currentSentence.getText());
     }
 
-    public void onOriginalTextClick() {
+    public void originalTextClick() {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onFoundSentenceForScoring(currentSentence);
     }

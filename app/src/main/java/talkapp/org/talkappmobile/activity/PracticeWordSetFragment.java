@@ -155,7 +155,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Click(R.id.originalText)
     public void onOriginalTextClick() {
-        presenter.onOriginalTextClick();
+        presenter.originalTextClick();
     }
 
     @Touch(R.id.rightAnswer)
