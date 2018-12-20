@@ -25,7 +25,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -76,7 +76,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, newExp.getMaxTrainingExperience());
         assertEquals(0, newExp.getTrainingExperience());
-        assertEquals(STUDYING, newExp.getStatus());
+        assertEquals(FIRST_CYCLE, newExp.getStatus());
     }
 
     @Test
@@ -117,6 +117,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, newExp.getMaxTrainingExperience());
         assertEquals(0, newExp.getTrainingExperience());
-        assertEquals(STUDYING, newExp.getStatus());
+        assertEquals(FIRST_CYCLE, newExp.getStatus());
     }
 }

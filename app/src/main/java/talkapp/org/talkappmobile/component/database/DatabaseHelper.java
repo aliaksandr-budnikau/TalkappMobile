@@ -13,9 +13,8 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final String TAG = DatabaseHelper.class.getSimpleName();
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 13;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

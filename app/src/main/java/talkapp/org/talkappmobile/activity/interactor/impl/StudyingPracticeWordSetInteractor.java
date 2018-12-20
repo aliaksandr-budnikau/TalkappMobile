@@ -22,7 +22,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
@@ -60,7 +60,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             logger.i(TAG, "create new experience");
             exp = experienceService.createNew(wordSet);
         }
-        if (REPETITION.equals(exp.getStatus())) {
+        if (SECOND_CYCLE.equals(exp.getStatus())) {
             logger.i(TAG, "enable repetition mode");
             sentenceProvider.enableRepetitionMode();
             listener.onEnableRepetitionMode();
@@ -112,7 +112,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
-            experienceService.moveToAnotherState(wordSet.getId(), REPETITION);
+            experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
@@ -129,8 +129,14 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
-        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        initialiseSentence(word, wordSetId, listener);
+        WordSetExperience exp = experienceService.findById(wordSetId);
+        if (SECOND_CYCLE.equals(exp.getStatus())) {
+            listener.onSentenceChangeUnsupported();
+        } else {
+            Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
+            initialiseSentence(word, wordSetId, listener);
+            listener.onSentenceChanged();
+        }
     }
 
     @Override

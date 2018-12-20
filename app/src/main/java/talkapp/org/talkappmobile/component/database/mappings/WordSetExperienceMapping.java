@@ -8,7 +8,7 @@ import java.util.Objects;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping.WORD_SET_EXPERIENCE_TABLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 @DatabaseTable(tableName = WORD_SET_EXPERIENCE_TABLE)
 public class WordSetExperienceMapping {
@@ -28,7 +28,7 @@ public class WordSetExperienceMapping {
     private int maxTrainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetExperienceStatus status = STUDYING;
+    private WordSetExperienceStatus status = FIRST_CYCLE;
 
     public WordSetExperienceMapping() {
     }

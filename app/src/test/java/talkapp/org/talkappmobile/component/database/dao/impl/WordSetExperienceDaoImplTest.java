@@ -28,8 +28,8 @@ import static talkapp.org.talkappmobile.component.database.mappings.WordSetExper
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping.TRAINING_EXPERIENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping.WORD_SET_EXPERIENCE_TABLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.REPETITION;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
@@ -52,7 +52,7 @@ public class WordSetExperienceDaoImplTest {
     @Test
     public void createNewOrUpdate_ordinaryCaseOfCreation() {
         // setup
-        WordSetExperienceMapping exp = new WordSetExperienceMapping(1, 3, 10, STUDYING);
+        WordSetExperienceMapping exp = new WordSetExperienceMapping(1, 3, 10, FIRST_CYCLE);
 
         // when
         experienceDao.createNewOrUpdate(exp);
@@ -71,13 +71,13 @@ public class WordSetExperienceDaoImplTest {
     @Test
     public void createNewOrUpdate_ordinaryCaseOfUpdate() {
         WordSetExperienceMapping exp;
-        exp = new WordSetExperienceMapping(1, 0, 3, STUDYING);
+        exp = new WordSetExperienceMapping(1, 0, 3, FIRST_CYCLE);
         experienceDao.createNewOrUpdate(exp);
-        exp = new WordSetExperienceMapping(2, 0, 3, STUDYING);
+        exp = new WordSetExperienceMapping(2, 0, 3, FIRST_CYCLE);
         experienceDao.createNewOrUpdate(exp);
-        exp = new WordSetExperienceMapping(2, 1, 3, REPETITION);
+        exp = new WordSetExperienceMapping(2, 1, 3, SECOND_CYCLE);
         experienceDao.createNewOrUpdate(exp);
-        exp = new WordSetExperienceMapping(2, 2, 3, REPETITION);
+        exp = new WordSetExperienceMapping(2, 2, 3, SECOND_CYCLE);
         experienceDao.createNewOrUpdate(exp);
         exp = new WordSetExperienceMapping(2, 3, 3, FINISHED);
         experienceDao.createNewOrUpdate(exp);
@@ -88,7 +88,7 @@ public class WordSetExperienceDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
         assertEquals(3, cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
-        assertEquals(STUDYING.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
+        assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
 
         cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_SET_EXPERIENCE_TABLE, 2), new String[]{});
         cursor.moveToNext();
@@ -112,7 +112,7 @@ public class WordSetExperienceDaoImplTest {
     public void createNewOrUpdate_onlyStatusNotNull() {
         // setup
         WordSetExperienceMapping exp = new WordSetExperienceMapping();
-        exp.setStatus(STUDYING);
+        exp.setStatus(FIRST_CYCLE);
 
         // when
         experienceDao.createNewOrUpdate(exp);

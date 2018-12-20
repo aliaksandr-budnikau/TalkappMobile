@@ -25,7 +25,7 @@ import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
 import static org.apache.commons.collections4.ListUtils.partition;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
 public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
@@ -100,7 +100,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            exercise.setStatus(STUDYING);
+            exercise.setStatus(FIRST_CYCLE);
             exercise.setWordSetId(wordSetId);
             exercise.setUpdatedDate(getInstance(UTC).getTime());
             wordsEx.add(exercise);

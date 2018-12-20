@@ -462,8 +462,17 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void showSentenceInRepetitionModeUnsupportedMessage() {
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void showSentenceChangeUnsupportedMessage() {
         Toast.makeText(getContext(), "Unsupported in repetition mode", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void showSentenceChangedSuccessfullyMessage() {
+        Toast.makeText(getContext(), "The sentence was changed", Toast.LENGTH_LONG).show();
     }
 
     private void sendCheatSignal(final String signal) {

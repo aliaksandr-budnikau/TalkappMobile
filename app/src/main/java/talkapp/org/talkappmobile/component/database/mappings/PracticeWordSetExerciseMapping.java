@@ -12,7 +12,7 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 @DatabaseTable(tableName = PRACTICE_WORD_SET_EXERCISE_TABLE)
 public class PracticeWordSetExerciseMapping {
@@ -38,7 +38,7 @@ public class PracticeWordSetExerciseMapping {
     private String sentenceJSON;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetExperienceStatus status = STUDYING;
+    private WordSetExperienceStatus status = FIRST_CYCLE;
 
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;

@@ -32,7 +32,7 @@ public abstract class PracticeWordSetViewStrategy {
         view.setOriginalText(sentence.getTranslations().get("russian"));
         view.setRightAnswerModel(sentence, word);
         view.unlockRightAnswer();
-        hideRightAnswer(view);
+        hideRightAnswer();
         view.setAnswerText("");
     }
 
@@ -110,15 +110,7 @@ public abstract class PracticeWordSetViewStrategy {
     }
 
     public void rightAnswerUntouched() {
-        hideRightAnswer(view);
-    }
-
-    public PracticeWordSetView getView() {
-        return view;
-    }
-
-    protected void hideRightAnswer(PracticeWordSetView view) {
-        view.maskRightAnswerEntirely();
+        hideRightAnswer();
     }
 
     public void onTrainingHalfFinished() {
@@ -177,7 +169,9 @@ public abstract class PracticeWordSetViewStrategy {
         view.setEnableNextButton(true);
     }
 
-    public void onChangeSentenceInRepetitionMode() {
-        view.showSentenceInRepetitionModeUnsupportedMessage();
-    }
+    public abstract void onSentenceChangeUnsupported();
+
+    public abstract void onSentenceChanged();
+
+    public abstract void hideRightAnswer();
 }

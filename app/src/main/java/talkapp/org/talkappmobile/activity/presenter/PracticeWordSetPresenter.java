@@ -113,8 +113,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onChangeSentenceInRepetitionMode() {
-        viewStrategy.onChangeSentenceInRepetitionMode();
+    public void onSentenceChangeUnsupported() {
+        viewStrategy.onSentenceChangeUnsupported();
+    }
+
+    @Override
+    public void onSentenceChanged() {
+        viewStrategy.onSentenceChanged();
     }
 
     public void gotRecognitionResult(List<String> result) {

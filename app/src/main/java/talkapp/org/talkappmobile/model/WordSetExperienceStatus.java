@@ -1,7 +1,7 @@
 package talkapp.org.talkappmobile.model;
 
 public enum WordSetExperienceStatus {
-    STUDYING(0), REPETITION(1), FINISHED(2);
+    FIRST_CYCLE(0), SECOND_CYCLE(1), FINISHED(2);
 
     private final int order;
 

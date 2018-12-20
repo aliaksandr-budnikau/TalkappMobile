@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.STUDYING;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 public class WordSetExperienceServiceImpl implements WordSetExperienceService {
     private static final String TAG = DatabaseHelper.class.getSimpleName();
@@ -33,7 +33,7 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
     @Override
     public WordSetExperience createNew(WordSet wordSet) {
         WordSetExperienceMapping mapping = new WordSetExperienceMapping();
-        mapping.setStatus(STUDYING);
+        mapping.setStatus(FIRST_CYCLE);
         mapping.setId(wordSet.getId());
         mapping.setTrainingExperience(0);
         mapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);

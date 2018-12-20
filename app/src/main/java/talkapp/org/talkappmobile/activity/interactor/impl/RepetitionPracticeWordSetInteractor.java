@@ -112,6 +112,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
-        listener.onChangeSentenceInRepetitionMode();
+        listener.onSentenceChangeUnsupported();
     }
 }
