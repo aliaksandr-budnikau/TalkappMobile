@@ -41,6 +41,7 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
+import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -476,6 +477,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     public void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely) {
         eventBus.post(new NewSentenceEM(sentence, word, hideEntirely));
+    }
+
+    @Override
+    public void onEnableRepetitionMode() {
+        eventBus.post(new PracticeHalfFinishedEM());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

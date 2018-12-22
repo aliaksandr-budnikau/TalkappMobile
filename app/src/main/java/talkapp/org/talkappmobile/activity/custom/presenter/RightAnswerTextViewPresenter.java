@@ -12,6 +12,7 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
     private Sentence sentence;
     private Word2Tokens word;
     private boolean locked;
+    private boolean hideAllMode;
 
     public RightAnswerTextViewPresenter(RightAnswerTextViewInteractor interactor, RightAnswerTextViewView view) {
         this.interactor = interactor;
@@ -23,10 +24,20 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
         this.word = word;
     }
 
+    public void mask() {
+        if (hideAllMode) {
+            interactor.maskEntirely(sentence, locked, this);
+        } else {
+            interactor.maskOnlyWord(sentence, word, locked, this);
+        }
+    }
+
+    @Deprecated
     public void maskEntirely() {
         interactor.maskEntirely(sentence, locked, this);
     }
 
+    @Deprecated
     public void maskOnlyWord() {
         interactor.maskOnlyWord(sentence, word, locked, this);
     }
@@ -41,6 +52,10 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
 
     public void unlock() {
         locked = false;
+    }
+
+    public void enableHideAllMode() {
+        hideAllMode = true;
     }
 
     @Override

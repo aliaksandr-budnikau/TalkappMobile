@@ -18,10 +18,9 @@ import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewI
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
+import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 
 @EView
 public class RightAnswerTextView extends AppCompatTextView implements RightAnswerTextViewView {
@@ -51,22 +50,22 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
         presenter = new RightAnswerTextViewPresenter(interacto, this);
     }
 
-    public void setModel(Sentence sentence, Word2Tokens word) {
-        presenter.setModel(sentence, word);
-    }
-
+    @Deprecated
     public void maskEntirely() {
         presenter.maskEntirely();
     }
 
+    @Deprecated
     public void maskOnlyWord() {
         presenter.maskOnlyWord();
     }
 
+    @Deprecated
     public void unmask() {
         presenter.unmask();
     }
 
+    @Deprecated
     public void lock() {
         presenter.lock();
     }
@@ -81,10 +80,11 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     public void onMessageEvent(NewSentenceEM event) {
         presenter.setModel(event.getSentence(), event.getWord());
         presenter.unlock();
-        if (event.isHideEntirely()) {
-            presenter.maskEntirely();
-        } else {
-            presenter.maskOnlyWord();
-        }
+        presenter.mask();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PracticeHalfFinishedEM event) {
+        presenter.enableHideAllMode();
     }
 }

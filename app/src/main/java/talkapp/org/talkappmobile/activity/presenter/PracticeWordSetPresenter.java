@@ -99,6 +99,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onEnableRepetitionMode() {
         this.viewStrategy = secondViewStrategy;
+        this.view.onEnableRepetitionMode();
     }
 
     @Override
