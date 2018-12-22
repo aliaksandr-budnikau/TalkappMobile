@@ -6,6 +6,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -18,17 +19,20 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetSecondCycleViewStrategy secondViewStrategy;
     private final PracticeWordSetFirstCycleViewStrategy firstViewStrategy;
+    private final PracticeWordSetView view;
     private PracticeWordSetViewStrategy viewStrategy;
 
     public PracticeWordSetPresenter(WordSet wordSet,
                                     PracticeWordSetInteractor interactor,
                                     PracticeWordSetFirstCycleViewStrategy firstViewStrategy,
-                                    PracticeWordSetSecondCycleViewStrategy secondViewStrategy) {
+                                    PracticeWordSetSecondCycleViewStrategy secondViewStrategy,
+                                    PracticeWordSetView view) {
         this.interactor = interactor;
         this.secondViewStrategy = secondViewStrategy;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.firstViewStrategy = firstViewStrategy;
         this.viewStrategy = firstViewStrategy;
+        this.view = view;
     }
 
     @Override
@@ -38,6 +42,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onSentencesFound(final Sentence sentence, Word2Tokens word) {
+        boolean hideEntirely = viewStrategy.equals(secondViewStrategy);
+        view.onSentencesFound(sentence, word, hideEntirely);
+    }
+
+    public void refreshSentence(Sentence sentence, Word2Tokens word) {
         viewStrategy.onSentencesFound(sentence, word);
     }
 

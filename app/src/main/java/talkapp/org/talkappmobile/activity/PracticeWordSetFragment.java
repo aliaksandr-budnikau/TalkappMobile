@@ -16,6 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+import com.tmtron.greenannotations.EventBusGreenRobot;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
@@ -26,6 +29,8 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,6 +40,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
+import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -110,6 +116,9 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @FragmentArg(REPETITION_MODE_MAPPING)
     boolean repetitionMode;
 
+    @EventBusGreenRobot
+    EventBus eventBus;
+
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetPresenter presenter;
     private HashMap<SentenceContentScore, String> enumToTexts = new HashMap<>();
@@ -148,7 +157,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         if (repetitionMode) {
             interactor = repetitionPracticeWordSetInteractor;
         }
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstStrategy, secondStrategy);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstStrategy, secondStrategy, this);
         presenter.initialise();
         presenter.nextButtonClick();
     }
@@ -386,12 +395,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @IgnoreWhen(VIEW_DESTROYED)
-    public void setRightAnswerModel(Sentence sentence, Word2Tokens word) {
-        rightAnswer.setModel(sentence, word);
-    }
-
-    @Override
-    @IgnoreWhen(VIEW_DESTROYED)
     public void maskRightAnswerEntirely() {
         rightAnswer.maskEntirely();
     }
@@ -412,11 +415,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         rightAnswer.lock();
     }
 
-    @Override
-    @IgnoreWhen(VIEW_DESTROYED)
-    public void unlockRightAnswer() {
-        rightAnswer.unlock();
-    }
 
     @Override
     @IgnoreWhen(VIEW_DESTROYED)
@@ -473,6 +471,16 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void showSentenceChangedSuccessfullyMessage() {
         Toast.makeText(getContext(), "The sentence was changed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely) {
+        eventBus.post(new NewSentenceEM(sentence, word, hideEntirely));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewSentenceEM event) {
+        presenter.refreshSentence(event.getSentence(), event.getWord());
     }
 
     private void sendCheatSignal(final String signal) {

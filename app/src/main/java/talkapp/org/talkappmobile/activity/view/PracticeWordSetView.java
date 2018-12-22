@@ -51,8 +51,6 @@ public interface PracticeWordSetView {
 
     void setEnableRightAnswerTextView(boolean value);
 
-    void setRightAnswerModel(Sentence sentence, Word2Tokens word);
-
     void maskRightAnswerEntirely();
 
     void maskRightAnswerOnlyWord();
@@ -60,8 +58,6 @@ public interface PracticeWordSetView {
     void unmaskRightAnswer();
 
     void lockRightAnswer();
-
-    void unlockRightAnswer();
 
     void openDialogForSentenceScoring(Sentence sentence);
 
@@ -72,4 +68,6 @@ public interface PracticeWordSetView {
     void showSentenceChangeUnsupportedMessage();
 
     void showSentenceChangedSuccessfullyMessage();
+
+    void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely);
 }

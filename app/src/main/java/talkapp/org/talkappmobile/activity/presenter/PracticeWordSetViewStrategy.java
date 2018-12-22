@@ -30,9 +30,6 @@ public abstract class PracticeWordSetViewStrategy {
         view.hideNextButton();
         view.showCheckButton();
         view.setOriginalText(sentence.getTranslations().get("russian"));
-        view.setRightAnswerModel(sentence, word);
-        view.unlockRightAnswer();
-        hideRightAnswer();
         view.setAnswerText("");
     }
 
