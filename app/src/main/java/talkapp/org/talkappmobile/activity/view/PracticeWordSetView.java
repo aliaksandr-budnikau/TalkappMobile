@@ -51,8 +51,6 @@ public interface PracticeWordSetView {
 
     void setEnableRightAnswerTextView(boolean value);
 
-    void unmaskRightAnswer();
-
     void lockRightAnswer();
 
     void openDialogForSentenceScoring(Sentence sentence);

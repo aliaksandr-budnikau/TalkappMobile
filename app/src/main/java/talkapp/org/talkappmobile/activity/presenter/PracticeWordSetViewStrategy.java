@@ -102,10 +102,6 @@ public abstract class PracticeWordSetViewStrategy {
         view.setAnswerText(textWithLastSymbol);
     }
 
-    public void rightAnswerTouched() {
-        view.unmaskRightAnswer();
-    }
-
     public void onTrainingHalfFinished() {
 
     }

@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPr
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerTouchedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
@@ -52,11 +53,6 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     }
 
     @Deprecated
-    public void unmask() {
-        presenter.unmask();
-    }
-
-    @Deprecated
     public void lock() {
         presenter.lock();
     }
@@ -82,5 +78,10 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(RightAnswerUntouchedEM event) {
         presenter.mask();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RightAnswerTouchedEM event) {
+        presenter.unmask();
     }
 }

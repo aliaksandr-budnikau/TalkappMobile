@@ -165,10 +165,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         state.setVoiceRecordUri(voiceRecordUri);
     }
 
-    public void rightAnswerTouched() {
-        viewStrategy.rightAnswerTouched();
-    }
-
     public void pronounceRightAnswerButtonClick() {
         try {
             viewStrategy.onStartSpeaking();

@@ -42,6 +42,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerTouchedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
@@ -173,7 +174,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public boolean onRightAnswerOnTouch(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                presenter.rightAnswerTouched();
+                eventBus.post(new RightAnswerTouchedEM());
                 return true; // if you want to handle the touch event
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
@@ -393,11 +394,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableRightAnswerTextView(final boolean value) {
         rightAnswer.setEnabled(value);
-    }
-
-    @Override
-    public void unmaskRightAnswer() {
-        rightAnswer.unmask();
     }
 
     @Override
