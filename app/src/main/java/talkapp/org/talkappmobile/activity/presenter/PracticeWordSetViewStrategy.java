@@ -106,10 +106,6 @@ public abstract class PracticeWordSetViewStrategy {
         view.unmaskRightAnswer();
     }
 
-    public void rightAnswerUntouched() {
-        hideRightAnswer();
-    }
-
     public void onTrainingHalfFinished() {
 
     }
@@ -169,6 +165,4 @@ public abstract class PracticeWordSetViewStrategy {
     public abstract void onSentenceChangeUnsupported();
 
     public abstract void onSentenceChanged();
-
-    public abstract void hideRightAnswer();
 }

@@ -108,11 +108,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onHideRightAnswer() {
-        viewStrategy.rightAnswerUntouched();
-    }
-
-    @Override
     public void onScoringUnsuccessful() {
         viewStrategy.onScoringUnsuccessful();
     }
@@ -172,10 +167,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public void rightAnswerTouched() {
         viewStrategy.rightAnswerTouched();
-    }
-
-    public void rightAnswerUntouched() {
-        viewStrategy.rightAnswerUntouched();
     }
 
     public void pronounceRightAnswerButtonClick() {

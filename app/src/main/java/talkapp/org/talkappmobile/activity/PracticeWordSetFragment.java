@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
@@ -29,6 +28,7 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -42,11 +42,12 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetSecondCycleViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
@@ -176,7 +177,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
                 return true; // if you want to handle the touch event
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                presenter.rightAnswerUntouched();
+                eventBus.post(new RightAnswerUntouchedEM());
                 return true; // if you want to handle the touch event
         }
         return false;
@@ -392,18 +393,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableRightAnswerTextView(final boolean value) {
         rightAnswer.setEnabled(value);
-    }
-
-    @Override
-    @IgnoreWhen(VIEW_DESTROYED)
-    public void maskRightAnswerEntirely() {
-        rightAnswer.maskEntirely();
-    }
-
-    @Override
-    @IgnoreWhen(VIEW_DESTROYED)
-    public void maskRightAnswerOnlyWord() {
-        rightAnswer.maskOnlyWord();
     }
 
     @Override

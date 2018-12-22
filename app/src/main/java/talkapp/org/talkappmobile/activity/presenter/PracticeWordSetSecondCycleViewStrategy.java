@@ -13,11 +13,6 @@ public class PracticeWordSetSecondCycleViewStrategy extends PracticeWordSetViewS
     }
 
     @Override
-    public void hideRightAnswer() {
-        view.maskRightAnswerEntirely();
-    }
-
-    @Override
     public void onSentenceChangeUnsupported() {
         view.showSentenceChangeUnsupportedMessage();
     }

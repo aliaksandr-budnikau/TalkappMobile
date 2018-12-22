@@ -51,10 +51,6 @@ public interface PracticeWordSetView {
 
     void setEnableRightAnswerTextView(boolean value);
 
-    void maskRightAnswerEntirely();
-
-    void maskRightAnswerOnlyWord();
-
     void unmaskRightAnswer();
 
     void lockRightAnswer();

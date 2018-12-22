@@ -32,16 +32,6 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
         }
     }
 
-    @Deprecated
-    public void maskEntirely() {
-        interactor.maskEntirely(sentence, locked, this);
-    }
-
-    @Deprecated
-    public void maskOnlyWord() {
-        interactor.maskOnlyWord(sentence, word, locked, this);
-    }
-
     public void unmask() {
         interactor.unmask(sentence, this);
     }

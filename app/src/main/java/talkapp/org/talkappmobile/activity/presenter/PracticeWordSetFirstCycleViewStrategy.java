@@ -14,11 +14,6 @@ public class PracticeWordSetFirstCycleViewStrategy extends PracticeWordSetViewSt
     }
 
     @Override
-    public void hideRightAnswer() {
-        view.maskRightAnswerOnlyWord();
-    }
-
-    @Override
     public void onSentenceChangeUnsupported() {
     }
 
