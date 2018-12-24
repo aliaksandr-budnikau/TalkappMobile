@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -31,6 +32,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetPresenterTest {
     @Mock
+    private PracticeWordSetView view;
+    @Mock
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetFirstCycleViewStrategy viewStrategy;
@@ -45,7 +48,7 @@ public class PracticeWordSetPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy, null);
+        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy, null, view);
         Whitebox.setInternalState(presenter, "state", state);
     }
 
@@ -245,28 +248,9 @@ public class PracticeWordSetPresenterTest {
     }
 
     @Test
-    public void rightAnswerTouched() {
-        // when
-        presenter.rightAnswerTouched();
-
-        // then
-        verify(viewStrategy).rightAnswerTouched();
-    }
-
-    @Test
     public void onEnableRepetitionMode() {
         Object viewStrategy = Whitebox.getInternalState(presenter, "viewStrategy");
         presenter.onEnableRepetitionMode();
         assertNotEquals(viewStrategy, Whitebox.getInternalState(presenter, "viewStrategy"));
-    }
-
-    @Test
-    public void onHideRightAnswer() {
-
-        // when
-        presenter.onHideRightAnswer();
-
-        // then
-        verify(viewStrategy).rightAnswerUntouched();
     }
 }

@@ -43,6 +43,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onSentencesFound(final Sentence sentence, Word2Tokens word) {
         boolean hideEntirely = viewStrategy.equals(secondViewStrategy);
+        viewStrategy.onSentencesFound(sentence, word);
         view.onSentencesFound(sentence, word, hideEntirely);
     }
 

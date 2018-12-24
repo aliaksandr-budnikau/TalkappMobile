@@ -74,8 +74,6 @@ public class PracticeWordSetViewStrategyTest {
         verify(view).hideNextButton();
         verify(view).showCheckButton();
         verify(view).setOriginalText(origText);
-        verify(view).setRightAnswerModel(sentence, word);
-        verify(view).maskRightAnswerEntirely();
         verify(view).setAnswerText("");
     }
 
@@ -170,23 +168,5 @@ public class PracticeWordSetViewStrategyTest {
         verify(view).setEnableVoiceRecButton(true);
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
-    }
-
-    @Test
-    public void rightAnswerTouched() {
-        // when
-        strategy.rightAnswerTouched();
-
-        // then
-        verify(view).unmaskRightAnswer();
-    }
-
-    @Test
-    public void rightAnswerUntouched() {
-        // when
-        strategy.rightAnswerUntouched();
-
-        // then
-        verify(view).maskRightAnswerEntirely();
     }
 }
