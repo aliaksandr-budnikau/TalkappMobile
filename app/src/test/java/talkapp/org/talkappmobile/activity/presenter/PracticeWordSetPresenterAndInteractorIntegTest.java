@@ -117,7 +117,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -169,7 +169,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -221,7 +221,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -279,7 +279,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -337,7 +337,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -455,7 +455,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -525,7 +525,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -595,7 +595,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -671,7 +671,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -747,7 +747,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).hideSpellingOrGrammarErrorPanel();
@@ -858,6 +858,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
         presenter.checkAnswerButtonClick(sentence.getText());
 
-        verify(view).lockRightAnswer();
+        verify(view).onExerciseGotAnswered();
     }
 }

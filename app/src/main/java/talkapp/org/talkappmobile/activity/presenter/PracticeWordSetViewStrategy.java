@@ -62,10 +62,10 @@ public abstract class PracticeWordSetViewStrategy {
 
     public void onRightAnswer(Sentence sentence) {
         view.setRightAnswer(sentence.getText());
-        view.lockRightAnswer();
         view.showNextButton();
         view.hideCheckButton();
         view.hideSpellingOrGrammarErrorPanel();
+        view.onExerciseGotAnswered();
     }
 
     public void onStartPlaying() {

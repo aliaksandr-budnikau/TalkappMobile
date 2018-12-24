@@ -25,6 +25,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
@@ -88,7 +89,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
                 .setItems(getOptions(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            eventBus.post(new ChangeSentenceOptionPickedEM());
+                            presenter.changeSentence();
                         } else {
                             eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which - 1], presenter.getSentence()));
                         }
@@ -101,7 +102,13 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.setModel(event.getSentence());
+        presenter.unlock();
         presenter.refresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ExerciseGotAnsweredEM event) {
+        presenter.lock();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -112,5 +119,10 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     @Override
     public void setOriginalText(String originalText) {
         setText(originalText);
+    }
+
+    @Override
+    public void onChangeSentence() {
+        eventBus.post(new ChangeSentenceOptionPickedEM());
     }
 }

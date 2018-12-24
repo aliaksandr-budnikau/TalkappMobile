@@ -36,6 +36,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
@@ -318,6 +319,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setEnablePronounceRightAnswerButton(final boolean value) {
         pronounceRightAnswerButton.setEnabled(value);
     }
@@ -370,11 +372,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         rightAnswer.setEnabled(value);
     }
 
-    @Override
-    public void lockRightAnswer() {
-        rightAnswer.lock();
-    }
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(ScoreSentenceOptionPickedEM event) {
         presenter.scoreSentence(event.getScore(), event.getSentence());
@@ -398,7 +395,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void showSentenceChangeUnsupportedMessage() {
-        Toast.makeText(getContext(), "Unsupported in repetition mode", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Unsupported during the repetition", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -416,6 +413,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     public void onEnableRepetitionMode() {
         eventBus.post(new PracticeHalfFinishedEM());
+    }
+
+    @Override
+    public void onExerciseGotAnswered() {
+        eventBus.post(new ExerciseGotAnsweredEM());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -49,8 +49,6 @@ public interface PracticeWordSetView {
 
     void setEnableRightAnswerTextView(boolean value);
 
-    void lockRightAnswer();
-
     void showScoringSuccessfulMessage();
 
     void showScoringUnsuccessfulMessage();
@@ -62,4 +60,6 @@ public interface PracticeWordSetView {
     void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely);
 
     void onEnableRepetitionMode();
+
+    void onExerciseGotAnswered();
 }
