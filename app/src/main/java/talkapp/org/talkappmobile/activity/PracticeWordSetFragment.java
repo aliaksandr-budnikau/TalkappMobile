@@ -406,8 +406,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely) {
-        eventBus.post(new NewSentenceEM(sentence, word, hideEntirely));
+    public void onSentencesFound(Sentence sentence, Word2Tokens word) {
+        eventBus.post(new NewSentenceEM(sentence, word));
     }
 
     @Override

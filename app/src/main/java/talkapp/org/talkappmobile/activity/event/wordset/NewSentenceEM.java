@@ -7,7 +7,7 @@ public class NewSentenceEM {
     private final Sentence sentence;
     private final Word2Tokens word;
 
-    public NewSentenceEM(Sentence sentence, Word2Tokens word, boolean hideEntirely) {
+    public NewSentenceEM(Sentence sentence, Word2Tokens word) {
         this.sentence = sentence;
         this.word = word;
     }

@@ -57,7 +57,7 @@ public interface PracticeWordSetView {
 
     void showSentenceChangedSuccessfullyMessage();
 
-    void onSentencesFound(Sentence sentence, Word2Tokens word, boolean hideEntirely);
+    void onSentencesFound(Sentence sentence, Word2Tokens word);
 
     void onEnableRepetitionMode();
 

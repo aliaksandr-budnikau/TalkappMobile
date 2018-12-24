@@ -76,7 +76,7 @@ public class PracticeWordSetPresenterTest {
         presenter.onSentencesFound(sentence, word);
 
         // then
-        verify(view).onSentencesFound(sentence, word, false);
+        verify(view).onSentencesFound(sentence, word);
     }
 
     @Test

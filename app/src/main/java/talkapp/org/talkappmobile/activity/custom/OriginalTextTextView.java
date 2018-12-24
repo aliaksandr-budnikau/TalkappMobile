@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
@@ -16,9 +15,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
@@ -28,6 +24,7 @@ import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPick
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
+import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 
@@ -65,38 +62,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @AfterInject
     public void init() {
-        options = new HashMap<>();
-        options.put(SentenceContentScore.POOR, poorSentenceOption);
-        options.put(SentenceContentScore.CORRUPTED, corruptedSentenceOption);
-        options.put(SentenceContentScore.INSULT, insultSentenceOption);
-
         presenter = new OriginalTextTextViewPresenter(this);
-    }
-
-    @NonNull
-    private String[] getOptions() {
-        List<String> optionsList = new LinkedList<>();
-        optionsList.add(anotherSentenceOption);
-        for (SentenceContentScore value : SentenceContentScore.values()) {
-            optionsList.add(options.get(value));
-        }
-        return optionsList.toArray(new String[SentenceContentScore.values().length]);
-    }
-
-    public void showOptionsInDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(scoreSentenceDialogTitle)
-                .setItems(getOptions(), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            presenter.changeSentence();
-                        } else {
-                            eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which - 1], presenter.getSentence()));
-                        }
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -113,7 +79,12 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OriginalTextClickEM event) {
-        showOptionsInDialog();
+        presenter.prepareDialog(anotherSentenceOption, poorSentenceOption, corruptedSentenceOption, insultSentenceOption);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PracticeHalfFinishedEM event) {
+        presenter.enableImmutableMode();
     }
 
     @Override
@@ -124,5 +95,26 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     @Override
     public void onChangeSentence() {
         eventBus.post(new ChangeSentenceOptionPickedEM());
+    }
+
+    @Override
+    public void openDialog(String[] options, final boolean mutable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder
+                .setTitle(scoreSentenceDialogTitle)
+                .setItems((options), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mutable) {
+                            if (which == 0) {
+                                presenter.changeSentence();
+                                return;
+                            }
+                            which--;
+                        }
+                        eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which], presenter.getSentence()));
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 }
