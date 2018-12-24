@@ -96,7 +96,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -162,7 +162,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -228,7 +228,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -294,7 +294,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -361,7 +361,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -428,7 +428,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -503,7 +503,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -591,7 +591,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -679,7 +679,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -767,7 +767,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -856,7 +856,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -945,7 +945,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openDialogForSentenceScoring(any(Sentence.class));
         reset(view);
 
-        presenter.scoreSentence(new Sentence(), 0);
+        presenter.changeSentence();
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);

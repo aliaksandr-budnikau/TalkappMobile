@@ -188,14 +188,19 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onFoundSentenceForScoring(currentSentence);
     }
 
-    public void scoreSentence(Sentence sentence, int witch) {
+    public void changeSentence() {
+        try {
+            viewStrategy.onChangeSentenceStart();
+            interactor.changeSentence(state.getWordSetId(), this);
+        } finally {
+            viewStrategy.onChangeSentenceFinish();
+        }
+    }
+
+    public void scoreSentence(SentenceContentScore score, Sentence sentence) {
         try {
             viewStrategy.onScoreSentenceStart();
-            if (witch == 0) {
-                interactor.changeSentence(state.getWordSetId(), this);
-            } else {
-                interactor.scoreSentence(sentence, SentenceContentScore.values()[witch - 1], this);
-            }
+            interactor.scoreSentence(sentence, score, this);
         } finally {
             viewStrategy.onScoreSentenceFinish();
         }

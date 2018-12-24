@@ -158,6 +158,18 @@ public abstract class PracticeWordSetViewStrategy {
         view.setEnableNextButton(true);
     }
 
+    public void onChangeSentenceStart() {
+        view.showPleaseWaitProgressBar();
+        view.setEnableCheckButton(false);
+        view.setEnableNextButton(false);
+    }
+
+    public void onChangeSentenceFinish() {
+        view.hidePleaseWaitProgressBar();
+        view.setEnableCheckButton(true);
+        view.setEnableNextButton(true);
+    }
+
     public abstract void onSentenceChangeUnsupported();
 
     public abstract void onSentenceChanged();

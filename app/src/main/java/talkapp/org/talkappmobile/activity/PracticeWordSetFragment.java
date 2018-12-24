@@ -1,12 +1,9 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,23 +24,23 @@ import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
+import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerTouchedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -56,7 +53,6 @@ import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -79,7 +75,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.originalText)
-    TextView originalText;
+    OriginalTextTextView originalText;
     @ViewById(R.id.rightAnswer)
     RightAnswerTextView rightAnswer;
     @ViewById(R.id.answerText)
@@ -103,17 +99,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @ViewById(R.id.spellingGrammarErrorsListView)
     LinearLayout spellingGrammarErrorsListView;
 
-    @StringRes(R.string.score_sentence_dialog_title)
-    String scoreSentenceDialogTitle;
-    @StringRes(R.string.another_sentence_option)
-    String anotherSentenceOption;
-    @StringRes(R.string.poor_sentence_option)
-    String poorSentenceOption;
-    @StringRes(R.string.corrupted_sentence_option)
-    String corruptedSentenceOption;
-    @StringRes(R.string.insult_sentence_option)
-    String insultSentenceOption;
-
     @FragmentArg(WORD_SET_MAPPING)
     WordSet wordSet;
     @FragmentArg(REPETITION_MODE_MAPPING)
@@ -124,7 +109,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetPresenter presenter;
-    private HashMap<SentenceContentScore, String> enumToTexts = new HashMap<>();
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -144,10 +128,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         DIContextUtils.get().inject(this);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, wordSetPractiseForm);
-
-        enumToTexts.put(SentenceContentScore.POOR, poorSentenceOption);
-        enumToTexts.put(SentenceContentScore.CORRUPTED, corruptedSentenceOption);
-        enumToTexts.put(SentenceContentScore.INSULT, insultSentenceOption);
 
         initPresenter();
     }
@@ -405,30 +385,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     @IgnoreWhen(VIEW_DESTROYED)
     public void openDialogForSentenceScoring(final Sentence sentence) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(scoreSentenceDialogTitle)
-                .setItems(getOptions(), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        scoreSentence(which, sentence);
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
+        originalText.showOptionsInDialog(sentence);
     }
 
-    @NonNull
-    private String[] getOptions() {
-        List<String> options = new LinkedList<>();
-        options.add(anotherSentenceOption);
-        for (SentenceContentScore value : SentenceContentScore.values()) {
-            options.add(enumToTexts.get(value));
-        }
-        return options.toArray(new String[SentenceContentScore.values().length]);
-    }
-
-    @Background
-    public void scoreSentence(int which, Sentence sentence) {
-        presenter.scoreSentence(sentence, which);
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void scoreSentence(ScoreSentenceOptionPickedEM event) {
+        presenter.scoreSentence(event.getScore(), event.getSentence());
     }
 
     @Override
@@ -472,6 +434,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.refreshSentence(event.getSentence(), event.getWord());
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void changeSentence(ChangeSentenceOptionPickedEM event) {
+        presenter.changeSentence();
     }
 
     private void sendCheatSignal(final String signal) {
