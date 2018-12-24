@@ -7,7 +7,6 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public abstract class PracticeWordSetViewStrategy {
@@ -26,10 +25,9 @@ public abstract class PracticeWordSetViewStrategy {
         view.setProgress(progress);
     }
 
-    public void onSentencesFound(Sentence sentence, Word2Tokens word) {
+    public void onSentencesFound() {
         view.hideNextButton();
         view.showCheckButton();
-        view.setOriginalText(sentence.getTranslations().get("russian"));
         view.setAnswerText("");
     }
 
@@ -132,10 +130,6 @@ public abstract class PracticeWordSetViewStrategy {
         view.setEnableRightAnswerTextView(true);
         view.setEnablePronounceRightAnswerButton(true);
         view.setEnableCheckButton(true);
-    }
-
-    public void onFoundSentenceForScoring(Sentence sentence) {
-        view.openDialogForSentenceScoring(sentence);
     }
 
     public void onScoringUnsuccessful() {

@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
@@ -17,7 +16,6 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
@@ -58,22 +56,12 @@ public class PracticeWordSetViewStrategyTest {
 
     @Test
     public void onSentencesFound() {
-        // setup
-        String origText = "fsdfsfs";
-
-        Sentence sentence = new Sentence();
-        sentence.setTranslations(new HashMap<String, String>());
-        sentence.getTranslations().put("russian", origText);
-
-        Word2Tokens word = new Word2Tokens("word");
-
         // when
-        strategy.onSentencesFound(sentence, word);
+        strategy.onSentencesFound();
 
         // then
         verify(view).hideNextButton();
         verify(view).showCheckButton();
-        verify(view).setOriginalText(origText);
         verify(view).setAnswerText("");
     }
 

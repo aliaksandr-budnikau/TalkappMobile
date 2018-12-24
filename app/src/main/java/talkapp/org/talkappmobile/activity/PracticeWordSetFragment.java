@@ -37,6 +37,7 @@ import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
+import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerTouchedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
@@ -147,7 +148,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Click(R.id.originalText)
     public void onOriginalTextClick() {
-        presenter.originalTextClick();
+        eventBus.post(new OriginalTextClickEM());
     }
 
     @Touch(R.id.rightAnswer)
@@ -274,13 +275,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
-    @IgnoreWhen(VIEW_DESTROYED)
-    public void setOriginalText(final String text) {
-        originalText.setText(text);
-    }
-
-    @Override
-    @UiThread
     public void showMessageAnswerEmpty() {
         Toast.makeText(getContext(), "Answer can't be empty.", Toast.LENGTH_SHORT).show();
     }
@@ -381,15 +375,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         rightAnswer.lock();
     }
 
-
-    @Override
-    @IgnoreWhen(VIEW_DESTROYED)
-    public void openDialogForSentenceScoring(final Sentence sentence) {
-        originalText.showOptionsInDialog(sentence);
-    }
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void scoreSentence(ScoreSentenceOptionPickedEM event) {
+    public void onMessageEvent(ScoreSentenceOptionPickedEM event) {
         presenter.scoreSentence(event.getScore(), event.getSentence());
     }
 
@@ -433,11 +420,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
-        presenter.refreshSentence(event.getSentence(), event.getWord());
+        presenter.refreshSentence();
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void changeSentence(ChangeSentenceOptionPickedEM event) {
+    public void onMessageEvent(ChangeSentenceOptionPickedEM event) {
         presenter.changeSentence();
     }
 

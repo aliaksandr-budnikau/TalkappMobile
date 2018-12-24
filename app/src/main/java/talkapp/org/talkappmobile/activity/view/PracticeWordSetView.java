@@ -21,8 +21,6 @@ public interface PracticeWordSetView {
 
     void setProgress(int progress);
 
-    void setOriginalText(String text);
-
     void showMessageAnswerEmpty();
 
     void showMessageSpellingOrGrammarError();
@@ -52,8 +50,6 @@ public interface PracticeWordSetView {
     void setEnableRightAnswerTextView(boolean value);
 
     void lockRightAnswer();
-
-    void openDialogForSentenceScoring(Sentence sentence);
 
     void showScoringSuccessfulMessage();
 

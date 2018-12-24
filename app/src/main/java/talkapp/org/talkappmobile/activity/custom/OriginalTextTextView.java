@@ -13,6 +13,8 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,13 +22,16 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
+import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
+import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
-import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 
 @EView
-public class OriginalTextTextView extends AppCompatTextView {
+public class OriginalTextTextView extends AppCompatTextView implements OriginalTextTextViewView {
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -43,6 +48,7 @@ public class OriginalTextTextView extends AppCompatTextView {
     String insultSentenceOption;
 
     private Map<SentenceContentScore, String> options;
+    private OriginalTextTextViewPresenter presenter;
 
     public OriginalTextTextView(Context context) {
         super(context);
@@ -63,6 +69,7 @@ public class OriginalTextTextView extends AppCompatTextView {
         options.put(SentenceContentScore.CORRUPTED, corruptedSentenceOption);
         options.put(SentenceContentScore.INSULT, insultSentenceOption);
 
+        presenter = new OriginalTextTextViewPresenter(this);
     }
 
     @NonNull
@@ -75,7 +82,7 @@ public class OriginalTextTextView extends AppCompatTextView {
         return optionsList.toArray(new String[SentenceContentScore.values().length]);
     }
 
-    public void showOptionsInDialog(final Sentence sentence) {
+    public void showOptionsInDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(scoreSentenceDialogTitle)
                 .setItems(getOptions(), new DialogInterface.OnClickListener() {
@@ -83,11 +90,27 @@ public class OriginalTextTextView extends AppCompatTextView {
                         if (which == 0) {
                             eventBus.post(new ChangeSentenceOptionPickedEM());
                         } else {
-                            eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which - 1], sentence));
+                            eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which - 1], presenter.getSentence()));
                         }
                         dialog.cancel();
                     }
                 });
         builder.create().show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewSentenceEM event) {
+        presenter.setModel(event.getSentence());
+        presenter.refresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OriginalTextClickEM event) {
+        showOptionsInDialog();
+    }
+
+    @Override
+    public void setOriginalText(String originalText) {
+        setText(originalText);
     }
 }

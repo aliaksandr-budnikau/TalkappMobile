@@ -43,12 +43,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onSentencesFound(final Sentence sentence, Word2Tokens word) {
         boolean hideEntirely = viewStrategy.equals(secondViewStrategy);
-        viewStrategy.onSentencesFound(sentence, word);
         view.onSentencesFound(sentence, word, hideEntirely);
     }
 
-    public void refreshSentence(Sentence sentence, Word2Tokens word) {
-        viewStrategy.onSentencesFound(sentence, word);
+    public void refreshSentence() {
+        viewStrategy.onSentencesFound();
     }
 
     @Override
@@ -181,11 +180,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void checkRightAnswerCommandRecognized() {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         checkAnswerButtonClick(currentSentence.getText());
-    }
-
-    public void originalTextClick() {
-        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
-        viewStrategy.onFoundSentenceForScoring(currentSentence);
     }
 
     public void changeSentence() {
