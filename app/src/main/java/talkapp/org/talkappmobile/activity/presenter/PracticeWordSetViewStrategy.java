@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-public abstract class PracticeWordSetViewStrategy {
+public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
     private final WordSetExperienceUtils experienceUtils;
     private final TextUtils textUtils;

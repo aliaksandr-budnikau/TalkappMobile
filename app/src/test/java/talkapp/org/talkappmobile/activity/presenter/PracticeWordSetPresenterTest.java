@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +47,7 @@ public class PracticeWordSetPresenterTest {
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy, null, view);
+        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy, view);
         Whitebox.setInternalState(presenter, "state", state);
     }
 
@@ -245,12 +244,5 @@ public class PracticeWordSetPresenterTest {
 
         // then
         verify(interactor).playVoice(empty, presenter);
-    }
-
-    @Test
-    public void onEnableRepetitionMode() {
-        Object viewStrategy = Whitebox.getInternalState(presenter, "viewStrategy");
-        presenter.onEnableRepetitionMode();
-        assertNotEquals(viewStrategy, Whitebox.getInternalState(presenter, "viewStrategy"));
     }
 }

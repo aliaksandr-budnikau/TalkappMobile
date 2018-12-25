@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;
     private final PracticeWordSetInteractor interactor;
-    private final PracticeWordSetSecondCycleViewStrategy secondViewStrategy;
     private final PracticeWordSetFirstCycleViewStrategy firstViewStrategy;
     private final PracticeWordSetView view;
     private PracticeWordSetViewStrategy viewStrategy;
@@ -25,10 +24,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public PracticeWordSetPresenter(WordSet wordSet,
                                     PracticeWordSetInteractor interactor,
                                     PracticeWordSetFirstCycleViewStrategy firstViewStrategy,
-                                    PracticeWordSetSecondCycleViewStrategy secondViewStrategy,
                                     PracticeWordSetView view) {
         this.interactor = interactor;
-        this.secondViewStrategy = secondViewStrategy;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.firstViewStrategy = firstViewStrategy;
         this.viewStrategy = firstViewStrategy;
@@ -97,7 +94,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onEnableRepetitionMode() {
-        this.viewStrategy = secondViewStrategy;
         this.view.onEnableRepetitionMode();
     }
 
