@@ -6,7 +6,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -17,17 +16,14 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;
     private final PracticeWordSetInteractor interactor;
-    private final PracticeWordSetView view;
     private final PracticeWordSetViewStrategy viewStrategy;
 
     public PracticeWordSetPresenter(WordSet wordSet,
                                     PracticeWordSetInteractor interactor,
-                                    PracticeWordSetViewStrategy viewStrategy,
-                                    PracticeWordSetView view) {
+                                    PracticeWordSetViewStrategy viewStrategy) {
         this.interactor = interactor;
         state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.viewStrategy = viewStrategy;
-        this.view = view;
     }
 
     @Override
@@ -37,7 +33,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onSentencesFound(final Sentence sentence, Word2Tokens word) {
-        view.onSentencesFound(sentence, word);
+        viewStrategy.onSentencesFound(sentence, word);
     }
 
     public void refreshSentence() {
@@ -92,7 +88,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     @Override
     public void onEnableRepetitionMode() {
-        this.view.onEnableRepetitionMode();
+        viewStrategy.onEnableRepetitionMode();
     }
 
     @Override

@@ -7,6 +7,7 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetViewStrategy {
@@ -166,5 +167,13 @@ public class PracticeWordSetViewStrategy {
 
     public void onSentenceChanged() {
         view.showSentenceChangedSuccessfullyMessage();
+    }
+
+    public void onEnableRepetitionMode() {
+        view.onEnableRepetitionMode();
+    }
+
+    public void onSentencesFound(Sentence sentence, Word2Tokens word) {
+        view.onSentencesFound(sentence, word);
     }
 }

@@ -57,7 +57,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
         PracticeWordSetViewStrategy firstCycleViewStrategy = viewStrategyFactory.createPracticeWordSetViewStrategy(view);
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy, view);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy);
     }
 
     @Test

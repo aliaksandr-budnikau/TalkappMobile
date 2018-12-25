@@ -140,7 +140,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         if (repetitionMode) {
             interactor = repetitionPracticeWordSetInteractor;
         }
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy, this);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
         presenter.initialise();
         presenter.nextButtonClick();
     }
