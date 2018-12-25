@@ -8,6 +8,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
@@ -15,9 +18,14 @@ import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMa
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
     private static final int DATABASE_VERSION = 13;
+    private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        /*changes.put(14, asList(
+                "",
+                ""
+        ));*/
     }
 
     @Override
@@ -32,12 +40,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer, int newVer) {
-        try {
-            TableUtils.dropTable(connectionSource, PracticeWordSetExerciseMapping.class, true);
-            TableUtils.dropTable(connectionSource, WordSetExperienceMapping.class, true);
-            onCreate(db, connectionSource);
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        for (int i = oldVer + 1; i < changes.size(); i++) {
+            List<String> sqls = changes.get(i);
+            if (sqls == null || sqls.isEmpty()) {
+                continue;
+            }
+            for (String sql : sqls) {
+                db.execSQL(sql);
+            }
         }
     }
 }
