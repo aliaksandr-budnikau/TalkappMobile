@@ -67,7 +67,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         } else {
             logger.i(TAG, "disable repetition mode for state {} ", exp.getStatus());
             sentenceProvider.disableRepetitionMode();
-            listener.onDisableRepetitionMode();
         }
         logger.i(TAG, "experience was initialized");
         listener.onInitialiseExperience(exp);

@@ -46,8 +46,8 @@ import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPicke
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
@@ -135,12 +135,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        PracticeWordSetFirstCycleViewStrategy firstStrategy = viewStrategyFactory.createPracticeWordSetFirstCycleViewStrategy(this);
+        PracticeWordSetViewStrategy viewStrategy = viewStrategyFactory.createPracticeWordSetViewStrategy(this);
         PracticeWordSetInteractor interactor = studyingPracticeWordSetInteractor;
         if (repetitionMode) {
             interactor = repetitionPracticeWordSetInteractor;
         }
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstStrategy, this);
+        presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy, this);
         presenter.initialise();
         presenter.nextButtonClick();
     }
