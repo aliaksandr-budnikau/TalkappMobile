@@ -164,7 +164,7 @@ public abstract class PracticeWordSetViewStrategy {
         view.setEnableNextButton(true);
     }
 
-    public abstract void onSentenceChangeUnsupported();
-
-    public abstract void onSentenceChanged();
+    public void onSentenceChanged() {
+        view.showSentenceChangedSuccessfullyMessage();
+    }
 }

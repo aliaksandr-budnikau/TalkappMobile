@@ -117,11 +117,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onSentenceChangeUnsupported() {
-        viewStrategy.onSentenceChangeUnsupported();
-    }
-
-    @Override
     public void onSentenceChanged() {
         viewStrategy.onSentenceChanged();
     }

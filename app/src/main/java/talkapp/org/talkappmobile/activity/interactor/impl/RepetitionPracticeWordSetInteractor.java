@@ -38,7 +38,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Context context,
             AudioStuffFactory audioStuffFactory,
             Speaker speaker) {
-        super(logger, context, refereeService, audioStuffFactory, speaker);
+        super(logger, context, refereeService, exerciseService, audioStuffFactory, speaker);
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
@@ -108,10 +108,5 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             listener.onRightAnswer(sentence);
         }
         return true;
-    }
-
-    @Override
-    public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
-        listener.onSentenceChangeUnsupported();
     }
 }

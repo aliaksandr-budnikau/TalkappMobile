@@ -43,7 +43,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              Context context,
                                              AudioStuffFactory audioStuffFactory,
                                              Speaker speaker) {
-        super(logger, context, refereeService, audioStuffFactory, speaker);
+        super(logger, context, refereeService, exerciseService, audioStuffFactory, speaker);
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
@@ -125,18 +125,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
         }
         return true;
-    }
-
-    @Override
-    public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
-        WordSetExperience exp = experienceService.findById(wordSetId);
-        if (SECOND_CYCLE.equals(exp.getStatus())) {
-            listener.onSentenceChangeUnsupported();
-        } else {
-            Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-            initialiseSentence(word, wordSetId, listener);
-            listener.onSentenceChanged();
-        }
     }
 
     @Override

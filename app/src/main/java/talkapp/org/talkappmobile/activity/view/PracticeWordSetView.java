@@ -53,8 +53,6 @@ public interface PracticeWordSetView {
 
     void showScoringUnsuccessfulMessage();
 
-    void showSentenceChangeUnsupportedMessage();
-
     void showSentenceChangedSuccessfullyMessage();
 
     void onSentencesFound(Sentence sentence, Word2Tokens word);

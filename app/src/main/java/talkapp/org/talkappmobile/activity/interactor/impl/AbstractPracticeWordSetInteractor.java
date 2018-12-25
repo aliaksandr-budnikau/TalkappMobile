@@ -10,10 +10,12 @@ import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -25,15 +27,18 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final RefereeService refereeService;
     private final AudioStuffFactory audioStuffFactory;
     private final Speaker speaker;
+    private final PracticeWordSetExerciseService exerciseService;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
+                                             PracticeWordSetExerciseService exerciseService,
                                              AudioStuffFactory audioStuffFactory,
                                              Speaker speaker) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
+        this.exerciseService = exerciseService;
         this.audioStuffFactory = audioStuffFactory;
         this.speaker = speaker;
     }
@@ -115,5 +120,12 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         } else {
             listener.onScoringUnsuccessful();
         }
+    }
+
+    @Override
+    public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
+        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
+        initialiseSentence(word, wordSetId, listener);
+        listener.onSentenceChanged();
     }
 }

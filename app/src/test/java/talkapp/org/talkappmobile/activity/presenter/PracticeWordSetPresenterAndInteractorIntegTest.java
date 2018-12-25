@@ -18,9 +18,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -240,25 +238,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
-        reset(view);
-
         presenter.checkAnswerButtonClick("");
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
@@ -298,25 +277,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
-        reset(view);
-
         presenter.checkAnswerButtonClick("");
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
@@ -354,25 +314,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
-        reset(view);
-
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("");
@@ -632,25 +573,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
-        reset(view);
-
         presenter.checkAnswerButtonClick("");
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
@@ -708,25 +630,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
-        reset(view);
-
         presenter.checkAnswerButtonClick("");
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
@@ -782,25 +685,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
-        reset(view);
-
-        presenter.changeSentence();
-        verify(view).showPleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableNextButton(false);
-        verify(view).showSentenceChangeUnsupportedMessage();
-
-        verify(view, times(0)).hideNextButton();
-        verify(view, times(0)).showCheckButton();
-        verify(view, times(0)).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-        verify(view, times(0)).setAnswerText("");
-
-        verify(view, times(0)).showSentenceChangedSuccessfullyMessage();
-
-        verify(view).hidePleaseWaitProgressBar();
-        verify(view).setEnableCheckButton(true);
-        verify(view).setEnableNextButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("");
