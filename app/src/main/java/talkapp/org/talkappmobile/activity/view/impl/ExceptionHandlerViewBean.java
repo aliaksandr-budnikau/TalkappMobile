@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.UiThread;
 
 import talkapp.org.talkappmobile.activity.CrashActivity_;
@@ -14,12 +15,10 @@ import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import static talkapp.org.talkappmobile.activity.CrashActivity.STACK_TRACE;
 
 @EBean
-public class ExceptionHandlerViewImpl implements ExceptionHandlerView {
-    private final Context context;
+public class ExceptionHandlerViewBean implements ExceptionHandlerView {
 
-    public ExceptionHandlerViewImpl(Context context) {
-        this.context = context;
-    }
+    @RootContext
+    Context context;
 
     @Override
     @UiThread
