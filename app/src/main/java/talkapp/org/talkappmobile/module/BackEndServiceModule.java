@@ -44,6 +44,8 @@ public class BackEndServiceModule {
 
     @Bean(LoggerImpl.class)
     Logger logger;
+    @Bean(AuthSign.class)
+    AuthSign authSign;
 
     @Provides
     @Singleton
@@ -89,7 +91,7 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public BackendServer provideBackendServer(AuthSign authSign, Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
+    public BackendServer provideBackendServer(Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
         return new BackendServerImpl(logger, authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
     }
 

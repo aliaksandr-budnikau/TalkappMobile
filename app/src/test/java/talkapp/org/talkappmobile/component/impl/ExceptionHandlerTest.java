@@ -19,6 +19,7 @@ import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
@@ -48,6 +49,7 @@ public class ExceptionHandlerTest {
     public void setup() {
         TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
         Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerImpl.class));
+        Whitebox.setInternalState(backEndServiceModule, "authSign", mock(AuthSign.class));
         ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
         componentsFactory = injection.getComponentsFactory();

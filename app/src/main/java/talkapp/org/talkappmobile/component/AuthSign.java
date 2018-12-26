@@ -1,10 +1,13 @@
 package talkapp.org.talkappmobile.component;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.HashMap;
 
 /**
  * @author Budnikau Aliaksandr
  */
+@EBean
 public class AuthSign extends HashMap<String, String> {
 
     public static final String AUTHORIZATION_HEADER_KEY = "Authorization";

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -32,7 +33,7 @@ import talkapp.org.talkappmobile.config.DIContextUtils;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
-    @Inject
+    @Bean(AuthSign.class)
     AuthSign authSign;
     @Inject
     SaveSharedPreference saveSharedPreference;
