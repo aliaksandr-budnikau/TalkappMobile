@@ -43,6 +43,8 @@ public class BackEndServiceModule {
     Logger logger;
     @Bean(AuthSign.class)
     AuthSign authSign;
+    @Bean(AuthorizationInterceptor.class)
+    AuthorizationInterceptor authorizationInterceptor;
 
     @Provides
     @Singleton
@@ -94,19 +96,13 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public AuthorizationInterceptor provideAuthorizationInterceptor() {
-        return new AuthorizationInterceptor();
-    }
-
-    @Provides
-    @Singleton
     public JacksonConverterFactory provideJacksonConverterFactory(ObjectMapper mapper) {
         return JacksonConverterFactory.create(mapper);
     }
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(AuthorizationInterceptor authorizationInterceptor) {
+    public OkHttpClient provideOkHttpClient() {
         return new OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(TIMEOUT, TimeUnit.SECONDS)

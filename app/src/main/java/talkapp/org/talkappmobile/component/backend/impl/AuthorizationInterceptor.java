@@ -1,11 +1,14 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
+import org.androidannotations.annotations.EBean;
+
 import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
+@EBean
 public class AuthorizationInterceptor implements Interceptor {
 
     @Override

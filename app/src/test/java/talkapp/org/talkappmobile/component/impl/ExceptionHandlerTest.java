@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
+import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.module.TestBackEndServiceModule;
 
@@ -50,6 +51,7 @@ public class ExceptionHandlerTest {
         TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
         Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerImpl.class));
         Whitebox.setInternalState(backEndServiceModule, "authSign", mock(AuthSign.class));
+        Whitebox.setInternalState(backEndServiceModule, "authorizationInterceptor", new AuthorizationInterceptor());
         ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
         componentsFactory = injection.getComponentsFactory();
