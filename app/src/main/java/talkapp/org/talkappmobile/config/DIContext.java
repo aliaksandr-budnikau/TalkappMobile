@@ -15,8 +15,8 @@ import talkapp.org.talkappmobile.activity.WordSetsListFragment;
 import talkapp.org.talkappmobile.activity.custom.WordSetListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetFirstCycleViewStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
@@ -26,7 +26,6 @@ import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
-import talkapp.org.talkappmobile.module.DataModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.InfraModule;
@@ -38,7 +37,6 @@ import talkapp.org.talkappmobile.module.ViewModule;
         BackEndServiceModule.class,
         GameplayModule.class,
         AndroidModule.class,
-        DataModule.class,
         AudioModule.class,
         InfraModule.class,
         LanguageModule.class,

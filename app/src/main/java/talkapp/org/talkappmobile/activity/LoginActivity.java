@@ -28,6 +28,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
+import talkapp.org.talkappmobile.component.SaveSharedPreference_;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
@@ -54,6 +56,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    @Pref
+    SaveSharedPreference_ saveSharedPreference;
     @Inject
     BackendServer server;
     @Inject
@@ -258,6 +262,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @Override
     public void signInButtonClick() {
         signIn();
+    }
+
+    @Override
+    public void saveSignature(String signature) {
+        saveSharedPreference.authorizationHeaderKey().put(signature);
     }
 
     private interface ProfileQuery {

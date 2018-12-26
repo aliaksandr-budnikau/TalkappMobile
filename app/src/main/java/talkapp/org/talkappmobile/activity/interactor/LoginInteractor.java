@@ -33,9 +33,10 @@ public class LoginInteractor {
         LoginCredentials credentials = new LoginCredentials();
         credentials.setEmail(email);
         credentials.setPassword(password);
+        String signature;
         try {
             listener.onStartLoginProcess();
-            server.loginUser(credentials);
+            signature = server.loginUser(credentials);
         } catch (LoginException e) {
             logger.e(TAG, e, "Login failed");
             listener.onLoginFailed();
@@ -44,7 +45,7 @@ public class LoginInteractor {
             listener.onStopLoginProcess();
         }
         logger.i(TAG, "Login " + email + " is done!");
-        listener.onLoginSucceed();
+        listener.onLoginSucceed(signature);
     }
 
     public void signUpButtonClick(String email, String password, OnLoginListener listener) {

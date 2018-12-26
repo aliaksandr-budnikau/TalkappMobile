@@ -19,6 +19,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -28,15 +29,15 @@ import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.SaveSharedPreference;
+import talkapp.org.talkappmobile.component.SaveSharedPreference_;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
     @Bean(AuthSign.class)
     AuthSign authSign;
-    @Inject
-    SaveSharedPreference saveSharedPreference;
+    @Pref
+    SaveSharedPreference_ saveSharedPreference;
     @Inject
     MainActivityInteractor interactor;
 
@@ -53,7 +54,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     public void init() {
         DIContextUtils.get().inject(this);
 
-        String headerKey = saveSharedPreference.getAuthorizationHeaderKey(MainActivity.this);
+        String headerKey = saveSharedPreference.authorizationHeaderKey().get();
         if (StringUtils.isEmpty(headerKey)) {
             Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
             finish();
@@ -90,7 +91,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                     Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
                     finish();
                     startActivity(intent);
-                    saveSharedPreference.clear(MainActivity.this);
+                    saveSharedPreference.clear();
                 }
 
                 drawer.closeDrawer(GravityCompat.START);

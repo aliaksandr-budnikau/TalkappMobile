@@ -25,7 +25,6 @@ import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.LanguageModule_;
 import talkapp.org.talkappmobile.module.TestAudioModule;
 import talkapp.org.talkappmobile.module.TestDIContext;
-import talkapp.org.talkappmobile.module.TestDataModule;
 import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 public class ClassForInjection {
@@ -63,7 +62,6 @@ public class ClassForInjection {
                 .androidModule(new AndroidModule(application))
                 .audioModule(new TestAudioModule())
                 .gameplayModule(GameplayModule_.getInstance_(application))
-                .dataModule(new TestDataModule())
                 .infraModule(new InfraModule())
                 .languageModule(LanguageModule_.getInstance_(application))
                 .backEndServiceModule(backEndServiceModule)

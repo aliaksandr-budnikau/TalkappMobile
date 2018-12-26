@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.module;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.androidannotations.annotations.Bean;
@@ -20,7 +18,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
@@ -91,8 +88,8 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public BackendServer provideBackendServer(Context context, LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient, SaveSharedPreference saveSharedPreference) {
-        return new BackendServerImpl(logger, authSign, context, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient, saveSharedPreference);
+    public BackendServer provideBackendServer(LoginRestClient loginRestClient, TopicRestClient topicRestClient, SentenceRestClient sentenceRestClient, WordSetRestClient wordSetRestClient, TextGrammarCheckRestClient checkRestClient, WordTranslationRestClient wordTranslationRestClient, AccountRestClient accountRestClient) {
+        return new BackendServerImpl(logger, authSign, accountRestClient, loginRestClient, sentenceRestClient, checkRestClient, topicRestClient, wordSetRestClient, wordTranslationRestClient);
     }
 
     @Provides

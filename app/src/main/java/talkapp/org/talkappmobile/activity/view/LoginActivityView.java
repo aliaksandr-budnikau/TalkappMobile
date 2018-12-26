@@ -19,4 +19,6 @@ public interface LoginActivityView {
     void requestEmailFocus();
 
     void signInButtonClick();
+
+    void saveSignature(String signature);
 }

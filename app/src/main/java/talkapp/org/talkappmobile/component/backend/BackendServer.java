@@ -17,7 +17,7 @@ public interface BackendServer {
 
     void registerAccount(Account account) throws RegistrationException;
 
-    boolean loginUser(LoginCredentials credentials) throws LoginException;
+    String loginUser(LoginCredentials credentials) throws LoginException;
 
     List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber);
 

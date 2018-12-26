@@ -10,7 +10,6 @@ import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
         BackEndServiceModule.class,
         GameplayModule.class,
         AndroidModule.class,
-        DataModule.class,
         AudioModule.class,
         InfraModule.class,
         LanguageModule.class,

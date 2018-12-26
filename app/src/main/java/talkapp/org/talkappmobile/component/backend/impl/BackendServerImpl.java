@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
-import android.content.Context;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -13,7 +11,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.SaveSharedPreference;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
@@ -53,16 +50,11 @@ public class BackendServerImpl implements BackendServer {
 
     private final WordTranslationRestClient wordTranslationRestClient;
 
-    private final SaveSharedPreference saveSharedPreference;
-
-    private final Context context;
-
     private final Logger logger;
 
-    public BackendServerImpl(Logger logger, AuthSign authSign, Context context, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, SaveSharedPreference saveSharedPreference) {
+    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient) {
         this.logger = logger;
         this.authSign = authSign;
-        this.context = context;
         this.accountRestClient = accountRestClient;
         this.loginRestClient = loginRestClient;
         this.sentenceRestClient = sentenceRestClient;
@@ -70,7 +62,6 @@ public class BackendServerImpl implements BackendServer {
         this.topicRestClient = topicRestClient;
         this.wordSetRestClient = wordSetRestClient;
         this.wordTranslationRestClient = wordTranslationRestClient;
-        this.saveSharedPreference = saveSharedPreference;
     }
 
     @Override
@@ -83,18 +74,17 @@ public class BackendServerImpl implements BackendServer {
     }
 
     @Override
-    public boolean loginUser(LoginCredentials credentials) throws LoginException {
+    public String loginUser(LoginCredentials credentials) throws LoginException {
         Call<Boolean> call = loginRestClient.login(credentials);
         Response<Boolean> response = execute(call);
         Boolean result = response.body();
         String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
         if (result != null && signature != null && result) {
             authSign.put(signature);
-            saveSharedPreference.setAuthorizationHeaderKey(context, signature);
         } else {
             throw new LoginException(response.message());
         }
-        return false;
+        return signature;
     }
 
     @Override

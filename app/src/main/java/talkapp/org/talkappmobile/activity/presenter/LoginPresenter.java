@@ -33,7 +33,8 @@ public class LoginPresenter implements OnLoginListener {
     }
 
     @Override
-    public void onLoginSucceed() {
+    public void onLoginSucceed(String signature) {
+        view.saveSignature(signature);
         view.finishLoginActivity();
         view.openMainActivity();
     }

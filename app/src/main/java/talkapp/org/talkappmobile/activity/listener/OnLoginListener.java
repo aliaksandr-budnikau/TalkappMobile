@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.activity.listener;
 public interface OnLoginListener {
     void onLoginFailed();
 
-    void onLoginSucceed();
+    void onLoginSucceed(String signature);
 
     void onStartLoginProcess();
 
