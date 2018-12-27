@@ -29,7 +29,6 @@ import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
-import talkapp.org.talkappmobile.module.ViewModule;
 
 @Singleton
 @Component(modules = {
@@ -38,7 +37,6 @@ import talkapp.org.talkappmobile.module.ViewModule;
         AndroidModule.class,
         AudioModule.class,
         LanguageModule.class,
-        ViewModule.class,
         DatabaseModule.class
 })
 public interface DIContext {

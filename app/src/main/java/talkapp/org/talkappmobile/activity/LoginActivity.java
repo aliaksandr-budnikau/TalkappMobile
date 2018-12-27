@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -64,7 +65,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     LoginInteractor interactor;
     @Inject
     Context context;
-    @Inject
+    @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.email)

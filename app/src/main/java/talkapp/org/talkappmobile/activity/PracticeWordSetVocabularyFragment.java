@@ -36,7 +36,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     PracticeWordSetVocabularyListAdapter adapter;
     @Inject
     PracticeWordSetVocabularyInteractor interactor;
-    @Inject
+    @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.wordTranslationsListView)

@@ -36,7 +36,7 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
     TopicListAdapter adapter;
     @Inject
     TopicsFragmentInteractor interactor;
-    @Inject
+    @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.topicsListView)

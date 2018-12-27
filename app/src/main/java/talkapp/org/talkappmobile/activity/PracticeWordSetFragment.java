@@ -17,6 +17,7 @@ import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -72,7 +73,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
     @Inject
     ViewStrategyFactory viewStrategyFactory;
-    @Inject
+    @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.originalText)

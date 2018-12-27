@@ -8,6 +8,7 @@ import android.view.View;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.IgnoreWhen;
@@ -45,7 +46,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     StudyingWordSetsListInteractor studyingWordSetsListInteractor;
     @Inject
     RepetitionWordSetsListInteractor repetitionWordSetsListInteractor;
-    @Inject
+    @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.wordSetsListView)
