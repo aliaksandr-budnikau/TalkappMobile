@@ -11,7 +11,6 @@ import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
         GameplayModule.class,
         AndroidModule.class,
         AudioModule.class,
-        InfraModule.class,
         LanguageModule.class,
         DatabaseModule.class
 })

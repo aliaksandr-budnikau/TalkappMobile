@@ -39,6 +39,12 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
+    public ObjectMapper provideObjectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Provides
+    @Singleton
     public DatabaseHelper provideDatabaseHelper(Context context) {
         return OpenHelperManager.getHelper(context, DatabaseHelper.class);
     }

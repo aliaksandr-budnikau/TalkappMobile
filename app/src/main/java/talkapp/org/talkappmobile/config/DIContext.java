@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
-import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
 import talkapp.org.talkappmobile.module.ViewModule;
 
@@ -38,7 +37,6 @@ import talkapp.org.talkappmobile.module.ViewModule;
         GameplayModule.class,
         AndroidModule.class,
         AudioModule.class,
-        InfraModule.class,
         LanguageModule.class,
         ViewModule.class,
         DatabaseModule.class

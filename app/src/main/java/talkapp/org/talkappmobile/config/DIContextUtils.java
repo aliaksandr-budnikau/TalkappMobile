@@ -7,7 +7,6 @@ import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule_;
 import talkapp.org.talkappmobile.module.DatabaseModule_;
 import talkapp.org.talkappmobile.module.GameplayModule_;
-import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.LanguageModule_;
 import talkapp.org.talkappmobile.module.ViewModule;
 
@@ -22,7 +21,6 @@ public class DIContextUtils {
                     .audioModule(new AudioModule())
                     .viewModule(new ViewModule())
                     .gameplayModule(GameplayModule_.getInstance_(application))
-                    .infraModule(new InfraModule())
                     .languageModule(LanguageModule_.getInstance_(application))
                     .databaseModule(DatabaseModule_.getInstance_(application))
                     .backEndServiceModule(BackEndServiceModule_.getInstance_(application))
