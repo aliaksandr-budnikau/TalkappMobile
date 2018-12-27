@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 /**
  * @author Budnikau Aliaksandr
@@ -19,7 +19,7 @@ import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 @Module
 @EBean
 public class LanguageModule {
-    @Bean(LoggerImpl.class)
+    @Bean(LoggerBean.class)
     Logger logger;
 
     @Provides

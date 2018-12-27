@@ -2,10 +2,10 @@ package talkapp.org.talkappmobile.component.impl;
 
 import org.junit.Test;
 
-public class LoggerImplTest {
+public class LoggerBeanTest {
 
     @Test
     public void w() {
-        new LoggerImpl().w("ds", " sds fdsfsd dsf  fs{}df {}s", 234, 222);
+        new LoggerBean().w("ds", " sds fdsfsd dsf  fs{}df {}s", 234, 222);
     }
 }

@@ -26,7 +26,7 @@ import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExercise
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
-import talkapp.org.talkappmobile.component.impl.LoggerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 /**
  * @author Budnikau Aliaksandr
@@ -34,7 +34,7 @@ import talkapp.org.talkappmobile.component.impl.LoggerImpl;
 @Module
 @EBean
 public class DatabaseModule {
-    @Bean(LoggerImpl.class)
+    @Bean(LoggerBean.class)
     Logger logger;
 
     @Provides

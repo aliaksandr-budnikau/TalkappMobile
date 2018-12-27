@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EBean
-public class LoggerImpl implements Logger {
+public class LoggerBean implements Logger {
 
     @Override
     public void i(String tag, String message, Object... args) {

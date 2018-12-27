@@ -37,7 +37,7 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
@@ -54,7 +54,7 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 @EBean
 public class GameplayModule {
 
-    @Bean(LoggerImpl.class)
+    @Bean(LoggerBean.class)
     Logger logger;
     @Bean(TextUtilsImpl.class)
     TextUtils textUtils;

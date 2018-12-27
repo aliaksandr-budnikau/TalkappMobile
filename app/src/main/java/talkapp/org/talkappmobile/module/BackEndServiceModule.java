@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 /**
  * @author Budnikau Aliaksandr
@@ -39,7 +39,7 @@ public class BackEndServiceModule {
 
     public static final int TIMEOUT = 20;
 
-    @Bean(LoggerImpl.class)
+    @Bean(LoggerBean.class)
     Logger logger;
     @Bean(AuthSign.class)
     AuthSign authSign;
