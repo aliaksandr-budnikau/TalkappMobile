@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.activity.view.impl.ExceptionHandlerViewBean;
 import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -22,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     InfraComponentsFactory componentsFactory;
     @Bean(LoggerBean.class)
     Logger logger;
-    @Inject
+    @Bean(ExceptionHandlerViewBean.class)
     ExceptionHandlerView exceptionHandlerView;
 
     @Override
@@ -30,6 +31,6 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         DIContextUtils.get().inject(this);
         ExceptionHandlerInteractor interactor = new ExceptionHandlerInteractor(logger);
-        Thread.setDefaultUncaughtExceptionHandler(componentsFactory.createExceptionHandler(this, exceptionHandlerView, interactor));
+        Thread.setDefaultUncaughtExceptionHandler(componentsFactory.createExceptionHandler(exceptionHandlerView, interactor));
     }
 }

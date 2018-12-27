@@ -13,10 +13,8 @@ import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     private final ExceptionHandlerInteractor interactor;
     private final ExceptionHandlerView view;
-    private final Context currentActivityContext;
 
-    public ExceptionHandlerPresenter(Context currentActivityContext, ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
-        this.currentActivityContext = currentActivityContext;
+    public ExceptionHandlerPresenter(ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
@@ -32,7 +30,7 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
 
     @Override
     public void onUnauthorizedAccess() {
-        view.openLoginActivity(currentActivityContext);
+        view.openLoginActivity();
         view.killCurrentActivity();
     }
 
@@ -52,7 +50,7 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
                 "SDK: " + Build.VERSION.SDK + lineSeparator +
                 "Release: " + Build.VERSION.RELEASE + lineSeparator +
                 "Incremental: " + Build.VERSION.INCREMENTAL + lineSeparator;
-        view.openCrashActivity(currentActivityContext, e, errorReport);
+        view.openCrashActivity(e, errorReport);
         view.killCurrentActivity();
     }
 

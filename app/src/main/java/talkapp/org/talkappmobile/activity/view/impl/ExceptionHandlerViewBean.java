@@ -27,16 +27,16 @@ public class ExceptionHandlerViewBean implements ExceptionHandlerView {
     }
 
     @Override
-    public void openLoginActivity(Context currentActivityContext) {
-        Intent intent = new Intent(currentActivityContext, LoginActivity_.class);
-        currentActivityContext.startActivity(intent);
+    public void openLoginActivity() {
+        Intent intent = new Intent(context, LoginActivity_.class);
+        context.startActivity(intent);
     }
 
     @Override
-    public void openCrashActivity(Context currentActivityContext, Throwable e, String errorReport) {
-        Intent intent = new Intent(currentActivityContext, CrashActivity_.class);
+    public void openCrashActivity(Throwable e, String errorReport) {
+        Intent intent = new Intent(context, CrashActivity_.class);
         intent.putExtra(STACK_TRACE, errorReport);
-        currentActivityContext.startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override

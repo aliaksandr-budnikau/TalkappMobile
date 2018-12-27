@@ -1,12 +1,9 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -30,7 +27,6 @@ import talkapp.org.talkappmobile.module.TestBackEndServiceModule;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,8 +39,6 @@ public class ExceptionHandlerTest {
     private InfraComponentsFactory componentsFactory;
     private ExceptionHandlerInteractor interactor;
     private TopicRestClient topicRestClient;
-    @Mock
-    private Context context;
 
     @Before
     public void setup() {
@@ -63,7 +57,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_ConnectException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(context, view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
@@ -74,8 +68,8 @@ public class ExceptionHandlerTest {
         } catch (InternetConnectionLostException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
             verify(view, times(0)).killCurrentActivity();
-            verify(view, times(0)).openCrashActivity(context, e, "Internet connection was lost");
-            verify(view, times(0)).openLoginActivity(context);
+            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
+            verify(view, times(0)).openLoginActivity();
             verify(view).showToastMessage("Internet connection was lost");
             return;
         }
@@ -85,7 +79,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_SocketTimeoutException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(context, view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
@@ -96,8 +90,8 @@ public class ExceptionHandlerTest {
         } catch (InternetConnectionLostException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
             verify(view, times(0)).killCurrentActivity();
-            verify(view, times(0)).openCrashActivity(context, e, "Internet connection was lost");
-            verify(view, times(0)).openLoginActivity(context);
+            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
+            verify(view, times(0)).openLoginActivity();
             verify(view).showToastMessage("Internet connection was lost");
             return;
         }
@@ -108,7 +102,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_RuntimeException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(context, view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);
@@ -118,9 +112,9 @@ public class ExceptionHandlerTest {
             server.findAllTopics();
         } catch (RuntimeException e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            verify(view).openCrashActivity(eq(context), any(Throwable.class), anyString());
+            verify(view).openCrashActivity(any(Throwable.class), anyString());
             verify(view).killCurrentActivity();
-            verify(view, times(0)).openLoginActivity(context);
+            verify(view, times(0)).openLoginActivity();
             verify(view, times(0)).showToastMessage("Internet connection was lost");
             return;
         }
@@ -130,15 +124,15 @@ public class ExceptionHandlerTest {
     @Test
     public void test_AuthorizationException() {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(context, view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
 
         try {
             server.findAllWordSets();
         } catch (Exception e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            verify(view, times(0)).openCrashActivity(context, e, "Internet connection was lost");
+            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
             verify(view, times(0)).showToastMessage("Internet connection was lost");
-            verify(view).openLoginActivity(context);
+            verify(view).openLoginActivity();
             verify(view).killCurrentActivity();
             return;
         }
