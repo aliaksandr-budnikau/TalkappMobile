@@ -10,7 +10,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
@@ -152,12 +151,6 @@ public class GameplayModule {
     @Singleton
     public TopicsFragmentInteractor provideTopicsFragmentInteractor(BackendServer server) {
         return new TopicsFragmentInteractor(server);
-    }
-
-    @Provides
-    @Singleton
-    public ExceptionHandlerInteractor provideExceptionHandlerInteractor() {
-        return new ExceptionHandlerInteractor(logger);
     }
 
     @Provides

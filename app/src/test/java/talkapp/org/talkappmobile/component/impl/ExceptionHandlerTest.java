@@ -49,13 +49,14 @@ public class ExceptionHandlerTest {
     @Before
     public void setup() {
         TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
-        Whitebox.setInternalState(backEndServiceModule, "logger", mock(LoggerBean.class));
+        LoggerBean loggerBean = mock(LoggerBean.class);
+        Whitebox.setInternalState(backEndServiceModule, "logger", loggerBean);
         Whitebox.setInternalState(backEndServiceModule, "authSign", mock(AuthSign.class));
         Whitebox.setInternalState(backEndServiceModule, "authorizationInterceptor", new AuthorizationInterceptor());
         ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
         componentsFactory = injection.getComponentsFactory();
-        interactor = injection.getExceptionHandlerInteractor();
+        interactor = new ExceptionHandlerInteractor(loggerBean);
         topicRestClient = injection.getTopicRestClient();
     }
 

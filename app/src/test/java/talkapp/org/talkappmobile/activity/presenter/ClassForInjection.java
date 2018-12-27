@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import javax.inject.Inject;
 
-import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
@@ -51,8 +50,6 @@ public class ClassForInjection {
     Speaker speaker;
     @Inject
     InfraComponentsFactory componentsFactory;
-    @Inject
-    ExceptionHandlerInteractor exceptionHandlerInteractor;
     @Inject
     TopicRestClient topicRestClient;
 
@@ -116,10 +113,6 @@ public class ClassForInjection {
 
     public InfraComponentsFactory getComponentsFactory() {
         return componentsFactory;
-    }
-
-    public ExceptionHandlerInteractor getExceptionHandlerInteractor() {
-        return exceptionHandlerInteractor;
     }
 
     public TopicRestClient getTopicRestClient() {
