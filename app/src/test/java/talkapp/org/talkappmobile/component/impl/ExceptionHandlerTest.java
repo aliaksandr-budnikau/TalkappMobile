@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
@@ -36,7 +35,6 @@ import static org.mockito.Mockito.when;
 public class ExceptionHandlerTest {
 
     private BackendServer server;
-    private InfraComponentsFactory componentsFactory;
     private ExceptionHandlerInteractor interactor;
     private TopicRestClient topicRestClient;
 
@@ -49,7 +47,6 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(backEndServiceModule, "authorizationInterceptor", new AuthorizationInterceptor());
         ClassForInjection injection = new ClassForInjection(backEndServiceModule);
         server = injection.getServer();
-        componentsFactory = injection.getComponentsFactory();
         interactor = new ExceptionHandlerInteractor(loggerBean);
         topicRestClient = injection.getTopicRestClient();
     }
@@ -57,7 +54,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_ConnectException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
@@ -79,7 +76,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_SocketTimeoutException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
@@ -102,7 +99,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_RuntimeException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);
@@ -124,7 +121,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_AuthorizationException() {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = componentsFactory.createExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
 
         try {
             server.findAllWordSets();

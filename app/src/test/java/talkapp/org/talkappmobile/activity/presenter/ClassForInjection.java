@@ -8,7 +8,6 @@ import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.component.InfraComponentsFactory;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -20,7 +19,7 @@ import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.BackEndServiceModule_;
 import talkapp.org.talkappmobile.module.DaggerTestDIContext;
 import talkapp.org.talkappmobile.module.GameplayModule_;
-import talkapp.org.talkappmobile.module.InfraModule_;
+import talkapp.org.talkappmobile.module.InfraModule;
 import talkapp.org.talkappmobile.module.LanguageModule_;
 import talkapp.org.talkappmobile.module.TestAudioModule;
 import talkapp.org.talkappmobile.module.TestDIContext;
@@ -49,8 +48,6 @@ public class ClassForInjection {
     @Inject
     Speaker speaker;
     @Inject
-    InfraComponentsFactory componentsFactory;
-    @Inject
     TopicRestClient topicRestClient;
 
     public ClassForInjection(BackEndServiceModule backEndServiceModule) {
@@ -59,7 +56,7 @@ public class ClassForInjection {
                 .androidModule(new AndroidModule(application))
                 .audioModule(new TestAudioModule())
                 .gameplayModule(GameplayModule_.getInstance_(application))
-                .infraModule(InfraModule_.getInstance_(application))
+                .infraModule(new InfraModule())
                 .languageModule(LanguageModule_.getInstance_(application))
                 .backEndServiceModule(backEndServiceModule)
                 .build();
@@ -109,10 +106,6 @@ public class ClassForInjection {
 
     public Speaker getSpeaker() {
         return speaker;
-    }
-
-    public InfraComponentsFactory getComponentsFactory() {
-        return componentsFactory;
     }
 
     public TopicRestClient getTopicRestClient() {
