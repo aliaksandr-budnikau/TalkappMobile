@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * @author Budnikau Aliaksandr
  */
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class AuthSign extends HashMap<String, String> {
 
     public static final String AUTHORIZATION_HEADER_KEY = "Authorization";
