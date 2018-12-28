@@ -96,8 +96,8 @@ public class BackEndServiceModule {
 
     @Provides
     @Singleton
-    public JacksonConverterFactory provideJacksonConverterFactory(ObjectMapper mapper) {
-        return JacksonConverterFactory.create(mapper);
+    public JacksonConverterFactory provideJacksonConverterFactory() {
+        return JacksonConverterFactory.create(new ObjectMapper());
     }
 
     @Provides

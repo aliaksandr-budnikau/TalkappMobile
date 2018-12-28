@@ -39,12 +39,6 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public ObjectMapper provideObjectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Provides
-    @Singleton
     public DatabaseHelper provideDatabaseHelper(Context context) {
         return OpenHelperManager.getHelper(context, DatabaseHelper.class);
     }
@@ -71,8 +65,8 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetExerciseService providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
-        return new PracticeWordSetExerciseServiceImpl(exerciseDao, experienceDao, mapper);
+    public PracticeWordSetExerciseService providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao) {
+        return new PracticeWordSetExerciseServiceImpl(exerciseDao, experienceDao, new ObjectMapper());
     }
 
     @Provides
