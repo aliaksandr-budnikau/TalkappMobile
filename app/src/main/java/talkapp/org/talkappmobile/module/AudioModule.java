@@ -6,9 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.SpeakerImpl;
 
 /**
@@ -16,12 +14,6 @@ import talkapp.org.talkappmobile.component.impl.SpeakerImpl;
  */
 @Module
 public class AudioModule {
-
-    @Provides
-    @Singleton
-    public AudioStuffFactory provideAudioStuffFactory() {
-        return new AudioStuffFactoryImpl();
-    }
 
     @Provides
     @Singleton
