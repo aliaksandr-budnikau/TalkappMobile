@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -12,7 +14,8 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 /**
  * @author Budnikau Aliaksandr
  */
-public class RandomWordsCombinatorImpl implements WordsCombinator {
+@EBean(scope = EBean.Scope.Singleton)
+public class RandomWordsCombinatorBean implements WordsCombinator {
 
     @Override
     public Set<Word2Tokens> combineWords(List<Word2Tokens> words) {

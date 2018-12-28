@@ -37,7 +37,7 @@ import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
-import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorImpl;
+import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
@@ -57,6 +57,8 @@ public class GameplayModule {
     TextUtils textUtils;
     @Bean(WordSetExperienceUtilsImpl.class)
     WordSetExperienceUtils experienceUtils;
+    @Bean(RandomWordsCombinatorBean.class)
+    WordsCombinator wordsCombinator;
 
     @RootContext
     Context context;
@@ -87,12 +89,6 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public WordsCombinator provideWordsCombinator() {
-        return new RandomWordsCombinatorImpl();
-    }
-
-    @Provides
-    @Singleton
     public RefereeService provideRefereeService(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {
         return new RefereeServiceImpl(grammarCheckService, equalityScorer);
     }
@@ -111,7 +107,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(WordsCombinator wordsCombinator, SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
     }
 

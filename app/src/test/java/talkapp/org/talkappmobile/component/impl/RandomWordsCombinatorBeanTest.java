@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.WordsCombinator;
@@ -16,8 +15,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Budnikau Aliaksandr
  */
-public class RandomWordsCombinatorImplTest {
-    private WordsCombinator combinator = new RandomWordsCombinatorImpl();
+public class RandomWordsCombinatorBeanTest {
+    private WordsCombinator combinator = new RandomWordsCombinatorBean();
 
     @Test(expected = IllegalArgumentException.class)
     public void combineWords_empty() throws Exception {
