@@ -21,8 +21,8 @@ import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 /**
  * @author Budnikau Aliaksandr
  */
-public class RandomSentenceSelectorImplTest {
-    private SentenceSelector sentenceSelector = new RandomSentenceSelectorImpl();
+public class RandomSentenceSelectorBeanTest {
+    private SentenceSelector sentenceSelector = new RandomSentenceSelectorBean();
 
     @Test(expected = IllegalArgumentException.class)
     public void getSentence_empty() throws Exception {

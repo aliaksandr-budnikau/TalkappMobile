@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -14,7 +16,8 @@ import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 /**
  * @author Budnikau Aliaksandr
  */
-public class RandomSentenceSelectorImpl implements SentenceSelector {
+@EBean(scope = EBean.Scope.Singleton)
+public class RandomSentenceSelectorBean implements SentenceSelector {
 
     @Override
     public Sentence selectSentence(List<Sentence> sentences) {

@@ -25,7 +25,6 @@ import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
@@ -36,7 +35,7 @@ import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorImpl;
+import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
@@ -59,15 +58,11 @@ public class GameplayModule {
     WordSetExperienceUtils experienceUtils;
     @Bean(RandomWordsCombinatorBean.class)
     WordsCombinator wordsCombinator;
+    @Bean(RandomSentenceSelectorBean.class)
+    RandomSentenceSelectorBean sentenceSelector;
 
     @RootContext
     Context context;
-
-    @Provides
-    @Singleton
-    public SentenceSelector provideSentenceSelector() {
-        return new RandomSentenceSelectorImpl();
-    }
 
     @Provides
     @Singleton
@@ -107,13 +102,13 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, SentenceSelector sentenceSelector, RefereeService refereeService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
+    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, PracticeWordSetExerciseService exerciseService, AudioStuffFactory audioStuffFactory, Speaker speaker) {
         return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, exerciseService, context, audioStuffFactory, speaker);
     }
 
