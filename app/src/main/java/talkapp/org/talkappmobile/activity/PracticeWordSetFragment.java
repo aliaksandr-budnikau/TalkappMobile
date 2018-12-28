@@ -50,7 +50,10 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSe
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.ViewStrategyFactory;
+import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
@@ -71,8 +74,10 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
     @Inject
     RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
-    @Inject
-    ViewStrategyFactory viewStrategyFactory;
+    @Bean(TextUtilsImpl.class)
+    TextUtils textUtils;
+    @Bean(WordSetExperienceUtilsImpl.class)
+    WordSetExperienceUtils experienceUtils;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -136,7 +141,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        PracticeWordSetViewStrategy viewStrategy = viewStrategyFactory.createPracticeWordSetViewStrategy(this);
+        PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
         PracticeWordSetInteractor interactor = studyingPracticeWordSetInteractor;
         if (repetitionMode) {
             interactor = repetitionPracticeWordSetInteractor;

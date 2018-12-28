@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
@@ -43,7 +42,6 @@ import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.component.impl.ViewStrategyFactoryImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
 /**
@@ -163,11 +161,5 @@ public class GameplayModule {
     @Singleton
     public MainActivityDefaultFragmentInteractor provideMainActivityDefaultFragmentInteractor(PracticeWordSetExerciseService exerciseService) {
         return new MainActivityDefaultFragmentInteractor(exerciseService);
-    }
-
-    @Provides
-    @Singleton
-    public ViewStrategyFactory provideViewStrategyFactory() {
-        return new ViewStrategyFactoryImpl(textUtils, experienceUtils);
     }
 }

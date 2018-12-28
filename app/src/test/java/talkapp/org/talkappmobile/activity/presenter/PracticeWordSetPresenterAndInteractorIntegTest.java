@@ -9,8 +9,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.component.ViewStrategyFactory;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -29,18 +30,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private PracticeWordSetExerciseService exerciseService;
     private WordSet wordSet;
     private StudyingPracticeWordSetInteractor interactor;
-    private ViewStrategyFactory viewStrategyFactory;
     private Speaker speaker;
 
     @Before
     public void setup() {
-        viewStrategyFactory = getClassForInjection().getViewStrategyFactory();
         interactor = getClassForInjection().getStudyingPracticeWordSetInteractor();
         exerciseService = getClassForInjection().getExerciseService();
         speaker = getClassForInjection().getSpeaker();
     }
 
-    private void createPresenter(StudyingPracticeWordSetInteractor interactor, ViewStrategyFactory viewStrategyFactory) {
+    private void createPresenter(StudyingPracticeWordSetInteractor interactor) {
         int id = -1;
         wordSet = new WordSet();
         wordSet.setId(id);
@@ -56,13 +55,13 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
-        PracticeWordSetViewStrategy firstCycleViewStrategy = viewStrategyFactory.createPracticeWordSetViewStrategy(view);
+        PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy);
     }
 
     @Test
     public void testPracticeWordSet_completeOneSet() {
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -343,7 +342,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -414,7 +413,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -484,7 +483,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -554,7 +553,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -611,7 +610,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -668,7 +667,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -714,7 +713,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Test
     public void testPracticeWordSet_indexOutOfBoundsExceptionAfterCheck() {
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
@@ -729,7 +728,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Test
     public void testPracticeWordSet_rightAnswerCheckedTouchRightAnswerUntouchBug() {
-        createPresenter(interactor, viewStrategyFactory);
+        createPresenter(interactor);
         login();
 
         presenter.initialise();
