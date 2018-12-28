@@ -1,12 +1,15 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
 
-public class EqualityScorerImpl implements EqualityScorer {
+@EBean(scope = EBean.Scope.Singleton)
+public class EqualityScorerBean implements EqualityScorer {
 
     public static final String REPLACEMENT = " ";
     public static final String REGEX = "[^A-Za-z0-9]";

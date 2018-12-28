@@ -4,9 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class EqualityScorerImplTest {
+public class EqualityScorerBeanTest {
 
-    private EqualityScorerImpl scorer = new EqualityScorerImpl();
+    private EqualityScorerBean scorer = new EqualityScorerBean();
 
     @Test
     public void score_100() {

@@ -35,7 +35,7 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
-import talkapp.org.talkappmobile.component.impl.EqualityScorerImpl;
+import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
@@ -64,6 +64,8 @@ public class GameplayModule {
     SentenceSelector sentenceSelector;
     @Bean(AudioStuffFactoryBean.class)
     AudioStuffFactory audioStuffFactory;
+    @Bean(EqualityScorerBean.class)
+    EqualityScorer equalityScorer;
 
     @RootContext
     Context context;
@@ -88,14 +90,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {
+    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService) {
         return new RefereeServiceImpl(grammarCheckService, equalityScorer);
-    }
-
-    @Provides
-    @Singleton
-    public EqualityScorer provideEqualityScorer() {
-        return new EqualityScorerImpl();
     }
 
     @Provides
