@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
@@ -112,7 +113,8 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     public Word2Tokens peekByWordSetIdAnyWord(int wordSetId) {
         WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
         List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
-        PracticeWordSetExerciseMapping mapping = exercises.get(0);
+        int i = new Random().nextInt(exercises.size());
+        PracticeWordSetExerciseMapping mapping = exercises.get(i);
         mapping.setCurrent(true);
         exerciseDao.createNewOrUpdate(mapping);
         try {
