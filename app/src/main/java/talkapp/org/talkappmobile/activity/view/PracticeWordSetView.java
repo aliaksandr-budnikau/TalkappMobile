@@ -60,4 +60,6 @@ public interface PracticeWordSetView {
     void onEnableRepetitionMode();
 
     void onExerciseGotAnswered();
+
+    void onAnswerPronounced();
 }

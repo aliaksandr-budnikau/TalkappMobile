@@ -17,6 +17,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
+    private boolean answerHasBeenSeen;
 
     public PracticeWordSetPresenter(WordSet wordSet,
                                     PracticeWordSetInteractor interactor,
@@ -37,6 +38,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void refreshSentence() {
+        answerHasBeenSeen = false;
         viewStrategy.onSentencesFound();
     }
 
@@ -106,6 +108,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onSentenceChanged();
     }
 
+    @Override
+    public void onAnswerPronounced() {
+        viewStrategy.onAnswerPronounced();
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -130,7 +137,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         try {
             viewStrategy.onCheckAnswerStart();
             Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
-            interactor.checkAnswer(answer, state.getWordSet(), currentSentence, this);
+            interactor.checkAnswer(answer, state.getWordSet(), currentSentence, answerHasBeenSeen, this);
         } finally {
             viewStrategy.onCheckAnswerFinish();
         }
@@ -177,5 +184,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         } finally {
             viewStrategy.onScoreSentenceFinish();
         }
+    }
+
+    public void markAnswerHasBeenSeen() {
+        this.answerHasBeenSeen = true;
     }
 }

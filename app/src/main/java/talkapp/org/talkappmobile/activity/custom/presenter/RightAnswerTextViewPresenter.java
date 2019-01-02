@@ -32,8 +32,9 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
         }
     }
 
-    public void unmask() {
+    public void rightAnswerTouched() {
         interactor.unmask(sentence, this);
+        view.answerHasBeenSeen();
     }
 
     public void lock() {

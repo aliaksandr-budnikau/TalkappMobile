@@ -37,4 +37,6 @@ public interface OnPracticeWordSetListener {
     void onScoringSuccessful();
 
     void onSentenceChanged();
+
+    void onAnswerPronounced();
 }

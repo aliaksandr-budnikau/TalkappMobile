@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
@@ -418,6 +419,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         eventBus.post(new ExerciseGotAnsweredEM());
     }
 
+    @Override
+    public void onAnswerPronounced() {
+        eventBus.post(new AnswerHasBeenSeenEM());
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.refreshSentence();
@@ -426,5 +432,10 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(ChangeSentenceOptionPickedEM event) {
         presenter.changeSentence();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AnswerHasBeenSeenEM event) {
+        presenter.markAnswerHasBeenSeen();
     }
 }

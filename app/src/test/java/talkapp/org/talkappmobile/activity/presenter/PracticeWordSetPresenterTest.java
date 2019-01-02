@@ -199,7 +199,7 @@ public class PracticeWordSetPresenterTest {
         // then
         verify(viewStrategy).onCheckAnswerFinish();
         verify(viewStrategy).onCheckAnswerStart();
-        verify(interactor).checkAnswer(answer, wordSet, sentence, presenter);
+        verify(interactor).checkAnswer(answer, wordSet, sentence, false, presenter);
     }
 
     @Test

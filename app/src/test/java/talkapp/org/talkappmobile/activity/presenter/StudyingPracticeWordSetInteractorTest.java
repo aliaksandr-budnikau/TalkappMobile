@@ -235,7 +235,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(listener).onUpdateProgress(experience);
@@ -279,7 +279,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
         when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(listener).onUpdateProgress(experience);
@@ -324,7 +324,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(listener).onAccuracyTooLowError();
@@ -368,7 +368,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(listener).onSpellingOrGrammarError(errors);
@@ -408,7 +408,7 @@ public class StudyingPracticeWordSetInteractorTest {
         checkingResult.setErrors(asList(new GrammarError()));
 
         // when
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);

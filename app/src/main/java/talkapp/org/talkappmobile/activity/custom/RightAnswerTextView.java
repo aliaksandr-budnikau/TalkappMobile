@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
@@ -59,6 +60,11 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
         setText(newValue);
     }
 
+    @Override
+    public void answerHasBeenSeen() {
+        eventBus.post(new AnswerHasBeenSeenEM());
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.setModel(event.getSentence(), event.getWord());
@@ -83,6 +89,6 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(RightAnswerTouchedEM event) {
-        presenter.unmask();
+        presenter.rightAnswerTouched();
     }
 }

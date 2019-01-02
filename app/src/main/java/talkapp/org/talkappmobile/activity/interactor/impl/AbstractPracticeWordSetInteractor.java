@@ -44,7 +44,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
-    public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
         logger.i(TAG, "check answer {} ", answer);
         if (isEmpty(answer)) {
             logger.i(TAG, "answer is empty");
@@ -106,6 +106,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         logger.i(TAG, "start speaking {}", sentence.getText());
         try {
             speaker.speak(sentence.getText());
+            listener.onAnswerPronounced();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
