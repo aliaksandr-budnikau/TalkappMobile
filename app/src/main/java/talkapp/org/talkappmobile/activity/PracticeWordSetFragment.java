@@ -69,7 +69,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String WORD_SET_MAPPING = "wordSet";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
-    private final StringBuilder SIGNAL_SEQUENCE = new StringBuilder("12345678");
     @Inject
     StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
     @Inject
@@ -180,21 +179,23 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Background
     public void onPlayVoiceButtonClick() {
         presenter.playVoiceButtonClick();
-        sendCheatSignal("L");
     }
 
     @Click(R.id.pronounceRightAnswerButton)
     @Background
     public void onPronounceRightAnswerButtonClick() {
         presenter.pronounceRightAnswerButtonClick();
-        sendCheatSignal("P");
     }
 
     @Click(R.id.checkButton)
     @Background
     public void onCheckAnswerButtonClick() {
-        presenter.checkAnswerButtonClick(answerText.getText().toString());
-        sendCheatSignal("C");
+        String answer = answerText.getText().toString();
+        if (CHEAT_SEND_WRITE_ANSWER.equals(answer)) {
+            presenter.checkRightAnswerCommandRecognized();
+        } else {
+            presenter.checkAnswerButtonClick(answer);
+        }
     }
 
     @Click(R.id.speakButton)
@@ -425,13 +426,5 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(ChangeSentenceOptionPickedEM event) {
         presenter.changeSentence();
-    }
-
-    private void sendCheatSignal(final String signal) {
-        SIGNAL_SEQUENCE.deleteCharAt(0);
-        SIGNAL_SEQUENCE.append(signal);
-        if (CHEAT_SEND_WRITE_ANSWER.equals(SIGNAL_SEQUENCE.toString())) {
-            presenter.checkRightAnswerCommandRecognized();
-        }
     }
 }
