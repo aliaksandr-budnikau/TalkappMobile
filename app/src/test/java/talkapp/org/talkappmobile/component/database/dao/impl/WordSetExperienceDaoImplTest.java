@@ -7,7 +7,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -31,7 +31,7 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
 public class WordSetExperienceDaoImplTest {
 

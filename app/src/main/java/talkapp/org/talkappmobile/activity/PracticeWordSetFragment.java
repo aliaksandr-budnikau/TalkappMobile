@@ -34,8 +34,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
-import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
 import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
@@ -82,9 +80,9 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
     @ViewById(R.id.originalText)
-    OriginalTextTextView originalText;
+    TextView originalText;
     @ViewById(R.id.rightAnswer)
-    RightAnswerTextView rightAnswer;
+    TextView rightAnswer;
     @ViewById(R.id.answerText)
     TextView answerText;
     @ViewById(R.id.wordSetProgress)

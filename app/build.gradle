@@ -63,7 +63,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile 'org.powermock:powermock-reflect:1.6.1'
-    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'org.robolectric:robolectric:3.4.2'
     annotationProcessor 'org.androidannotations:androidannotations:4.5.2'
     annotationProcessor 'com.tmtron:green-annotations:1.0.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
