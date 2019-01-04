@@ -16,16 +16,17 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.PracticeWordSetVocabularyListAdapter;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -34,8 +35,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public static final String WORD_SET_MAPPING = "wordSet";
     @Bean
     PracticeWordSetVocabularyListAdapter adapter;
-    @Inject
-    PracticeWordSetVocabularyInteractor interactor;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -60,17 +63,16 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
-
         wordSetsListView.setAdapter(adapter);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
-        initPresenter();
+        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), speaker);
+        initPresenter(interactor);
     }
 
     @Background
-    public void initPresenter() {
+    public void initPresenter(PracticeWordSetVocabularyInteractor interactor) {
         presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
         presenter.initialise();
     }

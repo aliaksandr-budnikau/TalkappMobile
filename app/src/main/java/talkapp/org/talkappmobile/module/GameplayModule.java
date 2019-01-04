@@ -130,12 +130,6 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
-        return new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), speaker);
-    }
-
-    @Provides
-    @Singleton
     public MainActivityInteractor provideMainActivityInteractor() {
         return new MainActivityInteractor(backendServerFactory.get(), context);
     }
