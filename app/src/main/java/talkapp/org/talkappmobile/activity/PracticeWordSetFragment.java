@@ -31,8 +31,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
@@ -49,13 +47,35 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSe
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
+import talkapp.org.talkappmobile.component.AudioStuffFactory;
+import talkapp.org.talkappmobile.component.EqualityScorer;
+import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.RefereeService;
+import talkapp.org.talkappmobile.component.SentenceProvider;
+import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.WordsCombinator;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
+import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
+import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
+import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
+import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
+import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -68,16 +88,28 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String WORD_SET_MAPPING = "wordSet";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
-    @Inject
-    StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
-    @Inject
-    RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
     @Bean(TextUtilsImpl.class)
     TextUtils textUtils;
     @Bean(WordSetExperienceUtilsImpl.class)
     WordSetExperienceUtils experienceUtils;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+    @Bean(LoggerBean.class)
+    Logger logger;
+    @Bean(EqualityScorerBean.class)
+    EqualityScorer equalityScorer;
+    @Bean(RandomSentenceSelectorBean.class)
+    SentenceSelector sentenceSelector;
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
+    @Bean(AudioStuffFactoryBean.class)
+    AudioStuffFactory audioStuffFactory;
+    @Bean(RandomWordsCombinatorBean.class)
+    WordsCombinator wordsCombinator;
 
     @ViewById(R.id.originalText)
     TextView originalText;
@@ -130,7 +162,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, wordSetPractiseForm);
 
@@ -139,10 +170,16 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
+        BackendSentenceProviderStrategy backendStrategy = new BackendSentenceProviderStrategy(backendServerFactory.get());
+        SentenceProviderRepetitionStrategy repetitionStrategy = new SentenceProviderRepetitionStrategy(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
+        SentenceProvider sentenceProvider = new SentenceProviderImpl(backendStrategy, repetitionStrategy);
+        GrammarCheckServiceImpl grammarCheckService = new GrammarCheckServiceImpl(backendServerFactory.get(), logger);
+        RefereeService refereeService = new RefereeServiceImpl(grammarCheckService, equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
-        PracticeWordSetInteractor interactor = studyingPracticeWordSetInteractor;
+
+        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory, speaker);
         if (repetitionMode) {
-            interactor = repetitionPracticeWordSetInteractor;
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory, speaker);
         }
         presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
         presenter.initialise();

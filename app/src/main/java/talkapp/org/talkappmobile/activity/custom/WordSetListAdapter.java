@@ -20,7 +20,6 @@ import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPre
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
@@ -42,7 +41,6 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
 
     @AfterInject
     public void init() {
-        DIContextUtils.get().inject(this);
         WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor(serviceFactory.getWordSetExperienceRepository());
         presenter = new WordSetListAdapterPresenter(interactor, this);
     }
