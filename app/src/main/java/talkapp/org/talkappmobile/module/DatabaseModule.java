@@ -7,6 +7,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
 
@@ -36,10 +37,12 @@ import talkapp.org.talkappmobile.component.impl.LoggerBean;
 public class DatabaseModule {
     @Bean(LoggerBean.class)
     Logger logger;
+    @RootContext
+    Context context;
 
     @Provides
     @Singleton
-    public DatabaseHelper provideDatabaseHelper(Context context) {
+    public DatabaseHelper provideDatabaseHelper() {
         return OpenHelperManager.getHelper(context, DatabaseHelper.class);
     }
 
