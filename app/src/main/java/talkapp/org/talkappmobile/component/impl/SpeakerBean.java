@@ -3,15 +3,23 @@ package talkapp.org.talkappmobile.component.impl;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+
 import java.util.Locale;
 
 import talkapp.org.talkappmobile.component.Speaker;
 
-public class SpeakerImpl implements Speaker, TextToSpeech.OnInitListener {
+@EBean(scope = EBean.Scope.Singleton)
+public class SpeakerBean implements Speaker, TextToSpeech.OnInitListener {
 
-    private final TextToSpeech speech;
+    @RootContext
+    Context context;
+    private TextToSpeech speech;
 
-    public SpeakerImpl(Context context) {
+    @AfterInject
+    public void init() {
         this.speech = new TextToSpeech(context, this);
     }
 

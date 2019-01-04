@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
-import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
@@ -33,7 +32,6 @@ import talkapp.org.talkappmobile.module.LanguageModule;
 @Component(modules = {
         GameplayModule.class,
         AndroidModule.class,
-        AudioModule.class,
         LanguageModule.class,
         DatabaseModule.class
 })

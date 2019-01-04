@@ -43,6 +43,7 @@ import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
@@ -69,6 +70,9 @@ public class GameplayModule {
     EqualityScorer equalityScorer;
     @Bean(BackendServerFactoryBean.class)
     BackendServerFactory backendServerFactory;
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
+
     @RootContext
     Context context;
 
@@ -104,13 +108,13 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService, Speaker speaker) {
+    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
         return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, PracticeWordSetExerciseService exerciseService, Speaker speaker) {
+    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, PracticeWordSetExerciseService exerciseService) {
         return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, exerciseService, context, audioStuffFactory, speaker);
     }
 
@@ -134,7 +138,7 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor(Speaker speaker) {
+    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
         return new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), speaker);
     }
 

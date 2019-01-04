@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.config;
 import android.app.Application;
 
 import talkapp.org.talkappmobile.module.AndroidModule;
-import talkapp.org.talkappmobile.module.AudioModule;
 import talkapp.org.talkappmobile.module.DatabaseModule_;
 import talkapp.org.talkappmobile.module.GameplayModule_;
 import talkapp.org.talkappmobile.module.LanguageModule_;
@@ -16,7 +15,6 @@ public class DIContextUtils {
         if (instance == null && application != null) {
             instance = DaggerDIContext.builder()
                     .androidModule(new AndroidModule(application))
-                    .audioModule(new AudioModule())
                     .gameplayModule(GameplayModule_.getInstance_(application))
                     .languageModule(LanguageModule_.getInstance_(application))
                     .databaseModule(DatabaseModule_.getInstance_(application))
