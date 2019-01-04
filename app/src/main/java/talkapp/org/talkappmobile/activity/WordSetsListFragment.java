@@ -19,8 +19,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView;
 import talkapp.org.talkappmobile.activity.custom.WordSetsListListView;
@@ -29,9 +27,12 @@ import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsList
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -42,10 +43,10 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
-    @Inject
-    StudyingWordSetsListInteractor studyingWordSetsListInteractor;
-    @Inject
-    RepetitionWordSetsListInteractor repetitionWordSetsListInteractor;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -63,8 +64,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
-
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
 
         initPresenter();
@@ -72,9 +71,9 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Background
     public void initPresenter() {
-        WordSetsListInteractor interactor = studyingWordSetsListInteractor;
+        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
-            interactor = repetitionWordSetsListInteractor;
+            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
         }
         presenter = new WordSetsListPresenter(topic, this, interactor);
         presenter.initialize();

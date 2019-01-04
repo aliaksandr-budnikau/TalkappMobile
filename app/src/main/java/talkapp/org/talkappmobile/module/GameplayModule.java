@@ -10,11 +10,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.Logger;
@@ -105,23 +102,5 @@ public class GameplayModule {
     @Singleton
     public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService) {
         return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), context, audioStuffFactory, speaker);
-    }
-
-    @Provides
-    @Singleton
-    public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor() {
-        return new StudyingWordSetsListInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
-    }
-
-    @Provides
-    @Singleton
-    public RepetitionWordSetsListInteractor provideRepetitionWordSetsListInteractor() {
-        return new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
-    }
-
-    @Provides
-    @Singleton
-    public MainActivityDefaultFragmentInteractor provideMainActivityDefaultFragmentInteractor() {
-        return new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
     }
 }

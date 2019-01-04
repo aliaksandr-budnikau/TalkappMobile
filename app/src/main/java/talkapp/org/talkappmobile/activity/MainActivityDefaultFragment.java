@@ -5,25 +5,25 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-
-import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
-import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 
 import static java.lang.String.format;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_MODE_MAPPING;
 
 @EFragment(value = R.layout.main_activity_default_fragment_layout)
 public class MainActivityDefaultFragment extends Fragment implements MainActivityDefaultFragmentView {
-    @Inject
-    MainActivityDefaultFragmentInteractor interactor;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
 
     @ViewById(R.id.wordsForRepetitionTextView)
     TextView wordsForRepetitionTextView;
@@ -32,8 +32,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
-
+        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
         presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
         presenter.init();
     }
