@@ -14,7 +14,6 @@ import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
-import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -140,12 +139,6 @@ public class GameplayModule {
     @Singleton
     public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor() {
         return new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), speaker);
-    }
-
-    @Provides
-    @Singleton
-    public TopicsFragmentInteractor provideTopicsFragmentInteractor() {
-        return new TopicsFragmentInteractor(backendServerFactory.get());
     }
 
     @Provides
