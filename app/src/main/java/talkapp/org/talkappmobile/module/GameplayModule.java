@@ -74,19 +74,14 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy() {
-        return new BackendSentenceProviderStrategy(backendServerFactory.get());
-    }
-
-    @Provides
-    @Singleton
     public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(PracticeWordSetExerciseService exerciseService) {
         return new SentenceProviderRepetitionStrategy(backendServerFactory.get(), exerciseService);
     }
 
     @Provides
     @Singleton
-    public SentenceProvider provideSentenceProvider(BackendSentenceProviderStrategy backendStrategy, SentenceProviderRepetitionStrategy repetitionStrategy) {
+    public SentenceProvider provideSentenceProvider(SentenceProviderRepetitionStrategy repetitionStrategy) {
+        BackendSentenceProviderStrategy backendStrategy = new BackendSentenceProviderStrategy(backendServerFactory.get());
         return new SentenceProviderImpl(backendStrategy, repetitionStrategy);
     }
 

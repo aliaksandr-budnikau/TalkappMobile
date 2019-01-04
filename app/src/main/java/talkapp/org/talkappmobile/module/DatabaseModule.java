@@ -40,15 +40,7 @@ public class DatabaseModule {
     @RootContext
     Context context;
 
-    @Provides
-    @Singleton
-    public DatabaseHelper provideDatabaseHelper() {
-        return OpenHelperManager.getHelper(context, DatabaseHelper.class);
-    }
-
-    @Provides
-    @Singleton
-    public PracticeWordSetExerciseDao providePracticeWordSetExerciseDao(DatabaseHelper databaseHelper) {
+    private PracticeWordSetExerciseDao providePracticeWordSetExerciseDao(DatabaseHelper databaseHelper) {
         try {
             return new PracticeWordSetExerciseDaoImpl(databaseHelper.getConnectionSource(), PracticeWordSetExerciseMapping.class);
         } catch (SQLException e) {
@@ -56,9 +48,7 @@ public class DatabaseModule {
         }
     }
 
-    @Provides
-    @Singleton
-    public WordSetExperienceDao provideWordSetExperienceDao(DatabaseHelper databaseHelper) {
+    private WordSetExperienceDao provideWordSetExperienceDao(DatabaseHelper databaseHelper) {
         try {
             return new WordSetExperienceDaoImpl(databaseHelper.getConnectionSource(), WordSetExperienceMapping.class);
         } catch (SQLException e) {
@@ -68,13 +58,18 @@ public class DatabaseModule {
 
     @Provides
     @Singleton
-    public PracticeWordSetExerciseService providePracticeWordSetExerciseRepository(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao) {
+    public PracticeWordSetExerciseService providePracticeWordSetExerciseRepository() {
+        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao(databaseHelper);
+        WordSetExperienceDao experienceDao = provideWordSetExperienceDao(databaseHelper);
         return new PracticeWordSetExerciseServiceImpl(exerciseDao, experienceDao, new ObjectMapper());
     }
 
     @Provides
     @Singleton
-    public WordSetExperienceService provideWordSetExperienceRepository(WordSetExperienceDao experienceDao) {
+    public WordSetExperienceService provideWordSetExperienceRepository() {
+        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        WordSetExperienceDao experienceDao = provideWordSetExperienceDao(databaseHelper);
         return new WordSetExperienceServiceImpl(experienceDao, logger);
     }
 }

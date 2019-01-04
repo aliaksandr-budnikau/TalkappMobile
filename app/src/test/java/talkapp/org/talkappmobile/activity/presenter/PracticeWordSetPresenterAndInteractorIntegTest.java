@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,8 +58,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Before
     public void setup() {
-        PracticeWordSetExerciseDao exerciseDao = new TestDatabaseModule().providePracticeWordSetExerciseDao(null);
-        wordSetExperienceDao = new TestDatabaseModule().provideWordSetExperienceDao(null);
+        PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
+        wordSetExperienceDao = provideWordSetExperienceDao();
         exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
         experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, logger);

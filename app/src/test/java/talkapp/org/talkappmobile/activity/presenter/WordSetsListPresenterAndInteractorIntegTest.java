@@ -22,7 +22,6 @@ import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
-import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -43,8 +42,8 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Before
     public void setup() {
-        PracticeWordSetExerciseDao exerciseDao = new TestDatabaseModule().providePracticeWordSetExerciseDao(null);
-        wordSetExperienceDao = new TestDatabaseModule().provideWordSetExperienceDao(null);
+        PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
+        wordSetExperienceDao = provideWordSetExperienceDao();
         PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
         WordSetExperienceServiceImpl experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, new LoggerBean());
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
