@@ -10,7 +10,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
@@ -127,12 +126,6 @@ public class GameplayModule {
     @Singleton
     public RepetitionWordSetsListInteractor provideRepetitionWordSetsListInteractor(PracticeWordSetExerciseService exerciseService) {
         return new RepetitionWordSetsListInteractor(exerciseService);
-    }
-
-    @Provides
-    @Singleton
-    public LoginInteractor provideLoginInteractor() {
-        return new LoginInteractor(logger, backendServerFactory.get(), textUtils);
     }
 
     @Provides

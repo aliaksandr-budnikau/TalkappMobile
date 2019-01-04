@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity;
 
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -34,16 +33,17 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 import talkapp.org.talkappmobile.component.SaveSharedPreference_;
+import talkapp.org.talkappmobile.component.TextUtils;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -58,10 +58,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private static final int REQUEST_READ_CONTACTS = 0;
     @Pref
     SaveSharedPreference_ saveSharedPreference;
-    @Inject
-    LoginInteractor interactor;
-    @Inject
-    Context context;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
+    @Bean(TextUtilsImpl.class)
+    TextUtils textUtils;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -81,7 +81,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
         // Set up the login form.
         populateAutoComplete();
 
@@ -97,7 +96,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         });
 
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressView, loginFormView);
-        presenter = new LoginPresenter(context, this, interactor);
+        LoginInteractor interactor = new LoginInteractor(logger, backendServerFactory.get(), textUtils);
+        presenter = new LoginPresenter(getApplicationContext(), this, interactor);
     }
 
     @Background
