@@ -11,15 +11,12 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
-import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
@@ -35,6 +32,7 @@ import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
+import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
@@ -94,7 +92,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public RefereeService provideRefereeService(GrammarCheckService grammarCheckService) {
+    public RefereeService provideRefereeService() {
+        GrammarCheckServiceImpl grammarCheckService = new GrammarCheckServiceImpl(backendServerFactory.get(), logger);
         return new RefereeServiceImpl(grammarCheckService, equalityScorer);
     }
 

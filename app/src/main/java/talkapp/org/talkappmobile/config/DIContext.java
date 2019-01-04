@@ -26,13 +26,11 @@ import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
-import talkapp.org.talkappmobile.module.LanguageModule;
 
 @Singleton
 @Component(modules = {
         GameplayModule.class,
         AndroidModule.class,
-        LanguageModule.class,
         DatabaseModule.class
 })
 public interface DIContext {
