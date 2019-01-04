@@ -27,8 +27,8 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
@@ -68,20 +68,17 @@ public class GameplayModule {
     BackendServerFactory backendServerFactory;
     @Bean(SpeakerBean.class)
     Speaker speaker;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
 
     @RootContext
     Context context;
 
     @Provides
     @Singleton
-    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(PracticeWordSetExerciseService exerciseService) {
-        return new SentenceProviderRepetitionStrategy(backendServerFactory.get(), exerciseService);
-    }
-
-    @Provides
-    @Singleton
-    public SentenceProvider provideSentenceProvider(SentenceProviderRepetitionStrategy repetitionStrategy) {
+    public SentenceProvider provideSentenceProvider() {
         BackendSentenceProviderStrategy backendStrategy = new BackendSentenceProviderStrategy(backendServerFactory.get());
+        SentenceProviderRepetitionStrategy repetitionStrategy = new SentenceProviderRepetitionStrategy(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
         return new SentenceProviderImpl(backendStrategy, repetitionStrategy);
     }
 
@@ -100,31 +97,31 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
-        return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, experienceService, exerciseService, context, audioStuffFactory, speaker);
+    public StudyingPracticeWordSetInteractor providePracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService) {
+        return new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService, PracticeWordSetExerciseService exerciseService) {
-        return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, exerciseService, context, audioStuffFactory, speaker);
+    public RepetitionPracticeWordSetInteractor provideRepetitionPracticeWordSetInteractor(SentenceProvider sentenceProvider, RefereeService refereeService) {
+        return new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), context, audioStuffFactory, speaker);
     }
 
     @Provides
     @Singleton
-    public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor(WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
-        return new StudyingWordSetsListInteractor(backendServerFactory.get(), experienceService, exerciseService);
+    public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor() {
+        return new StudyingWordSetsListInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
     }
 
     @Provides
     @Singleton
-    public RepetitionWordSetsListInteractor provideRepetitionWordSetsListInteractor(PracticeWordSetExerciseService exerciseService) {
-        return new RepetitionWordSetsListInteractor(exerciseService);
+    public RepetitionWordSetsListInteractor provideRepetitionWordSetsListInteractor() {
+        return new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
     }
 
     @Provides
     @Singleton
-    public MainActivityDefaultFragmentInteractor provideMainActivityDefaultFragmentInteractor(PracticeWordSetExerciseService exerciseService) {
-        return new MainActivityDefaultFragmentInteractor(exerciseService);
+    public MainActivityDefaultFragmentInteractor provideMainActivityDefaultFragmentInteractor() {
+        return new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
     }
 }

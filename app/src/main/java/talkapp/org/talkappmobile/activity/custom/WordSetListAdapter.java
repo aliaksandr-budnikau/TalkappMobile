@@ -9,17 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -29,8 +29,8 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
  */
 @EBean
 public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSetListAdapterView {
-    @Inject
-    WordSetExperienceService experienceService;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
     @RootContext
     Context context;
     private SparseArray<WordSetsListItemView> childViews;
@@ -43,7 +43,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
     @AfterInject
     public void init() {
         DIContextUtils.get().inject(this);
-        WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor(experienceService);
+        WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor(serviceFactory.getWordSetExperienceRepository());
         presenter = new WordSetListAdapterPresenter(interactor, this);
     }
 

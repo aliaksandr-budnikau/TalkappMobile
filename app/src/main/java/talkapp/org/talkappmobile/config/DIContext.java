@@ -23,13 +23,11 @@ import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
-import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 
 @Singleton
 @Component(modules = {
-        GameplayModule.class,
-        DatabaseModule.class
+        GameplayModule.class
 })
 public interface DIContext {
     void inject(PracticeWordSetActivity target);
