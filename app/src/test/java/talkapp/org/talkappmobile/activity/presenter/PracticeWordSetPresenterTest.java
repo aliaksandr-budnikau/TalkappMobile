@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.net.Uri;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -14,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.app.TalkappMobileApplication;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -36,11 +33,6 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
-
-    @BeforeClass
-    public static void setUpContext() {
-        DIContextUtils.init(new TalkappMobileApplication());
-    }
 
     @Before
     public void setUp() {

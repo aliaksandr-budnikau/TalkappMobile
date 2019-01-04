@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,10 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -32,11 +29,6 @@ public class PracticeWordSetViewStrategyTest {
     private TextUtils textUtils;
     @InjectMocks
     private PracticeWordSetViewStrategy strategy;
-
-    @BeforeClass
-    public static void setUpContext() {
-        DIContextUtils.init(new TalkappMobileApplication());
-    }
 
     @Test
     public void onInitialiseExperience() {

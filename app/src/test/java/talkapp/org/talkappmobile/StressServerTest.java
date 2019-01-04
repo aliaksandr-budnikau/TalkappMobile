@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile;
 
-import org.junit.Test;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -61,7 +59,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
     }
 
     private void doActivity() {
-        BackendServer server = getClassForInjection().getServer();
+        BackendServer server = getServer();
         String email = "sasha-ne@tut.by" + RANDOM.nextInt();
         String password = "password0";
 

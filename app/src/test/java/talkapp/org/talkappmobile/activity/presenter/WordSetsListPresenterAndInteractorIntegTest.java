@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +13,16 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
+import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
+import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,8 +43,11 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Before
     public void setup() {
-        studyingWordSetsInteractor = getClassForInjection().getStudyingWordSetsListInteractor();
-        wordSetExperienceDao = getClassForInjection().getWordSetExperienceDao();
+        PracticeWordSetExerciseDao exerciseDao = new TestDatabaseModule().providePracticeWordSetExerciseDao(null);
+        wordSetExperienceDao = new TestDatabaseModule().provideWordSetExperienceDao(null);
+        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
+        WordSetExperienceServiceImpl experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, new LoggerBean());
+        studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
     }
 
     @Test

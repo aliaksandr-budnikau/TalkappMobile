@@ -26,7 +26,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
 
     @Before
     public void setup() {
-        topicsFragmentInteractor = getClassForInjection().getTopicsFragmentInteractor();
+        topicsFragmentInteractor = new TopicsFragmentInteractor(getServer());
     }
 
     @Test

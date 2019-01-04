@@ -30,7 +30,8 @@ import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
@@ -66,20 +67,21 @@ public class GameplayModule {
     AudioStuffFactory audioStuffFactory;
     @Bean(EqualityScorerBean.class)
     EqualityScorer equalityScorer;
-
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
     @RootContext
     Context context;
 
     @Provides
     @Singleton
-    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy(BackendServer server) {
-        return new BackendSentenceProviderStrategy(server);
+    public BackendSentenceProviderStrategy provideBackendSentenceProviderStrategy() {
+        return new BackendSentenceProviderStrategy(backendServerFactory.get());
     }
 
     @Provides
     @Singleton
-    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(BackendServer server, PracticeWordSetExerciseService exerciseService) {
-        return new SentenceProviderRepetitionStrategy(server, exerciseService);
+    public SentenceProviderRepetitionStrategy provideSentenceProviderRepetitionStrategy(PracticeWordSetExerciseService exerciseService) {
+        return new SentenceProviderRepetitionStrategy(backendServerFactory.get(), exerciseService);
     }
 
     @Provides
@@ -114,8 +116,8 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor(BackendServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
-        return new StudyingWordSetsListInteractor(server, experienceService, exerciseService);
+    public StudyingWordSetsListInteractor provideStudyingWordSetsListInteractor(WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
+        return new StudyingWordSetsListInteractor(backendServerFactory.get(), experienceService, exerciseService);
     }
 
     @Provides
@@ -126,26 +128,26 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public LoginInteractor provideLoginInteractor(BackendServer server) {
-        return new LoginInteractor(logger, server, textUtils);
+    public LoginInteractor provideLoginInteractor() {
+        return new LoginInteractor(logger, backendServerFactory.get(), textUtils);
     }
 
     @Provides
     @Singleton
-    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor(BackendServer server, Speaker speaker) {
-        return new PracticeWordSetVocabularyInteractor(server, speaker);
+    public PracticeWordSetVocabularyInteractor provideWordTranslationInteractor(Speaker speaker) {
+        return new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), speaker);
     }
 
     @Provides
     @Singleton
-    public TopicsFragmentInteractor provideTopicsFragmentInteractor(BackendServer server) {
-        return new TopicsFragmentInteractor(server);
+    public TopicsFragmentInteractor provideTopicsFragmentInteractor() {
+        return new TopicsFragmentInteractor(backendServerFactory.get());
     }
 
     @Provides
     @Singleton
-    public MainActivityInteractor provideMainActivityInteractor(BackendServer server) {
-        return new MainActivityInteractor(server, context);
+    public MainActivityInteractor provideMainActivityInteractor() {
+        return new MainActivityInteractor(backendServerFactory.get(), context);
     }
 
     @Provides

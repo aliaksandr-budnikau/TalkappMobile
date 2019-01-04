@@ -16,6 +16,8 @@ import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LoginPresenterAndInteractorIntegTest {
+public class LoginPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     @Mock
     private LoginActivityView view;
     private LoginInteractor interactor;
@@ -36,8 +38,7 @@ public class LoginPresenterAndInteractorIntegTest {
 
     @Before
     public void setup() {
-        final ClassForInjection injection = new ClassForInjection();
-        interactor = injection.getLoginInteractor();
+        interactor = new LoginInteractor(new LoggerBean(), getServer(), new TextUtilsImpl());
     }
 
     @Test

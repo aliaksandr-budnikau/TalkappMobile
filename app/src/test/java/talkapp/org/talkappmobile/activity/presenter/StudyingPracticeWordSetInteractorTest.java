@@ -4,7 +4,6 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.app.TalkappMobileApplication;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
@@ -28,7 +26,6 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
-import talkapp.org.talkappmobile.config.DIContextUtils;
 import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -46,8 +43,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingPracticeWordSetInteractorTest {
@@ -74,11 +71,6 @@ public class StudyingPracticeWordSetInteractorTest {
     private Logger logger;
     @InjectMocks
     private StudyingPracticeWordSetInteractor interactor;
-
-    @BeforeClass
-    public static void setUp() {
-        DIContextUtils.init(new TalkappMobileApplication());
-    }
 
     @Test
     public void initialiseExperience_experienceIsNull() {

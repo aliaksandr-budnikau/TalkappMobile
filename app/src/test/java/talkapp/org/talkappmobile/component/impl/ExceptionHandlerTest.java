@@ -14,14 +14,13 @@ import java.util.Map;
 
 import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
-import talkapp.org.talkappmobile.activity.presenter.ClassForInjection;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
-import talkapp.org.talkappmobile.module.TestBackEndServiceModule;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,15 +39,17 @@ public class ExceptionHandlerTest {
 
     @Before
     public void setup() {
-        TestBackEndServiceModule backEndServiceModule = new TestBackEndServiceModule();
         LoggerBean loggerBean = mock(LoggerBean.class);
-        Whitebox.setInternalState(backEndServiceModule, "logger", loggerBean);
-        Whitebox.setInternalState(backEndServiceModule, "authSign", mock(AuthSign.class));
-        Whitebox.setInternalState(backEndServiceModule, "authorizationInterceptor", new AuthorizationInterceptor());
-        ClassForInjection injection = new ClassForInjection(backEndServiceModule);
-        server = injection.getServer();
+        BackendServerFactoryBean factory = new BackendServerFactoryBean();
+        Whitebox.setInternalState(factory, "logger", loggerBean);
+        Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
+        Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
+        server = factory.get();
+
+        server = factory.get();
         interactor = new ExceptionHandlerInteractor(loggerBean);
-        topicRestClient = injection.getTopicRestClient();
+        topicRestClient = mock(TopicRestClient.class);
+        Whitebox.setInternalState(server, "topicRestClient", topicRestClient);
     }
 
     @Test

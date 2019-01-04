@@ -25,14 +25,12 @@ import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrate
 import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy;
 import talkapp.org.talkappmobile.module.AndroidModule;
 import talkapp.org.talkappmobile.module.AudioModule;
-import talkapp.org.talkappmobile.module.BackEndServiceModule;
 import talkapp.org.talkappmobile.module.DatabaseModule;
 import talkapp.org.talkappmobile.module.GameplayModule;
 import talkapp.org.talkappmobile.module.LanguageModule;
 
 @Singleton
 @Component(modules = {
-        BackEndServiceModule.class,
         GameplayModule.class,
         AndroidModule.class,
         AudioModule.class,

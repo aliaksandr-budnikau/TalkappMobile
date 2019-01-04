@@ -1,5 +1,9 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +14,27 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSe
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
+import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
+import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
+import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
+import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
+import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
+import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
+import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.module.TestDatabaseModule;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,13 +50,24 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private PracticeWordSetExerciseService exerciseService;
     private WordSet wordSet;
     private StudyingPracticeWordSetInteractor interactor;
+    @Mock
     private Speaker speaker;
+    @Mock
+    private Context context;
+    private WordSetExperienceDao wordSetExperienceDao;
+    private WordSetExperienceService experienceService;
 
     @Before
     public void setup() {
-        interactor = getClassForInjection().getStudyingPracticeWordSetInteractor();
-        exerciseService = getClassForInjection().getExerciseService();
-        speaker = getClassForInjection().getSpeaker();
+        PracticeWordSetExerciseDao exerciseDao = new TestDatabaseModule().providePracticeWordSetExerciseDao(null);
+        wordSetExperienceDao = new TestDatabaseModule().provideWordSetExperienceDao(null);
+        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
+        LoggerBean logger = new LoggerBean();
+        experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, logger);
+        interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
+                new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
+                new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer(), logger), new EqualityScorerBean()),
+                logger, experienceService, exerciseService, context, new AudioStuffFactoryBean(), speaker);
     }
 
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {

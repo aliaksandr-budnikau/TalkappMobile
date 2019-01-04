@@ -9,7 +9,8 @@ import dagger.Module;
 import dagger.Provides;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
@@ -21,10 +22,12 @@ import talkapp.org.talkappmobile.component.impl.LoggerBean;
 public class LanguageModule {
     @Bean(LoggerBean.class)
     Logger logger;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
 
     @Provides
     @Singleton
-    public GrammarCheckService provideGrammarCheckService(BackendServer server) {
-        return new GrammarCheckServiceImpl(server, logger);
+    public GrammarCheckService provideGrammarCheckService() {
+        return new GrammarCheckServiceImpl(backendServerFactory.get(), logger);
     }
 }

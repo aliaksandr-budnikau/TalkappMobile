@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import android.os.AsyncTask;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,14 +31,13 @@ import static org.mockito.Mockito.verify;
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     @Mock
     private PracticeWordSetVocabularyView view;
+    @Mock
     private Speaker speaker;
     private PracticeWordSetVocabularyInteractor interactor;
-    private AsyncTask<Void, Void, Void> value;
 
     @Before
     public void setup() {
-        interactor = getClassForInjection().getPracticeWordSetVocabularyInteractor();
-        speaker = getClassForInjection().getSpeaker();
+        interactor = new PracticeWordSetVocabularyInteractor(getServer(), speaker);
     }
 
     @Test

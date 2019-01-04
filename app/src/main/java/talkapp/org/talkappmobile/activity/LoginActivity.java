@@ -41,7 +41,6 @@ import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.presenter.LoginPresenter;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
 import talkapp.org.talkappmobile.component.SaveSharedPreference_;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.config.DIContextUtils;
@@ -59,8 +58,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private static final int REQUEST_READ_CONTACTS = 0;
     @Pref
     SaveSharedPreference_ saveSharedPreference;
-    @Inject
-    BackendServer server;
     @Inject
     LoginInteractor interactor;
     @Inject
