@@ -22,15 +22,14 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Inject;
-
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.SaveSharedPreference_;
-import talkapp.org.talkappmobile.config.DIContextUtils;
+import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
@@ -38,8 +37,8 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     AuthSign authSign;
     @Pref
     SaveSharedPreference_ saveSharedPreference;
-    @Inject
-    MainActivityInteractor interactor;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
 
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
@@ -52,8 +51,6 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @AfterViews
     public void init() {
-        DIContextUtils.get().inject(this);
-
         String headerKey = saveSharedPreference.authorizationHeaderKey().get();
         if (StringUtils.isEmpty(headerKey)) {
             Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
@@ -71,7 +68,8 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        initPresenter();
+        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), getApplicationContext());
+        initPresenter(interactor);
 
         final FragmentManager fragmentManager = getFragmentManager();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -103,7 +101,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     }
 
     @Background
-    public void initPresenter() {
+    public void initPresenter(MainActivityInteractor interactor) {
         presenter = new MainActivityPresenter(this, interactor);
         presenter.checkServerAvailability();
         presenter.initAppVersion();

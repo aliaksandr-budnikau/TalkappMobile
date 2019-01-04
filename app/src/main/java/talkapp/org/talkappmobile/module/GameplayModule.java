@@ -130,12 +130,6 @@ public class GameplayModule {
 
     @Provides
     @Singleton
-    public MainActivityInteractor provideMainActivityInteractor() {
-        return new MainActivityInteractor(backendServerFactory.get(), context);
-    }
-
-    @Provides
-    @Singleton
     public MainActivityDefaultFragmentInteractor provideMainActivityDefaultFragmentInteractor(PracticeWordSetExerciseService exerciseService) {
         return new MainActivityDefaultFragmentInteractor(exerciseService);
     }
