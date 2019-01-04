@@ -440,11 +440,15 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void onSentencesFound(Sentence sentence, Word2Tokens word) {
         eventBus.post(new NewSentenceEM(sentence, word));
     }
 
     @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void onEnableRepetitionMode() {
         eventBus.post(new PracticeHalfFinishedEM());
     }
