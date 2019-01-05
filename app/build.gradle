@@ -65,7 +65,4 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.4.2'
     annotationProcessor 'org.androidannotations:androidannotations:4.5.2'
     annotationProcessor 'com.tmtron:green-annotations:1.0.2'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.5'
-    testAnnotationProcessor 'com.google.dagger:dagger-compiler:2.5'
 }
