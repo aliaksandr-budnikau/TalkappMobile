@@ -10,4 +10,6 @@ public interface LocalDataService {
     void saveWordSets(List<WordSet> wordSets);
 
     List<WordSet> findAllWordSetsFromMemCache();
+
+    List<WordSet> findAllWordSetsByTopicIdFromMemCache(int topicId);
 }

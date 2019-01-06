@@ -94,6 +94,14 @@ public class LocalDataServiceImpl implements LocalDataService {
         return getAllWordSets(allWordSets);
     }
 
+    @Override
+    public List<WordSet> findAllWordSetsByTopicIdFromMemCache(int topicId) {
+        if (allWordSets == null) {
+            return emptyList();
+        }
+        return allWordSets.get(String.valueOf(topicId));
+    }
+
     private void execute(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

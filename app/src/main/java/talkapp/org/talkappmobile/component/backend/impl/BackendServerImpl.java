@@ -143,12 +143,26 @@ public class BackendServerImpl implements BackendServer {
 
     @Override
     public List<WordSet> findWordSetsByTopicId(int topicId) {
+        List<WordSet> cached = localDataService.findAllWordSetsByTopicIdFromMemCache(topicId);
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+        initLocalCache();
         Call<List<WordSet>> call = wordSetRestClient.findByTopicId(topicId, authSign);
-        List<WordSet> body = requestExecutor.execute(call).body();
+        List<WordSet> body;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return localDataService.findAllWordSetsByTopicIdFromMemCache(topicId);
+        }
         if (body == null) {
             return new LinkedList<>();
         }
         return body;
+    }
+
+    private void initLocalCache() {
+        findAllWordSets();
     }
 
     @Override
