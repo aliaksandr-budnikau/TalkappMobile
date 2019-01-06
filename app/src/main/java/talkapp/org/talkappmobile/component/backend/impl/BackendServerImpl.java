@@ -112,10 +112,21 @@ public class BackendServerImpl implements BackendServer {
 
     @Override
     public List<Topic> findAllTopics() {
+        List<Topic> cached = localDataService.findAllTopicsFromMemCache();
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
         Call<List<Topic>> call = topicRestClient.findAll(authSign);
-        List<Topic> body = requestExecutor.execute(call).body();
+        List<Topic> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        }catch (InternetConnectionLostException e) {
+            return localDataService.findAllTopics();
+        }
         if (body == null) {
             return new LinkedList<>();
+        } else {
+            localDataService.saveTopics(body);
         }
         return body;
     }

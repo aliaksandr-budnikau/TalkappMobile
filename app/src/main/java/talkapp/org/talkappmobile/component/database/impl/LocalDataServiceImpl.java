@@ -13,8 +13,11 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
+import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
+import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -24,12 +27,15 @@ public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
     private final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
     private final WordSetDao wordSetDao;
+    private final TopicDao topicDao;
     private final ObjectMapper mapper;
     private final Logger logger;
     private Map<String, List<WordSet>> allWordSets;
+    private List<Topic> allTopics;
 
-    public LocalDataServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper, Logger logger) {
+    public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
+        this.topicDao = topicDao;
         this.mapper = mapper;
         this.logger = logger;
         LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
@@ -102,6 +108,42 @@ public class LocalDataServiceImpl implements LocalDataService {
         return allWordSets.get(String.valueOf(topicId));
     }
 
+    @Override
+    public List<Topic> findAllTopicsFromMemCache() {
+        return allTopics;
+    }
+
+    @Override
+    public void saveTopics(final List<Topic> topics) {
+        if (allTopics != null && !allTopics.isEmpty()) {
+            return;
+        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                LinkedList<TopicMapping> mappings = new LinkedList<>();
+                for (Topic topic : topics) {
+                    mappings.add(toMapping(topic));
+                }
+                topicDao.save(mappings);
+                allTopics = topics;
+            }
+        };
+        execute(runnable);
+    }
+
+    @Override
+    public List<Topic> findAllTopics() {
+        if (allTopics != null && !allTopics.isEmpty()) {
+            return allTopics;
+        }
+        LinkedList<Topic> result = new LinkedList<>();
+        for (TopicMapping mapping : topicDao.findAll()) {
+            result.add(toDto(mapping));
+        }
+        return result;
+    }
+
     private void execute(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -141,5 +183,19 @@ public class LocalDataServiceImpl implements LocalDataService {
 
         wordSet.setWords(words);
         return wordSet;
+    }
+
+    private TopicMapping toMapping(Topic topic) {
+        TopicMapping mapping = new TopicMapping();
+        mapping.setId(topic.getId());
+        mapping.setName(topic.getName());
+        return mapping;
+    }
+
+    private Topic toDto(TopicMapping mapping) {
+        Topic topic = new Topic();
+        topic.setId(mapping.getId());
+        topic.setName(mapping.getName());
+        return topic;
     }
 }

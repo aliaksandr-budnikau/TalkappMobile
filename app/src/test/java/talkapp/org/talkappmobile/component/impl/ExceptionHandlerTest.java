@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -24,6 +25,7 @@ import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
+import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
@@ -31,6 +33,7 @@ import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -43,6 +46,9 @@ public class ExceptionHandlerTest {
     private ExceptionHandlerInteractor interactor;
     private TopicRestClient topicRestClient;
 
+    @Mock
+    private TopicDao topicDao;
+
     @Before
     public void setup() {
         LoggerBean loggerBean = mock(LoggerBean.class);
@@ -51,7 +57,7 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), new ObjectMapper(), new LoggerBean()));
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), topicDao, new ObjectMapper(), new LoggerBean()));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
         Whitebox.setInternalState(requestExecutor, "logger", new LoggerBean());
@@ -75,14 +81,13 @@ public class ExceptionHandlerTest {
         try {
             server.findAllTopics();
         } catch (InternetConnectionLostException e) {
-            exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            verify(view, times(0)).killCurrentActivity();
-            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
-            verify(view, times(0)).openLoginActivity();
-            verify(view).showToastMessage("Internet connection was lost");
-            return;
+            fail();
         }
-        fail();
+        verify(topicDao).findAll();
+        verify(view, times(0)).killCurrentActivity();
+        verify(view, times(0)).openCrashActivity(any(Exception.class), eq("Internet connection was lost"));
+        verify(view, times(0)).openLoginActivity();
+        verify(view, times(0)).showToastMessage("Internet connection was lost");
     }
 
     @Test
@@ -97,14 +102,13 @@ public class ExceptionHandlerTest {
         try {
             server.findAllTopics();
         } catch (InternetConnectionLostException e) {
-            exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            verify(view, times(0)).killCurrentActivity();
-            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
-            verify(view, times(0)).openLoginActivity();
-            verify(view).showToastMessage("Internet connection was lost");
-            return;
+            fail();
         }
-        fail();
+        verify(topicDao).findAll();
+        verify(view, times(0)).killCurrentActivity();
+        verify(view, times(0)).openCrashActivity(any(Exception.class), eq("Internet connection was lost"));
+        verify(view, times(0)).openLoginActivity();
+        verify(view, times(0)).showToastMessage("Internet connection was lost");
     }
 
 
