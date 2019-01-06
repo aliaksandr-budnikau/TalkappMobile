@@ -1,9 +1,6 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +51,7 @@ public class BackendServerImpl implements BackendServer {
     private final Logger logger;
 
     private final LocalDataService localDataService;
+    private final RequestExecutor requestExecutor;
 
     public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService) {
         this.logger = logger;
@@ -66,12 +64,13 @@ public class BackendServerImpl implements BackendServer {
         this.wordSetRestClient = wordSetRestClient;
         this.wordTranslationRestClient = wordTranslationRestClient;
         this.localDataService = localDataService;
+        this.requestExecutor = new RequestExecutor(logger);
     }
 
     @Override
     public void registerAccount(Account account) throws RegistrationException {
         Call<Void> call = accountRestClient.register(account);
-        Response<Void> response = execute(call);
+        Response<Void> response = requestExecutor.execute(call);
         if (response.code() == HttpURLConnection.HTTP_MOVED_TEMP) {
             throw new RegistrationException(response.message());
         }
@@ -80,7 +79,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public String loginUser(LoginCredentials credentials) throws LoginException {
         Call<Boolean> call = loginRestClient.login(credentials);
-        Response<Boolean> response = execute(call);
+        Response<Boolean> response = requestExecutor.execute(call);
         Boolean result = response.body();
         String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
         if (result != null && signature != null && result) {
@@ -94,28 +93,17 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
         Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
-        List<Sentence> body = execute(call).body();
+        List<Sentence> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
         return body;
     }
 
-    private <T> Response<T> execute(Call<T> call) {
-        try {
-            return call.execute();
-        } catch (SocketException | SocketTimeoutException e) {
-            logger.e(TAG, e, e.getMessage());
-            throw new InternetConnectionLostException("Internet connection was lost");
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
     @Override
     public List<GrammarError> checkText(String text) {
         Call<List<GrammarError>> call = textGrammarCheckRestClient.check(text, authSign);
-        List<GrammarError> body = execute(call).body();
+        List<GrammarError> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -125,7 +113,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<Topic> findAllTopics() {
         Call<List<Topic>> call = topicRestClient.findAll(authSign);
-        List<Topic> body = execute(call).body();
+        List<Topic> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -137,7 +125,7 @@ public class BackendServerImpl implements BackendServer {
         Call<List<WordSet>> call = wordSetRestClient.findAll(authSign);
         List<WordSet> body = null;
         try {
-            body = execute(call).body();
+            body = requestExecutor.execute(call).body();
         } catch (InternetConnectionLostException e) {
             return localDataService.findAllWordSets();
         }
@@ -152,7 +140,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<WordSet> findWordSetsByTopicId(int topicId) {
         Call<List<WordSet>> call = wordSetRestClient.findByTopicId(topicId, authSign);
-        List<WordSet> body = execute(call).body();
+        List<WordSet> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -162,7 +150,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordSetIdAndByLanguage(wordSetId, language, authSign);
-        List<WordTranslation> body = execute(call).body();
+        List<WordTranslation> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -172,7 +160,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordsAndByLanguage(words, language, authSign);
-        List<WordTranslation> body = execute(call).body();
+        List<WordTranslation> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -182,7 +170,7 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public boolean saveSentenceScore(Sentence sentence) {
         Call<Boolean> call = sentenceRestClient.saveSentenceScore(sentence, authSign);
-        Boolean body = execute(call).body();
+        Boolean body = requestExecutor.execute(call).body();
         return body != null;
     }
 }
