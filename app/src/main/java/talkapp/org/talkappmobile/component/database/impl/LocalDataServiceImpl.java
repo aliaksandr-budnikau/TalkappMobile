@@ -61,6 +61,11 @@ public class LocalDataServiceImpl implements LocalDataService {
         execute(runnable);
     }
 
+    @Override
+    public List<WordSet> findAllWordSetsFromMemCache() {
+        return allWordSets;
+    }
+
     private void execute(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {

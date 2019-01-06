@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +23,9 @@ import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
+import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
+import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 
 import static org.junit.Assert.fail;
@@ -45,10 +50,14 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(factory, "logger", loggerBean);
         Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
-        Whitebox.setInternalState(factory, "serviceFactory", mock(ServiceFactoryBean.class));
+        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), new ObjectMapper(), new LoggerBean()));
+        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
+        RequestExecutor requestExecutor = new RequestExecutor();
+        Whitebox.setInternalState(requestExecutor, "logger", new LoggerBean());
+        Whitebox.setInternalState(factory, "requestExecutor", requestExecutor);
         server = factory.get();
 
-        server = factory.get();
         interactor = new ExceptionHandlerInteractor(loggerBean);
         topicRestClient = mock(TopicRestClient.class);
         Whitebox.setInternalState(server, "topicRestClient", topicRestClient);

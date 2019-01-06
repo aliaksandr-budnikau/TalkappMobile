@@ -40,6 +40,8 @@ public class BackendServerFactoryBean implements BackendServerFactory {
     AuthorizationInterceptor authorizationInterceptor;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
+    @Bean
+    RequestExecutor requestExecutor;
     private Retrofit retrofit;
     private BackendServerImpl backendServer;
 
@@ -53,7 +55,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 loginRestClient(),
                 sentenceRestClient(),
                 checkRestClient(), topicRestClient(), wordSetRestClient(), wordTranslationRestClient(),
-                serviceFactory.getLocalDataService()
+                serviceFactory.getLocalDataService(), requestExecutor
         );
         return backendServer;
     }

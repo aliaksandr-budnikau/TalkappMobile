@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
+import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
@@ -41,6 +42,7 @@ public abstract class PresenterAndInteractorIntegTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(mock(LocalDataService.class));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
+        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         server = factory.get();
     }
 

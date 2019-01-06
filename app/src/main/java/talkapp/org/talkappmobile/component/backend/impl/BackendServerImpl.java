@@ -53,7 +53,7 @@ public class BackendServerImpl implements BackendServer {
     private final LocalDataService localDataService;
     private final RequestExecutor requestExecutor;
 
-    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService) {
+    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;
@@ -64,7 +64,7 @@ public class BackendServerImpl implements BackendServer {
         this.wordSetRestClient = wordSetRestClient;
         this.wordTranslationRestClient = wordTranslationRestClient;
         this.localDataService = localDataService;
-        this.requestExecutor = new RequestExecutor(logger);
+        this.requestExecutor = requestExecutor;
     }
 
     @Override
@@ -122,6 +122,10 @@ public class BackendServerImpl implements BackendServer {
 
     @Override
     public List<WordSet> findAllWordSets() {
+        List<WordSet> cached = localDataService.findAllWordSetsFromMemCache();
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
         Call<List<WordSet>> call = wordSetRestClient.findAll(authSign);
         List<WordSet> body = null;
         try {
