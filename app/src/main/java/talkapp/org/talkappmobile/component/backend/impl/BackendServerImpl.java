@@ -103,7 +103,12 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<GrammarError> checkText(String text) {
         Call<List<GrammarError>> call = textGrammarCheckRestClient.check(text, authSign);
-        List<GrammarError> body = requestExecutor.execute(call).body();
+        List<GrammarError> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            // do nothing
+        }
         if (body == null) {
             return new LinkedList<>();
         }
@@ -120,7 +125,7 @@ public class BackendServerImpl implements BackendServer {
         List<Topic> body = null;
         try {
             body = requestExecutor.execute(call).body();
-        }catch (InternetConnectionLostException e) {
+        } catch (InternetConnectionLostException e) {
             return localDataService.findAllTopics();
         }
         if (body == null) {
