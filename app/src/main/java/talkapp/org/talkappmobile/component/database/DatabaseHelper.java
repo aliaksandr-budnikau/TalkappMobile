@@ -15,17 +15,18 @@ import java.util.Map;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
+import static java.util.Collections.singletonList;
+
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 15;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        /*changes.put(14, asList(
-                "",
-                ""
-        ));*/
+        changes.put(15, singletonList(
+                "CREATE TABLE WordSet (id VARCHAR NOT NULL PRIMARY KEY, topicId VARCHAR NOT NULL, word VARCHAR NOT NULL);"
+        ));
     }
 
     @Override
@@ -40,8 +41,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVer, int newVer) {
-        for (int i = oldVer + 1; i < changes.size(); i++) {
-            List<String> sqls = changes.get(i);
+        for (Map.Entry<Integer, List<String>> entry : changes.entrySet()) {
+            if (entry.getKey() <= oldVer) {
+                continue;
+            }
+            List<String> sqls = entry.getValue();
             if (sqls == null || sqls.isEmpty()) {
                 continue;
             }

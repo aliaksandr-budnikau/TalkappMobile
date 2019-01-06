@@ -22,6 +22,8 @@ import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 @EBean(scope = EBean.Scope.Singleton)
@@ -36,6 +38,8 @@ public class BackendServerFactoryBean implements BackendServerFactory {
     AuthSign authSign;
     @Bean(AuthorizationInterceptor.class)
     AuthorizationInterceptor authorizationInterceptor;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
     private Retrofit retrofit;
     private BackendServerImpl backendServer;
 
@@ -48,7 +52,9 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 accountRestClient(),
                 loginRestClient(),
                 sentenceRestClient(),
-                checkRestClient(), topicRestClient(), wordSetRestClient(), wordTranslationRestClient());
+                checkRestClient(), topicRestClient(), wordSetRestClient(), wordTranslationRestClient(),
+                serviceFactory.getLocalDataService()
+        );
         return backendServer;
     }
 

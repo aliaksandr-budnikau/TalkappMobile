@@ -13,13 +13,18 @@ import talkapp.org.talkappmobile.component.backend.BackendServer;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
+import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public abstract class PresenterAndInteractorIntegTest {
 
@@ -33,6 +38,9 @@ public abstract class PresenterAndInteractorIntegTest {
         authSign = new AuthSign();
         Whitebox.setInternalState(factory, "authSign", authSign);
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
+        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(mock(LocalDataService.class));
+        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         server = factory.get();
     }
 

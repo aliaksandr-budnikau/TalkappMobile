@@ -13,20 +13,25 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
+import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetExperienceDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {
 
+    private final ObjectMapper MAPPER = new ObjectMapper();
     @Bean(LoggerBean.class)
     Logger logger;
     @RootContext
@@ -35,8 +40,10 @@ public class ServiceFactoryBean implements ServiceFactory {
     private DatabaseHelper databaseHelper;
     private PracticeWordSetExerciseDaoImpl exerciseDao;
     private WordSetExperienceDaoImpl experienceDao;
+    private WordSetDao wordSetDao;
     private PracticeWordSetExerciseServiceImpl practiceWordSetExerciseService;
     private WordSetExperienceServiceImpl wordSetExperienceService;
+    private LocalDataService localDataService;
 
     @Override
     public WordSetExperienceService getWordSetExperienceRepository() {
@@ -60,6 +67,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         return practiceWordSetExerciseService;
     }
 
+    @Override
+    public LocalDataService getLocalDataService() {
+        if (localDataService != null) {
+            return localDataService;
+        }
+        localDataService = new LocalDataServiceImpl(provideWordSetDao(), MAPPER, logger);
+        return localDataService;
+    }
+
     private PracticeWordSetExerciseDao providePracticeWordSetExerciseDao() {
         if (exerciseDao != null) {
             return exerciseDao;
@@ -67,6 +83,18 @@ public class ServiceFactoryBean implements ServiceFactory {
         try {
             exerciseDao = new PracticeWordSetExerciseDaoImpl(databaseHelper().getConnectionSource(), PracticeWordSetExerciseMapping.class);
             return exerciseDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private WordSetDao provideWordSetDao() {
+        if (wordSetDao != null) {
+            return wordSetDao;
+        }
+        try {
+            wordSetDao = new WordSetDaoImpl(databaseHelper().getConnectionSource(), WordSetMapping.class);
+            return wordSetDao;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

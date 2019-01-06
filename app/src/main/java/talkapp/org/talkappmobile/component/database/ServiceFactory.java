@@ -4,4 +4,6 @@ public interface ServiceFactory {
     WordSetExperienceService getWordSetExperienceRepository();
 
     PracticeWordSetExerciseService getPracticeWordSetExerciseRepository();
+
+    LocalDataService getLocalDataService();
 }

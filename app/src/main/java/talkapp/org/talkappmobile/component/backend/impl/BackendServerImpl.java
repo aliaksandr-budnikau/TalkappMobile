@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
+import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.LoginCredentials;
@@ -52,7 +53,9 @@ public class BackendServerImpl implements BackendServer {
 
     private final Logger logger;
 
-    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient) {
+    private final LocalDataService localDataService;
+
+    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;
@@ -62,6 +65,7 @@ public class BackendServerImpl implements BackendServer {
         this.topicRestClient = topicRestClient;
         this.wordSetRestClient = wordSetRestClient;
         this.wordTranslationRestClient = wordTranslationRestClient;
+        this.localDataService = localDataService;
     }
 
     @Override
@@ -131,9 +135,16 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public List<WordSet> findAllWordSets() {
         Call<List<WordSet>> call = wordSetRestClient.findAll(authSign);
-        List<WordSet> body = execute(call).body();
+        List<WordSet> body = null;
+        try {
+            body = execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return localDataService.findAllWordSets();
+        }
         if (body == null) {
             return new LinkedList<>();
+        } else {
+            localDataService.saveWordSets(body);
         }
         return body;
     }

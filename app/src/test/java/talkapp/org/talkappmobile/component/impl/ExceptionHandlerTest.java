@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +45,7 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(factory, "logger", loggerBean);
         Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
+        Whitebox.setInternalState(factory, "serviceFactory", mock(ServiceFactoryBean.class));
         server = factory.get();
 
         server = factory.get();
