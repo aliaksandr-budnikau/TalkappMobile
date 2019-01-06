@@ -1,11 +1,15 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
@@ -14,13 +18,15 @@ import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMappin
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static java.util.Collections.emptyList;
+
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
     private final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
     private final WordSetDao wordSetDao;
     private final ObjectMapper mapper;
     private final Logger logger;
-    private List<WordSet> allWordSets;
+    private Map<String, List<WordSet>> allWordSets;
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -32,14 +38,33 @@ public class LocalDataServiceImpl implements LocalDataService {
     @Override
     public List<WordSet> findAllWordSets() {
         if (allWordSets != null && !allWordSets.isEmpty()) {
-            return allWordSets;
+            return getAllWordSets(allWordSets);
         }
         List<WordSetMapping> allMappings = wordSetDao.findAll();
-        allWordSets = new LinkedList<>();
+        allWordSets = splitAllWortSetsByTopicId(allMappings);
+        return getAllWordSets(allWordSets);
+    }
+
+    private Map<String, List<WordSet>> splitAllWortSetsByTopicId(List<WordSetMapping> allMappings) {
+        Map<String, List<WordSet>> allWordSets = new HashMap<>();
         for (WordSetMapping mapping : allMappings) {
-            allWordSets.add(toDto(mapping));
+            List<WordSet> wordSetList = allWordSets.get(mapping.getTopicId());
+            if (wordSetList == null) {
+                wordSetList = new LinkedList<>();
+                allWordSets.put(mapping.getTopicId(), wordSetList);
+            }
+            wordSetList.add(toDto(mapping));
         }
         return allWordSets;
+    }
+
+    @NonNull
+    private List<WordSet> getAllWordSets(Map<String, List<WordSet>> all) {
+        LinkedList<WordSet> result = new LinkedList<>();
+        for (List<WordSet> wordSets : all.values()) {
+            result.addAll(wordSets);
+        }
+        return result;
     }
 
     @Override
@@ -55,7 +80,7 @@ public class LocalDataServiceImpl implements LocalDataService {
                     mappings.add(toMapping(wordSet));
                 }
                 wordSetDao.save(mappings);
-                allWordSets = wordSets;
+                allWordSets = splitAllWortSetsByTopicId(mappings);
             }
         };
         execute(runnable);
@@ -63,7 +88,10 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public List<WordSet> findAllWordSetsFromMemCache() {
-        return allWordSets;
+        if (allWordSets == null) {
+            return emptyList();
+        }
+        return getAllWordSets(allWordSets);
     }
 
     private void execute(Runnable runnable) {
