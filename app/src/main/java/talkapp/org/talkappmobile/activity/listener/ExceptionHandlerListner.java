@@ -6,4 +6,6 @@ public interface ExceptionHandlerListner {
     void onUnauthorizedAccess();
 
     void onUncaughtException(Throwable e);
+
+    void onLocalCacheIsEmpty();
 }

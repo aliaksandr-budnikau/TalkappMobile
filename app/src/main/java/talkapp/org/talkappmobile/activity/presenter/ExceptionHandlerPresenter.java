@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import android.content.Context;
 import android.os.Build;
 
 import java.io.PrintWriter;
@@ -54,11 +53,20 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
         view.killCurrentActivity();
     }
 
+    @Override
+    public void onLocalCacheIsEmpty() {
+        view.showToastMessage("You need internet connection to preload this task.");
+    }
+
     public void handleAuthorizationException(Thread t, Throwable e, Throwable cause) {
         interactor.handleAuthorizationException(this);
     }
 
     public void handleUncaughtException(Thread t, Throwable e, Throwable cause) {
         interactor.handleUncaughtException(this, e);
+    }
+
+    public void handleLocalCacheIsEmptyException(Thread t, Throwable e, Throwable cause) {
+        interactor.handleLocalCacheIsEmptyException(this);
     }
 }

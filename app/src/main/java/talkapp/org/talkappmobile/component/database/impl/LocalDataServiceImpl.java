@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
@@ -225,10 +226,14 @@ public class LocalDataServiceImpl implements LocalDataService {
         return findAllByWordsAndByLanguage(words, language);
     }
 
-    private LinkedList<WordTranslation> findAllByWordsAndByLanguage(List<String> words, String language) {
+    private List<WordTranslation> findAllByWordsAndByLanguage(List<String> words, String language) {
         LinkedList<WordTranslation> result = new LinkedList<>();
         for (String word : words) {
-            result.add(toDto(wordTranslationDao.findByWordAndByLanguage(word, language)));
+            WordTranslationMapping mapping = wordTranslationDao.findByWordAndByLanguage(word, language);
+            if (mapping == null) {
+                throw new LocalCacheIsEmptyException("Local cache is empty. You need internet connection to fill it.");
+            }
+            result.add(toDto(mapping));
         }
         return result;
     }

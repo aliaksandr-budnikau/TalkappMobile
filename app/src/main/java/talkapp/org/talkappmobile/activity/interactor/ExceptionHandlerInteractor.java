@@ -24,4 +24,8 @@ public class ExceptionHandlerInteractor {
         logger.e(TAG, e, e.getMessage());
         listner.onUncaughtException(e);
     }
+
+    public void handleLocalCacheIsEmptyException(ExceptionHandlerListner listner) {
+        listner.onLocalCacheIsEmpty();
+    }
 }
