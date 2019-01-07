@@ -238,7 +238,12 @@ public class BackendServerImpl implements BackendServer {
     @Override
     public boolean saveSentenceScore(Sentence sentence) {
         Call<Boolean> call = sentenceRestClient.saveSentenceScore(sentence, authSign);
-        Boolean body = requestExecutor.execute(call).body();
+        Boolean body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return false;
+        }
         return body != null;
     }
 }

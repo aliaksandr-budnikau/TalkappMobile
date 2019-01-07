@@ -22,7 +22,6 @@ public class RequestExecutor {
         try {
             return call.execute();
         } catch (SocketException | SocketTimeoutException e) {
-            logger.e(TAG, e, e.getMessage());
             throw new InternetConnectionLostException("Internet connection was lost");
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
