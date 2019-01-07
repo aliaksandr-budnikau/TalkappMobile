@@ -2,8 +2,10 @@ package talkapp.org.talkappmobile.component.database.impl;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.MapType;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,10 +15,14 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
+import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -25,20 +31,27 @@ import static java.util.Collections.emptyList;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
+    private final MapType HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE;
     private final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
+    private final CollectionType LINKED_LIST_OF_TOKENS_JAVA_TYPE;
     private final WordSetDao wordSetDao;
     private final TopicDao topicDao;
+    private final SentenceDao sentenceDao;
     private final ObjectMapper mapper;
     private final Logger logger;
     private Map<String, List<WordSet>> allWordSets;
+    private Map<String, List<Sentence>> allSentences = new HashMap<>();
     private List<Topic> allTopics;
 
-    public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, ObjectMapper mapper, Logger logger) {
+    public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
         this.topicDao = topicDao;
+        this.sentenceDao = sentenceDao;
         this.mapper = mapper;
         this.logger = logger;
         LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
+        HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE = mapper.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
+        LINKED_LIST_OF_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, TextToken.class);
     }
 
     @Override
@@ -144,6 +157,53 @@ public class LocalDataServiceImpl implements LocalDataService {
         return result;
     }
 
+    @Override
+    public void saveSentences(final List<Sentence> sentences, final Word2Tokens words, final int wordsNumber) {
+        List<Sentence> cache = allSentences.get(getKey(words, wordsNumber));
+        if (cache != null && !cache.isEmpty()) {
+            return;
+        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                LinkedList<SentenceMapping> mappings = new LinkedList<>();
+                for (Sentence sentence : sentences) {
+                    mappings.add(toMapping(sentence, words.getWord(), wordsNumber));
+                }
+                sentenceDao.save(mappings);
+                allSentences.put(getKey(words, wordsNumber), sentences);
+            }
+        };
+        execute(runnable);
+    }
+
+    @NonNull
+    private String getKey(Word2Tokens words, int wordsNumber) {
+        return words.getWord() + "_" + wordsNumber;
+    }
+
+    @Override
+    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
+        List<Sentence> cached = allSentences.get(getKey(words, wordsNumber));
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (SentenceMapping mapping : sentenceDao.findAllByWord(words.getWord(), wordsNumber)) {
+            Sentence dto = toDto(mapping);
+            if (dto.getTokens().size() <= wordsNumber) {
+                result.add(dto);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Sentence> findSentencesByWordsFromMemCache(Word2Tokens word, int wordsNumber) {
+        return allSentences.get(word.getWord() + "_" + wordsNumber);
+    }
+
     private void execute(Runnable runnable) {
         Thread thread = new Thread(runnable);
         thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -197,5 +257,46 @@ public class LocalDataServiceImpl implements LocalDataService {
         topic.setId(mapping.getId());
         topic.setName(mapping.getName());
         return topic;
+    }
+
+    private SentenceMapping toMapping(Sentence sentence, String word, int wordsNumber) {
+        SentenceMapping mapping = new SentenceMapping();
+        mapping.setId(sentence.getId() + "#" + word + "#" + wordsNumber);
+        mapping.setText(sentence.getText());
+        mapping.setContentScore(sentence.getContentScore());
+        try {
+            mapping.setTranslations(mapper.writeValueAsString(sentence.getTranslations()));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        try {
+            mapping.setTokens(mapper.writeValueAsString(sentence.getTokens()));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return mapping;
+    }
+
+    private Sentence toDto(SentenceMapping mapping) {
+        Sentence sentence = new Sentence();
+        sentence.setId(mapping.getId().split("#")[1]);
+        sentence.setText(mapping.getText());
+        sentence.setContentScore(mapping.getContentScore());
+        Map<String, String> translation = null;
+        try {
+            translation = mapper.readValue(mapping.getTranslations(), HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        sentence.setTranslations(translation);
+
+        List<TextToken> tokens = null;
+        try {
+            tokens = mapper.readValue(mapping.getTokens(), LINKED_LIST_OF_TOKENS_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        sentence.setTokens(tokens);
+        return sentence;
     }
 }

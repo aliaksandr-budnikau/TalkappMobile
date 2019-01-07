@@ -15,17 +15,22 @@ import java.util.Map;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         changes.put(15, singletonList(
                 "CREATE TABLE WordSet (id VARCHAR NOT NULL PRIMARY KEY, topicId VARCHAR NOT NULL, word VARCHAR NOT NULL);"
+        ));
+        changes.put(16, asList(
+                "CREATE TABLE Topic (id INTEGER NOT NULL PRIMARY KEY, name VARCHAR NOT NULL);",
+                "CREATE TABLE Sentence (id VARCHAR NOT NULL PRIMARY KEY, text VARCHAR NOT NULL, translations VARCHAR NOT NULL, tokens VARCHAR NOT NULL, contentScore VARCHAR NOT NULL);"
         ));
     }
 

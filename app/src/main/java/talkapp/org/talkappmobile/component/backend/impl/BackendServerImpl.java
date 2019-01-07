@@ -92,10 +92,21 @@ public class BackendServerImpl implements BackendServer {
 
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
+        List<Sentence> cached = localDataService.findSentencesByWordsFromMemCache(words, wordsNumber);
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
         Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
-        List<Sentence> body = requestExecutor.execute(call).body();
+        List<Sentence> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return localDataService.findSentencesByWords(words, wordsNumber);
+        }
         if (body == null) {
             return new LinkedList<>();
+        } else {
+            localDataService.saveSentences(body, words, wordsNumber);
         }
         return body;
     }

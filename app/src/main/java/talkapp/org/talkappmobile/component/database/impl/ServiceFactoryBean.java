@@ -18,15 +18,18 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetExperienceDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.TopicDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -45,6 +48,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordSetExperienceDaoImpl experienceDao;
     private WordSetDao wordSetDao;
     private TopicDao topicDao;
+    private SentenceDao sentenceDao;
     private PracticeWordSetExerciseServiceImpl practiceWordSetExerciseService;
     private WordSetExperienceServiceImpl wordSetExperienceService;
     private LocalDataService localDataService;
@@ -76,7 +80,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (localDataService != null) {
             return localDataService;
         }
-        localDataService = new LocalDataServiceImpl(provideWordSetDao(), provideTopicDao(), MAPPER, logger);
+        localDataService = new LocalDataServiceImpl(provideWordSetDao(), provideTopicDao(), provideSentenceDao(), MAPPER, logger);
         return localDataService;
     }
 
@@ -111,6 +115,18 @@ public class ServiceFactoryBean implements ServiceFactory {
         try {
             topicDao = new TopicDaoImpl(databaseHelper().getConnectionSource(), TopicMapping.class);
             return topicDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private SentenceDao provideSentenceDao() {
+        if (sentenceDao != null) {
+            return sentenceDao;
+        }
+        try {
+            sentenceDao = new SentenceDaoImpl(databaseHelper().getConnectionSource(), SentenceMapping.class);
+            return sentenceDao;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

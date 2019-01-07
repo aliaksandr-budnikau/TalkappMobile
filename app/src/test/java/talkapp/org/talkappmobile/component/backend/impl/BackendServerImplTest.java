@@ -26,6 +26,7 @@ import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
@@ -48,6 +49,8 @@ public class BackendServerImplTest {
     private WordSetDao wordSetDao;
     @Mock
     private TopicDao topicDao;
+    @Mock
+    private SentenceDao sentenceDao;
     @Mock
     private AuthSign authSign;
     @Mock
@@ -74,7 +77,7 @@ public class BackendServerImplTest {
 
     @Before
     public void init() {
-        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, mapper, logger);
+        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, mapper, logger);
         server = new BackendServerImpl(logger, authSign, accountRestClient,
                 loginRestClient, sentenceRestClient,
                 textGrammarCheckRestClient, topicRestClient, wordSetRestClient,
