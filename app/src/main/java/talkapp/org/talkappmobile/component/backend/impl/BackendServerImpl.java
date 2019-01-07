@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.backend.impl;
 import java.net.HttpURLConnection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -91,11 +92,12 @@ public class BackendServerImpl implements BackendServer {
     }
 
     @Override
-    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
+    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
         List<Sentence> cached = localDataService.findSentencesByWordsFromMemCache(words, wordsNumber);
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
+        initLocalCacheOfAllSentencesForThisWordset(wordSetId, wordsNumber);
         Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
         List<Sentence> body = null;
         try {
@@ -109,6 +111,19 @@ public class BackendServerImpl implements BackendServer {
             localDataService.saveSentences(body, words, wordsNumber);
         }
         return body;
+    }
+
+    private void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
+        Call<Map<String, List<Sentence>>> call = sentenceRestClient.findByWordSetId(wordSetId, wordsNumber, authSign);
+        Map<String, List<Sentence>> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            // do nothing
+        }
+        if (body != null) {
+            localDataService.saveSentences(body, wordsNumber);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.component.database;
 
 import java.util.List;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
@@ -36,4 +37,6 @@ public interface LocalDataService {
     void saveWordTranslations(List<WordTranslation> wordTranslations, List<String> words, String language);
 
     List<String> findWordsOfWordSetByIdFromMemCache(int wordSetId);
+
+    void saveSentences(Map<String, List<Sentence>> body, int wordsNumber);
 }

@@ -19,7 +19,7 @@ public interface BackendServer {
 
     String loginUser(LoginCredentials credentials) throws LoginException;
 
-    List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber);
+    List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId);
 
     List<GrammarError> checkText(String text);
 

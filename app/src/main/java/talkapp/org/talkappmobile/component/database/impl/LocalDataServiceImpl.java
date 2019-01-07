@@ -166,7 +166,7 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public void saveSentences(final List<Sentence> sentences, final Word2Tokens words, final int wordsNumber) {
-        List<Sentence> cache = allSentences.get(getKey(words, wordsNumber));
+        List<Sentence> cache = allSentences.get(getKey(words.getWord(), wordsNumber));
         if (cache != null && !cache.isEmpty()) {
             return;
         }
@@ -178,20 +178,20 @@ public class LocalDataServiceImpl implements LocalDataService {
                     mappings.add(toMapping(sentence, words.getWord(), wordsNumber));
                 }
                 sentenceDao.save(mappings);
-                allSentences.put(getKey(words, wordsNumber), sentences);
+                allSentences.put(getKey(words.getWord(), wordsNumber), sentences);
             }
         };
         execute(runnable);
     }
 
     @NonNull
-    private String getKey(Word2Tokens words, int wordsNumber) {
-        return words.getWord() + "_" + wordsNumber;
+    private String getKey(String word, int wordsNumber) {
+        return word + "_" + wordsNumber;
     }
 
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
-        List<Sentence> cached = allSentences.get(getKey(words, wordsNumber));
+        List<Sentence> cached = allSentences.get(getKey(words.getWord(), wordsNumber));
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
@@ -282,6 +282,31 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
         }
         return new LinkedList<>();
+    }
+
+    @Override
+    public void saveSentences(final Map<String, List<Sentence>> words2Sentences, final int wordsNumber) {
+        for (String word : words2Sentences.keySet()) {
+            List<Sentence> cache = allSentences.get(getKey(word, wordsNumber));
+            if (cache == null || cache.isEmpty()) {
+                break;
+            }
+            return;
+        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                for (String word : words2Sentences.keySet()) {
+                    LinkedList<SentenceMapping> mappings = new LinkedList<>();
+                    for (Sentence sentence : words2Sentences.get(word)) {
+                        mappings.add(toMapping(sentence, word, wordsNumber));
+                    }
+                    sentenceDao.save(mappings);
+                    allSentences.put(getKey(word, wordsNumber), words2Sentences.get(word));
+                }
+            }
+        };
+        execute(runnable);
     }
 
     private void saveMemCache(List<WordTranslation> wordTranslations) {

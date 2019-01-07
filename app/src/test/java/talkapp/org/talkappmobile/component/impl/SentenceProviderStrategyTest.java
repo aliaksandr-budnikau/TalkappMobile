@@ -40,7 +40,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = asList(sentence1, sentence2);
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -63,7 +63,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = asList(sentence1, sentence2);
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -79,7 +79,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = emptyList();
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER)).thenReturn(sentences);
+        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -93,7 +93,7 @@ public class SentenceProviderStrategyTest {
         int wordSetId = 3;
 
         // when
-        doThrow(RuntimeException.class).when(backendServer.findSentencesByWords(word, WORDS_NUMBER));
+        doThrow(RuntimeException.class).when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then

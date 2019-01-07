@@ -28,7 +28,7 @@ public class SentenceProviderStrategy {
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
         List<Sentence> cachedSentences = cache.getIfPresent(word.getWord());
         if (cachedSentences == null || cachedSentences.isEmpty()) {
-            cachedSentences = server.findSentencesByWords(word, WORDS_NUMBER);
+            cachedSentences = server.findSentencesByWords(word, WORDS_NUMBER, wordSetId);
             cache.put(word.getWord(), cachedSentences);
         }
         return new ArrayList<>(cachedSentences);

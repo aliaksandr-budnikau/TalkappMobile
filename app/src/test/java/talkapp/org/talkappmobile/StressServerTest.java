@@ -121,7 +121,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
                 if (badWords.contains(word)) {
                     continue;
                 }
-                List<Sentence> sentences = server.findSentencesByWords(word, 6);
+                List<Sentence> sentences = server.findSentencesByWords(word, 6, 3);
                 if (sentences.isEmpty()) {
                     badWords.add(word);
                     fail();
