@@ -6,6 +6,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface LocalDataService {
     List<WordSet> findAllWordSets();
@@ -27,4 +28,12 @@ public interface LocalDataService {
     List<Sentence> findSentencesByWords(Word2Tokens word, int wordsNumber);
 
     List<Sentence> findSentencesByWordsFromMemCache(Word2Tokens word, int wordsNumber);
+
+    List<WordTranslation> findWordTranslationsByWordsAndByLanguageMemCache(List<String> words, String language);
+
+    List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
+
+    void saveWordTranslations(List<WordTranslation> wordTranslations, List<String> words, String language);
+
+    List<String> findWordsOfWordSetByIdFromMemCache(int wordSetId);
 }

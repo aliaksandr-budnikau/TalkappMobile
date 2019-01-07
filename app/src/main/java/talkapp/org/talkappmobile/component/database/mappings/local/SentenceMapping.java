@@ -24,7 +24,7 @@ public class SentenceMapping {
     private String translations;
     @DatabaseField(canBeNull = false, columnName = TOKENS_FN)
     private String tokens;
-    @DatabaseField(canBeNull = false, columnName = CONTENT_SCORE_FN)
+    @DatabaseField(columnName = CONTENT_SCORE_FN)
     private SentenceContentScore contentScore;
 
     public String getId() {

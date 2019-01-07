@@ -28,6 +28,7 @@ import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
+import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 
@@ -51,6 +52,8 @@ public class ExceptionHandlerTest {
     private TopicDao topicDao;
     @Mock
     private SentenceDao sentenceDao;
+    @Mock
+    private WordTranslationDao wordTranslationDao;
 
     @Before
     public void setup() {
@@ -60,7 +63,7 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), topicDao, sentenceDao, new ObjectMapper(), new LoggerBean()));
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), topicDao, sentenceDao, wordTranslationDao, new ObjectMapper(), new LoggerBean()));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
         Whitebox.setInternalState(requestExecutor, "logger", new LoggerBean());

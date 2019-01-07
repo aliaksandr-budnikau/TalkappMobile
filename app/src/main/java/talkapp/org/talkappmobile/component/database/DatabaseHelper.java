@@ -20,7 +20,7 @@ import static java.util.Collections.singletonList;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 18;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
@@ -31,6 +31,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         changes.put(16, asList(
                 "CREATE TABLE Topic (id INTEGER NOT NULL PRIMARY KEY, name VARCHAR NOT NULL);",
                 "CREATE TABLE Sentence (id VARCHAR NOT NULL PRIMARY KEY, text VARCHAR NOT NULL, translations VARCHAR NOT NULL, tokens VARCHAR NOT NULL, contentScore VARCHAR NOT NULL);"
+        ));
+        changes.put(17, singletonList(
+                "CREATE TABLE WordTranslation (word VARCHAR NOT NULL PRIMARY KEY, language VARCHAR NOT NULL, translation VARCHAR NOT NULL);"
+        ));
+        changes.put(18, asList(
+                "DROP TABLE Sentence;",
+                "CREATE TABLE Sentence (id VARCHAR NOT NULL PRIMARY KEY, text VARCHAR NOT NULL, translations VARCHAR NOT NULL, tokens VARCHAR NOT NULL, contentScore VARCHAR);"
         ));
     }
 

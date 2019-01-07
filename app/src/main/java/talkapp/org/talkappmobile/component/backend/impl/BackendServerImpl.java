@@ -194,20 +194,43 @@ public class BackendServerImpl implements BackendServer {
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
+        List<String> words = localDataService.findWordsOfWordSetByIdFromMemCache(wordSetId);
+        List<WordTranslation> cached = localDataService.findWordTranslationsByWordsAndByLanguageMemCache(words, language);
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordSetIdAndByLanguage(wordSetId, language, authSign);
-        List<WordTranslation> body = requestExecutor.execute(call).body();
+        List<WordTranslation> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
+        }
         if (body == null) {
             return new LinkedList<>();
+        } else {
+            localDataService.saveWordTranslations(body, words, language);
         }
         return body;
     }
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
+        List<WordTranslation> cached = localDataService.findWordTranslationsByWordsAndByLanguageMemCache(words, language);
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordsAndByLanguage(words, language, authSign);
-        List<WordTranslation> body = requestExecutor.execute(call).body();
+        List<WordTranslation> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
+        }
         if (body == null) {
             return new LinkedList<>();
+        } else {
+            localDataService.saveWordTranslations(body, words, language);
         }
         return body;
     }
