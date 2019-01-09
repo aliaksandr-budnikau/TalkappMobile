@@ -24,6 +24,7 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
@@ -99,5 +100,11 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @UiThread
     public void onInitializeEnd() {
         waitingForProgressBarManager.hideProgressBar();
+    }
+
+    @Override
+    public void onLocalCacheIsEmptyException(LocalCacheIsEmptyException e) {
+        getActivity().finish();
+        throw e;
     }
 }

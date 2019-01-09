@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.view;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface PracticeWordSetVocabularyView {
@@ -10,4 +11,6 @@ public interface PracticeWordSetVocabularyView {
     void onInitializeBeginning();
 
     void onInitializeEnd();
+
+    void onLocalCacheIsEmptyException(LocalCacheIsEmptyException e);
 }

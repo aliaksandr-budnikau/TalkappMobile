@@ -373,6 +373,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableNextButton(final boolean value) {
         nextButton.setEnabled(value);
     }
