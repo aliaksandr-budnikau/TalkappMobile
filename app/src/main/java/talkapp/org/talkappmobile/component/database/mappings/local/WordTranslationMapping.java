@@ -16,6 +16,8 @@ public class WordTranslationMapping {
     public static final String ID_FN = "word";
     public static final String LANGUAGE_FN = "language";
     public static final String TRANSLATION_FN = "translation";
+    public static final String TOP_FN = "top";
+
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private String word;
@@ -25,6 +27,9 @@ public class WordTranslationMapping {
 
     @DatabaseField(canBeNull = false, columnName = TRANSLATION_FN)
     private String translation;
+
+    @DatabaseField(columnName = TOP_FN)
+    private Integer top;
 
     public String getWord() {
         return word;
@@ -48,6 +53,14 @@ public class WordTranslationMapping {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
     }
 
     @Override

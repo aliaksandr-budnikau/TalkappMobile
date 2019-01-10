@@ -341,6 +341,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         }
 
         mapping.setTopicId(wordSet.getTopicId());
+        mapping.setTop(wordSet.getTop());
         return mapping;
     }
 
@@ -348,6 +349,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         WordSet wordSet = new WordSet();
         wordSet.setId(Integer.valueOf(mapping.getId()));
         wordSet.setTopicId(mapping.getTopicId());
+        wordSet.setTop(mapping.getTop());
 
         List<Word2Tokens> words;
         try {
@@ -420,6 +422,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         mapping.setWord(translation.getWord() + "_" + translation.getLanguage());
         mapping.setTranslation(translation.getTranslation());
         mapping.setLanguage(translation.getLanguage());
+        mapping.setTop(translation.getTop());
         return mapping;
     }
 
@@ -428,6 +431,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         translation.setWord(mapping.getWord().split("_")[0]);
         translation.setTranslation(mapping.getTranslation());
         translation.setLanguage(mapping.getLanguage());
+        translation.setTop(mapping.getTop());
         return translation;
     }
 }

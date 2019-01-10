@@ -16,6 +16,7 @@ public class WordSetMapping implements Serializable {
     public static final String ID_FN = "id";
     public static final String TOPIC_ID_FN = "topicId";
     public static final String WORDS_FN = "word";
+    public static final String TOP_FN = "top";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private String id;
@@ -25,6 +26,9 @@ public class WordSetMapping implements Serializable {
 
     @DatabaseField(canBeNull = false, columnName = WORDS_FN)
     private String words;
+
+    @DatabaseField(columnName = TOP_FN)
+    private Integer top;
 
     public String getId() {
         return id;
@@ -48,6 +52,14 @@ public class WordSetMapping implements Serializable {
 
     public void setTopicId(String topicId) {
         this.topicId = topicId;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
     }
 
     @Override

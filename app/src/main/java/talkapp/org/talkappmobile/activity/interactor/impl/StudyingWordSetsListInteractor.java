@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
@@ -32,6 +33,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
         } else {
             wordSets = server.findWordSetsByTopicId(topic.getId());
         }
+        Collections.sort(wordSets, new WordSetComparator());
         listener.onWordSetsInitialized(wordSets);
     }
 

@@ -15,6 +15,8 @@ public class WordSet implements Serializable {
 
     private List<Word2Tokens> words;
 
+    private Integer top;
+
     public int getId() {
         return id;
     }
@@ -37,6 +39,14 @@ public class WordSet implements Serializable {
 
     public void setTopicId(String topicId) {
         this.topicId = topicId;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
     }
 
     @Override

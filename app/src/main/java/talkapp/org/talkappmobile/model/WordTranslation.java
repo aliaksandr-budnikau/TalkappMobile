@@ -14,6 +14,8 @@ public class WordTranslation {
 
     private String translation;
 
+    private Integer top;
+
     public String getId() {
         return id;
     }
@@ -44,6 +46,14 @@ public class WordTranslation {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
     }
 
     @Override
