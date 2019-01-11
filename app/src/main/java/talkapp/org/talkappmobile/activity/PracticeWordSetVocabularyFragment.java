@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ListView;
 
@@ -104,7 +105,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Override
     public void onLocalCacheIsEmptyException(LocalCacheIsEmptyException e) {
-        getActivity().finish();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.finish();
+        }
         throw e;
     }
 }

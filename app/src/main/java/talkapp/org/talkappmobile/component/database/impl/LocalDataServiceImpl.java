@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,10 +45,10 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final WordTranslationDao wordTranslationDao;
     private final ObjectMapper mapper;
     private final Logger logger;
-    private Map<String, List<WordSet>> allWordSets;
+    private Map<String, List<WordSet>> allWordSets = new HashMap<>();
     private Map<String, List<Sentence>> allSentences = new HashMap<>();
     private Map<String, WordTranslation> allWordTranslations = new HashMap<>();
-    private List<Topic> allTopics;
+    private List<Topic> allTopics = new ArrayList<>();
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
