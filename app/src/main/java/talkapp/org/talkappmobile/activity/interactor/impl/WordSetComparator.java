@@ -18,6 +18,11 @@ public class WordSetComparator implements Comparator<WordSet> {
 
         int o1Top = (o1.getTop() == null ? MAX_TOP_VALUE : o1.getTop());
         int o2Top = (o2.getTop() == null ? MAX_TOP_VALUE : o2.getTop());
-        return o1Top - o2Top;
+        result = o1Top - o2Top;
+        if (result != 0) {
+            return result;
+        }
+
+        return o1.getId() - o2.getId();
     }
 }
