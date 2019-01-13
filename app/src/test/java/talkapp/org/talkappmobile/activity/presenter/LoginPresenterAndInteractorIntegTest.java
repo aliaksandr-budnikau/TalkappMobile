@@ -14,7 +14,7 @@ import java.util.Random;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.LoginInteractor;
 import talkapp.org.talkappmobile.activity.view.LoginActivityView;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
@@ -120,7 +120,7 @@ public class LoginPresenterAndInteractorIntegTest extends PresenterAndInteractor
     @Test
     public void signInButtonClick_correctCredentialsButException() throws LoginException {
         // setup
-        BackendServer server = mock(BackendServer.class);
+        DataServer server = mock(DataServer.class);
         Whitebox.setInternalState(interactor, "server", server);
         presenter = new LoginPresenter(context, view, interactor);
 

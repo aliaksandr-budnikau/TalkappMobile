@@ -19,7 +19,7 @@ import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ExceptionHandlerTest {
 
-    private BackendServer server;
+    private DataServer server;
     private ExceptionHandlerInteractor interactor;
     private TopicRestClient topicRestClient;
 

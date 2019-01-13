@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-public interface BackendServer {
+public interface DataServer {
 
     void registerAccount(Account account) throws RegistrationException;
 

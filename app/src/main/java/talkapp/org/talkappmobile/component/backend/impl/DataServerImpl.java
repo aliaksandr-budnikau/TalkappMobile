@@ -10,7 +10,7 @@ import retrofit2.Response;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
@@ -29,9 +29,9 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
 
-public class BackendServerImpl implements BackendServer {
+public class DataServerImpl implements DataServer {
 
-    private static final String TAG = BackendServerImpl.class.getSimpleName();
+    private static final String TAG = DataServerImpl.class.getSimpleName();
 
     private final AuthSign authSign;
 
@@ -54,7 +54,7 @@ public class BackendServerImpl implements BackendServer {
     private final LocalDataService localDataService;
     private final RequestExecutor requestExecutor;
 
-    public BackendServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
+    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;

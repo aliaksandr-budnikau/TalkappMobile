@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.GrammarError;
 
 import static java.util.Arrays.asList;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GrammarCheckServiceImplTest {
     @Mock
-    private BackendServer server;
+    private DataServer server;
     @Mock
     private Logger logger;
     @InjectMocks

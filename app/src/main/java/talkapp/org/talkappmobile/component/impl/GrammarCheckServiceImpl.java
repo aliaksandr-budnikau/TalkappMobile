@@ -4,16 +4,16 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class GrammarCheckServiceImpl implements GrammarCheckService {
     private static final String TAG = GrammarCheckServiceImpl.class.getSimpleName();
     private final Logger logger;
-    private final BackendServer server;
+    private final DataServer server;
 
-    public GrammarCheckServiceImpl(BackendServer server, Logger logger) {
+    public GrammarCheckServiceImpl(DataServer server, Logger logger) {
         this.server = server;
         this.logger = logger;
     }

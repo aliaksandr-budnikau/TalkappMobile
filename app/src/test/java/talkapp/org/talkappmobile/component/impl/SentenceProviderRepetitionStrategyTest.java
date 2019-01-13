@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceProviderRepetitionStrategyTest {
     @Mock
-    BackendServer server;
+    DataServer server;
     @Mock
     PracticeWordSetExerciseService exerciseService;
     @InjectMocks

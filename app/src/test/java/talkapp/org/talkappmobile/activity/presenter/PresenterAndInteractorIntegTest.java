@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 public abstract class PresenterAndInteractorIntegTest {
 
-    private BackendServer server;
+    private DataServer server;
 
     private AuthSign authSign;
 
@@ -59,7 +59,7 @@ public abstract class PresenterAndInteractorIntegTest {
         authSign.put(signature);
     }
 
-    public BackendServer getServer() {
+    public DataServer getServer() {
         return server;
     }
 

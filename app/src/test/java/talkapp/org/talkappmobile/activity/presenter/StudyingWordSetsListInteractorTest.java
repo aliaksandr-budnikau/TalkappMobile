@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Topic;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingWordSetsListInteractorTest {
     @Mock
-    private BackendServer server;
+    private DataServer server;
     @Mock
     private WordSetExperienceService experienceRepository;
     @Mock

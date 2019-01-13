@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
 import talkapp.org.talkappmobile.model.Account;
@@ -59,7 +59,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
     }
 
     private void doActivity() {
-        BackendServer server = getServer();
+        DataServer server = getServer();
         String email = "sasha-ne@tut.by" + RANDOM.nextInt();
         String password = "password0";
 

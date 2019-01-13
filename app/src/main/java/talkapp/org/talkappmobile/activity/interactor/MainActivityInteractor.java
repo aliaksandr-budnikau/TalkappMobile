@@ -5,14 +5,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityListener;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 
 public class MainActivityInteractor {
 
-    private final BackendServer server;
+    private final DataServer server;
     private final Context context;
 
-    public MainActivityInteractor(BackendServer server, Context context) {
+    public MainActivityInteractor(DataServer server, Context context) {
         this.server = server;
         this.context = context;
     }

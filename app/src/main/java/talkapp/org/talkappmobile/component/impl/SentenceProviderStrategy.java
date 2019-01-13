@@ -6,7 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
@@ -14,10 +14,10 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class SentenceProviderStrategy {
     public static final int WORDS_NUMBER = 6;
-    private final BackendServer server;
+    private final DataServer server;
     private final Cache<String, List<Sentence>> cache;
 
-    public SentenceProviderStrategy(BackendServer server) {
+    public SentenceProviderStrategy(DataServer server) {
         this.server = server;
         cache = CacheBuilder.newBuilder()
                 .maximumSize(10000)

@@ -5,7 +5,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Topic;
@@ -15,11 +15,11 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
-    private final BackendServer server;
+    private final DataServer server;
     private final WordSetExperienceService experienceService;
     private final PracticeWordSetExerciseService exerciseService;
 
-    public StudyingWordSetsListInteractor(BackendServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
+    public StudyingWordSetsListInteractor(DataServer server, WordSetExperienceService experienceService, PracticeWordSetExerciseService exerciseService) {
         this.server = server;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;

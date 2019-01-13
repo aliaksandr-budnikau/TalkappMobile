@@ -5,7 +5,7 @@ import android.util.Log;
 import talkapp.org.talkappmobile.activity.listener.OnLoginListener;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
 import talkapp.org.talkappmobile.model.Account;
@@ -15,11 +15,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class LoginInteractor {
     public static final String TAG = LoginInteractor.class.getSimpleName();
-    private final BackendServer server;
+    private final DataServer server;
     private final Logger logger;
     private final TextUtils textUtils;
 
-    public LoginInteractor(Logger logger, BackendServer server, TextUtils textUtils) {
+    public LoginInteractor(Logger logger, DataServer server, TextUtils textUtils) {
         this.logger = logger;
         this.server = server;
         this.textUtils = textUtils;

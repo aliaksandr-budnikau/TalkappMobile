@@ -7,16 +7,16 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public class PracticeWordSetVocabularyInteractor {
-    private final BackendServer server;
+    private final DataServer server;
     private final Speaker speaker;
 
-    public PracticeWordSetVocabularyInteractor(BackendServer server, Speaker speaker) {
+    public PracticeWordSetVocabularyInteractor(DataServer server, Speaker speaker) {
         this.server = server;
         this.speaker = speaker;
     }

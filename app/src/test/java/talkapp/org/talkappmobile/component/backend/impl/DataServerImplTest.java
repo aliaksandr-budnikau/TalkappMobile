@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BackendServerImplTest {
+public class DataServerImplTest {
 
     @Mock
     private WordSetDao wordSetDao;
@@ -75,13 +75,13 @@ public class BackendServerImplTest {
     @Mock
     private RequestExecutor requestExecutor;
     private LocalDataService localDataService;
-    private BackendServerImpl server;
+    private DataServerImpl server;
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void init() {
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new BackendServerImpl(logger, authSign, accountRestClient,
+        server = new DataServerImpl(logger, authSign, accountRestClient,
                 loginRestClient, sentenceRestClient,
                 textGrammarCheckRestClient, topicRestClient, wordSetRestClient,
                 wordTranslationRestClient, localDataService, requestExecutor);

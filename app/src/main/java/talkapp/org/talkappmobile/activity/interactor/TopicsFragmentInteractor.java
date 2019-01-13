@@ -3,13 +3,13 @@ package talkapp.org.talkappmobile.activity.interactor;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnTopicsFragmentPresenterListener;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.Topic;
 
 public class TopicsFragmentInteractor {
-    private final BackendServer server;
+    private final DataServer server;
 
-    public TopicsFragmentInteractor(BackendServer server) {
+    public TopicsFragmentInteractor(DataServer server) {
         this.server = server;
     }
 

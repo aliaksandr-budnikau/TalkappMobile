@@ -14,7 +14,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
@@ -43,14 +43,14 @@ public class BackendServerFactoryBean implements BackendServerFactory {
     @Bean
     RequestExecutor requestExecutor;
     private Retrofit retrofit;
-    private BackendServerImpl backendServer;
+    private DataServerImpl backendServer;
 
     @Override
-    public synchronized BackendServer get() {
+    public synchronized DataServer get() {
         if (backendServer != null) {
             return backendServer;
         }
-        backendServer = new BackendServerImpl(logger, authSign,
+        backendServer = new DataServerImpl(logger, authSign,
                 accountRestClient(),
                 loginRestClient(),
                 sentenceRestClient(),

@@ -8,7 +8,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.backend.BackendServer;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
@@ -23,7 +23,7 @@ import static talkapp.org.talkappmobile.component.impl.SentenceProviderStrategy.
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceProviderStrategyTest {
     @Mock
-    private BackendServer backendServer;
+    private DataServer dataServer;
     @InjectMocks
     private SentenceProviderStrategy strategy;
 
@@ -40,7 +40,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = asList(sentence1, sentence2);
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -63,7 +63,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = asList(sentence1, sentence2);
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -79,7 +79,7 @@ public class SentenceProviderStrategyTest {
         List<Sentence> sentences = emptyList();
 
         // when
-        when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
@@ -93,7 +93,7 @@ public class SentenceProviderStrategyTest {
         int wordSetId = 3;
 
         // when
-        doThrow(RuntimeException.class).when(backendServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
+        doThrow(RuntimeException.class).when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
         List<Sentence> sentencesActual = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then
