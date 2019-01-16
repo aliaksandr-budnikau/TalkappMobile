@@ -14,9 +14,7 @@ public interface LocalDataService {
 
     void saveWordSets(List<WordSet> wordSets);
 
-    List<WordSet> findAllWordSetsFromMemCache();
-
-    List<WordSet> findAllWordSetsByTopicIdFromMemCache(int topicId);
+    List<WordSet> findAllWordSetsByTopicId(int topicId);
 
     List<Topic> findAllTopicsFromMemCache();
 
@@ -36,7 +34,7 @@ public interface LocalDataService {
 
     void saveWordTranslations(List<WordTranslation> wordTranslations, List<String> words, String language);
 
-    List<String> findWordsOfWordSetByIdFromMemCache(int wordSetId);
+    List<String> findWordsOfWordSetById(int wordSetId);
 
     void saveSentences(Map<String, List<Sentence>> body, int wordsNumber);
 }

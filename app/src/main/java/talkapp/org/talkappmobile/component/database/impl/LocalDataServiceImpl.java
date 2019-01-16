@@ -45,7 +45,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final WordTranslationDao wordTranslationDao;
     private final ObjectMapper mapper;
     private final Logger logger;
-    private Map<String, List<WordSet>> allWordSets = new HashMap<>();
     private Map<String, List<Sentence>> allSentences = new HashMap<>();
     private Map<String, WordTranslation> allWordTranslations = new HashMap<>();
     private List<Topic> allTopics = new ArrayList<>();
@@ -64,12 +63,12 @@ public class LocalDataServiceImpl implements LocalDataService {
 
     @Override
     public List<WordSet> findAllWordSets() {
-        if (allWordSets != null && !allWordSets.isEmpty()) {
-            return getAllWordSets(allWordSets);
-        }
         List<WordSetMapping> allMappings = wordSetDao.findAll();
-        allWordSets = splitAllWortSetsByTopicId(allMappings);
-        return getAllWordSets(allWordSets);
+        List<WordSet> result = new LinkedList<>();
+        for (WordSetMapping mapping : allMappings) {
+            result.add(toDto(mapping));
+        }
+        return result;
     }
 
     private Map<String, List<WordSet>> splitAllWortSetsByTopicId(List<WordSetMapping> allMappings) {
@@ -95,38 +94,22 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public void saveWordSets(final List<WordSet> wordSets) {
-        if (allWordSets != null && !allWordSets.isEmpty()) {
-            return;
+    public void saveWordSets(final List<WordSet> incomingSets) {
+        LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
+        for (WordSet wordSet : incomingSets) {
+            mappingsForSaving.add(toMapping(wordSet));
         }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LinkedList<WordSetMapping> mappings = new LinkedList<>();
-                for (WordSet wordSet : wordSets) {
-                    mappings.add(toMapping(wordSet));
-                }
-                wordSetDao.save(mappings);
-                allWordSets = splitAllWortSetsByTopicId(mappings);
-            }
-        };
-        execute(runnable);
+        wordSetDao.save(mappingsForSaving);
     }
 
     @Override
-    public List<WordSet> findAllWordSetsFromMemCache() {
-        if (allWordSets == null) {
-            return emptyList();
+    public List<WordSet> findAllWordSetsByTopicId(int topicId) {
+        List<WordSetMapping> allMappings = wordSetDao.findAllByTopicId(String.valueOf(topicId));
+        List<WordSet> result = new LinkedList<>();
+        for (WordSetMapping mapping : allMappings) {
+            result.add(toDto(mapping));
         }
-        return getAllWordSets(allWordSets);
-    }
-
-    @Override
-    public List<WordSet> findAllWordSetsByTopicIdFromMemCache(int topicId) {
-        if (allWordSets == null) {
-            return emptyList();
-        }
-        return allWordSets.get(String.valueOf(topicId));
+        return result;
     }
 
     @Override
@@ -272,11 +255,18 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public List<String> findWordsOfWordSetByIdFromMemCache(int wordSetId) {
-        for (WordSet wordSet : getAllWordSets(allWordSets)) {
-            if (wordSet.getId() == wordSetId) {
+    public List<String> findWordsOfWordSetById(int wordSetId) {
+        String wordSetIdString = String.valueOf(wordSetId);
+        for (WordSetMapping mapping : wordSetDao.findAll()) {
+            if (mapping.getId().equals(wordSetIdString)) {
                 LinkedList<String> result = new LinkedList<>();
-                for (Word2Tokens word : wordSet.getWords()) {
+                List<Word2Tokens> tokens;
+                try {
+                    tokens = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE);
+                } catch (IOException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+                for (Word2Tokens word : tokens) {
                     result.add(word.getWord());
                 }
                 return result;

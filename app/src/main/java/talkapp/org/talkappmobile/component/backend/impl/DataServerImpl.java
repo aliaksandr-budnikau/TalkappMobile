@@ -164,12 +164,8 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordSet> findAllWordSets() {
-        List<WordSet> cached = localDataService.findAllWordSetsFromMemCache();
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
         Call<List<WordSet>> call = wordSetRestClient.findAll(authSign);
-        List<WordSet> body = null;
+        List<WordSet> body;
         try {
             body = requestExecutor.execute(call).body();
         } catch (InternetConnectionLostException e) {
@@ -178,14 +174,23 @@ public class DataServerImpl implements DataServer {
         if (body == null) {
             return new LinkedList<>();
         } else {
-            localDataService.saveWordSets(body);
+            saveAsync(body);
         }
         return body;
     }
 
+    private void saveAsync(final List<WordSet> body) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                localDataService.saveWordSets(body);
+            }
+        }).start();
+    }
+
     @Override
     public List<WordSet> findWordSetsByTopicId(int topicId) {
-        List<WordSet> cached = localDataService.findAllWordSetsByTopicIdFromMemCache(topicId);
+        List<WordSet> cached = localDataService.findAllWordSetsByTopicId(topicId);
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
@@ -195,7 +200,7 @@ public class DataServerImpl implements DataServer {
         try {
             body = requestExecutor.execute(call).body();
         } catch (InternetConnectionLostException e) {
-            return localDataService.findAllWordSetsByTopicIdFromMemCache(topicId);
+            return localDataService.findAllWordSetsByTopicId(topicId);
         }
         if (body == null) {
             return new LinkedList<>();
@@ -209,7 +214,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
-        List<String> words = localDataService.findWordsOfWordSetByIdFromMemCache(wordSetId);
+        List<String> words = localDataService.findWordsOfWordSetById(wordSetId);
         List<WordTranslation> cached = localDataService.findWordTranslationsByWordsAndByLanguageMemCache(words, language);
         if (cached != null && !cached.isEmpty()) {
             return cached;

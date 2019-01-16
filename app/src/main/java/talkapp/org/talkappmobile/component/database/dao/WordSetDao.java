@@ -8,4 +8,6 @@ public interface WordSetDao {
     List<WordSetMapping> findAll();
 
     void save(List<WordSetMapping> mappings);
+
+    List<WordSetMapping> findAllByTopicId(String topicId);
 }
