@@ -14,8 +14,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
-import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
+import talkapp.org.talkappmobile.component.backend.DataServer;
+import talkapp.org.talkappmobile.component.backend.GitHubSentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
@@ -31,6 +32,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
 
     public static final int TIMEOUT = 20;
     public static final String SERVER_URL = "http://192.168.0.101:8080";
+    public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
 
     @Bean(LoggerBean.class)
     Logger logger;
@@ -43,6 +45,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
     @Bean
     RequestExecutor requestExecutor;
     private Retrofit retrofit;
+    private Retrofit gitHubRetrofit;
     private DataServerImpl backendServer;
 
     @Override
@@ -54,6 +57,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 accountRestClient(),
                 loginRestClient(),
                 sentenceRestClient(),
+                gitHubSentenceRestClient(),
                 checkRestClient(), topicRestClient(), wordSetRestClient(), wordTranslationRestClient(),
                 serviceFactory.getLocalDataService(), requestExecutor
         );
@@ -84,6 +88,10 @@ public class BackendServerFactoryBean implements BackendServerFactory {
         return retrofit().create(SentenceRestClient.class);
     }
 
+    private GitHubSentenceRestClient gitHubSentenceRestClient() {
+        return gitHubRetrofit().create(GitHubSentenceRestClient.class);
+    }
+
     private WordTranslationRestClient wordTranslationRestClient() {
         return retrofit().create(WordTranslationRestClient.class);
     }
@@ -99,6 +107,19 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 .addConverterFactory(jacksonConverterFactory())
                 .build();
         return retrofit;
+    }
+
+    private Retrofit gitHubRetrofit() {
+        if (gitHubRetrofit != null) {
+            return gitHubRetrofit;
+        }
+        gitHubRetrofit = new Retrofit.Builder()
+                .baseUrl(GIT_HUB_URL)
+                .client(okHttpClient())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(jacksonConverterFactory())
+                .build();
+        return gitHubRetrofit;
     }
 
     private OkHttpClient okHttpClient() {

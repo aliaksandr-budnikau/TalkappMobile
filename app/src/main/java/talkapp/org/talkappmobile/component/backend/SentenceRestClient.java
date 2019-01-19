@@ -24,7 +24,4 @@ public interface SentenceRestClient {
 
     @POST(SENTENCE_SCORING_PATH)
     Call<Boolean> saveSentenceScore(@Body Sentence sentence, @HeaderMap Map<String, String> headers);
-
-    @GET(SENTENCE_PATH)
-    Call<Map<String, List<Sentence>>> findByWordSetId(@Query("wordSetId") int wordSetId, @Query("wordsNumber") int wordsNumber, @HeaderMap Map<String, String> headers);
 }
