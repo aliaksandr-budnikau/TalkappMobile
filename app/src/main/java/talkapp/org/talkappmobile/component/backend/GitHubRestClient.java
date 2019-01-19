@@ -14,8 +14,9 @@ import talkapp.org.talkappmobile.model.WordTranslation;
  */
 public interface GitHubRestClient {
 
-    String SENTENCES_PATH = "/aliaksandr-budnikau/talkapp-data/master/sentences/l{wordsNumber}/ws{wordSetId}.json";
-    String WORD_TRANSLATION_PATH = "/aliaksandr-budnikau/talkapp-data/master/words/{language}/ws{wordSetId}.json";
+    String COMMON_PART = "/aliaksandr-budnikau/talkapp-data/master/";
+    String SENTENCES_PATH = COMMON_PART + "sentences/l{wordsNumber}/ws{wordSetId}.json";
+    String WORD_TRANSLATION_PATH = COMMON_PART + "words/{language}/ws{wordSetId}.json";
 
     @GET(SENTENCES_PATH)
     Call<Map<String, List<Sentence>>> findByWordSetId(@Path("wordSetId") int wordSetId, @Path("wordsNumber") int wordsNumber);
