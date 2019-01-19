@@ -7,14 +7,19 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.WordTranslation;
 
 /**
  * @author Budnikau Aliaksandr
  */
-public interface GitHubSentenceRestClient {
+public interface GitHubRestClient {
 
     String SENTENCES_PATH = "/aliaksandr-budnikau/talkapp-data/master/sentences/l{wordsNumber}/ws{wordSetId}.json";
+    String WORD_TRANSLATION_PATH = "/aliaksandr-budnikau/talkapp-data/master/words/{language}/ws{wordSetId}.json";
 
     @GET(SENTENCES_PATH)
     Call<Map<String, List<Sentence>>> findByWordSetId(@Path("wordSetId") int wordSetId, @Path("wordsNumber") int wordsNumber);
+
+    @GET(WORD_TRANSLATION_PATH)
+    Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Path("wordSetId") int wordSetId, @Path("language") String language);
 }

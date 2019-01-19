@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.GitHubSentenceRestClient;
+import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
@@ -54,15 +54,15 @@ public class DataServerImpl implements DataServer {
 
     private final LocalDataService localDataService;
     private final RequestExecutor requestExecutor;
-    private final GitHubSentenceRestClient gitHubSentenceRestClient;
+    private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubSentenceRestClient gitHubSentenceRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
+    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;
         this.loginRestClient = loginRestClient;
         this.sentenceRestClient = sentenceRestClient;
-        this.gitHubSentenceRestClient = gitHubSentenceRestClient;
+        this.gitHubRestClient = gitHubRestClient;
         this.textGrammarCheckRestClient = textGrammarCheckRestClient;
         this.topicRestClient = topicRestClient;
         this.wordSetRestClient = wordSetRestClient;
@@ -117,7 +117,7 @@ public class DataServerImpl implements DataServer {
     }
 
     private void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
-        Call<Map<String, List<Sentence>>> call = gitHubSentenceRestClient.findByWordSetId(wordSetId, wordsNumber);
+        Call<Map<String, List<Sentence>>> call = gitHubRestClient.findByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
         try {
             body = requestExecutor.execute(call).body();
@@ -222,7 +222,7 @@ public class DataServerImpl implements DataServer {
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
-        Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordSetIdAndByLanguage(wordSetId, language, authSign);
+        Call<List<WordTranslation>> call = gitHubRestClient.findByWordSetIdAndByLanguage(wordSetId, language);
         List<WordTranslation> body = null;
         try {
             body = requestExecutor.execute(call).body();

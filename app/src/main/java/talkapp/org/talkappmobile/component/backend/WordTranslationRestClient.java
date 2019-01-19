@@ -17,8 +17,5 @@ public interface WordTranslationRestClient {
     String WORD_TRANSLATION_PATH = "/wordtranslation";
 
     @GET(WORD_TRANSLATION_PATH)
-    Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Query("wordSetId") int wordSetId, @Query("language") String language, @HeaderMap Map<String, String> headers);
-
-    @GET(WORD_TRANSLATION_PATH)
     Call<List<WordTranslation>> findByWordsAndByLanguage(@Query("word") List<String> words, @Query("language") String language, @HeaderMap Map<String, String> headers);
 }
