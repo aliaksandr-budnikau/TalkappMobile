@@ -24,8 +24,6 @@ public interface LocalDataService {
 
     List<Sentence> findSentencesByWordsFromMemCache(Word2Tokens word, int wordsNumber);
 
-    List<WordTranslation> findWordTranslationsByWordsAndByLanguageMemCache(List<String> words, String language);
-
     List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
 
     void saveWordTranslations(List<WordTranslation> wordTranslations, List<String> words, String language);

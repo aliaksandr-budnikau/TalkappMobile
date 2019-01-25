@@ -31,8 +31,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-import static java.util.Collections.emptyList;
-
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
     private final MapType HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE;
@@ -45,7 +43,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final ObjectMapper mapper;
     private final Logger logger;
     private Map<String, List<Sentence>> allSentences = new HashMap<>();
-    private Map<String, WordTranslation> allWordTranslations = new HashMap<>();
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -134,21 +131,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public List<WordTranslation> findWordTranslationsByWordsAndByLanguageMemCache(List<String> words, String language) {
-        return getCachedWordTranslations(words, language);
-    }
-
-    @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
-        List<WordTranslation> cached = getCachedWordTranslations(words, language);
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
-
-        return findAllByWordsAndByLanguage(words, language);
-    }
-
-    private List<WordTranslation> findAllByWordsAndByLanguage(List<String> words, String language) {
         LinkedList<WordTranslation> result = new LinkedList<>();
         for (String word : words) {
             WordTranslationMapping mapping = wordTranslationDao.findByWordAndByLanguage(word, language);
@@ -160,36 +143,13 @@ public class LocalDataServiceImpl implements LocalDataService {
         return result;
     }
 
-    private List<WordTranslation> getCachedWordTranslations(List<String> words, String language) {
-        LinkedList<WordTranslation> result = new LinkedList<>();
-        for (String word : words) {
-            WordTranslation wordTranslation = allWordTranslations.get(word + "_" + language);
-            if (wordTranslation == null) {
-                return emptyList();
-            }
-            result.add(wordTranslation);
-        }
-        return result;
-    }
-
     @Override
     public void saveWordTranslations(final List<WordTranslation> wordTranslations, final List<String> words, String language) {
-        List<WordTranslation> cached = getCachedWordTranslations(words, language);
-        if (cached != null && !cached.isEmpty()) {
-            return;
+        List<WordTranslationMapping> mappings = new LinkedList<>();
+        for (WordTranslation wordTranslation : wordTranslations) {
+            mappings.add(toMapping(wordTranslation));
         }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                List<WordTranslationMapping> mappings = new LinkedList<>();
-                for (WordTranslation wordTranslation : wordTranslations) {
-                    mappings.add(toMapping(wordTranslation));
-                }
-                wordTranslationDao.save(mappings);
-                saveMemCache(wordTranslations);
-            }
-        };
-        execute(runnable);
+        wordTranslationDao.save(mappings);
     }
 
     @Override
@@ -230,27 +190,6 @@ public class LocalDataServiceImpl implements LocalDataService {
             sentenceDao.save(mappings);
             allSentences.put(getKey(word, wordsNumber), words2Sentences.get(word));
         }
-    }
-
-    private void saveMemCache(List<WordTranslation> wordTranslations) {
-        for (WordTranslation wordTranslation : wordTranslations) {
-            allWordTranslations.put(getKey(wordTranslation.getWord(), wordTranslation.getLanguage()), wordTranslation);
-        }
-    }
-
-    private String getKey(String word, String language) {
-        return word + "_" + language;
-    }
-
-    private void execute(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                logger.e(TAG, e.getMessage(), e);
-            }
-        });
-        thread.start();
     }
 
     private WordSetMapping toMapping(WordSet wordSet) {

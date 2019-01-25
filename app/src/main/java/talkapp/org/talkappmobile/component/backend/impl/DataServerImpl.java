@@ -202,10 +202,6 @@ public class DataServerImpl implements DataServer {
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
         List<String> words = localDataService.findWordsOfWordSetById(wordSetId);
-        List<WordTranslation> cached = localDataService.findWordTranslationsByWordsAndByLanguageMemCache(words, language);
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
         Call<List<WordTranslation>> call = gitHubRestClient.findByWordSetIdAndByLanguage(wordSetId, language);
         List<WordTranslation> body = null;
         try {
@@ -223,10 +219,6 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
-        List<WordTranslation> cached = localDataService.findWordTranslationsByWordsAndByLanguageMemCache(words, language);
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
         Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordsAndByLanguage(words, language, authSign);
         List<WordTranslation> body = null;
         try {
