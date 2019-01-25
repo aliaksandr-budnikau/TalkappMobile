@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
-import android.support.annotation.NonNull;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -42,7 +40,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final WordTranslationDao wordTranslationDao;
     private final ObjectMapper mapper;
     private final Logger logger;
-    private Map<String, List<Sentence>> allSentences = new HashMap<>();
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -103,18 +100,8 @@ public class LocalDataServiceImpl implements LocalDataService {
         return result;
     }
 
-    @NonNull
-    private String getKey(String word, int wordsNumber) {
-        return word + "_" + wordsNumber;
-    }
-
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
-        List<Sentence> cached = allSentences.get(getKey(words.getWord(), wordsNumber));
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
-
         LinkedList<Sentence> result = new LinkedList<>();
         for (SentenceMapping mapping : sentenceDao.findAllByWord(words.getWord(), wordsNumber)) {
             Sentence dto = toDto(mapping);
@@ -123,11 +110,6 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
         }
         return result;
-    }
-
-    @Override
-    public List<Sentence> findSentencesByWordsFromMemCache(Word2Tokens word, int wordsNumber) {
-        return allSentences.get(word.getWord() + "_" + wordsNumber);
     }
 
     @Override
@@ -176,19 +158,11 @@ public class LocalDataServiceImpl implements LocalDataService {
     @Override
     public void saveSentences(final Map<String, List<Sentence>> words2Sentences, final int wordsNumber) {
         for (String word : words2Sentences.keySet()) {
-            List<Sentence> cache = allSentences.get(getKey(word, wordsNumber));
-            if (cache == null || cache.isEmpty()) {
-                break;
-            }
-            return;
-        }
-        for (String word : words2Sentences.keySet()) {
             LinkedList<SentenceMapping> mappings = new LinkedList<>();
             for (Sentence sentence : words2Sentences.get(word)) {
                 mappings.add(toMapping(sentence, word, wordsNumber));
             }
             sentenceDao.save(mappings);
-            allSentences.put(getKey(word, wordsNumber), words2Sentences.get(word));
         }
     }
 

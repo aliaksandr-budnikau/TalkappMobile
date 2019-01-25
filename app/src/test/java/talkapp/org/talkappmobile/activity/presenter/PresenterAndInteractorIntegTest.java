@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.AuthSign;
@@ -61,22 +63,29 @@ public abstract class PresenterAndInteractorIntegTest {
     private SentenceDao provideSentenceDao() {
         return new SentenceDao() {
 
-            private Set<SentenceMapping> storage = new HashSet<>();
+            private Map<String, List<SentenceMapping>> sentences = new HashMap<>();
 
             @Override
             public void save(List<SentenceMapping> mappings) {
-                storage.addAll(mappings);
+                for (SentenceMapping mapping : mappings) {
+                    String[] ids = mapping.getId().split("#");
+                    List<SentenceMapping> list = sentences.get(getKey(ids[1], Integer.valueOf(ids[2])));
+                    if (list != null && !list.isEmpty()) {
+                        continue;
+                    } else {
+                        sentences.put(getKey(ids[1], Integer.valueOf(ids[2])), new LinkedList<SentenceMapping>());
+                    }
+                    sentences.get(getKey(ids[1], Integer.valueOf(ids[2]))).add(mapping);
+                }
             }
 
             @Override
             public List<SentenceMapping> findAllByWord(String word, int wordsNumber) {
-                List<SentenceMapping> result = new LinkedList<>();
-                for (SentenceMapping mapping : storage) {
-                    if (mapping.getTokens().contains(word) && mapping.getTokens().length() <= wordsNumber) {
-                        result.add(mapping);
-                    }
-                }
-                return result;
+                return sentences.get(getKey(word, wordsNumber));
+            }
+
+            private String getKey(String word, int wordsNumber) {
+                return word + "_" + wordsNumber;
             }
         };
     }

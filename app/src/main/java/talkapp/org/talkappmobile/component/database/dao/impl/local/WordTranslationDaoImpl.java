@@ -46,6 +46,7 @@ public class WordTranslationDaoImpl extends BaseDaoImpl<WordTranslationMapping, 
             } catch (SQLException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
+            wordTranslations.put(getKey(mapping.getWord(), mapping.getLanguage()), mapping);
         }
     }
 

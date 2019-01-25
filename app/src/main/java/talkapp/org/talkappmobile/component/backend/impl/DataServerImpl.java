@@ -96,10 +96,6 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
-        List<Sentence> cached = localDataService.findSentencesByWordsFromMemCache(words, wordsNumber);
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
         return localDataService.findSentencesByWords(words, wordsNumber);
     }
 
