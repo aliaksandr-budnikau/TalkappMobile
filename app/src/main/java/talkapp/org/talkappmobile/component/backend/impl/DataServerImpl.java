@@ -215,19 +215,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
-        Call<List<WordTranslation>> call = wordTranslationRestClient.findByWordsAndByLanguage(words, language, authSign);
-        List<WordTranslation> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
-        }
-        if (body == null) {
-            return new LinkedList<>();
-        } else {
-            localDataService.saveWordTranslations(body, words, language);
-        }
-        return body;
+        return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
     }
 
     @Override
