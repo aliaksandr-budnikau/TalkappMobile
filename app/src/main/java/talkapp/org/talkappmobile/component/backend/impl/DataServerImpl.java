@@ -100,19 +100,7 @@ public class DataServerImpl implements DataServer {
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
-        Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
-        List<Sentence> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            return localDataService.findSentencesByWords(words, wordsNumber);
-        }
-        if (body == null) {
-            return new LinkedList<>();
-        } else {
-            localDataService.saveSentences(body, words, wordsNumber);
-        }
-        return body;
+        return localDataService.findSentencesByWords(words, wordsNumber);
     }
 
     @Override

@@ -284,20 +284,14 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
             return;
         }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                for (String word : words2Sentences.keySet()) {
-                    LinkedList<SentenceMapping> mappings = new LinkedList<>();
-                    for (Sentence sentence : words2Sentences.get(word)) {
-                        mappings.add(toMapping(sentence, word, wordsNumber));
-                    }
-                    sentenceDao.save(mappings);
-                    allSentences.put(getKey(word, wordsNumber), words2Sentences.get(word));
-                }
+        for (String word : words2Sentences.keySet()) {
+            LinkedList<SentenceMapping> mappings = new LinkedList<>();
+            for (Sentence sentence : words2Sentences.get(word)) {
+                mappings.add(toMapping(sentence, word, wordsNumber));
             }
-        };
-        execute(runnable);
+            sentenceDao.save(mappings);
+            allSentences.put(getKey(word, wordsNumber), words2Sentences.get(word));
+        }
     }
 
     private void saveMemCache(List<WordTranslation> wordTranslations) {

@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.powermock.reflect.Whitebox;
 
 import java.util.Date;
@@ -16,10 +18,16 @@ import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
+import talkapp.org.talkappmobile.component.database.dao.TopicDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
+import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
@@ -40,10 +48,37 @@ public abstract class PresenterAndInteractorIntegTest {
         Whitebox.setInternalState(factory, "authSign", authSign);
         Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(mock(LocalDataService.class));
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(provideLocalDataService());
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         server = factory.get();
+    }
+
+    private LocalDataService provideLocalDataService() {
+        return new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+    }
+
+    private SentenceDao provideSentenceDao() {
+        return new SentenceDao() {
+
+            private Set<SentenceMapping> storage = new HashSet<>();
+
+            @Override
+            public void save(List<SentenceMapping> mappings) {
+                storage.addAll(mappings);
+            }
+
+            @Override
+            public List<SentenceMapping> findAllByWord(String word, int wordsNumber) {
+                List<SentenceMapping> result = new LinkedList<>();
+                for (SentenceMapping mapping : storage) {
+                    if (mapping.getTokens().contains(word) && mapping.getTokens().length() <= wordsNumber) {
+                        result.add(mapping);
+                    }
+                }
+                return result;
+            }
+        };
     }
 
     protected void login() {
