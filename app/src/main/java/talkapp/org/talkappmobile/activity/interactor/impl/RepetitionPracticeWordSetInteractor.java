@@ -117,4 +117,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
         return true;
     }
+
+    @Override
+    public void initialiseSentence(WordSet wordSet) {
+
+    }
 }

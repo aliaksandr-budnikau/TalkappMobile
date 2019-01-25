@@ -100,7 +100,6 @@ public class DataServerImpl implements DataServer {
         if (cached != null && !cached.isEmpty()) {
             return cached;
         }
-        initLocalCacheOfAllSentencesForThisWordset(wordSetId, wordsNumber);
         Call<List<Sentence>> call = sentenceRestClient.findByWords(words.getWord(), wordsNumber, authSign);
         List<Sentence> body = null;
         try {
@@ -116,7 +115,8 @@ public class DataServerImpl implements DataServer {
         return body;
     }
 
-    private void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
+    @Override
+    public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
         Call<Map<String, List<Sentence>>> call = gitHubRestClient.findByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
         try {

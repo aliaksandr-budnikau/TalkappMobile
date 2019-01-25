@@ -132,6 +132,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
+    public void initialiseSentence(WordSet wordSet) {
+        sentenceProvider.initLocalCacheOfAllSentencesForThisWordset(wordSet.getId());
+    }
+
+    @Override
     public Sentence getCurrentSentence(int wordSetId) {
         return exerciseService.getCurrentSentence(wordSetId);
     }

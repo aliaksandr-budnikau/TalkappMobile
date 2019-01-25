@@ -33,4 +33,8 @@ public class SentenceProviderStrategy {
         }
         return new ArrayList<>(cachedSentences);
     }
+
+    public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId) {
+        server.initLocalCacheOfAllSentencesForThisWordset(wordSetId, WORDS_NUMBER);
+    }
 }

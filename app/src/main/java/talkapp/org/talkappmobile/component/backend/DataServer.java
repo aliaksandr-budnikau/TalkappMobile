@@ -21,6 +21,8 @@ public interface DataServer {
 
     List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId);
 
+    void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber);
+
     List<GrammarError> checkText(String text);
 
     List<Topic> findAllTopics();

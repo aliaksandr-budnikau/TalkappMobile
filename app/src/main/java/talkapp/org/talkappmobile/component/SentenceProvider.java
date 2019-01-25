@@ -11,4 +11,6 @@ public interface SentenceProvider {
     void enableRepetitionMode();
 
     void disableRepetitionMode();
+
+    void initLocalCacheOfAllSentencesForThisWordset(int wordSetId);
 }
