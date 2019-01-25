@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.MapType;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +46,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final Logger logger;
     private Map<String, List<Sentence>> allSentences = new HashMap<>();
     private Map<String, WordTranslation> allWordTranslations = new HashMap<>();
-    private List<Topic> allTopics = new ArrayList<>();
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -67,28 +65,6 @@ public class LocalDataServiceImpl implements LocalDataService {
         List<WordSet> result = new LinkedList<>();
         for (WordSetMapping mapping : allMappings) {
             result.add(toDto(mapping));
-        }
-        return result;
-    }
-
-    private Map<String, List<WordSet>> splitAllWortSetsByTopicId(List<WordSetMapping> allMappings) {
-        Map<String, List<WordSet>> allWordSets = new HashMap<>();
-        for (WordSetMapping mapping : allMappings) {
-            List<WordSet> wordSetList = allWordSets.get(mapping.getTopicId());
-            if (wordSetList == null) {
-                wordSetList = new LinkedList<>();
-                allWordSets.put(mapping.getTopicId(), wordSetList);
-            }
-            wordSetList.add(toDto(mapping));
-        }
-        return allWordSets;
-    }
-
-    @NonNull
-    private List<WordSet> getAllWordSets(Map<String, List<WordSet>> all) {
-        LinkedList<WordSet> result = new LinkedList<>();
-        for (List<WordSet> wordSets : all.values()) {
-            result.addAll(wordSets);
         }
         return result;
     }
@@ -113,59 +89,21 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public List<Topic> findAllTopicsFromMemCache() {
-        return allTopics;
-    }
-
-    @Override
     public void saveTopics(final List<Topic> topics) {
-        if (allTopics != null && !allTopics.isEmpty()) {
-            return;
+        LinkedList<TopicMapping> mappings = new LinkedList<>();
+        for (Topic topic : topics) {
+            mappings.add(toMapping(topic));
         }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LinkedList<TopicMapping> mappings = new LinkedList<>();
-                for (Topic topic : topics) {
-                    mappings.add(toMapping(topic));
-                }
-                topicDao.save(mappings);
-                allTopics = topics;
-            }
-        };
-        execute(runnable);
+        topicDao.save(mappings);
     }
 
     @Override
     public List<Topic> findAllTopics() {
-        if (allTopics != null && !allTopics.isEmpty()) {
-            return allTopics;
-        }
         LinkedList<Topic> result = new LinkedList<>();
         for (TopicMapping mapping : topicDao.findAll()) {
             result.add(toDto(mapping));
         }
         return result;
-    }
-
-    @Override
-    public void saveSentences(final List<Sentence> sentences, final Word2Tokens words, final int wordsNumber) {
-        List<Sentence> cache = allSentences.get(getKey(words.getWord(), wordsNumber));
-        if (cache != null && !cache.isEmpty()) {
-            return;
-        }
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                LinkedList<SentenceMapping> mappings = new LinkedList<>();
-                for (Sentence sentence : sentences) {
-                    mappings.add(toMapping(sentence, words.getWord(), wordsNumber));
-                }
-                sentenceDao.save(mappings);
-                allSentences.put(getKey(words.getWord(), wordsNumber), sentences);
-            }
-        };
-        execute(runnable);
     }
 
     @NonNull

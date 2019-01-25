@@ -16,13 +16,9 @@ public interface LocalDataService {
 
     List<WordSet> findAllWordSetsByTopicId(int topicId);
 
-    List<Topic> findAllTopicsFromMemCache();
-
     void saveTopics(List<Topic> topics);
 
     List<Topic> findAllTopics();
-
-    void saveSentences(List<Sentence> body, Word2Tokens words, int wordsNumber);
 
     List<Sentence> findSentencesByWords(Word2Tokens word, int wordsNumber);
 

@@ -134,10 +134,6 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<Topic> findAllTopics() {
-        List<Topic> cached = localDataService.findAllTopicsFromMemCache();
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
         Call<List<Topic>> call = topicRestClient.findAll(authSign);
         List<Topic> body = null;
         try {
