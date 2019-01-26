@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
@@ -13,14 +12,13 @@ import org.powermock.reflect.Whitebox;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
-import java.util.Map;
 
 import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.TopicRestClient;
+import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
@@ -46,7 +44,7 @@ public class ExceptionHandlerTest {
 
     private DataServer server;
     private ExceptionHandlerInteractor interactor;
-    private TopicRestClient topicRestClient;
+    private GitHubRestClient gitHubRestClient;
 
     @Mock
     private TopicDao topicDao;
@@ -71,8 +69,8 @@ public class ExceptionHandlerTest {
         server = factory.get();
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
-        topicRestClient = mock(TopicRestClient.class);
-        Whitebox.setInternalState(server, "topicRestClient", topicRestClient);
+        gitHubRestClient = mock(GitHubRestClient.class);
+        Whitebox.setInternalState(server, "gitHubRestClient", gitHubRestClient);
     }
 
     @Test
@@ -82,7 +80,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
-        when(topicRestClient.findAll(ArgumentMatchers.<Map<String, String>>any())).thenReturn(call);
+        when(gitHubRestClient.findAll()).thenReturn(call);
 
         try {
             server.findAllTopics();
@@ -103,7 +101,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
-        when(topicRestClient.findAll(ArgumentMatchers.<Map<String, String>>any())).thenReturn(call);
+        when(gitHubRestClient.findAll()).thenReturn(call);
 
         try {
             server.findAllTopics();
@@ -125,7 +123,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);
-        when(topicRestClient.findAll(ArgumentMatchers.<Map<String, String>>any())).thenReturn(call);
+        when(gitHubRestClient.findAll()).thenReturn(call);
 
         try {
             server.findAllTopics();

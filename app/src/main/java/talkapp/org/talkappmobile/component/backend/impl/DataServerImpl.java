@@ -15,9 +15,7 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
-import talkapp.org.talkappmobile.component.backend.TopicRestClient;
 import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
-import talkapp.org.talkappmobile.component.backend.WordTranslationRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -44,11 +42,7 @@ public class DataServerImpl implements DataServer {
 
     private final TextGrammarCheckRestClient textGrammarCheckRestClient;
 
-    private final TopicRestClient topicRestClient;
-
     private final WordSetRestClient wordSetRestClient;
-
-    private final WordTranslationRestClient wordTranslationRestClient;
 
     private final Logger logger;
 
@@ -56,7 +50,7 @@ public class DataServerImpl implements DataServer {
     private final RequestExecutor requestExecutor;
     private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, TopicRestClient topicRestClient, WordSetRestClient wordSetRestClient, WordTranslationRestClient wordTranslationRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
+    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, WordSetRestClient wordSetRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;
@@ -64,9 +58,7 @@ public class DataServerImpl implements DataServer {
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
         this.textGrammarCheckRestClient = textGrammarCheckRestClient;
-        this.topicRestClient = topicRestClient;
         this.wordSetRestClient = wordSetRestClient;
-        this.wordTranslationRestClient = wordTranslationRestClient;
         this.localDataService = localDataService;
         this.requestExecutor = requestExecutor;
     }
@@ -130,7 +122,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<Topic> findAllTopics() {
-        Call<List<Topic>> call = topicRestClient.findAll(authSign);
+        Call<List<Topic>> call = gitHubRestClient.findAll();
         List<Topic> body = null;
         try {
             body = requestExecutor.execute(call).body();
