@@ -20,7 +20,6 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
-import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -56,14 +55,10 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 loginRestClient(),
                 sentenceRestClient(),
                 gitHubRestClient(),
-                checkRestClient(), wordSetRestClient(),
+                checkRestClient(),
                 serviceFactory.getLocalDataService(), requestExecutor
         );
         return backendServer;
-    }
-
-    private WordSetRestClient wordSetRestClient() {
-        return retrofit().create(WordSetRestClient.class);
     }
 
     private TextGrammarCheckRestClient checkRestClient() {

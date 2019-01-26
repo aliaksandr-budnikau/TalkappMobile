@@ -15,7 +15,6 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
-import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.model.Account;
 import talkapp.org.talkappmobile.model.GrammarError;
@@ -42,15 +41,13 @@ public class DataServerImpl implements DataServer {
 
     private final TextGrammarCheckRestClient textGrammarCheckRestClient;
 
-    private final WordSetRestClient wordSetRestClient;
-
     private final Logger logger;
 
     private final LocalDataService localDataService;
     private final RequestExecutor requestExecutor;
     private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, WordSetRestClient wordSetRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
+    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.logger = logger;
         this.authSign = authSign;
         this.accountRestClient = accountRestClient;
@@ -58,7 +55,6 @@ public class DataServerImpl implements DataServer {
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
         this.textGrammarCheckRestClient = textGrammarCheckRestClient;
-        this.wordSetRestClient = wordSetRestClient;
         this.localDataService = localDataService;
         this.requestExecutor = requestExecutor;
     }
@@ -153,40 +149,17 @@ public class DataServerImpl implements DataServer {
         for (List<WordSet> wordSets : body.values()) {
             result.addAll(wordSets);
         }
-        saveAsync(result);
+        localDataService.saveWordSets(result);
         return result;
-    }
-
-    private void saveAsync(final List<WordSet> body) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                localDataService.saveWordSets(body);
-            }
-        }).start();
     }
 
     @Override
     public List<WordSet> findWordSetsByTopicId(int topicId) {
-        List<WordSet> cached = localDataService.findAllWordSetsByTopicId(topicId);
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
+        List<WordSet> sets = localDataService.findAllWordSetsByTopicId(topicId);
+        if (sets == null || sets.isEmpty()) {
+            throw new LocalCacheIsEmptyException("WordSets weren't initialized locally");
         }
-        Call<List<WordSet>> call = wordSetRestClient.findByTopicId(topicId, authSign);
-        List<WordSet> body;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            cached = localDataService.findAllWordSetsByTopicId(topicId);
-            if (cached == null || cached.isEmpty()) {
-                throw new LocalCacheIsEmptyException("WordSets weren't initialized locally");
-            }
-            return cached;
-        }
-        if (body == null) {
-            return new LinkedList<>();
-        }
-        return body;
+        return sets;
     }
 
     @Override

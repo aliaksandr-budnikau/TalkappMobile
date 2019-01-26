@@ -27,7 +27,6 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
-import talkapp.org.talkappmobile.component.backend.WordSetRestClient;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
@@ -73,8 +72,6 @@ public class DataServerImplTest {
     @Mock
     private TextGrammarCheckRestClient textGrammarCheckRestClient;
     @Mock
-    private WordSetRestClient wordSetRestClient;
-    @Mock
     private Logger logger;
     @Mock
     private RequestExecutor requestExecutor;
@@ -99,7 +96,7 @@ public class DataServerImplTest {
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
         server = new DataServerImpl(logger, authSign, accountRestClient,
                 loginRestClient, sentenceRestClient, gitHubRestClient,
-                textGrammarCheckRestClient, wordSetRestClient, localDataService, requestExecutor);
+                textGrammarCheckRestClient, localDataService, requestExecutor);
     }
 
     @Test
@@ -124,7 +121,6 @@ public class DataServerImplTest {
         verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);
-        reset(wordSetRestClient);
         reset(requestExecutor);
         reset(gitHubRestClient);
 
@@ -163,7 +159,6 @@ public class DataServerImplTest {
         verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);
-        reset(wordSetRestClient);
         reset(requestExecutor);
         reset(gitHubRestClient);
 
@@ -202,7 +197,6 @@ public class DataServerImplTest {
         verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);
-        reset(wordSetRestClient);
         reset(requestExecutor);
         reset(gitHubRestClient);
 
@@ -241,7 +235,6 @@ public class DataServerImplTest {
         verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);
-        reset(wordSetRestClient);
         reset(requestExecutor);
         reset(gitHubRestClient);
 

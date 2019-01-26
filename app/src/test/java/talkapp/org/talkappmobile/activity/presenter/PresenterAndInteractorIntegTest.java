@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.powermock.reflect.Whitebox;
@@ -30,6 +32,7 @@ import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
@@ -57,7 +60,51 @@ public abstract class PresenterAndInteractorIntegTest {
     }
 
     private LocalDataService provideLocalDataService() {
-        return new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+        return new LocalDataServiceImpl(provideWordSetDao(), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+    }
+
+    private WordSetDao provideWordSetDao() {
+        return new WordSetDao() {
+
+            private Map<String, List<WordSetMapping>> wordSets = new HashMap<>();
+
+            @Override
+            public List<WordSetMapping> findAll() {
+                return getAllWordSets(wordSets);
+            }
+
+            @Override
+            public void save(List<WordSetMapping> mappings) {
+                wordSets = splitAllWortSetsByTopicId(mappings);
+            }
+
+            @Override
+            public List<WordSetMapping> findAllByTopicId(String topicId) {
+                return wordSets.get(topicId) == null ? new LinkedList<WordSetMapping>() : wordSets.get(topicId);
+            }
+
+            @NonNull
+            private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
+                LinkedList<WordSetMapping> result = new LinkedList<>();
+                for (List<WordSetMapping> wordSets : all.values()) {
+                    result.addAll(wordSets);
+                }
+                return result;
+            }
+
+            private Map<String, List<WordSetMapping>> splitAllWortSetsByTopicId(List<WordSetMapping> incomminMapping) {
+                Map<String, List<WordSetMapping>> result = new HashMap<>();
+                for (WordSetMapping mapping : incomminMapping) {
+                    List<WordSetMapping> wordSetList = result.get(mapping.getTopicId());
+                    if (wordSetList == null) {
+                        wordSetList = new LinkedList<>();
+                        result.put(mapping.getTopicId(), wordSetList);
+                    }
+                    wordSetList.add(mapping);
+                }
+                return result;
+            }
+        };
     }
 
     private SentenceDao provideSentenceDao() {
