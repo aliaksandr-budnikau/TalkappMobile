@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.model.Sentence;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -144,7 +145,7 @@ public class ExceptionHandlerTest {
         Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
 
         try {
-            server.findAllWordSets();
+            server.saveSentenceScore(new Sentence());
         } catch (Exception e) {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
             verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");

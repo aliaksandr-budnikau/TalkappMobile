@@ -139,8 +139,8 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordSet> findAllWordSets() {
-        Call<List<WordSet>> call = wordSetRestClient.findAll(authSign);
-        List<WordSet> body;
+        Call<Map<Integer, List<WordSet>>> call = gitHubRestClient.findAllWordSets();
+        Map<Integer, List<WordSet>> body;
         try {
             body = requestExecutor.execute(call).body();
         } catch (InternetConnectionLostException e) {
@@ -148,10 +148,13 @@ public class DataServerImpl implements DataServer {
         }
         if (body == null) {
             return new LinkedList<>();
-        } else {
-            saveAsync(body);
         }
-        return body;
+        LinkedList<WordSet> result = new LinkedList<>();
+        for (List<WordSet> wordSets : body.values()) {
+            result.addAll(wordSets);
+        }
+        saveAsync(result);
+        return result;
     }
 
     private void saveAsync(final List<WordSet> body) {

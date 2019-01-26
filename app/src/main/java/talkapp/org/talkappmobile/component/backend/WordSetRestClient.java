@@ -17,8 +17,5 @@ public interface WordSetRestClient {
     String WORD_SET_PATH = "/wordset";
 
     @GET(WORD_SET_PATH)
-    Call<List<WordSet>> findAll(@HeaderMap Map<String, String> headers);
-
-    @GET(WORD_SET_PATH)
     Call<List<WordSet>> findByTopicId(@Query("topicId") int topicId, @HeaderMap Map<String, String> headers);
 }
