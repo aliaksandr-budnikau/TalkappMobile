@@ -21,11 +21,11 @@ public interface GitHubRestClient {
     String TOPICS_PATH = COMMON_PART + "topics/topics.json";
 
     @GET(SENTENCES_PATH)
-    Call<Map<String, List<Sentence>>> findByWordSetId(@Path("wordSetId") int wordSetId, @Path("wordsNumber") int wordsNumber);
+    Call<Map<String, List<Sentence>>> findSentencesByWordSetId(@Path("wordSetId") int wordSetId, @Path("wordsNumber") int wordsNumber);
 
     @GET(WORD_TRANSLATION_PATH)
-    Call<List<WordTranslation>> findByWordSetIdAndByLanguage(@Path("wordSetId") int wordSetId, @Path("language") String language);
+    Call<List<WordTranslation>> findWordTranslationsByWordSetIdAndByLanguage(@Path("wordSetId") int wordSetId, @Path("language") String language);
 
     @GET(TOPICS_PATH)
-    Call<List<Topic>> findAll();
+    Call<List<Topic>> findAllTopics();
 }

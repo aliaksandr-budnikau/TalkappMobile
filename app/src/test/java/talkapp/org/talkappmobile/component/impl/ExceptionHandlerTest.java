@@ -80,7 +80,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
-        when(gitHubRestClient.findAll()).thenReturn(call);
+        when(gitHubRestClient.findAllTopics()).thenReturn(call);
 
         try {
             server.findAllTopics();
@@ -101,7 +101,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
-        when(gitHubRestClient.findAll()).thenReturn(call);
+        when(gitHubRestClient.findAllTopics()).thenReturn(call);
 
         try {
             server.findAllTopics();
@@ -123,7 +123,7 @@ public class ExceptionHandlerTest {
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);
-        when(gitHubRestClient.findAll()).thenReturn(call);
+        when(gitHubRestClient.findAllTopics()).thenReturn(call);
 
         try {
             server.findAllTopics();

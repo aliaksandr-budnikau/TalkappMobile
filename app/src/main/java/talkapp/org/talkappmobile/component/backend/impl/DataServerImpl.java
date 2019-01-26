@@ -93,7 +93,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
-        Call<Map<String, List<Sentence>>> call = gitHubRestClient.findByWordSetId(wordSetId, wordsNumber);
+        Call<Map<String, List<Sentence>>> call = gitHubRestClient.findSentencesByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
         try {
             body = requestExecutor.execute(call).body();
@@ -122,7 +122,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<Topic> findAllTopics() {
-        Call<List<Topic>> call = gitHubRestClient.findAll();
+        Call<List<Topic>> call = gitHubRestClient.findAllTopics();
         List<Topic> body = null;
         try {
             body = requestExecutor.execute(call).body();
@@ -190,7 +190,7 @@ public class DataServerImpl implements DataServer {
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
         List<String> words = localDataService.findWordsOfWordSetById(wordSetId);
-        Call<List<WordTranslation>> call = gitHubRestClient.findByWordSetIdAndByLanguage(wordSetId, language);
+        Call<List<WordTranslation>> call = gitHubRestClient.findWordTranslationsByWordSetIdAndByLanguage(wordSetId, language);
         List<WordTranslation> body = null;
         try {
             body = requestExecutor.execute(call).body();
