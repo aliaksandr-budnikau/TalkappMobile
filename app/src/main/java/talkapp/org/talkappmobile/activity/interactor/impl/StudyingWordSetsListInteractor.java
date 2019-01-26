@@ -6,6 +6,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
+import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Topic;
@@ -31,10 +32,19 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
         if (topic == null) {
             wordSets = server.findAllWordSets();
         } else {
-            wordSets = server.findWordSetsByTopicId(topic.getId());
+            try {
+                wordSets = server.findWordSetsByTopicId(topic.getId());
+            } catch (LocalCacheIsEmptyException e) {
+                initLocalCache();
+                wordSets = server.findWordSetsByTopicId(topic.getId());
+            }
         }
         Collections.sort(wordSets, new WordSetComparator());
         listener.onWordSetsInitialized(wordSets);
+    }
+
+    private void initLocalCache() {
+        server.findAllWordSets();
     }
 
     @Override
