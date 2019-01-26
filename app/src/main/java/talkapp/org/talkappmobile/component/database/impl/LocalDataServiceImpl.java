@@ -109,6 +109,9 @@ public class LocalDataServiceImpl implements LocalDataService {
                 result.add(dto);
             }
         }
+        if (result.isEmpty()) {
+            throw new LocalCacheIsEmptyException("Local cache is empty for sentences of this word set");
+        }
         return result;
     }
 

@@ -128,7 +128,8 @@ public abstract class PresenterAndInteractorIntegTest {
 
             @Override
             public List<SentenceMapping> findAllByWord(String word, int wordsNumber) {
-                return sentences.get(getKey(word, wordsNumber));
+                List<SentenceMapping> mappings = sentences.get(getKey(word, wordsNumber));
+                return mappings == null ? new LinkedList<SentenceMapping>() : mappings;
             }
 
             private String getKey(String word, int wordsNumber) {

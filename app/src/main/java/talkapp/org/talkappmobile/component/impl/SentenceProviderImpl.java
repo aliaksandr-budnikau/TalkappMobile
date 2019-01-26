@@ -31,9 +31,4 @@ public class SentenceProviderImpl implements SentenceProvider {
     public void disableRepetitionMode() {
         currentStrategy = backendStrategy;
     }
-
-    @Override
-    public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId) {
-        currentStrategy.initLocalCacheOfAllSentencesForThisWordset(wordSetId);
-    }
 }

@@ -121,7 +121,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void initialise() {
         interactor.initialiseExperience(state.getWordSet(), this);
         interactor.initialiseWordsSequence(state.getWordSet(), this);
-        interactor.initialiseSentence(state.getWordSet());
     }
 
     public void nextButtonClick() {
