@@ -11,15 +11,11 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
-import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -33,10 +29,6 @@ public class BackendServerFactoryBean implements BackendServerFactory {
 
     @Bean(LoggerBean.class)
     Logger logger;
-    @Bean(AuthSign.class)
-    AuthSign authSign;
-    @Bean(AuthorizationInterceptor.class)
-    AuthorizationInterceptor authorizationInterceptor;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
     @Bean
@@ -50,27 +42,12 @@ public class BackendServerFactoryBean implements BackendServerFactory {
         if (backendServer != null) {
             return backendServer;
         }
-        backendServer = new DataServerImpl(logger, authSign,
-                accountRestClient(),
-                loginRestClient(),
+        backendServer = new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
-                checkRestClient(),
                 serviceFactory.getLocalDataService(), requestExecutor
         );
         return backendServer;
-    }
-
-    private TextGrammarCheckRestClient checkRestClient() {
-        return retrofit().create(TextGrammarCheckRestClient.class);
-    }
-
-    private LoginRestClient loginRestClient() {
-        return retrofit().create(LoginRestClient.class);
-    }
-
-    private AccountRestClient accountRestClient() {
-        return retrofit().create(AccountRestClient.class);
     }
 
     private SentenceRestClient sentenceRestClient() {
@@ -111,8 +88,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
         return new OkHttpClient().newBuilder()
                 .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(authorizationInterceptor).build();
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS).build();
     }
 
     private JacksonConverterFactory jacksonConverterFactory() {

@@ -20,13 +20,9 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
-import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
@@ -60,17 +56,9 @@ public class DataServerImplTest {
     @Mock
     private WordTranslationDao wordTranslationDao;
     @Mock
-    private AuthSign authSign;
-    @Mock
-    private AccountRestClient accountRestClient;
-    @Mock
-    private LoginRestClient loginRestClient;
-    @Mock
     private SentenceRestClient sentenceRestClient;
     @Mock
     private GitHubRestClient gitHubRestClient;
-    @Mock
-    private TextGrammarCheckRestClient textGrammarCheckRestClient;
     @Mock
     private Logger logger;
     @Mock
@@ -94,9 +82,7 @@ public class DataServerImplTest {
             }
         };
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new DataServerImpl(logger, authSign, accountRestClient,
-                loginRestClient, sentenceRestClient, gitHubRestClient,
-                textGrammarCheckRestClient, localDataService, requestExecutor);
+        server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, requestExecutor);
     }
 
     @Test

@@ -23,8 +23,6 @@ public interface PracticeWordSetView {
 
     void showMessageAnswerEmpty();
 
-    void showMessageSpellingOrGrammarError();
-
     void showMessageAccuracyTooLow();
 
     void showCongratulationMessage();
@@ -42,10 +40,6 @@ public interface PracticeWordSetView {
     void setEnableNextButton(boolean value);
 
     void setAnswerText(String text);
-
-    void showSpellingOrGrammarErrorPanel(String errorMessage);
-
-    void hideSpellingOrGrammarErrorPanel();
 
     void setEnableRightAnswerTextView(boolean value);
 

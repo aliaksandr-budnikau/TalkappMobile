@@ -28,12 +28,6 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     }
 
     @Override
-    public void onUnauthorizedAccess() {
-        view.openLoginActivity();
-        view.killCurrentActivity();
-    }
-
-    @Override
     public void onUncaughtException(Throwable e) {
         String lineSeparator = "\n";
         StringWriter stackTrace = new StringWriter();
@@ -56,10 +50,6 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     @Override
     public void onLocalCacheIsEmpty() {
         view.showToastMessage("You need internet connection to preload this task.");
-    }
-
-    public void handleAuthorizationException(Thread t, Throwable e, Throwable cause) {
-        interactor.handleAuthorizationException(this);
     }
 
     public void handleUncaughtException(Thread t, Throwable e, Throwable cause) {

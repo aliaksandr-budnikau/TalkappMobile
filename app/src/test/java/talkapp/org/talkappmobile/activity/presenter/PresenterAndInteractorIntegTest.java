@@ -14,11 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.backend.impl.LoginException;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
@@ -34,7 +31,6 @@ import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMa
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static org.mockito.Mockito.mock;
@@ -44,14 +40,9 @@ public abstract class PresenterAndInteractorIntegTest {
 
     private DataServer server;
 
-    private AuthSign authSign;
-
     {
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
-        authSign = new AuthSign();
-        Whitebox.setInternalState(factory, "authSign", authSign);
-        Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(provideLocalDataService());
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -136,19 +127,6 @@ public abstract class PresenterAndInteractorIntegTest {
                 return word + "_" + wordsNumber;
             }
         };
-    }
-
-    protected void login() {
-        LoginCredentials credentials = new LoginCredentials();
-        credentials.setEmail("sasha-ne@tut.by");
-        credentials.setPassword("password0");
-        String signature;
-        try {
-            signature = server.loginUser(credentials);
-        } catch (LoginException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        authSign.put(signature);
     }
 
     public DataServer getServer() {

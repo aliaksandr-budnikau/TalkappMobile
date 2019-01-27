@@ -9,11 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.LoginException;
-import talkapp.org.talkappmobile.component.backend.impl.RegistrationException;
-import talkapp.org.talkappmobile.model.Account;
-import talkapp.org.talkappmobile.model.GrammarError;
-import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -60,26 +55,6 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
 
     private void doActivity() {
         DataServer server = getServer();
-        String email = "sasha-ne@tut.by" + RANDOM.nextInt();
-        String password = "password0";
-
-        Account account = new Account();
-        account.setEmail(email);
-        account.setPassword(password);
-        try {
-            server.registerAccount(account);
-        } catch (RegistrationException e) {
-            fail();
-        }
-
-        LoginCredentials credentials = new LoginCredentials();
-        credentials.setEmail(email);
-        credentials.setPassword(password);
-        try {
-            server.loginUser(credentials);
-        } catch (LoginException e) {
-            fail();
-        }
 
         while (RANDOM.nextInt(5) != 3) {
 
@@ -126,14 +101,7 @@ public class StressServerTest extends PresenterAndInteractorIntegTest implements
                     badWords.add(word);
                     fail();
                 }
-                Sentence sentence = sentences.get(RANDOM.nextInt(sentences.size()));
-                if (RANDOM.nextBoolean()) {
-                    List<GrammarError> errors = server.checkText(sentence.getText());
-                    if (!errors.isEmpty()) {
-                        fail();
-                    }
-                } else {
-                    server.checkText(sentence.getText().replaceAll("the", "a"));
+                if (!RANDOM.nextBoolean()) {
                     i--;
                 }
             }

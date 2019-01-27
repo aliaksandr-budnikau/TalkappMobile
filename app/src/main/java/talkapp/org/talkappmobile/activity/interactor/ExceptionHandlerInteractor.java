@@ -16,10 +16,6 @@ public class ExceptionHandlerInteractor {
         listner.onInternetConnectionLost();
     }
 
-    public void handleAuthorizationException(ExceptionHandlerListner listner) {
-        listner.onUnauthorizedAccess();
-    }
-
     public void handleUncaughtException(ExceptionHandlerListner listner, Throwable e) {
         logger.e(TAG, e, e.getMessage());
         listner.onUncaughtException(e);

@@ -1,10 +1,7 @@
 package talkapp.org.talkappmobile.component.backend;
 
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import talkapp.org.talkappmobile.model.Sentence;
 
@@ -17,5 +14,5 @@ public interface SentenceRestClient {
     String SENTENCE_SCORING_PATH = SENTENCE_PATH + "/score";
 
     @POST(SENTENCE_SCORING_PATH)
-    Call<Boolean> saveSentenceScore(@Body Sentence sentence, @HeaderMap Map<String, String> headers);
+    Call<Boolean> saveSentenceScore(@Body Sentence sentence);
 }

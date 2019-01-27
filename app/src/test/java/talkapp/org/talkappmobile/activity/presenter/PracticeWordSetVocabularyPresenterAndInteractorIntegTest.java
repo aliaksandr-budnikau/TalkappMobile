@@ -42,8 +42,6 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
     @Test
     public void test() {
-        login();
-
         List<Word2Tokens> words = asList(new Word2Tokens("age"), new Word2Tokens("anniversary"), new Word2Tokens("birth"));
 
         int id = -1;

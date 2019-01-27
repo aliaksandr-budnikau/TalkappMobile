@@ -37,7 +37,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
@@ -65,7 +64,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, logger);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
-                new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer(), logger), new EqualityScorerBean()),
+                new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
                 logger, experienceService, exerciseService, context, new AudioStuffFactoryBean(), speaker);
     }
 
@@ -92,7 +91,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_completeOneSet() {
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -132,9 +130,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         String wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -146,7 +141,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -184,9 +178,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -198,7 +189,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -236,9 +226,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -250,7 +237,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -275,9 +261,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -289,7 +272,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -314,9 +296,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -328,7 +307,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -353,9 +331,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -373,7 +348,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -413,9 +387,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         String wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -427,7 +398,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -444,7 +414,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(16);
@@ -483,9 +452,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -497,7 +463,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -514,7 +479,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(33);
@@ -553,9 +517,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -567,7 +528,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -584,7 +544,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(50);
@@ -610,9 +569,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -624,7 +580,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -641,7 +596,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(66);
@@ -667,9 +621,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -681,7 +632,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).hideSpellingOrGrammarErrorPanel();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -698,7 +648,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         verify(view).setProgress(83);
@@ -724,9 +673,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord);
         verify(view).setEnableCheckButton(false);
-        verify(view).showMessageSpellingOrGrammarError();
-        verify(view).hideSpellingOrGrammarErrorPanel();
-        verify(view).showSpellingOrGrammarErrorPanel(contains(wrongWord));
         verify(view).setEnableCheckButton(true);
         reset(view);
 
@@ -744,7 +690,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_indexOutOfBoundsExceptionAfterCheck() {
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         presenter.nextButtonClick();
@@ -759,7 +704,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_rightAnswerCheckedTouchRightAnswerUntouchBug() {
         createPresenter(interactor);
-        login();
 
         presenter.initialise();
         presenter.nextButtonClick();

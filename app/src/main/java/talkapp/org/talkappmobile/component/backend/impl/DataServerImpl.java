@@ -1,85 +1,32 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
-import java.net.HttpURLConnection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.Response;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.backend.AccountRestClient;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.backend.LoginRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
-import talkapp.org.talkappmobile.component.backend.TextGrammarCheckRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.model.Account;
-import talkapp.org.talkappmobile.model.GrammarError;
-import talkapp.org.talkappmobile.model.LoginCredentials;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-import static talkapp.org.talkappmobile.component.AuthSign.AUTHORIZATION_HEADER_KEY;
-
 public class DataServerImpl implements DataServer {
-
-    private static final String TAG = DataServerImpl.class.getSimpleName();
-
-    private final AuthSign authSign;
-
-    private final AccountRestClient accountRestClient;
-
-    private final LoginRestClient loginRestClient;
-
     private final SentenceRestClient sentenceRestClient;
-
-    private final TextGrammarCheckRestClient textGrammarCheckRestClient;
-
-    private final Logger logger;
 
     private final LocalDataService localDataService;
     private final RequestExecutor requestExecutor;
     private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(Logger logger, AuthSign authSign, AccountRestClient accountRestClient, LoginRestClient loginRestClient, SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, TextGrammarCheckRestClient textGrammarCheckRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
-        this.logger = logger;
-        this.authSign = authSign;
-        this.accountRestClient = accountRestClient;
-        this.loginRestClient = loginRestClient;
+    public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
-        this.textGrammarCheckRestClient = textGrammarCheckRestClient;
         this.localDataService = localDataService;
         this.requestExecutor = requestExecutor;
-    }
-
-    @Override
-    public void registerAccount(Account account) throws RegistrationException {
-        Call<Void> call = accountRestClient.register(account);
-        Response<Void> response = requestExecutor.execute(call);
-        if (response.code() == HttpURLConnection.HTTP_MOVED_TEMP) {
-            throw new RegistrationException(response.message());
-        }
-    }
-
-    @Override
-    public String loginUser(LoginCredentials credentials) throws LoginException {
-        Call<Boolean> call = loginRestClient.login(credentials);
-        Response<Boolean> response = requestExecutor.execute(call);
-        Boolean result = response.body();
-        String signature = response.headers().get(AUTHORIZATION_HEADER_KEY);
-        if (result != null && signature != null && result) {
-            authSign.put(signature);
-        } else {
-            throw new LoginException(response.message());
-        }
-        return signature;
     }
 
     @Override
@@ -99,21 +46,6 @@ public class DataServerImpl implements DataServer {
         if (body != null) {
             localDataService.saveSentences(body, wordsNumber);
         }
-    }
-
-    @Override
-    public List<GrammarError> checkText(String text) {
-        Call<List<GrammarError>> call = textGrammarCheckRestClient.check(text, authSign);
-        List<GrammarError> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            // do nothing
-        }
-        if (body == null) {
-            return new LinkedList<>();
-        }
-        return body;
     }
 
     @Override
@@ -187,7 +119,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public boolean saveSentenceScore(Sentence sentence) {
-        Call<Boolean> call = sentenceRestClient.saveSentenceScore(sentence, authSign);
+        Call<Boolean> call = sentenceRestClient.saveSentenceScore(sentence);
         Boolean body = null;
         try {
             body = requestExecutor.execute(call).body();

@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +25,6 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
-import talkapp.org.talkappmobile.model.AnswerCheckingResult;
-import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -221,11 +218,8 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
         uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
-        AnswerCheckingResult checkingResult = new AnswerCheckingResult();
-        checkingResult.setErrors(new ArrayList<GrammarError>());
-
         // when
-        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
@@ -234,8 +228,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
         verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
@@ -265,11 +257,8 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
         uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
-        AnswerCheckingResult checkingResult = new AnswerCheckingResult();
-        checkingResult.setErrors(new ArrayList<GrammarError>());
-
         // when
-        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
@@ -278,8 +267,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener).onTrainingFinished();
         verify(wordSetExperienceService).moveToAnotherState(wordSet.getId(), FINISHED);
-        verify(listener, times(0)).onAccuracyTooLowError();
-        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
@@ -310,20 +297,14 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
         uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
-        AnswerCheckingResult checkingResult = new AnswerCheckingResult();
-        checkingResult.setErrors(new ArrayList<GrammarError>());
-        checkingResult.setAccuracyTooLow(true);
-
         // when
-        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
-        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
@@ -354,17 +335,11 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
         uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
-        AnswerCheckingResult checkingResult = new AnswerCheckingResult();
-        List<GrammarError> errors = asList(new GrammarError());
-        checkingResult.setErrors(errors);
-
         // when
-        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(checkingResult);
+        when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener).onSpellingOrGrammarError(errors);
-        verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
@@ -396,17 +371,12 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("");
         uncheckedAnswer.setWordSetExperienceId(experience.getId());
 
-        AnswerCheckingResult checkingResult = new AnswerCheckingResult();
-        checkingResult.setErrors(asList(new GrammarError()));
-
         // when
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);
         verify(listener).onAnswerEmpty();
-        verify(listener, times(0)).onSpellingOrGrammarError(any(List.class));
-        verify(listener, times(0)).onAccuracyTooLowError();
         verify(listener, times(0)).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();

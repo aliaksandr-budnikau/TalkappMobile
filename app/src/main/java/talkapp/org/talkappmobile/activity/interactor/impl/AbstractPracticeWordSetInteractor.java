@@ -11,7 +11,6 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
-import talkapp.org.talkappmobile.model.AnswerCheckingResult;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -57,14 +56,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
 
         logger.i(TAG, "checking ... {}", uncheckedAnswer);
-        AnswerCheckingResult result = refereeService.checkAnswer(uncheckedAnswer);
-        if (!result.getErrors().isEmpty()) {
-            logger.i(TAG, "errors were found ... {}", result.getErrors());
-            listener.onSpellingOrGrammarError(result.getErrors());
-            return false;
-        }
-
-        if (result.isAccuracyTooLow()) {
+        if (!refereeService.checkAnswer(uncheckedAnswer)) {
             logger.i(TAG, "accuracy is too low");
             listener.onAccuracyTooLowError();
             return false;

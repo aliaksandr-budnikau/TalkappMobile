@@ -5,7 +5,6 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -36,18 +35,8 @@ public class PracticeWordSetViewStrategy {
         view.showMessageAnswerEmpty();
     }
 
-    public void onSpellingOrGrammarError(List<GrammarError> errors) {
-        view.showMessageSpellingOrGrammarError();
-        view.hideSpellingOrGrammarErrorPanel();
-        for (GrammarError error : errors) {
-            String errorMessage = textUtils.buildSpellingGrammarErrorMessage(error);
-            view.showSpellingOrGrammarErrorPanel(errorMessage);
-        }
-    }
-
     public void onAccuracyTooLowError() {
         view.showMessageAccuracyTooLow();
-        view.hideSpellingOrGrammarErrorPanel();
     }
 
     public void onUpdateProgress(WordSetExperience exp) {
@@ -65,7 +54,6 @@ public class PracticeWordSetViewStrategy {
         view.setRightAnswer(sentence.getText());
         view.showNextButton();
         view.hideCheckButton();
-        view.hideSpellingOrGrammarErrorPanel();
         view.onExerciseGotAnswered();
     }
 

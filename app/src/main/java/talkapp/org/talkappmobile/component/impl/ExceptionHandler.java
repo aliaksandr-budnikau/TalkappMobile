@@ -5,7 +5,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.presenter.ExceptionHandlerPresenter;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
-import talkapp.org.talkappmobile.component.backend.impl.AuthorizationException;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 
@@ -24,8 +23,6 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
             presenter.handleInternetConnectionLostException(t, e, cause);
         } else if (cause instanceof LocalCacheIsEmptyException) {
             presenter.handleLocalCacheIsEmptyException(t, e, cause);
-        } else if (cause instanceof AuthorizationException) {
-            presenter.handleAuthorizationException(t, e, cause);
         } else {
             presenter.handleUncaughtException(t, e, cause);
         }

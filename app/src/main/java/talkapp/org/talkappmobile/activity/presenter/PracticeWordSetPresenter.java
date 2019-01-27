@@ -6,7 +6,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -45,11 +44,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     @Override
     public void onAnswerEmpty() {
         viewStrategy.onAnswerEmpty();
-    }
-
-    @Override
-    public void onSpellingOrGrammarError(List<GrammarError> errors) {
-        viewStrategy.onSpellingOrGrammarError(errors);
     }
 
     @Override

@@ -10,16 +10,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
 import java.util.HashMap;
-import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.model.GrammarError;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
-import static java.util.Arrays.asList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,24 +68,6 @@ public class PracticeWordSetPresenterTest {
     public void onAnswerEmpty() {
         presenter.onAnswerEmpty();
         verify(viewStrategy).onAnswerEmpty();
-    }
-
-    @Test
-    public void onSpellingOrGrammarError() {
-        // setup
-        GrammarError error1 = new GrammarError();
-        error1.setMessage("error1");
-
-        GrammarError error2 = new GrammarError();
-        error2.setMessage("error2");
-
-        List<GrammarError> errors = asList(error1, error2);
-
-        // when
-        presenter.onSpellingOrGrammarError(errors);
-
-        // then
-        verify(viewStrategy).onSpellingOrGrammarError(errors);
     }
 
     @Test

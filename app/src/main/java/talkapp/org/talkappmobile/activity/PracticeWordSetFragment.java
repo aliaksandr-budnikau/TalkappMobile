@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -173,7 +172,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         BackendSentenceProviderStrategy backendStrategy = new BackendSentenceProviderStrategy(backendServerFactory.get());
         SentenceProviderRepetitionStrategy repetitionStrategy = new SentenceProviderRepetitionStrategy(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
         SentenceProvider sentenceProvider = new SentenceProviderImpl(backendStrategy, repetitionStrategy);
-        GrammarCheckServiceImpl grammarCheckService = new GrammarCheckServiceImpl(backendServerFactory.get(), logger);
+        GrammarCheckServiceImpl grammarCheckService = new GrammarCheckServiceImpl(backendServerFactory.get());
         RefereeService refereeService = new RefereeServiceImpl(grammarCheckService, equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
 
@@ -323,12 +322,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
-    public void showMessageSpellingOrGrammarError() {
-        Toast.makeText(getContext(), "Spelling or grammar errors", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    @UiThread
     public void showMessageAccuracyTooLow() {
         Toast.makeText(getContext(), "Accuracy too low", Toast.LENGTH_LONG).show();
     }
@@ -383,28 +376,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void setAnswerText(final String text) {
         answerText.setText(text);
-    }
-
-    @Override
-    @UiThread
-    public void showSpellingOrGrammarErrorPanel(final String errorMessage) {
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View vi = inflater.inflate(R.layout.row_spelling_grammar_errors_list_item, null);
-        vi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-            }
-        });
-        TextView textView = vi.findViewById(R.id.errorRow);
-        textView.setText(errorMessage);
-        spellingGrammarErrorsListView.addView(vi);
-    }
-
-    @Override
-    @UiThread
-    public void hideSpellingOrGrammarErrorPanel() {
-        spellingGrammarErrorsListView.removeAllViews();
     }
 
     @Override

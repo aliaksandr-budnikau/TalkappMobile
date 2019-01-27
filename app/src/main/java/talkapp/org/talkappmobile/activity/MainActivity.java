@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,24 +18,16 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.apache.commons.lang3.StringUtils;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
-import talkapp.org.talkappmobile.component.AuthSign;
-import talkapp.org.talkappmobile.component.SaveSharedPreference_;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
-    @Bean(AuthSign.class)
-    AuthSign authSign;
-    @Pref
-    SaveSharedPreference_ saveSharedPreference;
     @Bean(BackendServerFactoryBean.class)
     BackendServerFactory backendServerFactory;
 
@@ -51,16 +42,6 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @AfterViews
     public void init() {
-        String headerKey = saveSharedPreference.authorizationHeaderKey().get();
-        if (StringUtils.isEmpty(headerKey)) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
-            finish();
-            startActivity(intent);
-            return;
-        } else {
-            authSign.put(headerKey);
-        }
-
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,11 +66,6 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
                 } else if (id == R.id.nav_manage) {
                     Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
-                } else if (id == R.id.nav_exit) {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity_.class);
-                    finish();
-                    startActivity(intent);
-                    saveSharedPreference.clear();
                 }
 
                 drawer.closeDrawer(GravityCompat.START);

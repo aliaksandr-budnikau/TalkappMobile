@@ -9,7 +9,6 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.UiThread;
 
 import talkapp.org.talkappmobile.activity.CrashActivity_;
-import talkapp.org.talkappmobile.activity.LoginActivity_;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 
 import static talkapp.org.talkappmobile.activity.CrashActivity.STACK_TRACE;
@@ -24,12 +23,6 @@ public class ExceptionHandlerViewBean implements ExceptionHandlerView {
     @UiThread
     public void showToastMessage(final String text) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void openLoginActivity() {
-        Intent intent = new Intent(context, LoginActivity_.class);
-        context.startActivity(intent);
     }
 
     @Override

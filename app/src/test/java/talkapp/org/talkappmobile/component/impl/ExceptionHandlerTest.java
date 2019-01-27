@@ -16,10 +16,8 @@ import java.net.SocketTimeoutException;
 import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
-import talkapp.org.talkappmobile.component.AuthSign;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.backend.impl.AuthorizationInterceptor;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
@@ -29,7 +27,6 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.model.Sentence;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,8 +56,6 @@ public class ExceptionHandlerTest {
         LoggerBean loggerBean = mock(LoggerBean.class);
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", loggerBean);
-        Whitebox.setInternalState(factory, "authSign", mock(AuthSign.class));
-        Whitebox.setInternalState(factory, "authorizationInterceptor", new AuthorizationInterceptor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), topicDao, sentenceDao, wordTranslationDao, new ObjectMapper(), new LoggerBean()));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -91,7 +86,6 @@ public class ExceptionHandlerTest {
         verify(topicDao).findAll();
         verify(view, times(0)).killCurrentActivity();
         verify(view, times(0)).openCrashActivity(any(Exception.class), eq("Internet connection was lost"));
-        verify(view, times(0)).openLoginActivity();
         verify(view, times(0)).showToastMessage("Internet connection was lost");
     }
 
@@ -112,7 +106,6 @@ public class ExceptionHandlerTest {
         verify(topicDao).findAll();
         verify(view, times(0)).killCurrentActivity();
         verify(view, times(0)).openCrashActivity(any(Exception.class), eq("Internet connection was lost"));
-        verify(view, times(0)).openLoginActivity();
         verify(view, times(0)).showToastMessage("Internet connection was lost");
     }
 
@@ -132,26 +125,7 @@ public class ExceptionHandlerTest {
             exceptionHandler.uncaughtException(Thread.currentThread(), e);
             verify(view).openCrashActivity(any(Throwable.class), anyString());
             verify(view).killCurrentActivity();
-            verify(view, times(0)).openLoginActivity();
             verify(view, times(0)).showToastMessage("Internet connection was lost");
-            return;
-        }
-        fail();
-    }
-
-    @Test
-    public void test_AuthorizationException() {
-        ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
-
-        try {
-            server.saveSentenceScore(new Sentence());
-        } catch (Exception e) {
-            exceptionHandler.uncaughtException(Thread.currentThread(), e);
-            verify(view, times(0)).openCrashActivity(e, "Internet connection was lost");
-            verify(view, times(0)).showToastMessage("Internet connection was lost");
-            verify(view).openLoginActivity();
-            verify(view).killCurrentActivity();
             return;
         }
         fail();

@@ -51,8 +51,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Test
     public void test_withoutTopic() {
-        login();
-
         WordSetsListPresenter presenter = new WordSetsListPresenter(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
@@ -90,8 +88,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Test
     public void test_withTopic() {
-        login();
-
         Topic topic = new Topic();
         topic.setId(1);
         WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, studyingWordSetsInteractor);
