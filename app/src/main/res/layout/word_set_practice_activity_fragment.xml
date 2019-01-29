@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <talkapp.org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/originalTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                     android:textColor="@color/color.text.answer"
 
                     android:textSize="5pt" />
-            </RelativeLayout>
+            </talkapp.org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_>
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/answerTextLayout"

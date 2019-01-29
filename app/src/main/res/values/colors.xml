@@ -13,4 +13,6 @@
     <color name="color.split.line.inRec">#FFFF1500</color>
     <color name="color.button.text">#47525E</color>
     <color name="color.button.background">#39c0fa</color>
+    <color name="color.layout.answerSeen.background">#ffa9a9</color>
+    <color name="color.layout.answerNotSeen.background">#ffffff</color>
 </resources>
