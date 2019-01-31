@@ -347,6 +347,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableVoiceRecButton(final boolean value) {
         speakButton.setEnabled(value);
     }
@@ -360,6 +361,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setEnableCheckButton(final boolean value) {
         checkButton.setEnabled(value);
     }
