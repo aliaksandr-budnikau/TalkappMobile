@@ -33,8 +33,7 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
     }
 
     public void rightAnswerTouched() {
-        interactor.unmask(sentence, this);
-        view.answerHasBeenSeen();
+        interactor.unmask(sentence, locked, this);
     }
 
     public void lock() {
@@ -52,5 +51,10 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
     @Override
     public void onNewValue(String newValue) {
         view.onNewValue(newValue);
+    }
+
+    @Override
+    public void onAnswerHasBeenSeen() {
+        view.answerHasBeenSeen();
     }
 }

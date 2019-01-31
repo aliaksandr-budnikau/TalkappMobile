@@ -34,9 +34,12 @@ public class RightAnswerTextViewInteractor {
         listener.onNewValue(maskedValue);
     }
 
-    public void unmask(Sentence sentence, OnRightAnswerTextViewListener listener) {
-        String maskedValue = sentence.getText();
-        listener.onNewValue(maskedValue);
+    public void unmask(Sentence sentence, boolean locked, OnRightAnswerTextViewListener listener) {
+        if (!locked) {
+            String maskedValue = sentence.getText();
+            listener.onNewValue(maskedValue);
+            listener.onAnswerHasBeenSeen();
+        }
     }
 
     private String maskOnlyWordAndPrepareIntervals(Sentence sentence, Word2Tokens word) {
