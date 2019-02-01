@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 
 @EView
@@ -49,7 +49,7 @@ public class WordSetsOriginalTextLayout extends RelativeLayout {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(AnswerHasBeenSeenEM event) {
+    public void onMessageEvent(AnswerHasBeenRevealedEM event) {
         GradientDrawable drawable = (GradientDrawable) background.getDrawable(1);
         drawable.setColor(getResources().getColor(R.color.color_layout_answerSeen_background));
     }

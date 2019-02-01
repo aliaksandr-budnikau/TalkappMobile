@@ -31,7 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenSeenEM;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
@@ -434,7 +434,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Override
     public void onAnswerPronounced() {
-        eventBus.post(new AnswerHasBeenSeenEM());
+        eventBus.post(new AnswerHasBeenRevealedEM());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -448,7 +448,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(AnswerHasBeenSeenEM event) {
+    public void onMessageEvent(AnswerHasBeenRevealedEM event) {
         presenter.markAnswerHasBeenSeen();
     }
 }
