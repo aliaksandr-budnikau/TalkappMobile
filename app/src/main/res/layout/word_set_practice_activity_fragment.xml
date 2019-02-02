@@ -71,7 +71,7 @@
                     android:textColor="@color/color.text.answer"
                     android:textSize="9pt" />
 
-                <Button
+                <talkapp.org.talkappmobile.activity.custom.PronounceRightAnswerButton_
                     android:id="@+id/pronounceRightAnswerButton"
 
                     android:layout_width="wrap_content"
