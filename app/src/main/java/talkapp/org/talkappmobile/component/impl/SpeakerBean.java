@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.component.Speaker;
 @EBean(scope = EBean.Scope.Singleton)
 public class SpeakerBean implements Speaker, TextToSpeech.OnInitListener {
 
+    public static final Locale US = Locale.US;
     @RootContext
     Context context;
     private TextToSpeech speech;
@@ -25,6 +26,9 @@ public class SpeakerBean implements Speaker, TextToSpeech.OnInitListener {
 
     @Override
     public void speak(final String text) {
+        if (!speech.getLanguage().equals(US)) {
+            onInit(0);
+        }
         speech.speak(text, TextToSpeech.QUEUE_ADD, null);
         while (speech.isSpeaking()) {
             try {
@@ -38,7 +42,7 @@ public class SpeakerBean implements Speaker, TextToSpeech.OnInitListener {
     @Override
     public void onInit(int status) {
         if (status != TextToSpeech.ERROR) {
-            speech.setLanguage(Locale.US);
+            speech.setLanguage(US);
             speech.setSpeechRate(0.8f);
         }
     }
