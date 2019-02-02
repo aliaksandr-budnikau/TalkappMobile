@@ -331,7 +331,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     @UiThread
     public void showCongratulationMessage() {
-        Toast.makeText(getContext(), "Congratulations! You won!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Congratulations! You finished!", Toast.LENGTH_LONG).show();
     }
 
     @Override
