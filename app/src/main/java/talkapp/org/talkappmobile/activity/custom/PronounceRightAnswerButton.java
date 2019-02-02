@@ -80,7 +80,7 @@ public class PronounceRightAnswerButton extends android.support.v7.widget.AppCom
     }
 
     @Override
-    public void onAnswerPronounced() {
+    public void onAnswerHasBeenRevealed() {
         eventBus.post(new AnswerHasBeenRevealedEM());
     }
 }

@@ -32,7 +32,7 @@ public class PronounceRightAnswerButtonPresenter implements PronounceRightAnswer
         try {
             view.onStartSpeaking();
             if (sentence != null) {
-                interactor.pronounceRightAnswer(sentence, this);
+                interactor.pronounceRightAnswer(sentence, locked, this);
             }
         } finally {
             view.onStopSpeaking();
@@ -40,7 +40,7 @@ public class PronounceRightAnswerButtonPresenter implements PronounceRightAnswer
     }
 
     @Override
-    public void onAnswerPronounced() {
-        view.onAnswerPronounced();
+    public void onAnswerHasBeenRevealed() {
+        view.onAnswerHasBeenRevealed();
     }
 }

@@ -5,5 +5,5 @@ public interface PronounceRightAnswerButtonView {
 
     void onStopSpeaking();
 
-    void onAnswerPronounced();
+    void onAnswerHasBeenRevealed();
 }

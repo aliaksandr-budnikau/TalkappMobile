@@ -11,10 +11,12 @@ public class PronounceRightAnswerButtonInteractor {
         this.speaker = speaker;
     }
 
-    public void pronounceRightAnswer(Sentence sentence, PronounceRightAnswerButtonListener listener) {
+    public void pronounceRightAnswer(Sentence sentence, boolean locked, PronounceRightAnswerButtonListener listener) {
         try {
             speaker.speak(sentence.getText());
-            listener.onAnswerPronounced();
+            if (!locked) {
+                listener.onAnswerHasBeenRevealed();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
