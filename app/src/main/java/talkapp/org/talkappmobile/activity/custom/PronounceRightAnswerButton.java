@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.activity.custom.presenter.PronounceRightAnswerButtonPresenter;
+import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 
 @EView
@@ -42,5 +43,10 @@ public class PronounceRightAnswerButton extends android.support.v7.widget.AppCom
     public void onMessageEvent(NewSentenceEM event) {
         presenter.setModel(event.getSentence());
         presenter.unlock();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ExerciseGotAnsweredEM event) {
+        presenter.lock();
     }
 }
