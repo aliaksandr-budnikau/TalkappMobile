@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.activity.listener;
 
-import java.util.List;
-
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -34,6 +32,4 @@ public interface OnPracticeWordSetListener {
     void onScoringSuccessful();
 
     void onSentenceChanged();
-
-    void onAnswerPronounced();
 }

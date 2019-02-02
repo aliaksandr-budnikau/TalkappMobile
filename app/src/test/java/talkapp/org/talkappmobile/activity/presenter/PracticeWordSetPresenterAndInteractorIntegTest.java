@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
@@ -49,8 +48,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private WordSet wordSet;
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
-    private Speaker speaker;
-    @Mock
     private Context context;
     private WordSetExperienceDao wordSetExperienceDao;
     private WordSetExperienceService experienceService;
@@ -65,7 +62,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
-                logger, experienceService, exerciseService, context, new AudioStuffFactoryBean(), speaker);
+                logger, experienceService, exerciseService, context, new AudioStuffFactoryBean());
     }
 
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {
@@ -685,20 +682,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         reset(view);
-    }
-
-    @Test
-    public void testPracticeWordSet_indexOutOfBoundsExceptionAfterCheck() {
-        createPresenter(interactor);
-
-        presenter.initialise();
-        presenter.nextButtonClick();
-        Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
-        presenter.checkAnswerButtonClick(sentence.getText());
-
-        // can fail here
-        presenter.pronounceRightAnswerButtonClick();
-        verify(speaker).speak(sentence.getText());
     }
 
     @Test

@@ -9,7 +9,6 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -25,21 +24,18 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final Context context;
     private final RefereeService refereeService;
     private final AudioStuffFactory audioStuffFactory;
-    private final Speaker speaker;
     private final PracticeWordSetExerciseService exerciseService;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
                                              PracticeWordSetExerciseService exerciseService,
-                                             AudioStuffFactory audioStuffFactory,
-                                             Speaker speaker) {
+                                             AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
         this.audioStuffFactory = audioStuffFactory;
-        this.speaker = speaker;
     }
 
     @Override
@@ -91,18 +87,6 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         } finally {
             listener.onStopPlaying();
         }
-    }
-
-    @Override
-    public void pronounceRightAnswer(Sentence sentence, OnPracticeWordSetListener listener) {
-        logger.i(TAG, "start speaking {}", sentence.getText());
-        try {
-            speaker.speak(sentence.getText());
-            listener.onAnswerPronounced();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        logger.i(TAG, "stop speaking");
     }
 
     @Override

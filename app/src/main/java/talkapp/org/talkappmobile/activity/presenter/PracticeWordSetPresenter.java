@@ -102,11 +102,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onSentenceChanged();
     }
 
-    @Override
-    public void onAnswerPronounced() {
-        viewStrategy.onAnswerPronounced();
-    }
-
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -145,18 +140,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         state.setVoiceRecordUri(voiceRecordUri);
     }
 
-    public void pronounceRightAnswerButtonClick() {
-        try {
-            viewStrategy.onStartSpeaking();
-            Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
-            if (currentSentence != null) {
-                interactor.pronounceRightAnswer(currentSentence, this);
-            }
-        } finally {
-            viewStrategy.onStopSpeaking();
-        }
-    }
-
     public void checkRightAnswerCommandRecognized() {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         checkAnswerButtonClick(currentSentence.getText());
@@ -182,5 +165,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public void markAnswerHasBeenSeen() {
         this.answerHasBeenSeen = true;
+    }
+
+    public void disableButtonsDuringPronunciation() {
+        viewStrategy.onStartSpeaking();
+    }
+
+    public void enableButtonsAfterPronunciation() {
+        viewStrategy.onStopSpeaking();
     }
 }

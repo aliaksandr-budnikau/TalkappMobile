@@ -12,7 +12,6 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
-import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
@@ -41,9 +40,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetExperienceService experienceService,
                                              PracticeWordSetExerciseService exerciseService,
                                              Context context,
-                                             AudioStuffFactory audioStuffFactory,
-                                             Speaker speaker) {
-        super(logger, context, refereeService, exerciseService, audioStuffFactory, speaker);
+                                             AudioStuffFactory audioStuffFactory) {
+        super(logger, context, refereeService, exerciseService, audioStuffFactory);
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;

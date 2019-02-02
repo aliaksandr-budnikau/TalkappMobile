@@ -32,6 +32,8 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenRevealedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerPronunciationStartedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.AnswerPronunciationStoppedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
@@ -52,7 +54,6 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
-import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
@@ -70,7 +71,6 @@ import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
-import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
@@ -103,8 +103,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     EqualityScorer equalityScorer;
     @Bean(RandomSentenceSelectorBean.class)
     SentenceSelector sentenceSelector;
-    @Bean(SpeakerBean.class)
-    Speaker speaker;
     @Bean(AudioStuffFactoryBean.class)
     AudioStuffFactory audioStuffFactory;
     @Bean(RandomWordsCombinatorBean.class)
@@ -176,9 +174,9 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         RefereeService refereeService = new RefereeServiceImpl(grammarCheckService, equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
 
-        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory, speaker);
+        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory);
         if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory, speaker);
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), getContext(), audioStuffFactory);
         }
         presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
         presenter.initialise();
@@ -216,10 +214,14 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         presenter.playVoiceButtonClick();
     }
 
-    @Click(R.id.pronounceRightAnswerButton)
-    @Background
-    public void onPronounceRightAnswerButtonClick() {
-        presenter.pronounceRightAnswerButtonClick();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AnswerPronunciationStartedEM event) {
+        presenter.disableButtonsDuringPronunciation();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AnswerPronunciationStoppedEM event) {
+        presenter.enableButtonsAfterPronunciation();
     }
 
     @Click(R.id.checkButton)
@@ -430,11 +432,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Override
     public void onExerciseGotAnswered() {
         eventBus.post(new ExerciseGotAnsweredEM());
-    }
-
-    @Override
-    public void onAnswerPronounced() {
-        eventBus.post(new AnswerHasBeenRevealedEM());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
