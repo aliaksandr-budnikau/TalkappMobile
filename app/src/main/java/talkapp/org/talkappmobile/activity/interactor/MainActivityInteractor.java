@@ -32,4 +32,8 @@ public class MainActivityInteractor {
 
         listener.onAppVersionInitialized(info.versionName);
     }
+
+    public void initYourExp(OnMainActivityListener listener) {
+        listener.onYourExpInitialized(0);
+    }
 }

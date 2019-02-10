@@ -25,4 +25,13 @@ public class MainActivityPresenter implements OnMainActivityListener {
     public void onAppVersionInitialized(String packageName) {
         view.setAppVersion("v" + packageName);
     }
+
+    public void initYourExp() {
+        interactor.initYourExp(this);
+    }
+
+    @Override
+    public void onYourExpInitialized(int exp) {
+        view.setYourExp("EXP " + exp);
+    }
 }

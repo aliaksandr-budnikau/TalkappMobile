@@ -81,6 +81,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         presenter = new MainActivityPresenter(this, interactor);
         presenter.checkServerAvailability();
         presenter.initAppVersion();
+        presenter.initYourExp();
     }
 
     @Override
@@ -119,5 +120,12 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     public void setAppVersion(String packageName) {
         TextView applicationVersion = navigationView.getHeaderView(0).findViewById(R.id.applicationVersion);
         applicationVersion.setText(packageName);
+    }
+
+    @Override
+    @UiThread
+    public void setYourExp(String text) {
+        TextView userExp = navigationView.getHeaderView(0).findViewById(R.id.userExp);
+        userExp.setText(text);
     }
 }
