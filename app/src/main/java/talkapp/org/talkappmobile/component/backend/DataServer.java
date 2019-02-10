@@ -25,4 +25,6 @@ public interface DataServer {
     List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
 
     boolean saveSentenceScore(Sentence sentence);
+
+    double getOverallExp();
 }

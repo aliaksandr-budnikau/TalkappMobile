@@ -25,6 +25,7 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
+import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
@@ -56,6 +57,8 @@ public class DataServerImplTest {
     @Mock
     private WordTranslationDao wordTranslationDao;
     @Mock
+    private ExpAuditDao expAuditDao;
+    @Mock
     private SentenceRestClient sentenceRestClient;
     @Mock
     private GitHubRestClient gitHubRestClient;
@@ -81,7 +84,7 @@ public class DataServerImplTest {
                 return wordSetDaoMock.createOrUpdate(data);
             }
         };
-        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
+        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, expAuditDao, mapper, logger);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, requestExecutor);
     }
 

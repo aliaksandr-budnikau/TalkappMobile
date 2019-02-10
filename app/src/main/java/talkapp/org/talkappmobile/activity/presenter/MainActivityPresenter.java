@@ -31,7 +31,7 @@ public class MainActivityPresenter implements OnMainActivityListener {
     }
 
     @Override
-    public void onYourExpInitialized(int exp) {
+    public void onYourExpInitialized(double exp) {
         view.setYourExp("EXP " + exp);
     }
 }

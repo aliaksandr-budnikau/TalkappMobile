@@ -34,6 +34,7 @@ public class MainActivityInteractor {
     }
 
     public void initYourExp(OnMainActivityListener listener) {
-        listener.onYourExpInitialized(0);
+        double exp = server.getOverallExp();
+        listener.onYourExpInitialized(exp);
     }
 }

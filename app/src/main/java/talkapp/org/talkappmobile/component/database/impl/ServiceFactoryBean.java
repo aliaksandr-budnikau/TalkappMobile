@@ -17,18 +17,21 @@ import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetExperienceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.TopicDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordTranslationDaoImpl;
+import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
@@ -56,6 +59,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private PracticeWordSetExerciseServiceImpl practiceWordSetExerciseService;
     private WordSetExperienceServiceImpl wordSetExperienceService;
     private LocalDataService localDataService;
+    private ExpAuditDao expAuditDao;
 
     @Override
     public WordSetExperienceService getWordSetExperienceRepository() {
@@ -84,7 +88,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (localDataService != null) {
             return localDataService;
         }
-        localDataService = new LocalDataServiceImpl(provideWordSetDao(), provideTopicDao(), provideSentenceDao(), provideWordTranslationDao(), MAPPER, logger);
+        localDataService = new LocalDataServiceImpl(provideWordSetDao(), provideTopicDao(), provideSentenceDao(), provideWordTranslationDao(), provideExpAuditDao(), MAPPER, logger);
         return localDataService;
     }
 
@@ -155,6 +159,18 @@ public class ServiceFactoryBean implements ServiceFactory {
         try {
             experienceDao = new WordSetExperienceDaoImpl(databaseHelper().getConnectionSource(), WordSetExperienceMapping.class);
             return experienceDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private ExpAuditDao provideExpAuditDao() {
+        if (expAuditDao != null) {
+            return expAuditDao;
+        }
+        try {
+            expAuditDao = new ExpAuditDaoImpl(databaseHelper().getConnectionSource(), ExpAuditMapping.class);
+            return expAuditDao;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

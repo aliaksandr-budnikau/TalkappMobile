@@ -128,4 +128,9 @@ public class DataServerImpl implements DataServer {
         }
         return body != null;
     }
+
+    @Override
+    public double getOverallExp() {
+        return localDataService.getOverallExp();
+    }
 }
