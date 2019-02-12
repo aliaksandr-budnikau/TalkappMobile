@@ -84,7 +84,7 @@ public class DataServerImplTest {
                 return wordSetDaoMock.createOrUpdate(data);
             }
         };
-        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, expAuditDao, mapper, logger);
+        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, requestExecutor);
     }
 

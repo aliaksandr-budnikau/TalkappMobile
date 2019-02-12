@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
@@ -52,7 +51,7 @@ public abstract class PresenterAndInteractorIntegTest {
     }
 
     private LocalDataService provideLocalDataService() {
-        return new LocalDataServiceImpl(provideWordSetDao(), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), mock(ExpAuditDao.class), new ObjectMapper(), new LoggerBean());
+        return new LocalDataServiceImpl(provideWordSetDao(), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
     }
 
     private WordSetDao provideWordSetDao() {

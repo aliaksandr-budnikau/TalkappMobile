@@ -6,4 +6,6 @@ import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 
 public interface ExpAuditDao {
     List<ExpAuditMapping> findAll();
+
+    void save(ExpAuditMapping mapping);
 }

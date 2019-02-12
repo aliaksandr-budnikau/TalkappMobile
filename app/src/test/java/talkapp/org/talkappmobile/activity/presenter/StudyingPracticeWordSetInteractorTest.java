@@ -24,6 +24,7 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -62,6 +63,8 @@ public class StudyingPracticeWordSetInteractorTest {
     private OnPracticeWordSetListener listener;
     @Mock
     private WordSetExperienceService wordSetExperienceService;
+    @Mock
+    private UserExpService userExpService;
     @Mock
     private Context context;
     @Mock

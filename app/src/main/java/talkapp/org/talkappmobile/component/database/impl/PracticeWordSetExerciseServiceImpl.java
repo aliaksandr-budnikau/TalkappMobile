@@ -230,7 +230,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     }
 
     @Override
-    public void markAsRepeated(Word2Tokens word, Sentence sentence) {
+    public int markAsRepeated(Word2Tokens word, Sentence sentence) {
         List<PracticeWordSetExerciseMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndBySentenceAndByStatus(
@@ -247,6 +247,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         exercise.setRepetitionCounter(counter);
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
+        return counter;
     }
 
     private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {

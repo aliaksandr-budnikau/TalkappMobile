@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -24,6 +25,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final Logger logger;
     private final SentenceSelector sentenceSelector;
     private final PracticeWordSetExerciseService exerciseService;
+    private final UserExpService userExpService;
     private WordSetExperience exp;
     private Word2Tokens currentWord;
     private Sentence currentSentence;
@@ -35,6 +37,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             RefereeService refereeService,
             Logger logger,
             PracticeWordSetExerciseService exerciseService,
+            UserExpService userExpService,
             Context context,
             AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, audioStuffFactory);
@@ -42,6 +45,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.exerciseService = exerciseService;
+        this.userExpService = userExpService;
     }
 
     @Override
@@ -104,8 +108,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         wordSet.getWords().remove(currentWord);
         logger.i(TAG, "experience is {}", exp);
         listener.onUpdateProgress(exp);
-
-        exerciseService.markAsRepeated(currentWord, sentence);
+        int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
+        userExpService.increaseForRepetition(repetitionCounter);
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");
             listener.onTrainingFinished();

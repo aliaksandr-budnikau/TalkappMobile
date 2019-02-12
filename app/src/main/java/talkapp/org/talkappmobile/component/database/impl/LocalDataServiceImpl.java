@@ -14,12 +14,10 @@ import java.util.Map;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -40,16 +38,14 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final TopicDao topicDao;
     private final SentenceDao sentenceDao;
     private final WordTranslationDao wordTranslationDao;
-    private final ExpAuditDao expAuditDao;
     private final ObjectMapper mapper;
     private final Logger logger;
 
-    public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ExpAuditDao expAuditDao, ObjectMapper mapper, Logger logger) {
+    public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
         this.topicDao = topicDao;
         this.sentenceDao = sentenceDao;
         this.wordTranslationDao = wordTranslationDao;
-        this.expAuditDao = expAuditDao;
         this.mapper = mapper;
         this.logger = logger;
         LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
@@ -171,15 +167,6 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
             sentenceDao.save(mappings);
         }
-    }
-
-    @Override
-    public double getOverallExp() {
-        double sum = 0;
-        for (ExpAuditMapping exp : expAuditDao.findAll()) {
-            sum += exp.getExpScore();
-        }
-        return sum;
     }
 
     private WordSetMapping toMapping(WordSet wordSet) {

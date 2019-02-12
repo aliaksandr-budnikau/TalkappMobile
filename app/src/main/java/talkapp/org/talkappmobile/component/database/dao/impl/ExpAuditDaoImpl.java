@@ -23,4 +23,13 @@ public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> imple
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void save(ExpAuditMapping mapping) {
+        try {
+            this.createOrUpdate(mapping);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 }

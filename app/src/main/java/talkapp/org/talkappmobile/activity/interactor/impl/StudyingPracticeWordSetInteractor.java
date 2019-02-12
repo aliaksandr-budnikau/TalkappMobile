@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -31,6 +32,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final Logger logger;
     private final WordSetExperienceService experienceService;
     private final PracticeWordSetExerciseService exerciseService;
+    private final UserExpService userExpService;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                              SentenceProvider sentenceProvider,
@@ -39,6 +41,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              Logger logger,
                                              WordSetExperienceService experienceService,
                                              PracticeWordSetExerciseService exerciseService,
+                                             UserExpService userExpService,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, audioStuffFactory);
@@ -48,6 +51,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
+        this.userExpService = userExpService;
     }
 
     @Override
@@ -112,6 +116,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         listener.onUpdateProgress(exp);
 
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
+        userExpService.increaseForRepetition(0);
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);

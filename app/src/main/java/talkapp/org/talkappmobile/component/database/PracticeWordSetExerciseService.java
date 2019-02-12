@@ -33,5 +33,5 @@ public interface PracticeWordSetExerciseService {
 
     List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetExperienceStatus status);
 
-    void markAsRepeated(Word2Tokens word, Sentence sentence);
+    int markAsRepeated(Word2Tokens word, Sentence sentence);
 }

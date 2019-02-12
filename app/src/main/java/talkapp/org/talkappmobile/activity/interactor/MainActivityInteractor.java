@@ -6,14 +6,17 @@ import android.content.pm.PackageManager;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
+import talkapp.org.talkappmobile.component.database.UserExpService;
 
 public class MainActivityInteractor {
 
     private final DataServer server;
+    private final UserExpService userExpService;
     private final Context context;
 
-    public MainActivityInteractor(DataServer server, Context context) {
+    public MainActivityInteractor(DataServer server, UserExpService userExpService, Context context) {
         this.server = server;
+        this.userExpService = userExpService;
         this.context = context;
     }
 
@@ -34,7 +37,7 @@ public class MainActivityInteractor {
     }
 
     public void initYourExp(OnMainActivityListener listener) {
-        double exp = server.getOverallExp();
+        double exp = userExpService.getOverallExp();
         listener.onYourExpInitialized(exp);
     }
 }

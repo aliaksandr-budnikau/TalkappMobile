@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
@@ -45,6 +46,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private PracticeWordSetView view;
     private PracticeWordSetPresenter presenter;
     private PracticeWordSetExerciseService exerciseService;
+    @Mock
+    private UserExpService userExpService;
     private WordSet wordSet;
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
@@ -62,7 +65,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
-                logger, experienceService, exerciseService, context, new AudioStuffFactoryBean());
+                logger, experienceService, exerciseService, userExpService, context, new AudioStuffFactoryBean());
     }
 
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {

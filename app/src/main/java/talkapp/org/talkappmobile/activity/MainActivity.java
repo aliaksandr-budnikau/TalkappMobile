@@ -25,11 +25,15 @@ import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
     @Bean(BackendServerFactoryBean.class)
     BackendServerFactory backendServerFactory;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
 
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
@@ -49,7 +53,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), getApplicationContext());
+        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), serviceFactory.getUserExpService(), getApplicationContext());
         initPresenter(interactor);
 
         final FragmentManager fragmentManager = getFragmentManager();

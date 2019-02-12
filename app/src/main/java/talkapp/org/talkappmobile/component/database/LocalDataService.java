@@ -29,6 +29,4 @@ public interface LocalDataService {
     List<String> findWordsOfWordSetById(int wordSetId);
 
     void saveSentences(Map<String, List<Sentence>> body, int wordsNumber);
-
-    double getOverallExp();
 }
