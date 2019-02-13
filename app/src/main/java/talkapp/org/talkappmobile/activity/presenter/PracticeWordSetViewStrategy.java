@@ -164,4 +164,8 @@ public class PracticeWordSetViewStrategy {
     public void onSentencesFound(Sentence sentence, Word2Tokens word) {
         view.onSentencesFound(sentence, word);
     }
+
+    public void onUpdateUserExp(double expScore) {
+        view.onUpdateUserExp(expScore);
+    }
 }

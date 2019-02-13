@@ -32,4 +32,6 @@ public interface OnPracticeWordSetListener {
     void onScoringSuccessful();
 
     void onSentenceChanged();
+
+    void onUpdateUserExp(double expScore);
 }

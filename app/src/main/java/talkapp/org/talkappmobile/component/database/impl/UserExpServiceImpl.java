@@ -25,11 +25,12 @@ public class UserExpServiceImpl implements UserExpService {
     }
 
     @Override
-    public void increaseForRepetition(int repetitionCounter) {
+    public double increaseForRepetition(int repetitionCounter) {
         ExpAuditMapping mapping = new ExpAuditMapping();
         mapping.setActivityType(WORD_SET_PRACTICE);
         mapping.setDate(new Date());
         mapping.setExpScore(1 + repetitionCounter);
         expAuditDao.save(mapping);
+        return mapping.getExpScore();
     }
 }

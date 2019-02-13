@@ -54,4 +54,6 @@ public interface PracticeWordSetView {
     void onEnableRepetitionMode();
 
     void onExerciseGotAnswered();
+
+    void onUpdateUserExp(double expScore);
 }

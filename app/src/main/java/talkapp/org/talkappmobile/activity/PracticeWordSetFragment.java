@@ -434,6 +434,13 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         eventBus.post(new ExerciseGotAnsweredEM());
     }
 
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onUpdateUserExp(double expScore) {
+        Toast.makeText(getContext(), "+" + expScore + " EXP", Toast.LENGTH_LONG).show();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.refreshSentence();
