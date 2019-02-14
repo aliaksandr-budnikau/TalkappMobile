@@ -19,6 +19,8 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
+
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
     private final SentenceProvider sentenceProvider;
@@ -109,7 +111,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         logger.i(TAG, "experience is {}", exp);
         listener.onUpdateProgress(exp);
         int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
-        double expScore = userExpService.increaseForRepetition(repetitionCounter);
+        double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");

@@ -5,8 +5,7 @@ import java.util.Date;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-
-import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
+import talkapp.org.talkappmobile.model.ExpActivityType;
 
 public class UserExpServiceImpl implements UserExpService {
     private final ExpAuditDao expAuditDao;
@@ -25,12 +24,19 @@ public class UserExpServiceImpl implements UserExpService {
     }
 
     @Override
-    public double increaseForRepetition(int repetitionCounter) {
-        ExpAuditMapping mapping = new ExpAuditMapping();
-        mapping.setActivityType(WORD_SET_PRACTICE);
-        mapping.setDate(new Date());
-        mapping.setExpScore(1 + repetitionCounter);
+    public double increaseForRepetition(int repetitionCounter, ExpActivityType type) {
+        Date today = new Date();
+        int newValue = 1 + repetitionCounter;
+        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(today, type);
+        if (mapping == null) {
+            mapping = new ExpAuditMapping();
+            mapping.setActivityType(type);
+            mapping.setDate(today);
+            mapping.setExpScore(newValue);
+        } else {
+            mapping.setExpScore(mapping.getExpScore() + newValue);
+        }
         expAuditDao.save(mapping);
-        return mapping.getExpScore();
+        return newValue;
     }
 }

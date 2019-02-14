@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
+import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
 
@@ -116,7 +117,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         listener.onUpdateProgress(exp);
 
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
-        double expScore = userExpService.increaseForRepetition(0);
+        double expScore = userExpService.increaseForRepetition(0, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
         if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
