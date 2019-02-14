@@ -20,7 +20,11 @@ import static java.util.Arrays.asList;
 @EBean
 public class TextUtilsImpl implements TextUtils {
 
-    public static final String[] ARTICLES = new String[]{"a", "an", "the"};
+    public static final String[] WORDS = new String[]{"a", "an", "the", "um", "uh", "hey", "yeah",
+            "huh", "ah", "aha", "ahem", "aw", "aye", "blah", "eh", "eh", "er", "erm", "ew", "ha",
+            "ha-ha", "hee", "hm", "hmph", "ho", "huh", "mm-hmm", "mm", "mmm", "oh", "oh-oh", "ooh", "oops",
+            "ouch", "shh", "ugh", "uh-huh", "uh-oh", "uh-uh", "whee", "whew", "whoa", "wow", "yay", "yo",
+            "yoo", "hoo"};
     public static final String[] LAST_SYMBOLS = new String[]{".", "!", "?"};
     public static final String[] PUNCTUATION_MARKS = new String[]{",", ".", "!", "?"};
     public static final String PLACEHOLDER = "***";
@@ -42,7 +46,7 @@ public class TextUtilsImpl implements TextUtils {
 
     public TextUtilsImpl() {
         this.placeholder = PLACEHOLDER;
-        this.words = new HashSet<>(asList(ARTICLES));
+        this.words = new HashSet<>(asList(WORDS));
         this.lastSymbols = new HashSet<>(asList(LAST_SYMBOLS));
         this.punctuationMarks = new HashSet<>(asList(PUNCTUATION_MARKS));
     }
