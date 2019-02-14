@@ -15,6 +15,12 @@ public class EqualityScorerBeanTest {
     }
 
     @Test
+    public void score_100_2() {
+        int score = scorer.score("Who is on duty today, you?", "Who is on duty today you?");
+        assertEquals(100, score);
+    }
+
+    @Test
     public void score_101() {
         int score = scorer.score("Who is on duty today?", "Who is duty today?");
         assertEquals(80, score);

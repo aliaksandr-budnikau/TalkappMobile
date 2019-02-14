@@ -7,6 +7,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 
 public class RefereeServiceImpl implements RefereeService {
+    public static final int EQUALITY_THRESHOLD = 80;
     private final GrammarCheckService grammarCheckService;
     private final EqualityScorer equalityScorer;
 
@@ -17,7 +18,7 @@ public class RefereeServiceImpl implements RefereeService {
 
     @Override
     public boolean checkAnswer(UncheckedAnswer answer) {
-        return equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer()) >= 80;
+        return equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer()) >= EQUALITY_THRESHOLD;
     }
 
     @Override

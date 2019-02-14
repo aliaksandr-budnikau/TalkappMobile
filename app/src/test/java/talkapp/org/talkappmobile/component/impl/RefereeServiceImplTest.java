@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.component.impl.RefereeServiceImpl.EQUALITY_THRESHOLD;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefereeServiceImplTest {
@@ -38,7 +39,7 @@ public class RefereeServiceImplTest {
         int delta = 1;
 
         // when
-        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(80);
+        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(EQUALITY_THRESHOLD);
         boolean result = service.checkAnswer(answer);
 
         // then

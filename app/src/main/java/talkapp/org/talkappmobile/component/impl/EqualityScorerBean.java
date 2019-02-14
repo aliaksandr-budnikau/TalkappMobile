@@ -2,20 +2,26 @@ package talkapp.org.talkappmobile.component.impl;
 
 import org.androidannotations.annotations.EBean;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class EqualityScorerBean implements EqualityScorer {
 
     public static final String REPLACEMENT = " ";
-    public static final String REGEX = "[^A-Za-z0-9]";
+    public static final String REGEX = "[^A-Za-z0-9 ]";
 
     @Override
     public int score(String expected, String actual) {
+        expected = expected.toLowerCase().replaceAll(REGEX, REPLACEMENT)
+                .replaceAll(" {1,}", REPLACEMENT).trim();
+        actual = actual.toLowerCase().replaceAll(REGEX, REPLACEMENT)
+                .replaceAll(" {1,}", REPLACEMENT).trim();
         if (expected.equals(actual)) {
             return 100;
         }
@@ -40,6 +46,14 @@ public class EqualityScorerBean implements EqualityScorer {
     }
 
     private HashSet<String> toSet(String sentence) {
-        return new HashSet<>(Arrays.asList(sentence.toLowerCase().replaceAll(REGEX, REPLACEMENT).split(REPLACEMENT)));
+        String[] split = sentence.toLowerCase().replaceAll(REGEX, REPLACEMENT).split(REPLACEMENT);
+        LinkedList<String> result = new LinkedList<>();
+        for (String token : split) {
+            token = token.trim();
+            if (!isEmpty(token)) {
+                result.add(token);
+            }
+        }
+        return new HashSet<>(result);
     }
 }
