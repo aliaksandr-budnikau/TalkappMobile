@@ -17,7 +17,7 @@ import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
@@ -54,17 +54,17 @@ public class ServiceFactoryBean implements ServiceFactory {
     private SentenceDao sentenceDao;
     private WordTranslationDao wordTranslationDao;
     private PracticeWordSetExerciseServiceImpl practiceWordSetExerciseService;
-    private WordSetExperienceServiceImpl wordSetExperienceService;
+    private WordSetServiceImpl wordSetExperienceService;
     private UserExpService userExpService;
     private LocalDataService localDataService;
     private ExpAuditDao expAuditDao;
 
     @Override
-    public WordSetExperienceService getWordSetExperienceRepository() {
+    public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetExperienceServiceImpl(provideWordSetDao());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao());
         return wordSetExperienceService;
     }
 

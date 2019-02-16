@@ -4,7 +4,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
-public interface WordSetExperienceService {
+public interface WordSetService {
 
     WordSetExperience findById(int id);
 

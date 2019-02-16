@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -9,10 +9,10 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
-public class WordSetExperienceServiceImpl implements WordSetExperienceService {
+public class WordSetServiceImpl implements WordSetService {
     private final WordSetDao wordSetDao;
 
-    public WordSetExperienceServiceImpl(WordSetDao wordSetDao) {
+    public WordSetServiceImpl(WordSetDao wordSetDao) {
         this.wordSetDao = wordSetDao;
     }
 

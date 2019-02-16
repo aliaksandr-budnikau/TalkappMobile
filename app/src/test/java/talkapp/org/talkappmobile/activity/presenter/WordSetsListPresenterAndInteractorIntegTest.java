@@ -16,7 +16,7 @@ import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
-import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -44,7 +44,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
         wordSetDao = provideWordSetDao();
         PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, new ObjectMapper());
-        WordSetExperienceServiceImpl experienceService = new WordSetExperienceServiceImpl(wordSetDao);
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao);
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
     }
 

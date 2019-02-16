@@ -25,7 +25,7 @@ import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -62,7 +62,7 @@ public class StudyingPracticeWordSetInteractorTest {
     @Mock
     private OnPracticeWordSetListener listener;
     @Mock
-    private WordSetExperienceService wordSetExperienceService;
+    private WordSetService wordSetService;
     @Mock
     private UserExpService userExpService;
     @Mock
@@ -82,8 +82,8 @@ public class StudyingPracticeWordSetInteractorTest {
         experience.setId(1);
 
         // when
-        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
-        when(wordSetExperienceService.createNew(wordSet)).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetService.createNew(wordSet)).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -106,11 +106,11 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(id);
 
         // when
-        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetExperienceService, times(0)).createNew(wordSet);
+        verify(wordSetService, times(0)).createNew(wordSet);
         verify(sentenceProvider).enableRepetitionMode();
         verify(listener).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
@@ -130,11 +130,11 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(id);
 
         // when
-        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetExperienceService, times(0)).createNew(wordSet);
+        verify(wordSetService, times(0)).createNew(wordSet);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(experience);
@@ -224,7 +224,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
+        when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -233,8 +233,8 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), FINISHED);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
     }
@@ -263,17 +263,17 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetExperienceService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
+        when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(experience);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
         verify(listener).onUpdateProgress(experience);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener).onTrainingFinished();
-        verify(wordSetExperienceService).moveToAnotherState(wordSet.getId(), FINISHED);
+        verify(wordSetService).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(exerciseService).moveCurrentWordToNextState(wordSet.getId());
@@ -311,7 +311,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
@@ -350,7 +350,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
@@ -385,7 +385,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
-        verify(wordSetExperienceService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+        verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());

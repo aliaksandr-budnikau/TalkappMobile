@@ -14,11 +14,11 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSe
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
-import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
@@ -53,7 +53,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Mock
     private Context context;
     private WordSetDao wordSetDao;
-    private WordSetExperienceService experienceService;
+    private WordSetService experienceService;
 
     @Before
     public void setup() {
@@ -61,7 +61,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSetDao = provideWordSetDao();
         exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
-        experienceService = new WordSetExperienceServiceImpl(wordSetDao);
+        experienceService = new WordSetServiceImpl(wordSetDao);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),

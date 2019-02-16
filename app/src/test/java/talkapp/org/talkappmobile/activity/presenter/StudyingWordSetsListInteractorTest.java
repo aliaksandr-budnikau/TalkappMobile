@@ -10,7 +10,7 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListIn
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
-import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -22,7 +22,7 @@ public class StudyingWordSetsListInteractorTest {
     @Mock
     private DataServer server;
     @Mock
-    private WordSetExperienceService experienceRepository;
+    private WordSetService experienceRepository;
     @Mock
     private PracticeWordSetExerciseService exerciseRepository;
     @Mock
