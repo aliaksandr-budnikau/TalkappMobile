@@ -13,15 +13,11 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 @DatabaseTable(tableName = WORD_SET_EXPERIENCE_TABLE)
 public class WordSetExperienceMapping {
     public static final String ID_FN = "id";
-    public static final String MAX_TRAINING_EXPERIENCE_FN = "maxTrainingExperience";
     public static final String STATUS_FN = "status";
     public static final String WORD_SET_EXPERIENCE_TABLE = "WordSetExperience";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private int id;
-
-    @DatabaseField(canBeNull = false, columnName = MAX_TRAINING_EXPERIENCE_FN)
-    private int maxTrainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetExperienceStatus status = FIRST_CYCLE;
@@ -29,9 +25,8 @@ public class WordSetExperienceMapping {
     public WordSetExperienceMapping() {
     }
 
-    public WordSetExperienceMapping(int id, int maxTrainingExperience, WordSetExperienceStatus status) {
+    public WordSetExperienceMapping(int id, WordSetExperienceStatus status) {
         this.id = id;
-        this.maxTrainingExperience = maxTrainingExperience;
         this.status = status;
     }
 
@@ -56,30 +51,20 @@ public class WordSetExperienceMapping {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordSetExperienceMapping that = (WordSetExperienceMapping) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(maxTrainingExperience, that.maxTrainingExperience);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, maxTrainingExperience);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WordSetExperienceMapping{");
         sb.append("id='").append(id).append('\'');
-        sb.append(", maxTrainingExperience='").append(maxTrainingExperience).append('\'');
         sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();
-    }
-
-    public int getMaxTrainingExperience() {
-        return maxTrainingExperience;
-    }
-
-    public void setMaxTrainingExperience(int maxTrainingExperience) {
-        this.maxTrainingExperience = maxTrainingExperience;
     }
 }

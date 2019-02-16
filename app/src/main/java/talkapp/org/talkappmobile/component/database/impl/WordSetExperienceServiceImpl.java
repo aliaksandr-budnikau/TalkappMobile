@@ -41,11 +41,11 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
         WordSetExperienceMapping mapping = new WordSetExperienceMapping();
         mapping.setStatus(FIRST_CYCLE);
         mapping.setId(wordSet.getId());
-        mapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);
         experienceDao.createNewOrUpdate(mapping);
 
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);
+        wordSetMapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);
         wordSetDao.createNewOrUpdate(wordSetMapping);
 
         return toDto(mapping, wordSetMapping);
@@ -56,9 +56,9 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
         WordSetExperienceMapping mapping = experienceDao.findById(id);
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
         int experience = wordSetMapping.getTrainingExperience() + value;
-        if (experience > mapping.getMaxTrainingExperience()) {
+        if (experience > wordSetMapping.getMaxTrainingExperience()) {
             logger.w(TAG, "Experience {} + value {} > then max value!", mapping, value);
-            wordSetMapping.setTrainingExperience(mapping.getMaxTrainingExperience());
+            wordSetMapping.setTrainingExperience(wordSetMapping.getMaxTrainingExperience());
         } else {
             wordSetMapping.setTrainingExperience(experience);
         }
@@ -80,7 +80,7 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
         wordSetExperience.setId(mapping.getId());
         wordSetExperience.setStatus(mapping.getStatus());
         wordSetExperience.setTrainingExperience(wordSetMapping.getTrainingExperience());
-        wordSetExperience.setMaxTrainingExperience(mapping.getMaxTrainingExperience());
+        wordSetExperience.setMaxTrainingExperience(wordSetMapping.getMaxTrainingExperience());
         return wordSetExperience;
     }
 }
