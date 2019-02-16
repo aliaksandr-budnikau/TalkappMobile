@@ -14,7 +14,6 @@ import java.util.Set;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -32,14 +31,12 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
 public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
     private PracticeWordSetExerciseDao exerciseDao;
-    private WordSetExperienceDao experienceDao;
     private WordSetDao wordSetDao;
     private ObjectMapper mapper;
     private int wordSetSize = 12;
 
-    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, WordSetDao wordSetDao, ObjectMapper mapper) {
+    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetDao wordSetDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
-        this.experienceDao = experienceDao;
         this.wordSetDao = wordSetDao;
         this.mapper = mapper;
     }

@@ -22,12 +22,10 @@ import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseD
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
@@ -166,27 +164,6 @@ public abstract class PresenterAndInteractorIntegTest {
 
     public DataServer getServer() {
         return server;
-    }
-
-    protected WordSetExperienceDao provideWordSetExperienceDao() {
-        return new WordSetExperienceDao() {
-            private Set<WordSetExperienceMapping> storage = new HashSet<>();
-
-            @Override
-            public void createNewOrUpdate(WordSetExperienceMapping experience) {
-                storage.add(experience);
-            }
-
-            @Override
-            public WordSetExperienceMapping findById(int id) {
-                for (WordSetExperienceMapping mapping : storage) {
-                    if (mapping.getId() == id) {
-                        return mapping;
-                    }
-                }
-                return null;
-            }
-        };
     }
 
     protected PracticeWordSetExerciseDao providePracticeWordSetExerciseDao() {

@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
@@ -53,18 +52,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private Context context;
-    private WordSetExperienceDao wordSetExperienceDao;
     private WordSetDao wordSetDao;
     private WordSetExperienceService experienceService;
 
     @Before
     public void setup() {
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
-        wordSetExperienceDao = provideWordSetExperienceDao();
         wordSetDao = provideWordSetDao();
-        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, wordSetDao, new ObjectMapper());
+        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
-        experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, wordSetDao, logger);
+        experienceService = new WordSetExperienceServiceImpl(wordSetDao);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),

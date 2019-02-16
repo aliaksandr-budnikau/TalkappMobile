@@ -59,7 +59,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         WordSetExperience exp = experienceService.findById(wordSet.getId());
         logger.i(TAG, "find experience by id {}, word set {}", exp, wordSet);
-        if (exp == null) {
+        if (exp.getTrainingExperience() == 0) {
             logger.i(TAG, "create new experience");
             exp = experienceService.createNew(wordSet);
         }

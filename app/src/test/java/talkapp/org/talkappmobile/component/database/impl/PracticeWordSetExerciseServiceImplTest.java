@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -38,8 +37,6 @@ import static org.mockito.Mockito.when;
 public class PracticeWordSetExerciseServiceImplTest {
     @Mock
     private PracticeWordSetExerciseDao exerciseDao;
-    @Mock
-    private WordSetExperienceDao experienceDao;
     @InjectMocks
     private PracticeWordSetExerciseServiceImpl service;
 

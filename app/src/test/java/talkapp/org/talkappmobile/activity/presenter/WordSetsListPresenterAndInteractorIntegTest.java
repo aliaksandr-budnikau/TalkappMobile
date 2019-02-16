@@ -15,12 +15,9 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListIn
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
@@ -40,16 +37,14 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     @Mock
     private WordSetsListView view;
     private StudyingWordSetsListInteractor studyingWordSetsInteractor;
-    private WordSetExperienceDao wordSetExperienceDao;
     private WordSetDao wordSetDao;
 
     @Before
     public void setup() {
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
-        wordSetExperienceDao = provideWordSetExperienceDao();
         wordSetDao = provideWordSetDao();
-        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, wordSetDao, new ObjectMapper());
-        WordSetExperienceServiceImpl experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, wordSetDao, new LoggerBean());
+        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, new ObjectMapper());
+        WordSetExperienceServiceImpl experienceService = new WordSetExperienceServiceImpl(wordSetDao);
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
     }
 
@@ -68,9 +63,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view, times(0)).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         reset(view);
 
-        WordSetExperienceMapping experience = new WordSetExperienceMapping();
-        experience.setId(wordSets.get(0).getId());
-        wordSetExperienceDao.createNewOrUpdate(experience);
         WordSetMapping wordSetMapping = new WordSetMapping();
         wordSetMapping.setId(String.valueOf(wordSets.get(0).getId()));
         wordSetMapping.setStatus(FINISHED);
@@ -110,9 +102,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view, times(0)).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         reset(view);
 
-        WordSetExperienceMapping experience = new WordSetExperienceMapping();
-        experience.setId(wordSets.get(0).getId());
-        wordSetExperienceDao.createNewOrUpdate(experience);
         WordSetMapping wordSetMapping = new WordSetMapping();
         wordSetMapping.setId(String.valueOf(wordSets.get(0).getId()));
         wordSetMapping.setStatus(FINISHED);

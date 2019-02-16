@@ -100,6 +100,7 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
         experience.setStatus(SECOND_CYCLE);
+        experience.setTrainingExperience(2);
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -123,6 +124,7 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
         experience.setStatus(FIRST_CYCLE);
+        experience.setTrainingExperience(2);
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
