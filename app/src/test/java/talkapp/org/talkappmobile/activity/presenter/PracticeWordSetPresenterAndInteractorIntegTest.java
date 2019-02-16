@@ -62,7 +62,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
         wordSetExperienceDao = provideWordSetExperienceDao();
         wordSetDao = provideWordSetDao();
-        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
+        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, wordSetDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
         experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, wordSetDao, logger);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),

@@ -39,13 +39,13 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
     @Override
     public WordSetExperience createNew(WordSet wordSet) {
         WordSetExperienceMapping mapping = new WordSetExperienceMapping();
-        mapping.setStatus(FIRST_CYCLE);
         mapping.setId(wordSet.getId());
         experienceDao.createNewOrUpdate(mapping);
 
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);
         wordSetMapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);
+        wordSetMapping.setStatus(FIRST_CYCLE);
         wordSetDao.createNewOrUpdate(wordSetMapping);
 
         return toDto(mapping, wordSetMapping);
@@ -69,16 +69,16 @@ public class WordSetExperienceServiceImpl implements WordSetExperienceService {
     @Override
     public WordSetExperience moveToAnotherState(int id, WordSetExperienceStatus value) {
         WordSetExperienceMapping mapping = experienceDao.findById(id);
-        mapping.setStatus(value);
-        experienceDao.createNewOrUpdate(mapping);
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
+        wordSetMapping.setStatus(value);
+        wordSetDao.createNewOrUpdate(wordSetMapping);
         return toDto(mapping, wordSetMapping);
     }
 
     private WordSetExperience toDto(WordSetExperienceMapping mapping, WordSetMapping wordSetMapping) {
         WordSetExperience wordSetExperience = new WordSetExperience();
-        wordSetExperience.setId(mapping.getId());
-        wordSetExperience.setStatus(mapping.getStatus());
+        wordSetExperience.setId(Integer.parseInt(wordSetMapping.getId()));
+        wordSetExperience.setStatus(wordSetMapping.getStatus());
         wordSetExperience.setTrainingExperience(wordSetMapping.getTrainingExperience());
         wordSetExperience.setMaxTrainingExperience(wordSetMapping.getMaxTrainingExperience());
         return wordSetExperience;

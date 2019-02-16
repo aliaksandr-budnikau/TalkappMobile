@@ -79,11 +79,10 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(1);
 
         WordSetExperience experience = new WordSetExperience();
-        experience.setId(3);
-        experience.setStatus(FIRST_CYCLE);
+        experience.setId(1);
 
         // when
-        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(null);
+        when(wordSetExperienceService.findById(wordSet.getId())).thenReturn(experience);
         when(wordSetExperienceService.createNew(wordSet)).thenReturn(experience);
         interactor.initialiseExperience(wordSet, listener);
 

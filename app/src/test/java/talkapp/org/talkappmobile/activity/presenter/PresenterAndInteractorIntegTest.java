@@ -100,6 +100,8 @@ public abstract class PresenterAndInteractorIntegTest {
                     throw new RuntimeException("not implemented");
                 } else {
                     mapping.setTrainingExperience(wordSetMapping.getTrainingExperience());
+                    mapping.setMaxTrainingExperience(wordSetMapping.getMaxTrainingExperience());
+                    mapping.setStatus(wordSetMapping.getStatus());
                     mapping.setWords(wordSetMapping.getWords());
                     //mapping.setId(wordSetMapping.getId());
                     mapping.setTop(wordSetMapping.getTop());

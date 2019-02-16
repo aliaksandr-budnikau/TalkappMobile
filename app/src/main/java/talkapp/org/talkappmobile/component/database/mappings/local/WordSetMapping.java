@@ -7,6 +7,10 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.Objects;
 
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+
 /**
  * @author Budnikau Aliaksandr
  */
@@ -19,6 +23,7 @@ public class WordSetMapping implements Serializable {
     public static final String TOP_FN = "top";
     public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
     public static final String MAX_TRAINING_EXPERIENCE_FN = "maxTrainingExperience";
+    public static final String STATUS_FN = "status";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private String id;
@@ -37,6 +42,9 @@ public class WordSetMapping implements Serializable {
 
     @DatabaseField(canBeNull = false, columnName = MAX_TRAINING_EXPERIENCE_FN)
     private int maxTrainingExperience;
+
+    @DatabaseField(canBeNull = false, columnName = STATUS_FN)
+    private WordSetExperienceStatus status = FIRST_CYCLE;
 
     public String getId() {
         return id;
@@ -84,6 +92,14 @@ public class WordSetMapping implements Serializable {
 
     public void setMaxTrainingExperience(int maxTrainingExperience) {
         this.maxTrainingExperience = maxTrainingExperience;
+    }
+
+    public WordSetExperienceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(WordSetExperienceStatus status) {
+        this.status = status;
     }
 
     @Override

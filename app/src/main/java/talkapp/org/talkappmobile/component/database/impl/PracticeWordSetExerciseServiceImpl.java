@@ -13,9 +13,10 @@ import java.util.Set;
 
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetExperienceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -32,12 +33,14 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
     private PracticeWordSetExerciseDao exerciseDao;
     private WordSetExperienceDao experienceDao;
+    private WordSetDao wordSetDao;
     private ObjectMapper mapper;
     private int wordSetSize = 12;
 
-    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, ObjectMapper mapper) {
+    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetExperienceDao experienceDao, WordSetDao wordSetDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
         this.experienceDao = experienceDao;
+        this.wordSetDao = wordSetDao;
         this.mapper = mapper;
     }
 
@@ -111,7 +114,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public Word2Tokens peekByWordSetIdAnyWord(int wordSetId) {
-        WordSetExperienceMapping exp = experienceDao.findById(wordSetId);
+        WordSetMapping exp = wordSetDao.findById(wordSetId);
         List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
         int i = new Random().nextInt(exercises.size());
         PracticeWordSetExerciseMapping mapping = exercises.get(i);

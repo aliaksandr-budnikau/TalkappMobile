@@ -80,6 +80,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         practiceWordSetExerciseService = new PracticeWordSetExerciseServiceImpl(
                 providePracticeWordSetExerciseDao(),
                 provideWordSetExperienceDao(),
+                provideWordSetDao(),
                 new ObjectMapper()
         );
         return practiceWordSetExerciseService;
