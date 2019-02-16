@@ -58,6 +58,27 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
         return wordSets.get(topicId);
     }
 
+    @Override
+    public WordSetMapping findById(int id) {
+        List<WordSetMapping> all = findAll();
+        for (WordSetMapping wordSetMapping : all) {
+            if (wordSetMapping.getId().equals(String.valueOf(id))) {
+                return wordSetMapping;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void createNewOrUpdate(WordSetMapping mapping) {
+        try {
+            this.createOrUpdate(mapping);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        wordSets = new HashMap<>();
+    }
+
     @NonNull
     private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
         LinkedList<WordSetMapping> result = new LinkedList<>();

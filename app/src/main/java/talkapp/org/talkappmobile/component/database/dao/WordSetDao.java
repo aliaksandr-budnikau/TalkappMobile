@@ -10,4 +10,8 @@ public interface WordSetDao {
     void save(List<WordSetMapping> mappings);
 
     List<WordSetMapping> findAllByTopicId(String topicId);
+
+    WordSetMapping findById(int id);
+
+    void createNewOrUpdate(WordSetMapping wordSetMapping);
 }

@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 public abstract class PresenterAndInteractorIntegTest {
 
     private DataServer server;
+    private WordSetDao wordSetDao;
 
     {
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -54,7 +55,14 @@ public abstract class PresenterAndInteractorIntegTest {
         return new LocalDataServiceImpl(provideWordSetDao(), mock(TopicDao.class), provideSentenceDao(), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
     }
 
-    private WordSetDao provideWordSetDao() {
+    protected WordSetDao provideWordSetDao() {
+        if (wordSetDao == null) {
+            wordSetDao = createWordSetDao();
+        }
+        return wordSetDao;
+    }
+
+    private WordSetDao createWordSetDao() {
         return new WordSetDao() {
 
             private Map<String, List<WordSetMapping>> wordSets = new HashMap<>();
@@ -72,6 +80,31 @@ public abstract class PresenterAndInteractorIntegTest {
             @Override
             public List<WordSetMapping> findAllByTopicId(String topicId) {
                 return wordSets.get(topicId) == null ? new LinkedList<WordSetMapping>() : wordSets.get(topicId);
+            }
+
+            @Override
+            public WordSetMapping findById(int id) {
+                List<WordSetMapping> all = getAllWordSets(wordSets);
+                for (WordSetMapping wordSetMapping : all) {
+                    if (wordSetMapping.getId().equals(String.valueOf(id))) {
+                        return wordSetMapping;
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public void createNewOrUpdate(WordSetMapping wordSetMapping) {
+                WordSetMapping mapping = findById(Integer.parseInt(wordSetMapping.getId()));
+                if (mapping == null) {
+                    throw new RuntimeException("not implemented");
+                } else {
+                    mapping.setTrainingExperience(wordSetMapping.getTrainingExperience());
+                    mapping.setWords(wordSetMapping.getWords());
+                    //mapping.setId(wordSetMapping.getId());
+                    mapping.setTop(wordSetMapping.getTop());
+                    mapping.setTopicId(wordSetMapping.getTopicId());
+                }
             }
 
             @NonNull

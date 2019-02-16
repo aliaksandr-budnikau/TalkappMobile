@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetExperienceService;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetExperienceDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetExperienceServiceImpl;
@@ -53,19 +54,22 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Mock
     private Context context;
     private WordSetExperienceDao wordSetExperienceDao;
+    private WordSetDao wordSetDao;
     private WordSetExperienceService experienceService;
 
     @Before
     public void setup() {
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
         wordSetExperienceDao = provideWordSetExperienceDao();
+        wordSetDao = provideWordSetDao();
         exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetExperienceDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
-        experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, logger);
+        experienceService = new WordSetExperienceServiceImpl(wordSetExperienceDao, wordSetDao, logger);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
                 logger, experienceService, exerciseService, userExpService, context, new AudioStuffFactoryBean());
+        getServer().findAllWordSets();
     }
 
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {

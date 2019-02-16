@@ -17,6 +17,7 @@ public class WordSetMapping implements Serializable {
     public static final String TOPIC_ID_FN = "topicId";
     public static final String WORDS_FN = "word";
     public static final String TOP_FN = "top";
+    public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private String id;
@@ -29,6 +30,9 @@ public class WordSetMapping implements Serializable {
 
     @DatabaseField(columnName = TOP_FN)
     private Integer top;
+
+    @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
+    private int trainingExperience;
 
     public String getId() {
         return id;
@@ -62,6 +66,13 @@ public class WordSetMapping implements Serializable {
         this.top = top;
     }
 
+    public int getTrainingExperience() {
+        return trainingExperience;
+    }
+
+    public void setTrainingExperience(int trainingExperience) {
+        this.trainingExperience = trainingExperience;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

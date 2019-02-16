@@ -13,16 +13,12 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 @DatabaseTable(tableName = WORD_SET_EXPERIENCE_TABLE)
 public class WordSetExperienceMapping {
     public static final String ID_FN = "id";
-    public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
     public static final String MAX_TRAINING_EXPERIENCE_FN = "maxTrainingExperience";
     public static final String STATUS_FN = "status";
     public static final String WORD_SET_EXPERIENCE_TABLE = "WordSetExperience";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private int id;
-
-    @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
-    private int trainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = MAX_TRAINING_EXPERIENCE_FN)
     private int maxTrainingExperience;
@@ -33,9 +29,8 @@ public class WordSetExperienceMapping {
     public WordSetExperienceMapping() {
     }
 
-    public WordSetExperienceMapping(int id, int trainingExperience, int maxTrainingExperience, WordSetExperienceStatus status) {
+    public WordSetExperienceMapping(int id, int maxTrainingExperience, WordSetExperienceStatus status) {
         this.id = id;
-        this.trainingExperience = trainingExperience;
         this.maxTrainingExperience = maxTrainingExperience;
         this.status = status;
     }
@@ -46,14 +41,6 @@ public class WordSetExperienceMapping {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getTrainingExperience() {
-        return trainingExperience;
-    }
-
-    public void setTrainingExperience(int trainingExperience) {
-        this.trainingExperience = trainingExperience;
     }
 
     public WordSetExperienceStatus getStatus() {
@@ -69,14 +56,13 @@ public class WordSetExperienceMapping {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordSetExperienceMapping that = (WordSetExperienceMapping) o;
-        return trainingExperience == that.trainingExperience &&
-                Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(maxTrainingExperience, that.maxTrainingExperience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, trainingExperience, maxTrainingExperience);
+        return Objects.hash(id, maxTrainingExperience);
     }
 
     @Override
@@ -84,7 +70,6 @@ public class WordSetExperienceMapping {
         final StringBuilder sb = new StringBuilder("WordSetExperienceMapping{");
         sb.append("id='").append(id).append('\'');
         sb.append(", maxTrainingExperience='").append(maxTrainingExperience).append('\'');
-        sb.append(", trainingExperience=").append(trainingExperience);
         sb.append(", status=").append(status);
         sb.append('}');
         return sb.toString();
