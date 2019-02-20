@@ -17,7 +17,7 @@ import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExer
 import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
@@ -153,7 +153,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
                     .and()
                     .eq(WORD_FN, selectWord)
                     .and()
-                    .eq(SENTENCE_FN, selectSentence).prepare();
+                    .eq(SENTENCE_ID_FN, selectSentence).prepare();
             selectWord.setValue(word);
             selectSentence.setValue(sentence);
             return this.query(prepare);

@@ -70,11 +70,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        try {
-            exercise.setSentenceJSON(mapper.writeValueAsString(sentence));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        exercise.setSentenceId(sentence.getId());
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
     }
@@ -223,13 +219,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     }
 
     private Sentence getSentence(PracticeWordSetExerciseMapping exercise) {
-        Sentence sentence;
-        try {
-            sentence = mapper.readValue(exercise.getSentenceJSON(), Sentence.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        SentenceMapping mapping = sentenceDao.findById(sentence.getId());
+        SentenceMapping mapping = sentenceDao.findById(exercise.getSentenceId());
         if (mapping == null) {
             throw new RuntimeException("Sentence wasn't found");
         }

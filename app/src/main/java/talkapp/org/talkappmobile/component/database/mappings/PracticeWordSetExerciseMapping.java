@@ -18,7 +18,7 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 public class PracticeWordSetExerciseMapping {
     public static final String ID_FN = "id";
     public static final String WORD_FN = "word";
-    public static final String SENTENCE_FN = "sentence";
+    public static final String SENTENCE_ID_FN = "sentenceId";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
     public static final String STATUS_FN = "status";
@@ -34,8 +34,8 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String wordJSON;
 
-    @DatabaseField(columnName = SENTENCE_FN)
-    private String sentenceJSON;
+    @DatabaseField(columnName = SENTENCE_ID_FN)
+    private String sentenceId;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetExperienceStatus status = FIRST_CYCLE;
@@ -52,15 +52,15 @@ public class PracticeWordSetExerciseMapping {
     public PracticeWordSetExerciseMapping() {
     }
 
-    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceJSON, WordSetExperienceStatus status, boolean current) {
-        this(id, wordSetId, wordJSON, sentenceJSON, status, current, getInstance(UTC).getTime());
+    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetExperienceStatus status, boolean current) {
+        this(id, wordSetId, wordJSON, sentenceId, status, current, getInstance(UTC).getTime());
     }
 
-    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceJSON, WordSetExperienceStatus status, boolean current, Date updatedDate) {
+    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetExperienceStatus status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordJSON = wordJSON;
-        this.sentenceJSON = sentenceJSON;
+        this.sentenceId = sentenceId;
         this.status = status;
         this.current = current;
         this.updatedDate = updatedDate;
@@ -90,12 +90,12 @@ public class PracticeWordSetExerciseMapping {
         this.wordSetId = wordSetId;
     }
 
-    public String getSentenceJSON() {
-        return sentenceJSON;
+    public String getSentenceId() {
+        return sentenceId;
     }
 
-    public void setSentenceJSON(String sentenceJSON) {
-        this.sentenceJSON = sentenceJSON;
+    public void setSentenceId(String sentenceJSON) {
+        this.sentenceId = sentenceJSON;
     }
 
     public WordSetExperienceStatus getStatus() {
@@ -137,12 +137,12 @@ public class PracticeWordSetExerciseMapping {
         PracticeWordSetExerciseMapping that = (PracticeWordSetExerciseMapping) o;
         return id == that.id &&
                 Objects.equals(wordJSON, that.wordJSON) &&
-                Objects.equals(sentenceJSON, that.sentenceJSON);
+                Objects.equals(sentenceId, that.sentenceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, wordJSON, sentenceJSON);
+        return Objects.hash(id, wordJSON, sentenceId);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class PracticeWordSetExerciseMapping {
                 "id=" + id +
                 ", word='" + wordJSON + '\'' +
                 ", wordSetId='" + wordSetId + '\'' +
-                ", sentenceJSON='" + sentenceJSON + '\'' +
+                ", sentenceId='" + sentenceId + '\'' +
                 '}';
     }
 }

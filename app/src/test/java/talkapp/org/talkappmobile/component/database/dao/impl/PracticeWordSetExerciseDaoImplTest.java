@@ -36,7 +36,7 @@ import static talkapp.org.talkappmobile.component.database.mappings.PracticeWord
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.REPETITION_COUNTER_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
@@ -78,7 +78,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(exe.getId(), cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(exe.getWordSetId(), cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals(exe.getWordJSON(), cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals(exe.getSentenceJSON(), cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals(exe.getSentenceId(), cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(exe.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(exe.isCurrent() ? 1 : 0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -103,7 +103,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals("wordJSON1", cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -114,7 +114,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals("wordJSON3", cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -146,7 +146,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         // setup
         PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping();
         exe.setWordJSON("wordJSON");
-        exe.setSentenceJSON("sentenceJSON");
+        exe.setSentenceId("sentenceId");
         exe.setStatus(FIRST_CYCLE);
         exe.setUpdatedDate(getInstance(UTC).getTime());
 
@@ -160,7 +160,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals(exe.getWordJSON(), cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals(exe.getSentenceJSON(), cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals(exe.getSentenceId(), cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(exe.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -244,7 +244,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(5, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals("wordJSON", cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals("sentenceJSON", cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals("sentenceJSON", cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -265,7 +265,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals("wordJSON1", cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -276,7 +276,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
         assertEquals("wordJSON3", cursor.getString(cursor.getColumnIndex(WORD_FN)));
-        assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_FN)));
+        assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_ID_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
@@ -305,14 +305,14 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(22, result.get(1).getId());
         assertEquals(2, result.get(1).getWordSetId());
         assertEquals("wordJSON4", result.get(1).getWordJSON());
-        assertEquals("sentenceJSON2", result.get(1).getSentenceJSON());
+        assertEquals("sentenceJSON2", result.get(1).getSentenceId());
         assertEquals(FINISHED, result.get(1).getStatus());
         assertEquals(true, result.get(1).isCurrent());
 
         assertEquals(3, result.get(0).getId());
         assertEquals(2, result.get(0).getWordSetId());
         assertEquals("wordJSON42", result.get(0).getWordJSON());
-        assertEquals("sentenceJSON22", result.get(0).getSentenceJSON());
+        assertEquals("sentenceJSON22", result.get(0).getSentenceId());
         assertEquals(FINISHED, result.get(0).getStatus());
         assertEquals(false, result.get(0).isCurrent());
     }
@@ -349,14 +349,14 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(22, result.get(1).getId());
         assertEquals(2, result.get(1).getWordSetId());
         assertEquals("wordJSON4", result.get(1).getWordJSON());
-        assertEquals("sentenceJSON2", result.get(1).getSentenceJSON());
+        assertEquals("sentenceJSON2", result.get(1).getSentenceId());
         assertEquals(FINISHED, result.get(1).getStatus());
         assertEquals(true, result.get(1).isCurrent());
 
         assertEquals(3, result.get(0).getId());
         assertEquals(2, result.get(0).getWordSetId());
         assertEquals("wordJSON42", result.get(0).getWordJSON());
-        assertEquals("sentenceJSON22", result.get(0).getSentenceJSON());
+        assertEquals("sentenceJSON22", result.get(0).getSentenceId());
         assertEquals(FINISHED, result.get(0).getStatus());
         assertEquals(true, result.get(0).isCurrent());
     }
@@ -395,14 +395,14 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(22, result.get(1).getId());
         assertEquals(2, result.get(1).getWordSetId());
         assertEquals("wordJSON4", result.get(1).getWordJSON());
-        assertEquals("sentenceJSON2", result.get(1).getSentenceJSON());
+        assertEquals("sentenceJSON2", result.get(1).getSentenceId());
         assertEquals(FINISHED, result.get(1).getStatus());
         assertEquals(true, result.get(1).isCurrent());
 
         assertEquals(3, result.get(0).getId());
         assertEquals(2, result.get(0).getWordSetId());
         assertEquals("wordJSON4", result.get(0).getWordJSON());
-        assertEquals("sentenceJSON22", result.get(0).getSentenceJSON());
+        assertEquals("sentenceJSON22", result.get(0).getSentenceId());
         assertEquals(FINISHED, result.get(0).getStatus());
         assertEquals(true, result.get(0).isCurrent());
     }
@@ -477,7 +477,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(3, result.get(0).getId());
         assertEquals(3, result.get(0).getWordSetId());
         assertEquals("wordJSON3", result.get(0).getWordJSON());
-        assertEquals("sentenceJSON3", result.get(0).getSentenceJSON());
+        assertEquals("sentenceJSON3", result.get(0).getSentenceId());
         assertEquals(FINISHED, result.get(0).getStatus());
         assertEquals(false, result.get(0).isCurrent());
     }
@@ -595,7 +595,7 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate, int repCount) {
         String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
-                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN,
+                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_ID_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN,
                 id, wordSetId, word, sentence, status, current, updatedDate.getTime(), repCount);
         databaseHelper.getWritableDatabase().execSQL(sql);
     }
