@@ -46,7 +46,7 @@ public class SentenceMapper {
 
     public Sentence toDto(SentenceMapping mapping) {
         Sentence sentence = new Sentence();
-        sentence.setId(mapping.getId().split("#")[1]);
+        sentence.setId(mapping.getId());
         sentence.setText(mapping.getText());
         sentence.setContentScore(mapping.getContentScore());
         Map<String, String> translation = null;

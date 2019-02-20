@@ -8,4 +8,6 @@ public interface SentenceDao {
     void save(List<SentenceMapping> mappings);
 
     List<SentenceMapping> findAllByWord(String word, int wordsNumber);
+
+    SentenceMapping findById(String id);
 }

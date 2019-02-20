@@ -76,6 +76,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         practiceWordSetExerciseService = new PracticeWordSetExerciseServiceImpl(
                 providePracticeWordSetExerciseDao(),
                 provideWordSetDao(),
+                provideSentenceDao(),
                 new ObjectMapper()
         );
         return practiceWordSetExerciseService;

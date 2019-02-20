@@ -12,9 +12,12 @@ import java.util.Random;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.SentenceMapper;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -30,15 +33,19 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
 
 public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
+    private final SentenceMapper sentenceMapper;
+    private final SentenceDao sentenceDao;
     private PracticeWordSetExerciseDao exerciseDao;
     private WordSetDao wordSetDao;
     private ObjectMapper mapper;
     private int wordSetSize = 12;
 
-    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetDao wordSetDao, ObjectMapper mapper) {
+    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetDao wordSetDao, SentenceDao sentenceDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
         this.wordSetDao = wordSetDao;
+        this.sentenceDao = sentenceDao;
         this.mapper = mapper;
+        this.sentenceMapper = new SentenceMapper(mapper);
     }
 
     @Override
@@ -52,12 +59,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         if (exercises.isEmpty()) {
             return null;
         }
-        PracticeWordSetExerciseMapping exercise = exercises.get(0);
-        try {
-            return mapper.readValue(exercise.getSentenceJSON(), Sentence.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return getSentence(exercises.get(0));
     }
 
     @Override
@@ -127,12 +129,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     @Override
     public Sentence getCurrentSentence(int wordSetId) {
         List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        String sentenceJSON = current.get(0).getSentenceJSON();
-        try {
-            return mapper.readValue(sentenceJSON, Sentence.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        return getSentence(current.get(0));
     }
 
     @Override
@@ -220,13 +217,23 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         }
         LinkedList<Sentence> sentences = new LinkedList<>();
         for (PracticeWordSetExerciseMapping exercise : exercises) {
-            try {
-                sentences.add(mapper.readValue(exercise.getSentenceJSON(), Sentence.class));
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            sentences.add(getSentence(exercise));
         }
         return sentences;
+    }
+
+    private Sentence getSentence(PracticeWordSetExerciseMapping exercise) {
+        Sentence sentence;
+        try {
+            sentence = mapper.readValue(exercise.getSentenceJSON(), Sentence.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        SentenceMapping mapping = sentenceDao.findById(sentence.getId());
+        if (mapping == null) {
+            throw new RuntimeException("Sentence wasn't found");
+        }
+        return sentenceMapper.toDto(mapping);
     }
 
     @Override

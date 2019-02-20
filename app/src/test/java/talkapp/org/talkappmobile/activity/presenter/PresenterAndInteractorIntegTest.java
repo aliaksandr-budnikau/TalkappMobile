@@ -38,6 +38,7 @@ public abstract class PresenterAndInteractorIntegTest {
 
     private DataServer server;
     private WordSetDao wordSetDao;
+    private SentenceDao sentenceDao;
 
     {
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -58,6 +59,13 @@ public abstract class PresenterAndInteractorIntegTest {
             wordSetDao = createWordSetDao();
         }
         return wordSetDao;
+    }
+
+    protected SentenceDao provideSentenceDao() {
+        if (sentenceDao == null) {
+            sentenceDao = createSentenceDao();
+        }
+        return sentenceDao;
     }
 
     private WordSetDao createWordSetDao() {
@@ -131,7 +139,7 @@ public abstract class PresenterAndInteractorIntegTest {
         };
     }
 
-    private SentenceDao provideSentenceDao() {
+    private SentenceDao createSentenceDao() {
         return new SentenceDao() {
 
             private Map<String, List<SentenceMapping>> sentences = new HashMap<>();
@@ -154,6 +162,18 @@ public abstract class PresenterAndInteractorIntegTest {
             public List<SentenceMapping> findAllByWord(String word, int wordsNumber) {
                 List<SentenceMapping> mappings = sentences.get(getKey(word, wordsNumber));
                 return mappings == null ? new LinkedList<SentenceMapping>() : mappings;
+            }
+
+            @Override
+            public SentenceMapping findById(String id) {
+                for (List<SentenceMapping> list : sentences.values()) {
+                    for (SentenceMapping sentenceMapping : list) {
+                        if (sentenceMapping.getId().startsWith(id)) {
+                            return sentenceMapping;
+                        }
+                    }
+                }
+                return null;
             }
 
             private String getKey(String word, int wordsNumber) {

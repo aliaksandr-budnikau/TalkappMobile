@@ -14,6 +14,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
@@ -38,12 +39,13 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     private WordSetsListView view;
     private StudyingWordSetsListInteractor studyingWordSetsInteractor;
     private WordSetDao wordSetDao;
+    private SentenceDao sentenceDao;
 
     @Before
     public void setup() {
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
         wordSetDao = provideWordSetDao();
-        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, new ObjectMapper());
+        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
         WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao);
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
     }
