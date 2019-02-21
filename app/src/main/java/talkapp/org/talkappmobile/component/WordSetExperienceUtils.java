@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.component;
 
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
  * @author Budnikau Aliaksandr

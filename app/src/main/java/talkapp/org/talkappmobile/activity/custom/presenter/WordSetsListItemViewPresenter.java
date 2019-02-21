@@ -4,26 +4,23 @@ import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemView
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetsListItemViewListener;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class WordSetsListItemViewPresenter implements OnWordSetsListItemViewListener {
     private final WordSetsListItemViewView view;
     private final WordSetsListItemViewInteractor interactor;
     private WordSet wordSet;
-    private WordSetExperience experience;
 
     public WordSetsListItemViewPresenter(WordSetsListItemViewInteractor interactor, WordSetsListItemViewView view) {
         this.interactor = interactor;
         this.view = view;
     }
 
-    public void setModel(WordSet wordSet, WordSetExperience experience) {
+    public void setModel(WordSet wordSet) {
         this.wordSet = wordSet;
-        this.experience = experience;
     }
 
     public void refreshModel() {
-        interactor.prepareModel(wordSet, experience, this);
+        interactor.prepareModel(wordSet, this);
     }
 
     public void hideProgress() {

@@ -11,7 +11,6 @@ import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseServi
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
 
@@ -49,8 +48,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
 
     @Override
     public void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
-        WordSetExperience experience = experienceService.findById(wordSet.getId());
-        if (experience != null && FINISHED.equals(wordSet.getStatus())) {
+        if (FINISHED.equals(wordSet.getStatus())) {
             listener.onWordSetFinished(wordSet, clickedItemNumber);
         } else {
             listener.onWordSetNotFinished(topic, wordSet);
@@ -60,7 +58,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     @Override
     public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         exerciseService.cleanByWordSetId(wordSet.getId());
-        WordSetExperience experience = experienceService.createNew(wordSet);
-        listener.onResetExperienceClick(wordSet, experience, clickedItemNumber);
+        experienceService.createNew(wordSet);
+        listener.onResetExperienceClick(wordSet, clickedItemNumber);
     }
 }

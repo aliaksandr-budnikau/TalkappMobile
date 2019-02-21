@@ -21,7 +21,6 @@ import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -78,10 +77,8 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view).onItemLongClick(wordSets.get(0), clickedItemNumber);
         reset(view);
 
-        ArgumentCaptor<WordSetExperience> expCaptor = forClass(WordSetExperience.class);
         presenter.resetExperienceClick(wordSets.get(0), clickedItemNumber);
-        verify(view).onResetExperienceClick(eq(wordSets.get(0)), expCaptor.capture(), eq(clickedItemNumber));
-        WordSetExperience newExp = expCaptor.getValue();
+        verify(view).onResetExperienceClick(eq(wordSets.get(0)), eq(clickedItemNumber));
         assertEquals(wordSets.get(0).getWords().size() * 2, wordSets.get(0).getMaxTrainingExperience());
         assertEquals(0, wordSets.get(0).getTrainingExperience());
         assertEquals(FIRST_CYCLE, wordSets.get(0).getStatus());
@@ -117,10 +114,8 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view).onItemLongClick(wordSets.get(0), clickedItemNumber);
         reset(view);
 
-        ArgumentCaptor<WordSetExperience> expCaptor = forClass(WordSetExperience.class);
         presenter.resetExperienceClick(wordSets.get(0), clickedItemNumber);
-        verify(view).onResetExperienceClick(eq(wordSets.get(0)), expCaptor.capture(), eq(clickedItemNumber));
-        WordSetExperience newExp = expCaptor.getValue();
+        verify(view).onResetExperienceClick(eq(wordSets.get(0)), eq(clickedItemNumber));
         assertEquals(wordSets.get(0).getWords().size() * 2, wordSets.get(0).getMaxTrainingExperience());
         assertEquals(0, wordSets.get(0).getTrainingExperience());
         assertEquals(FIRST_CYCLE, wordSets.get(0).getStatus());

@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {
@@ -52,8 +51,8 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
         presenter = new WordSetsListItemViewPresenter(interactor, this);
     }
 
-    public void setModel(WordSet wordSet, WordSetExperience experience) {
-        presenter.setModel(wordSet, experience);
+    public void setModel(WordSet wordSet) {
+        presenter.setModel(wordSet);
     }
 
     public void refreshModel() {

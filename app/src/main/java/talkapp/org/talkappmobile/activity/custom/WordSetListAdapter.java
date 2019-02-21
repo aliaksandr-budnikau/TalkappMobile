@@ -21,7 +21,6 @@ import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 /**
  * @author Budnikau Aliaksandr
@@ -41,7 +40,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
 
     @AfterInject
     public void init() {
-        WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor(serviceFactory.getWordSetExperienceRepository());
+        WordSetListAdapterInteractor interactor = new WordSetListAdapterInteractor();
         presenter = new WordSetListAdapterPresenter(interactor, this);
     }
 
@@ -59,9 +58,8 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
             itemView = (WordSetsListItemView) convertView;
         }
         WordSet wordSet = presenter.getWordSet(position);
-        WordSetExperience experience = presenter.getWordSetExperience(position);
-        itemView.setModel(wordSet, experience);
-        if (wordSet.getId() == 0 || experience == null || wordSet.getTrainingExperience() == 0) {
+        itemView.setModel(wordSet);
+        if (wordSet.getId() == 0 || wordSet.getTrainingExperience() == 0) {
             itemView.hideProgress();
         } else {
             itemView.showProgress();
@@ -74,7 +72,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
         return presenter.getWordSet(position);
     }
 
-    public WordSetExperience getWordSetExperience(int position) {
+    public WordSet getWordSetExperience(int position) {
         return presenter.getWordSetExperience(position);
     }
 

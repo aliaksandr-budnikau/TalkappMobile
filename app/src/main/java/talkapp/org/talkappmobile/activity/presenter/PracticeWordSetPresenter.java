@@ -10,7 +10,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetPresenterCurrentState state;

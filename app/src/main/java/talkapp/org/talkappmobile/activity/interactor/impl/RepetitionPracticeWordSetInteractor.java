@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
@@ -28,7 +27,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final SentenceSelector sentenceSelector;
     private final PracticeWordSetExerciseService exerciseService;
     private final UserExpService userExpService;
-    private WordSetExperience exp;
     private Word2Tokens currentWord;
     private Sentence currentSentence;
     private WordSet wordSet;

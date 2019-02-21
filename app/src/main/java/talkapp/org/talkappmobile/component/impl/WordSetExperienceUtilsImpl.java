@@ -4,7 +4,6 @@ import org.androidannotations.annotations.EBean;
 
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.androidannotations.annotations.EBean.Scope.Singleton;
 

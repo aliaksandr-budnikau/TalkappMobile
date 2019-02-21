@@ -30,7 +30,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -78,12 +77,9 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(1);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(1);
-
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
-        when(wordSetService.createNew(wordSet)).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        when(wordSetService.createNew(wordSet)).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -97,16 +93,13 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         int id = 2;
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(2);
         wordSet.setStatus(SECOND_CYCLE);
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -121,16 +114,13 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         int id = 3;
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         WordSet wordSet = new WordSet();
         wordSet.setStatus(FIRST_CYCLE);
         wordSet.setId(id);
         wordSet.setTrainingExperience(2);
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -210,9 +200,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(4);
         wordSet.setMaxTrainingExperience(12);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
         sentence.setText("dsdsdsfds3");
@@ -220,11 +207,11 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(experience.getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(experience);
+        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -249,9 +236,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(12);
         wordSet.setMaxTrainingExperience(12);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
         sentence.setText("dsdsdsfds3");
@@ -259,11 +243,11 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(experience.getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(experience);
+        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -289,9 +273,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(0);
         wordSet.setMaxTrainingExperience(12);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
         sentence.setText("dsdsdsfds3");
@@ -299,7 +280,7 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(experience.getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
@@ -327,9 +308,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(0);
         wordSet.setMaxTrainingExperience(12);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(id);
-
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
         sentence.setText("dsdsdsfds3");
@@ -337,7 +315,7 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(experience.getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
@@ -364,9 +342,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(0);
         wordSet.setMaxTrainingExperience(12);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setId(3);
-
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
         sentence.setText("dsdsdsfds3");
@@ -374,7 +349,7 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("");
-        uncheckedAnswer.setWordSetExperienceId(experience.getId());
+        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);

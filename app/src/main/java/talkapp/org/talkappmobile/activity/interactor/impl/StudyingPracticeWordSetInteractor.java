@@ -19,7 +19,6 @@ import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
@@ -57,11 +56,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
-        WordSetExperience exp = experienceService.findById(wordSet.getId());
-        logger.i(TAG, "find experience by id {}, word set {}", exp, wordSet);
         if (wordSet.getTrainingExperience() == 0) {
             logger.i(TAG, "create new experience");
-            exp = experienceService.createNew(wordSet);
+            experienceService.createNew(wordSet);
         }
         if (SECOND_CYCLE.equals(wordSet.getStatus())) {
             logger.i(TAG, "enable repetition mode");

@@ -6,7 +6,6 @@ import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterIn
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetListAdapterListener;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener {
     private final WordSetListAdapterView view;
@@ -30,8 +29,8 @@ public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener
         return interactor.getWordSet(wordSetList, position);
     }
 
-    public WordSetExperience getWordSetExperience(int position) {
-        return interactor.getWordSetExperience(wordSetList, position);
+    public WordSet getWordSetExperience(int position) {
+        return wordSetList.get(position);
     }
 
     @Override

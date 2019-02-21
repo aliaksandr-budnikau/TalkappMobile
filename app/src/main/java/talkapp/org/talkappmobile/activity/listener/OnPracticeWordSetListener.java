@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.listener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public interface OnPracticeWordSetListener {
     void onInitialiseExperience(WordSet wordSet);

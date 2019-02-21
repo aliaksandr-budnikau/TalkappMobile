@@ -7,7 +7,6 @@ import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;
@@ -40,8 +39,8 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     @Override
-    public void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber) {
-        view.onResetExperienceClick(wordSet, experience, clickedItemNumber);
+    public void onResetExperienceClick(WordSet wordSet, int clickedItemNumber) {
+        view.onResetExperienceClick(wordSet, clickedItemNumber);
     }
 
     @Override

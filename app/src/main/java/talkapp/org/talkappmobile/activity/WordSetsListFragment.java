@@ -35,7 +35,6 @@ import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
@@ -97,9 +96,9 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     }
 
     @Override
-    public void onResetExperienceClick(WordSet wordSet, WordSetExperience experience, int clickedItemNumber) {
-        WordSetsListItemView itemView = (WordSetsListItemView) wordSetsListView.getClickedItemView(clickedItemNumber);
-        itemView.setModel(wordSet, experience);
+    public void onResetExperienceClick(WordSet wordSet, int clickedItemNumber) {
+        WordSetsListItemView itemView = wordSetsListView.getClickedItemView(clickedItemNumber);
+        itemView.setModel(wordSet);
         itemView.refreshModel();
         itemView.hideProgress();
     }
