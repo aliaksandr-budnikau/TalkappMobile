@@ -50,7 +50,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     @Override
     public void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         WordSetExperience experience = experienceService.findById(wordSet.getId());
-        if (experience != null && FINISHED.equals(experience.getStatus())) {
+        if (experience != null && FINISHED.equals(wordSet.getStatus())) {
             listener.onWordSetFinished(wordSet, clickedItemNumber);
         } else {
             listener.onWordSetNotFinished(topic, wordSet);

@@ -21,6 +21,8 @@ public class WordSet implements Serializable {
 
     private int maxTrainingExperience;
 
+    private WordSetExperienceStatus status;
+
     public int getId() {
         return id;
     }
@@ -67,6 +69,14 @@ public class WordSet implements Serializable {
 
     public void setMaxTrainingExperience(int maxTrainingExperience) {
         this.maxTrainingExperience = maxTrainingExperience;
+    }
+
+    public WordSetExperienceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(WordSetExperienceStatus status) {
+        this.status = status;
     }
 
     @Override

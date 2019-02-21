@@ -67,7 +67,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
         WordSetMapping wordSetMapping = new WordSetMapping();
         wordSetMapping.setId(String.valueOf(wordSets.get(0).getId()));
-        wordSetMapping.setStatus(FINISHED);
+        wordSets.get(0).setStatus(FINISHED);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
@@ -84,7 +84,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, wordSets.get(0).getMaxTrainingExperience());
         assertEquals(0, wordSets.get(0).getTrainingExperience());
-        assertEquals(FIRST_CYCLE, newExp.getStatus());
+        assertEquals(FIRST_CYCLE, wordSets.get(0).getStatus());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
         WordSetMapping wordSetMapping = new WordSetMapping();
         wordSetMapping.setId(String.valueOf(wordSets.get(0).getId()));
-        wordSetMapping.setStatus(FINISHED);
+        wordSets.get(0).setStatus(FINISHED);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
@@ -123,6 +123,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, wordSets.get(0).getMaxTrainingExperience());
         assertEquals(0, wordSets.get(0).getTrainingExperience());
-        assertEquals(FIRST_CYCLE, newExp.getStatus());
+        assertEquals(FIRST_CYCLE, wordSets.get(0).getStatus());
     }
 }

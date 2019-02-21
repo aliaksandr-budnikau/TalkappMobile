@@ -33,6 +33,7 @@ public class WordSetServiceImpl implements WordSetService {
         wordSetMapping.setStatus(FIRST_CYCLE);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         wordSet.setMaxTrainingExperience(wordSet.getWords().size() * 2);
+        wordSet.setStatus(FIRST_CYCLE);
         return toDto(wordSetMapping);
     }
 
@@ -62,7 +63,6 @@ public class WordSetServiceImpl implements WordSetService {
     private WordSetExperience toDto(WordSetMapping wordSetMapping) {
         WordSetExperience wordSetExperience = new WordSetExperience();
         wordSetExperience.setId(Integer.parseInt(wordSetMapping.getId()));
-        wordSetExperience.setStatus(wordSetMapping.getStatus());
         return wordSetExperience;
     }
 }

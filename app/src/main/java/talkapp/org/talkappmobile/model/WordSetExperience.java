@@ -8,7 +8,6 @@ import java.util.Objects;
  */
 public class WordSetExperience implements Serializable {
     private int id;
-    private WordSetExperienceStatus status;
 
     public int getId() {
         return id;
@@ -31,18 +30,9 @@ public class WordSetExperience implements Serializable {
         return Objects.hash(id);
     }
 
-    public WordSetExperienceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(WordSetExperienceStatus status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WordSetExperienceMapping{");
-        sb.append(", status='").append(status).append('\'');
         sb.append(", id='").append(id).append('\'');
         sb.append('}');
         return sb.toString();

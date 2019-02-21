@@ -99,11 +99,11 @@ public class StudyingPracticeWordSetInteractorTest {
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setStatus(SECOND_CYCLE);
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(2);
+        wordSet.setStatus(SECOND_CYCLE);
 
         // when
         when(wordSetService.findById(wordSet.getId())).thenReturn(experience);
@@ -123,9 +123,9 @@ public class StudyingPracticeWordSetInteractorTest {
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setStatus(FIRST_CYCLE);
 
         WordSet wordSet = new WordSet();
+        wordSet.setStatus(FIRST_CYCLE);
         wordSet.setId(id);
         wordSet.setTrainingExperience(2);
 

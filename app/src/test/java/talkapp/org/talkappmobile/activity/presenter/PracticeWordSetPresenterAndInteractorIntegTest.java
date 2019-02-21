@@ -35,6 +35,7 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
@@ -76,9 +77,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         int id = -1;
         int trainingExperience = 0;
         int maxTrainingExperience = 0;
+        WordSetExperienceStatus status = null;
         if (wordSet != null) {
             trainingExperience = wordSet.getTrainingExperience();
             maxTrainingExperience = wordSet.getMaxTrainingExperience();
+            status = wordSet.getStatus();
         }
         wordSet = new WordSet();
         wordSet.setId(id);
@@ -96,6 +99,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setMaxTrainingExperience(maxTrainingExperience);
+        wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy);
     }
