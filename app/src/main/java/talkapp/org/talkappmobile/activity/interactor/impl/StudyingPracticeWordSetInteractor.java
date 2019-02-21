@@ -72,7 +72,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             sentenceProvider.disableRepetitionMode();
         }
         logger.i(TAG, "experience was initialized");
-        listener.onInitialiseExperience(exp, wordSet);
+        listener.onInitialiseExperience(wordSet);
     }
 
     @Override
@@ -112,20 +112,19 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return false;
         }
 
-        WordSetExperience exp = experienceService.increaseExperience(wordSet, 1);
-        logger.i(TAG, "experience is {}", exp);
-        listener.onUpdateProgress(exp, wordSet);
+        experienceService.increaseExperience(wordSet, 1);
+        listener.onUpdateProgress(wordSet);
 
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         double expScore = userExpService.increaseForRepetition(0, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
+        if (wordSet.getTrainingExperience() == wordSet.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
-        } else if (wordSet.getTrainingExperience() == exp.getMaxTrainingExperience()) {
+        } else if (wordSet.getTrainingExperience() == wordSet.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();

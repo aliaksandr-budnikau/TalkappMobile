@@ -6,7 +6,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public interface OnPracticeWordSetListener {
-    void onInitialiseExperience(WordSetExperience exp, WordSet wordSet);
+    void onInitialiseExperience(WordSet wordSet);
 
     void onSentencesFound(Sentence sentence, Word2Tokens word);
 
@@ -14,7 +14,7 @@ public interface OnPracticeWordSetListener {
 
     void onAccuracyTooLowError();
 
-    void onUpdateProgress(WordSetExperience exp, WordSet wordSet);
+    void onUpdateProgress(WordSet wordSet);
 
     void onTrainingHalfFinished(Sentence sentence);
 

@@ -87,7 +87,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(listener).onInitialiseExperience(experience, wordSet);
+        verify(listener).onInitialiseExperience(wordSet);
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(sentenceProvider, times(0)).enableRepetitionMode();
     }
@@ -113,7 +113,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(wordSetService, times(0)).createNew(wordSet);
         verify(sentenceProvider).enableRepetitionMode();
         verify(listener).onEnableRepetitionMode();
-        verify(listener).onInitialiseExperience(experience, wordSet);
+        verify(listener).onInitialiseExperience(wordSet);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(wordSetService, times(0)).createNew(wordSet);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(listener).onInitialiseExperience(experience, wordSet);
+        verify(listener).onInitialiseExperience(wordSet);
     }
 
     @Test
@@ -208,10 +208,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(4);
+        wordSet.setMaxTrainingExperience(12);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -228,7 +228,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener).onUpdateProgress(experience, wordSet);
+        verify(listener).onUpdateProgress(wordSet);
         verify(listener).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
@@ -247,10 +247,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(12);
+        wordSet.setMaxTrainingExperience(12);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -267,7 +267,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener).onUpdateProgress(experience, wordSet);
+        verify(listener).onUpdateProgress(wordSet);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener).onTrainingFinished();
         verify(wordSetService).moveToAnotherState(wordSet.getId(), FINISHED);
@@ -287,10 +287,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
+        wordSet.setMaxTrainingExperience(12);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -306,7 +306,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener, times(0)).onUpdateProgress(experience, wordSet);
+        verify(listener, times(0)).onUpdateProgress(wordSet);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onAnswerEmpty();
@@ -325,10 +325,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
+        wordSet.setMaxTrainingExperience(12);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(id);
-        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -344,7 +344,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
-        verify(listener, times(0)).onUpdateProgress(experience, wordSet);
+        verify(listener, times(0)).onUpdateProgress(wordSet);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
@@ -362,10 +362,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(4);
         wordSet.setTrainingExperience(0);
+        wordSet.setMaxTrainingExperience(12);
 
         WordSetExperience experience = new WordSetExperience();
         experience.setId(3);
-        experience.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -382,7 +382,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // then
         verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);
         verify(listener).onAnswerEmpty();
-        verify(listener, times(0)).onUpdateProgress(experience, wordSet);
+        verify(listener, times(0)).onUpdateProgress(wordSet);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);

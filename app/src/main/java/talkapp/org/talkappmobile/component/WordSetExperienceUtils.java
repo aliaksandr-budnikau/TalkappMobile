@@ -8,10 +8,10 @@ import talkapp.org.talkappmobile.model.WordSetExperience;
  */
 public interface WordSetExperienceUtils {
     @Deprecated
-    int getProgress(WordSetExperience experience, int currentTrainingExperience);
+    int getProgress(WordSet wordSet, int currentTrainingExperience);
 
     @Deprecated
-    int getProgress(WordSetExperience experience, WordSet wordSet);
+    int getProgress(WordSet wordSet);
 
     int getProgress(double experience, double maxTrainingExperience);
 }

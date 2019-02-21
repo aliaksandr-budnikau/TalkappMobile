@@ -39,14 +39,13 @@ public class PracticeWordSetPresenterTest {
 
     @Test
     public void onInitialiseExperience() {
-        WordSetExperience exp = new WordSetExperience();
         WordSet wordSet = new WordSet();
 
         // when
-        presenter.onInitialiseExperience(exp, wordSet);
+        presenter.onInitialiseExperience(wordSet);
 
         // then
-        verify(viewStrategy).onInitialiseExperience(exp, wordSet);
+        verify(viewStrategy).onInitialiseExperience(wordSet);
     }
 
     @Test
@@ -80,14 +79,13 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void onUpdateProgress() {
         // setup
-        WordSetExperience wordSetExperience = new WordSetExperience();
         WordSet wordSet = new WordSet();
 
         // when
-        presenter.onUpdateProgress(wordSetExperience, wordSet);
+        presenter.onUpdateProgress(wordSet);
 
         // then
-        verify(viewStrategy).onUpdateProgress(wordSetExperience, wordSet);
+        verify(viewStrategy).onUpdateProgress(wordSet);
     }
 
     @Test

@@ -21,8 +21,8 @@ public class PracticeWordSetViewStrategy {
         this.experienceUtils = experienceUtils;
     }
 
-    public void onInitialiseExperience(WordSetExperience exp, WordSet wordSet) {
-        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience());
+    public void onInitialiseExperience(WordSet wordSet) {
+        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
         view.setProgress(progress);
     }
 
@@ -40,8 +40,8 @@ public class PracticeWordSetViewStrategy {
         view.showMessageAccuracyTooLow();
     }
 
-    public void onUpdateProgress(WordSetExperience exp, WordSet wordSet) {
-        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience());
+    public void onUpdateProgress(WordSet wordSet) {
+        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
         view.setProgress(progress);
     }
 

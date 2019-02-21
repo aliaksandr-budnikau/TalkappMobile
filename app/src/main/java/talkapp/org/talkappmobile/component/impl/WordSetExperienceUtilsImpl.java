@@ -15,13 +15,13 @@ import static org.androidannotations.annotations.EBean.Scope.Singleton;
 public class WordSetExperienceUtilsImpl implements WordSetExperienceUtils {
 
     @Override
-    public int getProgress(WordSetExperience experience, int currentTrainingExperience) {
-        return getProgress((double) currentTrainingExperience, (double) experience.getMaxTrainingExperience());
+    public int getProgress(WordSet wordSet, int currentTrainingExperience) {
+        return getProgress((double) currentTrainingExperience, (double) wordSet.getMaxTrainingExperience());
     }
 
     @Override
-    public int getProgress(WordSetExperience experience, WordSet wordSet) {
-        return getProgress((double) wordSet.getTrainingExperience(), (double) experience.getMaxTrainingExperience());
+    public int getProgress(WordSet wordSet) {
+        return getProgress((double) wordSet.getTrainingExperience(), (double) wordSet.getMaxTrainingExperience());
     }
 
     @Override

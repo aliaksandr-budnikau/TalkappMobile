@@ -33,13 +33,9 @@ public class RefereeServiceImplTest {
         answer.setExpectedAnswer("Who is duty today?");
         answer.setWordSetExperienceId(3);
 
-        WordSetExperience experience = new WordSetExperience();
-        experience.setMaxTrainingExperience(12);
-
         WordSet wordSet = new WordSet();
+        wordSet.setMaxTrainingExperience(12);
         wordSet.setTrainingExperience(0);
-
-        int delta = 1;
 
         // when
         when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(EQUALITY_THRESHOLD);

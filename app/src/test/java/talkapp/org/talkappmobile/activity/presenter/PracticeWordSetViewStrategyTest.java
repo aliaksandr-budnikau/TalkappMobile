@@ -31,16 +31,15 @@ public class PracticeWordSetViewStrategyTest {
     public void onInitialiseExperience() {
         // setup
         int progress = 32;
-        WordSetExperience exp = new WordSetExperience();
-        exp.setMaxTrainingExperience(2332);
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(23332);
+        wordSet.setMaxTrainingExperience(2332);
 
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience())).thenReturn(progress);
-        strategy.onInitialiseExperience(exp, wordSet);
+        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience())).thenReturn(progress);
+        strategy.onInitialiseExperience(wordSet);
 
         // then
         verify(view).setProgress(progress);
@@ -74,15 +73,13 @@ public class PracticeWordSetViewStrategyTest {
         // setup
         int progress = 232;
 
-        WordSetExperience exp = new WordSetExperience();
-        exp.setMaxTrainingExperience(2332);
-
         WordSet wordSet = new WordSet();
+        wordSet.setMaxTrainingExperience(2332);
         wordSet.setTrainingExperience(23332);
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience())).thenReturn(progress);
-        strategy.onUpdateProgress(exp, wordSet);
+        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience())).thenReturn(progress);
+        strategy.onUpdateProgress(wordSet);
 
         // then
         verify(view).setProgress(progress);
