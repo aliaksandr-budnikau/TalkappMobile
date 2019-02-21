@@ -2,10 +2,11 @@ package talkapp.org.talkappmobile.activity.listener;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public interface OnPracticeWordSetListener {
-    void onInitialiseExperience(WordSetExperience exp);
+    void onInitialiseExperience(WordSetExperience exp, WordSet wordSet);
 
     void onSentencesFound(Sentence sentence, Word2Tokens word);
 
@@ -13,7 +14,7 @@ public interface OnPracticeWordSetListener {
 
     void onAccuracyTooLowError();
 
-    void onUpdateProgress(WordSetExperience exp);
+    void onUpdateProgress(WordSetExperience exp, WordSet wordSet);
 
     void onTrainingHalfFinished(Sentence sentence);
 

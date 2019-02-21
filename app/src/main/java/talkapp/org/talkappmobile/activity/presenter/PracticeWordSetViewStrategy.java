@@ -7,6 +7,7 @@ import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 public class PracticeWordSetViewStrategy {
@@ -20,8 +21,8 @@ public class PracticeWordSetViewStrategy {
         this.experienceUtils = experienceUtils;
     }
 
-    public void onInitialiseExperience(WordSetExperience exp) {
-        int progress = experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience());
+    public void onInitialiseExperience(WordSetExperience exp, WordSet wordSet) {
+        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience());
         view.setProgress(progress);
     }
 
@@ -39,8 +40,8 @@ public class PracticeWordSetViewStrategy {
         view.showMessageAccuracyTooLow();
     }
 
-    public void onUpdateProgress(WordSetExperience exp) {
-        int progress = experienceUtils.getProgress(exp.getTrainingExperience(), exp.getMaxTrainingExperience());
+    public void onUpdateProgress(WordSetExperience exp, WordSet wordSet) {
+        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), exp.getMaxTrainingExperience());
         view.setProgress(progress);
     }
 

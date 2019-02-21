@@ -10,7 +10,7 @@ public interface WordSetService {
 
     WordSetExperience createNew(WordSet wordSet);
 
-    WordSetExperience increaseExperience(int id, int value);
+    WordSetExperience increaseExperience(WordSet wordSet, int value);
 
     WordSetExperience moveToAnotherState(int id, WordSetExperienceStatus value);
 }

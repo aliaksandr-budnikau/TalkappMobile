@@ -62,9 +62,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         sentenceProvider.enableRepetitionMode();
         listener.onEnableRepetitionMode();
         exp = new WordSetExperience();
-        exp.setTrainingExperience(0);
+        wordSet.setTrainingExperience(0);
         exp.setMaxTrainingExperience(wordSet.getWords().size());
-        listener.onInitialiseExperience(exp);
+        listener.onInitialiseExperience(exp, wordSet);
     }
 
     @Override
@@ -106,14 +106,14 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        exp.setTrainingExperience(exp.getTrainingExperience() + 1);
+        wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         wordSet.getWords().remove(currentWord);
         logger.i(TAG, "experience is {}", exp);
-        listener.onUpdateProgress(exp);
+        listener.onUpdateProgress(exp, wordSet);
         int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
+        if (wordSet.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");
             listener.onTrainingFinished();
         } else {

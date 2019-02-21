@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.impl;
 import org.androidannotations.annotations.EBean;
 
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.androidannotations.annotations.EBean.Scope.Singleton;
@@ -19,8 +20,8 @@ public class WordSetExperienceUtilsImpl implements WordSetExperienceUtils {
     }
 
     @Override
-    public int getProgress(WordSetExperience experience) {
-        return getProgress((double) experience.getTrainingExperience(), (double) experience.getMaxTrainingExperience());
+    public int getProgress(WordSetExperience experience, WordSet wordSet) {
+        return getProgress((double) wordSet.getTrainingExperience(), (double) experience.getMaxTrainingExperience());
     }
 
     @Override

@@ -27,8 +27,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onInitialiseExperience(WordSetExperience exp) {
-        viewStrategy.onInitialiseExperience(exp);
+    public void onInitialiseExperience(WordSetExperience exp, WordSet wordSet) {
+        viewStrategy.onInitialiseExperience(exp, wordSet);
     }
 
     @Override
@@ -52,8 +52,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onUpdateProgress(WordSetExperience exp) {
-        viewStrategy.onUpdateProgress(exp);
+    public void onUpdateProgress(WordSetExperience exp, WordSet wordSet) {
+        viewStrategy.onUpdateProgress(exp, wordSet);
     }
 
     @Override

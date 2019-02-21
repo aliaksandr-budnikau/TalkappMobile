@@ -83,7 +83,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view).onResetExperienceClick(eq(wordSets.get(0)), expCaptor.capture(), eq(clickedItemNumber));
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, newExp.getMaxTrainingExperience());
-        assertEquals(0, newExp.getTrainingExperience());
+        assertEquals(0, wordSets.get(0).getTrainingExperience());
         assertEquals(FIRST_CYCLE, newExp.getStatus());
     }
 
@@ -122,7 +122,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         verify(view).onResetExperienceClick(eq(wordSets.get(0)), expCaptor.capture(), eq(clickedItemNumber));
         WordSetExperience newExp = expCaptor.getValue();
         assertEquals(wordSets.get(0).getWords().size() * 2, newExp.getMaxTrainingExperience());
-        assertEquals(0, newExp.getTrainingExperience());
+        assertEquals(0, wordSets.get(0).getTrainingExperience());
         assertEquals(FIRST_CYCLE, newExp.getStatus());
     }
 }

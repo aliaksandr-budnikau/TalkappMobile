@@ -8,7 +8,6 @@ import java.util.Objects;
  */
 public class WordSetExperience implements Serializable {
     private int id;
-    private int trainingExperience;
     private int maxTrainingExperience;
     private WordSetExperienceStatus status;
 
@@ -20,27 +19,18 @@ public class WordSetExperience implements Serializable {
         this.id = id;
     }
 
-    public int getTrainingExperience() {
-        return trainingExperience;
-    }
-
-    public void setTrainingExperience(int trainingExperience) {
-        this.trainingExperience = trainingExperience;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordSetExperience that = (WordSetExperience) o;
-        return trainingExperience == that.trainingExperience &&
-                Objects.equals(id, that.id) &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(maxTrainingExperience, that.maxTrainingExperience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, trainingExperience, maxTrainingExperience);
+        return Objects.hash(id, maxTrainingExperience);
     }
 
     public WordSetExperienceStatus getStatus() {
@@ -57,7 +47,6 @@ public class WordSetExperience implements Serializable {
         sb.append(", status='").append(status).append('\'');
         sb.append(", id='").append(id).append('\'');
         sb.append(", maxTrainingExperience='").append(maxTrainingExperience).append('\'');
-        sb.append(", trainingExperience=").append(trainingExperience);
         sb.append('}');
         return sb.toString();
     }

@@ -17,6 +17,8 @@ public class WordSet implements Serializable {
 
     private Integer top;
 
+    private int trainingExperience;
+
     public int getId() {
         return id;
     }
@@ -47,6 +49,14 @@ public class WordSet implements Serializable {
 
     public void setTop(Integer top) {
         this.top = top;
+    }
+
+    public int getTrainingExperience() {
+        return trainingExperience;
+    }
+
+    public void setTrainingExperience(int trainingExperience) {
+        this.trainingExperience = trainingExperience;
     }
 
     @Override

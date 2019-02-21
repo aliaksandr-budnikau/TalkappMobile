@@ -184,6 +184,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         wordSet.setId(Integer.valueOf(mapping.getId()));
         wordSet.setTopicId(mapping.getTopicId());
         wordSet.setTop(mapping.getTop());
+        wordSet.setTrainingExperience(mapping.getTrainingExperience());
 
         List<Word2Tokens> words;
         try {

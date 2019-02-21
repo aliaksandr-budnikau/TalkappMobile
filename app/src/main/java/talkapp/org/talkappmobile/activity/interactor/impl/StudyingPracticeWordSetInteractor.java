@@ -59,7 +59,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         WordSetExperience exp = experienceService.findById(wordSet.getId());
         logger.i(TAG, "find experience by id {}, word set {}", exp, wordSet);
-        if (exp.getTrainingExperience() == 0) {
+        if (wordSet.getTrainingExperience() == 0) {
             logger.i(TAG, "create new experience");
             exp = experienceService.createNew(wordSet);
         }
@@ -72,7 +72,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             sentenceProvider.disableRepetitionMode();
         }
         logger.i(TAG, "experience was initialized");
-        listener.onInitialiseExperience(exp);
+        listener.onInitialiseExperience(exp, wordSet);
     }
 
     @Override
@@ -112,20 +112,20 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return false;
         }
 
-        WordSetExperience exp = experienceService.increaseExperience(wordSet.getId(), 1);
+        WordSetExperience exp = experienceService.increaseExperience(wordSet, 1);
         logger.i(TAG, "experience is {}", exp);
-        listener.onUpdateProgress(exp);
+        listener.onUpdateProgress(exp, wordSet);
 
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         double expScore = userExpService.increaseForRepetition(0, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (exp.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
+        if (wordSet.getTrainingExperience() == exp.getMaxTrainingExperience() / 2) {
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
-        } else if (exp.getTrainingExperience() == exp.getMaxTrainingExperience()) {
+        } else if (wordSet.getTrainingExperience() == exp.getMaxTrainingExperience()) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();

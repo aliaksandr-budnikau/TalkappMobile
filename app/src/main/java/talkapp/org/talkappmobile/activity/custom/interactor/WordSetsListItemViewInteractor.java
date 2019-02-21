@@ -26,7 +26,7 @@ public class WordSetsListItemViewInteractor {
 
         int progressValue = 0;
         if (experience != null) {
-            progressValue = experienceUtils.getProgress(experience);
+            progressValue = experienceUtils.getProgress(experience, wordSet);
         }
         listener.onModelPrepared(wordSetRowValue, progressValue);
     }

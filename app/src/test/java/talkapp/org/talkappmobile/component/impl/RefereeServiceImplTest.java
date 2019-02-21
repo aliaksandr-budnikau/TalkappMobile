@@ -9,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.GrammarCheckService;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetExperience;
 
 import static org.junit.Assert.assertTrue;
@@ -33,8 +34,10 @@ public class RefereeServiceImplTest {
         answer.setWordSetExperienceId(3);
 
         WordSetExperience experience = new WordSetExperience();
-        experience.setTrainingExperience(0);
         experience.setMaxTrainingExperience(12);
+
+        WordSet wordSet = new WordSet();
+        wordSet.setTrainingExperience(0);
 
         int delta = 1;
 

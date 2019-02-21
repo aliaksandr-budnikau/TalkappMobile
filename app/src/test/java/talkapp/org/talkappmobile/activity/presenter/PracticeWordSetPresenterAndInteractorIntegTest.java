@@ -74,6 +74,10 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {
         int id = -1;
+        int trainingExperience = 0;
+        if (wordSet != null) {
+            trainingExperience = wordSet.getTrainingExperience();
+        }
         wordSet = new WordSet();
         wordSet.setId(id);
 
@@ -88,6 +92,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
+        wordSet.setTrainingExperience(trainingExperience);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy);
     }
