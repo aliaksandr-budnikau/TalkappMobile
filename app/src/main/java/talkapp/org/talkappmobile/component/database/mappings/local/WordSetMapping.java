@@ -40,7 +40,7 @@ public class WordSetMapping implements Serializable {
     @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
     private int trainingExperience;
 
-    @DatabaseField(canBeNull = false, columnName = MAX_TRAINING_EXPERIENCE_FN)
+    @DatabaseField(canBeNull = true, columnName = MAX_TRAINING_EXPERIENCE_FN)
     private int maxTrainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)

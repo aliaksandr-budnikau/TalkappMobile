@@ -24,7 +24,6 @@ import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping.ID_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping.MAX_TRAINING_EXPERIENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping.TOPIC_ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping.TOP_FN;
@@ -87,7 +86,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(1));
         exp.setTrainingExperience(0);
-        exp.setMaxTrainingExperience(3);
         exp.setStatus(FIRST_CYCLE);
         experienceDao.createNewOrUpdate(exp);
 
@@ -97,7 +95,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(0);
-        exp.setMaxTrainingExperience(3);
         exp.setStatus(FIRST_CYCLE);
         experienceDao.createNewOrUpdate(exp);
 
@@ -107,7 +104,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(1);
-        exp.setMaxTrainingExperience(3);
         exp.setStatus(SECOND_CYCLE);
         experienceDao.createNewOrUpdate(exp);
 
@@ -117,7 +113,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(2);
-        exp.setMaxTrainingExperience(3);
         exp.setStatus(SECOND_CYCLE);
         experienceDao.createNewOrUpdate(exp);
 
@@ -127,7 +122,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(3);
-        exp.setMaxTrainingExperience(3);
         exp.setStatus(FINISHED);
         experienceDao.createNewOrUpdate(exp);
 
@@ -136,7 +130,6 @@ public class WordSetDaoImplTest {
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(3, cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
         assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
 
         cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_SET_TABLE, 2), new String[]{});
@@ -144,7 +137,6 @@ public class WordSetDaoImplTest {
 
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(3, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(3, cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
 
         cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_SET_TABLE), new String[]{});
@@ -180,16 +172,15 @@ public class WordSetDaoImplTest {
 
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(0, cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
         assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getCount());
     }
 
     @Test
     public void findById_ordinaryCase() {
-        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s')", WORD_SET_TABLE,
-                ID_FN, TOPIC_ID_FN, WORDS_FN, TOP_FN, TRAINING_EXPERIENCE_FN, MAX_TRAINING_EXPERIENCE_FN, STATUS_FN,
-                1, "1", "words,words,words,words,words,words,words,words,words,words,words,words", 4, 0, 10, "FINISHED");
+        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s')", WORD_SET_TABLE,
+                ID_FN, TOPIC_ID_FN, WORDS_FN, TOP_FN, TRAINING_EXPERIENCE_FN, STATUS_FN,
+                1, "1", "words,words,words,words,words,words,words,words,words,words,words,words", 4, 0, "FINISHED");
         databaseHelper.getWritableDatabase().execSQL(sql);
         WordSetMapping exp = experienceDao.findById(1);
 
