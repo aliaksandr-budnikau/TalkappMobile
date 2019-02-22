@@ -198,7 +198,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(4);
-        wordSet.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -234,7 +233,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(12);
-        wordSet.setMaxTrainingExperience(12);
         wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens()));
 
         Sentence sentence = new Sentence();
@@ -273,7 +271,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
-        wordSet.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -308,7 +305,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
-        wordSet.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -342,7 +338,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(4);
         wordSet.setTrainingExperience(0);
-        wordSet.setMaxTrainingExperience(12);
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");

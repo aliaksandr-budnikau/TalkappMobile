@@ -64,7 +64,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         sentenceProvider.enableRepetitionMode();
         listener.onEnableRepetitionMode();
         wordSet.setTrainingExperience(0);
-        wordSet.setMaxTrainingExperience(wordSet.getWords().size());
         listener.onInitialiseExperience(wordSet);
     }
 
