@@ -7,7 +7,7 @@ public interface WordSetService {
 
     WordSet findById(int id);
 
-    WordSet createNew(WordSet wordSet);
+    void resetProgress(WordSet wordSet);
 
     WordSet increaseExperience(WordSet wordSet, int value);
 

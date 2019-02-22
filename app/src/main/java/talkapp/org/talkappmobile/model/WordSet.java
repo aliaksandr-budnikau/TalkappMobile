@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+
 /**
  * @author Budnikau Aliaksandr
  */
@@ -19,7 +21,7 @@ public class WordSet implements Serializable {
 
     private int trainingExperience;
 
-    private WordSetExperienceStatus status;
+    private WordSetExperienceStatus status = FIRST_CYCLE;
 
     public int getId() {
         return id;

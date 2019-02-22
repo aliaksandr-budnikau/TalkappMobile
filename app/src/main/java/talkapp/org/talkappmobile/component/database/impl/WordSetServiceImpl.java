@@ -25,13 +25,11 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public WordSet createNew(WordSet wordSet) {
+    public void resetProgress(WordSet wordSet) {
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);
         wordSetMapping.setStatus(FIRST_CYCLE);
         wordSetDao.createNewOrUpdate(wordSetMapping);
-        wordSet.setStatus(FIRST_CYCLE);
-        return toDto(wordSetMapping);
     }
 
     @Override

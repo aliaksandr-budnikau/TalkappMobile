@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     private final DataServer server;
@@ -58,7 +59,9 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     @Override
     public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         exerciseService.cleanByWordSetId(wordSet.getId());
-        experienceService.createNew(wordSet);
+        experienceService.resetProgress(wordSet);
+        wordSet.setTrainingExperience(0);
+        wordSet.setStatus(FIRST_CYCLE);
         listener.onResetExperienceClick(wordSet, clickedItemNumber);
     }
 }

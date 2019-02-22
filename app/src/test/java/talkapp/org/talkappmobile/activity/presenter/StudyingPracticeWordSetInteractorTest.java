@@ -79,7 +79,6 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        when(wordSetService.createNew(wordSet)).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -103,7 +102,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetService, times(0)).createNew(wordSet);
+        verify(wordSetService, times(0)).resetProgress(wordSet);
         verify(sentenceProvider).enableRepetitionMode();
         verify(listener).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(wordSet);
@@ -124,7 +123,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.initialiseExperience(wordSet, listener);
 
         // then
-        verify(wordSetService, times(0)).createNew(wordSet);
+        verify(wordSetService, times(0)).resetProgress(wordSet);
         verify(sentenceProvider, times(0)).enableRepetitionMode();
         verify(listener, times(0)).onEnableRepetitionMode();
         verify(listener).onInitialiseExperience(wordSet);

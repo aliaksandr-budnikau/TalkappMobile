@@ -3,10 +3,10 @@ package talkapp.org.talkappmobile.component.database.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
@@ -37,8 +37,12 @@ import static org.mockito.Mockito.when;
 public class PracticeWordSetExerciseServiceImplTest {
     @Mock
     private PracticeWordSetExerciseDao exerciseDao;
-    @InjectMocks
     private PracticeWordSetExerciseServiceImpl service;
+
+    @Before
+    public void setup() {
+        service = new PracticeWordSetExerciseServiceImpl(exerciseDao, null, null, new ObjectMapper());
+    }
 
     @Test
     public void findFinishedWordSetsSortByUpdatedDate_emptyDB() {
