@@ -12,6 +12,7 @@ import org.androidannotations.annotations.RootContext;
 import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
@@ -37,6 +38,7 @@ import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordTranslationMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
+import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {
@@ -58,13 +60,14 @@ public class ServiceFactoryBean implements ServiceFactory {
     private UserExpService userExpService;
     private LocalDataService localDataService;
     private ExpAuditDao expAuditDao;
+    private WordSetExperienceUtils experienceUtils;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), new ObjectMapper());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils(), MAPPER);
         return wordSetExperienceService;
     }
 
@@ -122,6 +125,14 @@ public class ServiceFactoryBean implements ServiceFactory {
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private WordSetExperienceUtils provideExperienceUtils() {
+        if (experienceUtils != null) {
+            return experienceUtils;
+        }
+        experienceUtils = new WordSetExperienceUtilsImpl();
+        return experienceUtils;
     }
 
     private TopicDao provideTopicDao() {

@@ -174,9 +174,9 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         RefereeService refereeService = new RefereeServiceImpl(grammarCheckService, equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
 
-        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), getContext(), audioStuffFactory);
+        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, getContext(), audioStuffFactory);
         if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), serviceFactory.getWordSetExperienceRepository(), getContext(), audioStuffFactory);
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), serviceFactory.getWordSetExperienceRepository(), experienceUtils, getContext(), audioStuffFactory);
         }
         presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
         presenter.initialise();

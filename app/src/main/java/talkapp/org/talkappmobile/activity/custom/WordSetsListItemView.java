@@ -51,7 +51,7 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
 
     @AfterViews
     public void init() {
-        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor(experienceUtils, serviceFactory.getWordSetExperienceRepository());
+        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor(experienceUtils);
         presenter = new WordSetsListItemViewPresenter(interactor, this);
     }
 

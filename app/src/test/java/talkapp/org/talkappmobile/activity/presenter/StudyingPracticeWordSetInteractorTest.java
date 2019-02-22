@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
@@ -62,6 +63,8 @@ public class StudyingPracticeWordSetInteractorTest {
     private OnPracticeWordSetListener listener;
     @Mock
     private WordSetService wordSetService;
+    @Mock
+    private WordSetExperienceUtils experienceUtils;
     @Mock
     private UserExpService userExpService;
     @Mock
@@ -246,7 +249,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
-        when(wordSetService.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
+        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then

@@ -57,6 +57,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private WordSetDao wordSetDao;
     private SentenceDao sentenceDao;
     private WordSetService experienceService;
+    private WordSetExperienceUtilsImpl experienceUtils;
 
     @Before
     public void setup() {
@@ -65,11 +66,12 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         sentenceDao = provideSentenceDao();
         exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
-        experienceService = new WordSetServiceImpl(wordSetDao, new ObjectMapper());
+        experienceUtils = new WordSetExperienceUtilsImpl();
+        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new ObjectMapper());
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
-                logger, experienceService, exerciseService, userExpService, context, new AudioStuffFactoryBean());
+                logger, experienceService, exerciseService, userExpService, experienceUtils, context, new AudioStuffFactoryBean());
         getServer().findAllWordSets();
     }
 

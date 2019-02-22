@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
@@ -32,6 +33,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final SentenceSelector sentenceSelector;
     private final Logger logger;
     private final WordSetService experienceService;
+    private final WordSetExperienceUtils experienceUtils;
     private final PracticeWordSetExerciseService exerciseService;
     private final UserExpService userExpService;
 
@@ -43,6 +45,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetService experienceService,
                                              PracticeWordSetExerciseService exerciseService,
                                              UserExpService userExpService,
+                                             WordSetExperienceUtils experienceUtils,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, audioStuffFactory);
@@ -53,6 +56,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
         this.userExpService = userExpService;
+        this.experienceUtils = experienceUtils;
     }
 
     @Override
@@ -118,13 +122,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         double expScore = userExpService.increaseForRepetition(0, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == experienceService.getMaxTrainingProgress(wordSet) / 2) {
+        if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
-        } else if (wordSet.getTrainingExperience() == experienceService.getMaxTrainingProgress(wordSet)) {
+        } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
             listener.onTrainingFinished();

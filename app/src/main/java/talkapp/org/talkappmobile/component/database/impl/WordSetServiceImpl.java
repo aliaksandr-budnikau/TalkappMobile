@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.component.database.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.WordSetMapper;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
@@ -14,9 +15,11 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 public class WordSetServiceImpl implements WordSetService {
     private final WordSetDao wordSetDao;
     private final WordSetMapper wordSetMapper;
+    private final WordSetExperienceUtils experienceUtils;
 
-    public WordSetServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper) {
+    public WordSetServiceImpl(WordSetDao wordSetDao, WordSetExperienceUtils experienceUtils, ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
+        this.experienceUtils = experienceUtils;
         this.wordSetMapper = new WordSetMapper(mapper);
     }
 
@@ -41,9 +44,9 @@ public class WordSetServiceImpl implements WordSetService {
     public WordSet increaseExperience(WordSet wordSet, int value) {
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         int experience = wordSetMapping.getTrainingExperience() + value;
-        if (experience > getMaxTrainingProgress(wordSet)) {
-            wordSetMapping.setTrainingExperience(getMaxTrainingProgress(wordSet));
-            wordSet.setTrainingExperience(getMaxTrainingProgress(wordSet));
+        if (experience > experienceUtils.getMaxTrainingProgress(wordSet)) {
+            wordSetMapping.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
+            wordSet.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
         } else {
             wordSetMapping.setTrainingExperience(experience);
             wordSet.setTrainingExperience(experience);
@@ -58,10 +61,5 @@ public class WordSetServiceImpl implements WordSetService {
         wordSetMapping.setStatus(value);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         return wordSetMapper.toDto(wordSetMapping);
-    }
-
-    @Override
-    public int getMaxTrainingProgress(WordSet wordSet) {
-        return wordSet.getWords().size() * 2;
     }
 }
