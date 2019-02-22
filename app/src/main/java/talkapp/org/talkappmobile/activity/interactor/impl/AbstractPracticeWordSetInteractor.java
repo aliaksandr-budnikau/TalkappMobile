@@ -47,7 +47,6 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
             return false;
         }
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
         uncheckedAnswer.setActualAnswer(answer);
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
 

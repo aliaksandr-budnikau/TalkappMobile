@@ -30,7 +30,6 @@ public class RefereeServiceImplTest {
         UncheckedAnswer answer = new UncheckedAnswer();
         answer.setActualAnswer("Who is duty today?");
         answer.setExpectedAnswer("Who is duty today?");
-        answer.setWordSetExperienceId(3);
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(0);

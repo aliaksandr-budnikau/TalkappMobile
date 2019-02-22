@@ -205,7 +205,6 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
@@ -241,7 +240,6 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
@@ -278,7 +276,6 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
@@ -312,7 +309,6 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
@@ -345,7 +341,6 @@ public class StudyingPracticeWordSetInteractorTest {
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("");
-        uncheckedAnswer.setWordSetExperienceId(wordSet.getId());
 
         // when
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
