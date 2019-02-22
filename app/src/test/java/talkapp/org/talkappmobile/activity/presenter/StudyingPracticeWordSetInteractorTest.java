@@ -235,6 +235,7 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(id);
         wordSet.setTrainingExperience(12);
         wordSet.setMaxTrainingExperience(12);
+        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens()));
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -248,6 +249,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
+        when(wordSetService.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then

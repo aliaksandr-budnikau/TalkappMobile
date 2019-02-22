@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -27,6 +28,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final SentenceSelector sentenceSelector;
     private final PracticeWordSetExerciseService exerciseService;
     private final UserExpService userExpService;
+    private final WordSetService wordSetService;
     private Word2Tokens currentWord;
     private Sentence currentSentence;
     private WordSet wordSet;
@@ -38,6 +40,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Logger logger,
             PracticeWordSetExerciseService exerciseService,
             UserExpService userExpService,
+            WordSetService wordSetService,
             Context context,
             AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, audioStuffFactory);
@@ -45,6 +48,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.exerciseService = exerciseService;
+        this.wordSetService = wordSetService;
         this.userExpService = userExpService;
     }
 
@@ -109,7 +113,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == wordSet.getMaxTrainingExperience()) {
+        if (wordSet.getTrainingExperience() == wordSetService.getMaxTrainingProgress(wordSet)) {
             logger.i(TAG, "training finished");
             listener.onTrainingFinished();
         } else {

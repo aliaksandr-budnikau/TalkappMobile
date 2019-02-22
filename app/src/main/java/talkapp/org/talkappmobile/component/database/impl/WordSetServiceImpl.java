@@ -59,6 +59,11 @@ public class WordSetServiceImpl implements WordSetService {
         return toDto(wordSetMapping);
     }
 
+    @Override
+    public int getMaxTrainingProgress(WordSet wordSet) {
+        return wordSet.getWords().size() * 2;
+    }
+
     private WordSet toDto(WordSetMapping mapping) {
         WordSet wordSet = new WordSet();
         wordSet.setId(Integer.valueOf(mapping.getId()));

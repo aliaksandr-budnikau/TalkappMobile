@@ -12,4 +12,6 @@ public interface WordSetService {
     WordSet increaseExperience(WordSet wordSet, int value);
 
     WordSet moveToAnotherState(int id, WordSetExperienceStatus value);
+
+    int getMaxTrainingProgress(WordSet wordSet);
 }
