@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
@@ -20,7 +20,7 @@ public class SentenceProviderRepetitionStrategyTest {
     @Mock
     DataServer server;
     @Mock
-    PracticeWordSetExerciseService exerciseService;
+    WordRepetitionProgressService exerciseService;
     @InjectMocks
     private SentenceProviderRepetitionStrategy strategy;
 

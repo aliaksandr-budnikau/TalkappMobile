@@ -11,36 +11,36 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
 import static org.apache.commons.collections4.ListUtils.partition;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.next;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
-public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerciseService {
+public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
     private final SentenceMapper sentenceMapper;
     private final SentenceDao sentenceDao;
-    private PracticeWordSetExerciseDao exerciseDao;
+    private WordRepetitionProgressDao exerciseDao;
     private WordSetDao wordSetDao;
     private ObjectMapper mapper;
     private int wordSetSize = 12;
 
-    public PracticeWordSetExerciseServiceImpl(PracticeWordSetExerciseDao exerciseDao, WordSetDao wordSetDao, SentenceDao sentenceDao, ObjectMapper mapper) {
+    public WordRepetitionProgressServiceImpl(WordRepetitionProgressDao exerciseDao, WordSetDao wordSetDao, SentenceDao sentenceDao, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
         this.wordSetDao = wordSetDao;
         this.sentenceDao = sentenceDao;
@@ -50,7 +50,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
-        List<PracticeWordSetExerciseMapping> exercises;
+        List<WordRepetitionProgressMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId);
         } catch (JsonProcessingException e) {
@@ -64,7 +64,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public void save(Word2Tokens word, int wordSetId, Sentence sentence) {
-        PracticeWordSetExerciseMapping exercise;
+        WordRepetitionProgressMapping exercise;
         try {
             exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId).get(0);
         } catch (JsonProcessingException e) {
@@ -82,9 +82,9 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public void createSomeIfNecessary(Set<Word2Tokens> words, int wordSetId) {
-        List<PracticeWordSetExerciseMapping> wordsEx = new LinkedList<>();
+        List<WordRepetitionProgressMapping> wordsEx = new LinkedList<>();
         for (Word2Tokens word : words) {
-            List<PracticeWordSetExerciseMapping> alreadyCreatedWord = null;
+            List<WordRepetitionProgressMapping> alreadyCreatedWord = null;
             try {
                 alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId);
             } catch (JsonProcessingException e) {
@@ -93,7 +93,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             if (alreadyCreatedWord != null && !alreadyCreatedWord.isEmpty()) {
                 continue;
             }
-            PracticeWordSetExerciseMapping exercise = new PracticeWordSetExerciseMapping();
+            WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
             try {
                 exercise.setWordJSON(mapper.writeValueAsString(word));
             } catch (JsonProcessingException e) {
@@ -110,9 +110,9 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
     @Override
     public Word2Tokens peekByWordSetIdAnyWord(int wordSetId) {
         WordSetMapping exp = wordSetDao.findById(wordSetId);
-        List<PracticeWordSetExerciseMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
         int i = new Random().nextInt(exercises.size());
-        PracticeWordSetExerciseMapping mapping = exercises.get(i);
+        WordRepetitionProgressMapping mapping = exercises.get(i);
         mapping.setCurrent(true);
         exerciseDao.createNewOrUpdate(mapping);
         try {
@@ -124,7 +124,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public Sentence getCurrentSentence(int wordSetId) {
-        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         return getSentence(current.get(0));
     }
 
@@ -133,10 +133,10 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         Calendar cal = getInstance(UTC);
         //cal.add(Calendar.SECOND, -olderThenInHours);
         cal.add(Calendar.HOUR, -olderThenInHours);
-        List<PracticeWordSetExerciseMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
-        Iterator<PracticeWordSetExerciseMapping> iterator = words.iterator();
+        List<WordRepetitionProgressMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
+        Iterator<WordRepetitionProgressMapping> iterator = words.iterator();
         while (iterator.hasNext()) {
-            PracticeWordSetExerciseMapping exe = iterator.next();
+            WordRepetitionProgressMapping exe = iterator.next();
             cal = getInstance(UTC);
             // 5, 7, 13, 23, 37,
             //cal.add(Calendar.SECOND, -(olderThenInHours + 48 * exe.getRepetitionCounter() * exe.getRepetitionCounter()));
@@ -146,10 +146,10 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             }
         }
         List<WordSet> wordSets = new LinkedList<>();
-        for (List<PracticeWordSetExerciseMapping> exercises : partition(words, wordSetSize)) {
+        for (List<WordRepetitionProgressMapping> exercises : partition(words, wordSetSize)) {
             WordSet set = new WordSet();
             set.setWords(new LinkedList<Word2Tokens>());
-            for (PracticeWordSetExerciseMapping mapping : exercises) {
+            for (WordRepetitionProgressMapping mapping : exercises) {
                 try {
                     set.getWords().add(mapper.readValue(mapping.getWordJSON(), Word2Tokens.class));
                 } catch (IOException e) {
@@ -168,22 +168,22 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public void putOffCurrentWord(int wordSetId) {
-        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         if (isNotThereCurrentExercise(current)) {
             return;
         }
-        PracticeWordSetExerciseMapping mapping = current.get(0);
+        WordRepetitionProgressMapping mapping = current.get(0);
         mapping.setCurrent(false);
         exerciseDao.createNewOrUpdate(mapping);
     }
 
     @Override
     public Word2Tokens getCurrentWord(int wordSetId) {
-        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         if (isNotThereCurrentExercise(current)) {
             return null;
         }
-        PracticeWordSetExerciseMapping mapping = current.get(0);
+        WordRepetitionProgressMapping mapping = current.get(0);
         try {
             return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
         } catch (IOException e) {
@@ -193,16 +193,16 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public void moveCurrentWordToNextState(int wordSetId) {
-        List<PracticeWordSetExerciseMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        PracticeWordSetExerciseMapping mapping = current.get(0);
+        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+        WordRepetitionProgressMapping mapping = current.get(0);
         mapping.setStatus(next(mapping.getStatus()));
         mapping.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(mapping);
     }
 
     @Override
-    public List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetExperienceStatus status) {
-        List<PracticeWordSetExerciseMapping> exercises;
+    public List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetProgressStatus status) {
+        List<WordRepetitionProgressMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndByStatus(mapper.writeValueAsString(word), status);
         } catch (JsonProcessingException e) {
@@ -212,13 +212,13 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
             return emptyList();
         }
         LinkedList<Sentence> sentences = new LinkedList<>();
-        for (PracticeWordSetExerciseMapping exercise : exercises) {
+        for (WordRepetitionProgressMapping exercise : exercises) {
             sentences.add(getSentence(exercise));
         }
         return sentences;
     }
 
-    private Sentence getSentence(PracticeWordSetExerciseMapping exercise) {
+    private Sentence getSentence(WordRepetitionProgressMapping exercise) {
         SentenceMapping mapping = sentenceDao.findById(exercise.getSentenceId());
         if (mapping == null) {
             throw new RuntimeException("Sentence wasn't found");
@@ -228,7 +228,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
 
     @Override
     public int markAsRepeated(Word2Tokens word, Sentence sentence) {
-        List<PracticeWordSetExerciseMapping> exercises;
+        List<WordRepetitionProgressMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndBySentenceAndByStatus(
                     mapper.writeValueAsString(word),
@@ -238,7 +238,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        PracticeWordSetExerciseMapping exercise = exercises.get(0);
+        WordRepetitionProgressMapping exercise = exercises.get(0);
         int counter = exercise.getRepetitionCounter();
         counter++;
         exercise.setRepetitionCounter(counter);
@@ -247,7 +247,7 @@ public class PracticeWordSetExerciseServiceImpl implements PracticeWordSetExerci
         return counter;
     }
 
-    private boolean isNotThereCurrentExercise(List<PracticeWordSetExerciseMapping> current) {
+    private boolean isNotThereCurrentExercise(List<WordRepetitionProgressMapping> current) {
         return current.isEmpty();
     }
 }

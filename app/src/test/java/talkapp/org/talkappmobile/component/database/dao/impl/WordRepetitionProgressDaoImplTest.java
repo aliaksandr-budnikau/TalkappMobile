@@ -20,8 +20,8 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;
@@ -32,30 +32,30 @@ import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.ID_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.REPETITION_COUNTER_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_ID_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.ID_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_REPETITION_PROGRESS_TABLE;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.REPETITION_COUNTER_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.SENTENCE_ID_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.STATUS_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.UPDATED_DATE_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_SET_ID_FN;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
-public class PracticeWordSetExerciseDaoImplTest {
+public class WordRepetitionProgressDaoImplTest {
 
     private DatabaseHelper databaseHelper;
-    private PracticeWordSetExerciseDao exerciseDao;
+    private WordRepetitionProgressDao exerciseDao;
 
     @Before
     public void setUp() throws Exception {
         databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        exerciseDao = new PracticeWordSetExerciseDaoImpl(databaseHelper.getConnectionSource(), PracticeWordSetExerciseMapping.class);
+        exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
     }
 
     @After
@@ -66,13 +66,13 @@ public class PracticeWordSetExerciseDaoImplTest {
     @Test
     public void createNewOrUpdate_ordinaryCaseOfCreation() {
         // setup
-        PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON", "sentenceJSON", FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe = new WordRepetitionProgressMapping(1, 2, "wordJSON", "sentenceJSON", FIRST_CYCLE, true);
 
         // when
         exerciseDao.createNewOrUpdate(exe);
 
         // then
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         cursor.moveToNext();
 
         assertEquals(exe.getId(), cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -87,17 +87,17 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void createNewOrUpdate_ordinaryCaseOfUpdate() {
-        PracticeWordSetExerciseMapping exe;
-        exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe;
+        exe = new WordRepetitionProgressMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(2, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(2, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(2, 2, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(2, 2, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(2, 2, "wordJSON3", "sentenceJSON3", FINISHED, false);
+        exe = new WordRepetitionProgressMapping(2, 2, "wordJSON3", "sentenceJSON3", FINISHED, false);
         exerciseDao.createNewOrUpdate(exe);
 
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 1), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_REPETITION_PROGRESS_TABLE, 1), new String[]{});
         cursor.moveToNext();
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -108,7 +108,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 2), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_REPETITION_PROGRESS_TABLE, 2), new String[]{});
         cursor.moveToNext();
 
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -118,33 +118,33 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 1), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE, 1), new String[]{});
         cursor.moveToNext();
         assertEquals(2, cursor.getCount());
     }
 
     @Test(expected = RuntimeException.class)
     public void createNewOrUpdate_wordNull() {
-        PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping(1, 2, null, "sentenceJSON", FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe = new WordRepetitionProgressMapping(1, 2, null, "sentenceJSON", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
     }
 
     @Test
     public void createNewOrUpdate_sentenceNull() {
-        PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON", null, FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe = new WordRepetitionProgressMapping(1, 2, "wordJSON", null, FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
     }
 
     @Test(expected = RuntimeException.class)
     public void createNewOrUpdate_statusNull() {
-        PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON", "sentenceJSON", null, true);
+        WordRepetitionProgressMapping exe = new WordRepetitionProgressMapping(1, 2, "wordJSON", "sentenceJSON", null, true);
         exerciseDao.createNewOrUpdate(exe);
     }
 
     @Test
     public void createNewOrUpdate_onlyWordSentenceStatusNotNull() {
         // setup
-        PracticeWordSetExerciseMapping exe = new PracticeWordSetExerciseMapping();
+        WordRepetitionProgressMapping exe = new WordRepetitionProgressMapping();
         exe.setWordJSON("wordJSON");
         exe.setSentenceId("sentenceId");
         exe.setStatus(FIRST_CYCLE);
@@ -154,7 +154,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         exerciseDao.createNewOrUpdate(exe);
 
         // then
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         cursor.moveToNext();
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -170,75 +170,75 @@ public class PracticeWordSetExerciseDaoImplTest {
     @Test
     public void cleanByWordSetId_nothingToDeleteEmptyDB() {
         exerciseDao.cleanByWordSetId(1);
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         assertEquals(0, cursor.getCount());
     }
 
     @Test
     public void cleanByWordSetId_nothingToDeleteNotEmptyDB() {
-        PracticeWordSetExerciseMapping exe;
-        exe = new PracticeWordSetExerciseMapping(1, 1, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe;
+        exe = new WordRepetitionProgressMapping(1, 1, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(2, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(2, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(4, 4, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(4, 4, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(5, 5, "wordJSON3", "sentenceJSON3", FINISHED, false);
+        exe = new WordRepetitionProgressMapping(5, 5, "wordJSON3", "sentenceJSON3", FINISHED, false);
         exerciseDao.createNewOrUpdate(exe);
 
         exerciseDao.cleanByWordSetId(3);
 
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE wordSetId = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 3), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE wordSetId = %s;", WORD_REPETITION_PROGRESS_TABLE, 3), new String[]{});
         assertEquals(0, cursor.getCount());
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         assertEquals(4, cursor.getCount());
     }
 
     @Test
     public void cleanByWordSetId_ordinaryCase() {
-        PracticeWordSetExerciseMapping exe;
-        exe = new PracticeWordSetExerciseMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        WordRepetitionProgressMapping exe;
+        exe = new WordRepetitionProgressMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(2, 3, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(2, 3, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(4, 4, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
+        exe = new WordRepetitionProgressMapping(4, 4, "wordJSON2", "sentenceJSON2", SECOND_CYCLE, true);
         exerciseDao.createNewOrUpdate(exe);
-        exe = new PracticeWordSetExerciseMapping(5, 3, "wordJSON3", "sentenceJSON3", FINISHED, false);
+        exe = new WordRepetitionProgressMapping(5, 3, "wordJSON3", "sentenceJSON3", FINISHED, false);
         exerciseDao.createNewOrUpdate(exe);
 
         exerciseDao.cleanByWordSetId(3);
 
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE wordSetId = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 3), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE wordSetId = %s;", WORD_REPETITION_PROGRESS_TABLE, 3), new String[]{});
         assertEquals(0, cursor.getCount());
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         assertEquals(2, cursor.getCount());
     }
 
     @Test
     public void createAll_nothingToCreate() {
         // setup
-        LinkedList<PracticeWordSetExerciseMapping> words = new LinkedList<>();
+        LinkedList<WordRepetitionProgressMapping> words = new LinkedList<>();
 
         // when
         exerciseDao.createAll(words);
 
         // then
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         assertEquals(0, cursor.getCount());
     }
 
     @Test
     public void createAll_createOne() {
         // setup
-        List<PracticeWordSetExerciseMapping> words = asList(new PracticeWordSetExerciseMapping(2, 5, "wordJSON", "sentenceJSON", FINISHED, true));
+        List<WordRepetitionProgressMapping> words = asList(new WordRepetitionProgressMapping(2, 5, "wordJSON", "sentenceJSON", FINISHED, true));
 
         // when
         exerciseDao.createAll(words);
 
         // then
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE), new String[]{});
         cursor.moveToNext();
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -253,13 +253,13 @@ public class PracticeWordSetExerciseDaoImplTest {
 
     @Test
     public void createAll_createTwo() {
-        List<PracticeWordSetExerciseMapping> words = asList(
-                new PracticeWordSetExerciseMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true),
-                new PracticeWordSetExerciseMapping(2, 2, "wordJSON3", "sentenceJSON3", FINISHED, false)
+        List<WordRepetitionProgressMapping> words = asList(
+                new WordRepetitionProgressMapping(1, 2, "wordJSON1", "sentenceJSON1", FIRST_CYCLE, true),
+                new WordRepetitionProgressMapping(2, 2, "wordJSON3", "sentenceJSON3", FINISHED, false)
         );
         exerciseDao.createAll(words);
 
-        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 1), new String[]{});
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_REPETITION_PROGRESS_TABLE, 1), new String[]{});
         cursor.moveToNext();
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -270,7 +270,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 2), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_REPETITION_PROGRESS_TABLE, 2), new String[]{});
         cursor.moveToNext();
 
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
@@ -280,14 +280,14 @@ public class PracticeWordSetExerciseDaoImplTest {
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(CURRENT_FN)));
 
-        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", PRACTICE_WORD_SET_EXERCISE_TABLE, 1), new String[]{});
+        cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", WORD_REPETITION_PROGRESS_TABLE, 1), new String[]{});
         cursor.moveToNext();
         assertEquals(2, cursor.getCount());
     }
 
     @Test
     public void findByStatusAndByWordSetId_nothingToReturn() {
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 4);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 4);
         assertTrue(result.isEmpty());
     }
 
@@ -299,7 +299,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
         insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 2);
         assertEquals(2, result.size());
 
         assertEquals(22, result.get(1).getId());
@@ -325,13 +325,13 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
         insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 4);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByStatusAndByWordSetId(FINISHED, 4);
         assertEquals(0, result.size());
     }
 
     @Test
     public void findByCurrentAndByWordSetId_nothingToReturn() {
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByCurrentAndByWordSetId(4);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByCurrentAndByWordSetId(4);
         assertTrue(result.isEmpty());
     }
 
@@ -343,7 +343,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
         insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "1");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
         assertEquals(2, result.size());
 
         assertEquals(22, result.get(1).getId());
@@ -370,14 +370,14 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "0");
         insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByCurrentAndByWordSetId(2);
         assertEquals(0, result.size());
     }
 
 
     @Test
     public void findByWordAndWordSetId_nothingToReturn() {
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByWordAndWordSetId("dsdsds", 4);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("dsdsds", 4);
         assertTrue(result.isEmpty());
     }
 
@@ -389,7 +389,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
         insertExercise(3, 2, "wordJSON4", "sentenceJSON22", FINISHED.name(), "1");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByWordAndWordSetId("wordJSON4", 2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("wordJSON4", 2);
         assertEquals(2, result.size());
 
         assertEquals(22, result.get(1).getId());
@@ -416,7 +416,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         insertExercise(22, 2, "wordJSON4", "sentenceJSON2", FINISHED.name(), "0");
         insertExercise(3, 2, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findByWordAndWordSetId("wordJSONsdds4", 2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("wordJSONsdds4", 2);
         assertEquals(0, result.size());
     }
 
@@ -428,7 +428,7 @@ public class PracticeWordSetExerciseDaoImplTest {
 
         // when
         instance = getInstance(UTC);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
 
         // then
         assertEquals(0, result.size());
@@ -447,7 +447,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         // when
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
 
         // then
         assertEquals(0, result.size());
@@ -470,7 +470,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         // when
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(1, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(1, instance.getTime());
 
         // then
         assertEquals(1, result.size());
@@ -499,7 +499,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         // when
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
 
         // then
         assertEquals(0, result.size());
@@ -522,7 +522,7 @@ public class PracticeWordSetExerciseDaoImplTest {
         // when
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(0, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(0, instance.getTime());
 
         // then
         assertEquals(0, result.size());
@@ -550,12 +550,12 @@ public class PracticeWordSetExerciseDaoImplTest {
         // when
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(5, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(5, instance.getTime());
 
         // then
         assertEquals(3, result.size());
-        Iterator<PracticeWordSetExerciseMapping> iterator = result.iterator();
-        PracticeWordSetExerciseMapping current = iterator.next();
+        Iterator<WordRepetitionProgressMapping> iterator = result.iterator();
+        WordRepetitionProgressMapping current = iterator.next();
         while (iterator.hasNext()) {
             assertEquals(FINISHED, current.getStatus());
             Date olderDate = current.getUpdatedDate();
@@ -581,7 +581,7 @@ public class PracticeWordSetExerciseDaoImplTest {
 
         instance = getInstance(UTC);
         instance.add(HOUR, -2);
-        List<PracticeWordSetExerciseMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
+        List<WordRepetitionProgressMapping> result = exerciseDao.findFinishedWordSetsSortByUpdatedDate(2, instance.getTime());
         assertEquals(2, result.size());
     }
 
@@ -594,7 +594,7 @@ public class PracticeWordSetExerciseDaoImplTest {
     }
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate, int repCount) {
-        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s');", PRACTICE_WORD_SET_EXERCISE_TABLE,
+        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s');", WORD_REPETITION_PROGRESS_TABLE,
                 ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_ID_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN,
                 id, wordSetId, word, sentence, status, current, updatedDate.getTime(), repCount);
         databaseHelper.getWritableDatabase().execSQL(sql);

@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Collections.singletonList;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy {
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
 
-    public SentenceProviderRepetitionStrategy(DataServer server, PracticeWordSetExerciseService exerciseService) {
+    public SentenceProviderRepetitionStrategy(DataServer server, WordRepetitionProgressService exerciseService) {
         super(server);
         this.exerciseService = exerciseService;
     }

@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 
 import static java.util.Arrays.asList;
@@ -54,7 +54,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, PracticeWordSetExerciseMapping.class);
+            TableUtils.createTable(connectionSource, WordRepetitionProgressMapping.class);
             TableUtils.createTable(connectionSource, WordSetMapping.class);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);

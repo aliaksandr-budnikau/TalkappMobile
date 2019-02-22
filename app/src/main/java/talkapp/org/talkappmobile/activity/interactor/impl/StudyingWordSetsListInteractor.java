@@ -7,20 +7,20 @@ import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     private final DataServer server;
     private final WordSetService experienceService;
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
 
-    public StudyingWordSetsListInteractor(DataServer server, WordSetService experienceService, PracticeWordSetExerciseService exerciseService) {
+    public StudyingWordSetsListInteractor(DataServer server, WordSetService experienceService, WordRepetitionProgressService exerciseService) {
         this.server = server;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;

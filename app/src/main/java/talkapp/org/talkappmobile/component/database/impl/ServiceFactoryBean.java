@@ -15,24 +15,24 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.PracticeWordSetExerciseDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.TopicDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordTranslationDaoImpl;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -50,12 +50,12 @@ public class ServiceFactoryBean implements ServiceFactory {
     Context context;
 
     private DatabaseHelper databaseHelper;
-    private PracticeWordSetExerciseDaoImpl exerciseDao;
+    private WordRepetitionProgressDaoImpl exerciseDao;
     private WordSetDao wordSetDao;
     private TopicDao topicDao;
     private SentenceDao sentenceDao;
     private WordTranslationDao wordTranslationDao;
-    private PracticeWordSetExerciseServiceImpl practiceWordSetExerciseService;
+    private WordRepetitionProgressServiceImpl practiceWordSetExerciseService;
     private WordSetServiceImpl wordSetExperienceService;
     private UserExpService userExpService;
     private LocalDataService localDataService;
@@ -72,11 +72,11 @@ public class ServiceFactoryBean implements ServiceFactory {
     }
 
     @Override
-    public PracticeWordSetExerciseService getPracticeWordSetExerciseRepository() {
+    public WordRepetitionProgressService getPracticeWordSetExerciseRepository() {
         if (practiceWordSetExerciseService != null) {
             return practiceWordSetExerciseService;
         }
-        practiceWordSetExerciseService = new PracticeWordSetExerciseServiceImpl(
+        practiceWordSetExerciseService = new WordRepetitionProgressServiceImpl(
                 providePracticeWordSetExerciseDao(),
                 provideWordSetDao(),
                 provideSentenceDao(),
@@ -103,12 +103,12 @@ public class ServiceFactoryBean implements ServiceFactory {
         return localDataService;
     }
 
-    private PracticeWordSetExerciseDao providePracticeWordSetExerciseDao() {
+    private WordRepetitionProgressDao providePracticeWordSetExerciseDao() {
         if (exerciseDao != null) {
             return exerciseDao;
         }
         try {
-            exerciseDao = new PracticeWordSetExerciseDaoImpl(databaseHelper().getConnectionSource(), PracticeWordSetExerciseMapping.class);
+            exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper().getConnectionSource(), WordRepetitionProgressMapping.class);
             return exerciseDao;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);

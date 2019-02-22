@@ -4,14 +4,14 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class RepetitionWordSetsListInteractor implements WordSetsListInteractor {
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
 
-    public RepetitionWordSetsListInteractor(PracticeWordSetExerciseService exerciseService) {
+    public RepetitionWordSetsListInteractor(WordRepetitionProgressService exerciseService) {
         this.exerciseService = exerciseService;
     }
 

@@ -13,10 +13,10 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
@@ -30,8 +30,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -44,9 +44,9 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Before
     public void setup() {
-        PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
+        WordRepetitionProgressDao exerciseDao = provideWordRepetitionProgressDao();
         wordSetDao = provideWordSetDao();
-        PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
+        WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
         experienceUtils = new WordSetExperienceUtilsImpl();
         WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new ObjectMapper());
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);

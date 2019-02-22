@@ -14,7 +14,7 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -22,9 +22,9 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
@@ -34,7 +34,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final Logger logger;
     private final WordSetService experienceService;
     private final WordSetExperienceUtils experienceUtils;
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
@@ -43,7 +43,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              RefereeService refereeService,
                                              Logger logger,
                                              WordSetService experienceService,
-                                             PracticeWordSetExerciseService exerciseService,
+                                             WordRepetitionProgressService exerciseService,
                                              UserExpService userExpService,
                                              WordSetExperienceUtils experienceUtils,
                                              Context context,

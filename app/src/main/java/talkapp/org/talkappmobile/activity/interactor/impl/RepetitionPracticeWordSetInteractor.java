@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -27,7 +27,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final SentenceProvider sentenceProvider;
     private final Logger logger;
     private final SentenceSelector sentenceSelector;
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private final WordSetService wordSetService;
     private final WordSetExperienceUtils experienceUtils;
@@ -40,7 +40,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             SentenceSelector sentenceSelector,
             RefereeService refereeService,
             Logger logger,
-            PracticeWordSetExerciseService exerciseService,
+            WordRepetitionProgressService exerciseService,
             UserExpService userExpService,
             WordSetService wordSetService,
             WordSetExperienceUtils experienceUtils,

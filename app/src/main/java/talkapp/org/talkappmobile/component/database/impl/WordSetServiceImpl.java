@@ -8,9 +8,9 @@ import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
     private final WordSetDao wordSetDao;
@@ -45,7 +45,7 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public WordSet moveToAnotherState(int id, WordSetExperienceStatus value) {
+    public WordSet moveToAnotherState(int id, WordSetProgressStatus value) {
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
         wordSetMapping.setStatus(value);
         wordSetDao.createNewOrUpdate(wordSetMapping);

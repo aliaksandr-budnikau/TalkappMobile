@@ -7,15 +7,15 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 import java.util.Objects;
 
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.PRACTICE_WORD_SET_EXERCISE_TABLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_REPETITION_PROGRESS_TABLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
-@DatabaseTable(tableName = PRACTICE_WORD_SET_EXERCISE_TABLE)
-public class PracticeWordSetExerciseMapping {
+@DatabaseTable(tableName = WORD_REPETITION_PROGRESS_TABLE)
+public class WordRepetitionProgressMapping {
     public static final String ID_FN = "id";
     public static final String WORD_FN = "word";
     public static final String SENTENCE_ID_FN = "sentenceId";
@@ -23,7 +23,7 @@ public class PracticeWordSetExerciseMapping {
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
-    public static final String PRACTICE_WORD_SET_EXERCISE_TABLE = "PracticeWordSetExercise";
+    public static final String WORD_REPETITION_PROGRESS_TABLE = "WordRepetitionProgress";
     public static final String UPDATED_DATE_FN = "updatedDate";
     @DatabaseField(generatedId = true, columnName = ID_FN)
     private int id;
@@ -38,7 +38,7 @@ public class PracticeWordSetExerciseMapping {
     private String sentenceId;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetExperienceStatus status = FIRST_CYCLE;
+    private WordSetProgressStatus status = FIRST_CYCLE;
 
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
@@ -49,14 +49,14 @@ public class PracticeWordSetExerciseMapping {
     @DatabaseField(canBeNull = false, columnName = REPETITION_COUNTER_FN)
     private int repetitionCounter;
 
-    public PracticeWordSetExerciseMapping() {
+    public WordRepetitionProgressMapping() {
     }
 
-    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetExperienceStatus status, boolean current) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetProgressStatus status, boolean current) {
         this(id, wordSetId, wordJSON, sentenceId, status, current, getInstance(UTC).getTime());
     }
 
-    public PracticeWordSetExerciseMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetExperienceStatus status, boolean current, Date updatedDate) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetProgressStatus status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordJSON = wordJSON;
@@ -98,11 +98,11 @@ public class PracticeWordSetExerciseMapping {
         this.sentenceId = sentenceJSON;
     }
 
-    public WordSetExperienceStatus getStatus() {
+    public WordSetProgressStatus getStatus() {
         return status;
     }
 
-    public void setStatus(WordSetExperienceStatus status) {
+    public void setStatus(WordSetProgressStatus status) {
         this.status = status;
     }
 
@@ -134,7 +134,7 @@ public class PracticeWordSetExerciseMapping {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PracticeWordSetExerciseMapping that = (PracticeWordSetExerciseMapping) o;
+        WordRepetitionProgressMapping that = (WordRepetitionProgressMapping) o;
         return id == that.id &&
                 Objects.equals(wordJSON, that.wordJSON) &&
                 Objects.equals(sentenceId, that.sentenceId);
@@ -147,7 +147,7 @@ public class PracticeWordSetExerciseMapping {
 
     @Override
     public String toString() {
-        return "PracticeWordSetExerciseMapping{" +
+        return "WordRepetitionProgressMapping{" +
                 "id=" + id +
                 ", word='" + wordJSON + '\'' +
                 ", wordSetId='" + wordSetId + '\'' +

@@ -24,7 +24,7 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -40,9 +40,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.SECOND_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingPracticeWordSetInteractorTest {
@@ -50,7 +50,7 @@ public class StudyingPracticeWordSetInteractorTest {
     @Mock
     AudioStuffFactory audioStuffFactory;
     @Mock
-    PracticeWordSetExerciseService exerciseService;
+    WordRepetitionProgressService exerciseService;
     @Mock
     private WordsCombinator wordsCombinator;
     @Mock

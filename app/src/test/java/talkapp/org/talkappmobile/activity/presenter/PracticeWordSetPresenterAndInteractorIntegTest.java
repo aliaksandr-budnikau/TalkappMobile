@@ -12,13 +12,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.impl.PracticeWordSetExerciseServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
@@ -35,7 +35,7 @@ import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,7 +47,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Mock
     private PracticeWordSetView view;
     private PracticeWordSetPresenter presenter;
-    private PracticeWordSetExerciseService exerciseService;
+    private WordRepetitionProgressService exerciseService;
     @Mock
     private UserExpService userExpService;
     private WordSet wordSet;
@@ -61,10 +61,10 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Before
     public void setup() {
-        PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
+        WordRepetitionProgressDao exerciseDao = provideWordRepetitionProgressDao();
         wordSetDao = provideWordSetDao();
         sentenceDao = provideSentenceDao();
-        exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
+        exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
         experienceUtils = new WordSetExperienceUtilsImpl();
         experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new ObjectMapper());
@@ -78,7 +78,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private void createPresenter(StudyingPracticeWordSetInteractor interactor) {
         int id = -1;
         int trainingExperience = 0;
-        WordSetExperienceStatus status = null;
+        WordSetProgressStatus status = null;
         if (wordSet != null) {
             trainingExperience = wordSet.getTrainingExperience();
             status = wordSet.getStatus();

@@ -7,9 +7,9 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.Objects;
 
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCLE;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 /**
  * @author Budnikau Aliaksandr
@@ -40,7 +40,7 @@ public class WordSetMapping implements Serializable {
     private int trainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetExperienceStatus status = FIRST_CYCLE;
+    private WordSetProgressStatus status = FIRST_CYCLE;
 
     public String getId() {
         return id;
@@ -82,11 +82,11 @@ public class WordSetMapping implements Serializable {
         this.trainingExperience = trainingExperience;
     }
 
-    public WordSetExperienceStatus getStatus() {
+    public WordSetProgressStatus getStatus() {
         return status;
     }
 
-    public void setStatus(WordSetExperienceStatus status) {
+    public void setStatus(WordSetProgressStatus status) {
         this.status = status;
     }
 

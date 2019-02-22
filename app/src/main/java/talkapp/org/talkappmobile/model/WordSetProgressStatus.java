@@ -1,11 +1,11 @@
 package talkapp.org.talkappmobile.model;
 
-public enum WordSetExperienceStatus {
+public enum WordSetProgressStatus {
     FIRST_CYCLE(0), SECOND_CYCLE(1), FINISHED(2);
 
     private final int order;
 
-    WordSetExperienceStatus(int order) {
+    WordSetProgressStatus(int order) {
         this.order = order;
     }
 
@@ -13,8 +13,8 @@ public enum WordSetExperienceStatus {
         return order;
     }
 
-    public static WordSetExperienceStatus next(WordSetExperienceStatus current) {
-        for (WordSetExperienceStatus next : values()) {
+    public static WordSetProgressStatus next(WordSetProgressStatus current) {
+        for (WordSetProgressStatus next : values()) {
             if (next.getOrder() == current.getOrder() + 1) {
                 return next;
             }

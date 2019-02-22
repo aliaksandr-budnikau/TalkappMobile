@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.component.database;
 public interface ServiceFactory {
     WordSetService getWordSetExperienceRepository();
 
-    PracticeWordSetExerciseService getPracticeWordSetExerciseRepository();
+    WordRepetitionProgressService getPracticeWordSetExerciseRepository();
 
     UserExpService getUserExpService();
 

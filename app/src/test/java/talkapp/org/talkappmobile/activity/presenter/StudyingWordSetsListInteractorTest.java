@@ -9,13 +9,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingWordSetsListInteractorTest {
@@ -24,7 +23,7 @@ public class StudyingWordSetsListInteractorTest {
     @Mock
     private WordSetService experienceRepository;
     @Mock
-    private PracticeWordSetExerciseService exerciseRepository;
+    private WordRepetitionProgressService exerciseRepository;
     @Mock
     private OnWordSetsListListener listener;
 

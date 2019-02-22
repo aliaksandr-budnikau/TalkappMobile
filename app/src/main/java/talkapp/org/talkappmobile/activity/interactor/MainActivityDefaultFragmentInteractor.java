@@ -3,14 +3,14 @@ package talkapp.org.talkappmobile.activity.interactor;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class MainActivityDefaultFragmentInteractor {
 
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
 
-    public MainActivityDefaultFragmentInteractor(PracticeWordSetExerciseService exerciseService) {
+    public MainActivityDefaultFragmentInteractor(WordRepetitionProgressService exerciseService) {
         this.exerciseService = exerciseService;
     }
 

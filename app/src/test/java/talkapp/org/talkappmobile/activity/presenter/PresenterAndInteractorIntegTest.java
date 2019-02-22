@@ -18,18 +18,18 @@ import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -185,14 +185,14 @@ public abstract class PresenterAndInteractorIntegTest {
         return server;
     }
 
-    protected PracticeWordSetExerciseDao providePracticeWordSetExerciseDao() {
-        return new PracticeWordSetExerciseDao() {
-            private Set<PracticeWordSetExerciseMapping> storage = new HashSet<>();
+    protected WordRepetitionProgressDao provideWordRepetitionProgressDao() {
+        return new WordRepetitionProgressDao() {
+            private Set<WordRepetitionProgressMapping> storage = new HashSet<>();
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId) {
-                LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
-                for (PracticeWordSetExerciseMapping mapping : storage) {
+            public List<WordRepetitionProgressMapping> findByWordAndWordSetId(String word, int wordSetId) {
+                LinkedList<WordRepetitionProgressMapping> result = new LinkedList<>();
+                for (WordRepetitionProgressMapping mapping : storage) {
                     if (mapping.getWordJSON().equals(word) && mapping.getWordSetId() == wordSetId) {
                         result.add(mapping);
                     }
@@ -201,15 +201,15 @@ public abstract class PresenterAndInteractorIntegTest {
             }
 
             @Override
-            public void createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
+            public void createNewOrUpdate(WordRepetitionProgressMapping exercise) {
                 storage.add(exercise);
             }
 
             @Override
             public void cleanByWordSetId(int wordSetId) {
-                Set<PracticeWordSetExerciseMapping> old = storage;
+                Set<WordRepetitionProgressMapping> old = storage;
                 storage = new HashSet<>();
-                for (PracticeWordSetExerciseMapping mapping : old) {
+                for (WordRepetitionProgressMapping mapping : old) {
                     if (mapping.getWordSetId() == wordSetId) {
                         continue;
                     }
@@ -218,15 +218,15 @@ public abstract class PresenterAndInteractorIntegTest {
             }
 
             @Override
-            public int createAll(List<PracticeWordSetExerciseMapping> words) {
+            public int createAll(List<WordRepetitionProgressMapping> words) {
                 storage.addAll(words);
                 return 0;
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId) {
-                LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
-                for (PracticeWordSetExerciseMapping mapping : storage) {
+            public List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId) {
+                LinkedList<WordRepetitionProgressMapping> result = new LinkedList<>();
+                for (WordRepetitionProgressMapping mapping : storage) {
                     if (mapping.getStatus() == status && mapping.getWordSetId() == wordSetId) {
                         result.add(mapping);
                     }
@@ -235,9 +235,9 @@ public abstract class PresenterAndInteractorIntegTest {
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId) {
-                LinkedList<PracticeWordSetExerciseMapping> result = new LinkedList<>();
-                for (PracticeWordSetExerciseMapping mapping : storage) {
+            public List<WordRepetitionProgressMapping> findByCurrentAndByWordSetId(int wordSetId) {
+                LinkedList<WordRepetitionProgressMapping> result = new LinkedList<>();
+                for (WordRepetitionProgressMapping mapping : storage) {
                     if (mapping.getWordSetId() == wordSetId && mapping.isCurrent()) {
                         result.add(mapping);
                     }
@@ -246,17 +246,17 @@ public abstract class PresenterAndInteractorIntegTest {
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
+            public List<WordRepetitionProgressMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
                 return null;
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByWordAndByStatus(String word, WordSetExperienceStatus status) {
+            public List<WordRepetitionProgressMapping> findByWordAndByStatus(String word, WordSetProgressStatus status) {
                 return null;
             }
 
             @Override
-            public List<PracticeWordSetExerciseMapping> findByWordAndBySentenceAndByStatus(String s, String s1, WordSetExperienceStatus finished) {
+            public List<WordRepetitionProgressMapping> findByWordAndBySentenceAndByStatus(String s, String s1, WordSetProgressStatus finished) {
                 return null;
             }
         };

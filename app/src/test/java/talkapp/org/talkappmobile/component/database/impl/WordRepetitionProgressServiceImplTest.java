@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -34,14 +34,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PracticeWordSetExerciseServiceImplTest {
+public class WordRepetitionProgressServiceImplTest {
     @Mock
-    private PracticeWordSetExerciseDao exerciseDao;
-    private PracticeWordSetExerciseServiceImpl service;
+    private WordRepetitionProgressDao exerciseDao;
+    private WordRepetitionProgressServiceImpl service;
 
     @Before
     public void setup() {
-        service = new PracticeWordSetExerciseServiceImpl(exerciseDao, null, null, new ObjectMapper());
+        service = new WordRepetitionProgressServiceImpl(exerciseDao, null, null, new ObjectMapper());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class PracticeWordSetExerciseServiceImplTest {
         // when
         int wordSetSize = 12;
         when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
-                .thenReturn(Collections.<PracticeWordSetExerciseMapping>emptyList());
+                .thenReturn(Collections.<WordRepetitionProgressMapping>emptyList());
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
@@ -80,8 +80,8 @@ public class PracticeWordSetExerciseServiceImplTest {
         value.setWord("ddd");
         value.setTokens("sss");
 
-        LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.get(0).setId(1);
         expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
@@ -125,14 +125,14 @@ public class PracticeWordSetExerciseServiceImplTest {
         value3.setWord("ddd3");
         value3.setTokens("sss3");
 
-        LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
@@ -177,15 +177,15 @@ public class PracticeWordSetExerciseServiceImplTest {
         value3.setWord("ddd3");
         value3.setTokens("sss3");
 
-        LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setRepetitionCounter(1);
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
@@ -225,11 +225,11 @@ public class PracticeWordSetExerciseServiceImplTest {
         value2.setWord("ddd2");
         value2.setTokens("sss2");
 
-        LinkedList<PracticeWordSetExerciseMapping> expectedWordSets = new LinkedList<>();
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
-        expectedWordSets.add(new PracticeWordSetExerciseMapping());
+        expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 

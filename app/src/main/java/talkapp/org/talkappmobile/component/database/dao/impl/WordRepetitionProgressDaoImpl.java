@@ -12,26 +12,26 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.database.dao.PracticeWordSetExerciseDao;
-import talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.CURRENT_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.SENTENCE_ID_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.STATUS_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.UPDATED_DATE_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.PracticeWordSetExerciseMapping.WORD_SET_ID_FN;
-import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FINISHED;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.SENTENCE_ID_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.STATUS_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.UPDATED_DATE_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_SET_ID_FN;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
-public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetExerciseMapping, Integer> implements PracticeWordSetExerciseDao {
+public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionProgressMapping, Integer> implements WordRepetitionProgressDao {
 
-    public PracticeWordSetExerciseDaoImpl(ConnectionSource connectionSource, Class<PracticeWordSetExerciseMapping> dataClass) throws SQLException {
+    public WordRepetitionProgressDaoImpl(ConnectionSource connectionSource, Class<WordRepetitionProgressMapping> dataClass) throws SQLException {
         super(connectionSource, dataClass);
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByWordAndWordSetId(String word, int wordSetId) {
+    public List<WordRepetitionProgressMapping> findByWordAndWordSetId(String word, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -46,7 +46,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public void createNewOrUpdate(PracticeWordSetExerciseMapping exercise) {
+    public void createNewOrUpdate(WordRepetitionProgressMapping exercise) {
         try {
             super.createOrUpdate(exercise);
         } catch (SQLException e) {
@@ -57,7 +57,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     @Override
     public void cleanByWordSetId(int wordSetId) {
         try {
-            DeleteBuilder<PracticeWordSetExerciseMapping, Integer> builder = deleteBuilder();
+            DeleteBuilder<WordRepetitionProgressMapping, Integer> builder = deleteBuilder();
             builder.where().eq(WORD_SET_ID_FN, wordSetId);
             builder.delete();
         } catch (SQLException e) {
@@ -66,7 +66,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public int createAll(List<PracticeWordSetExerciseMapping> words) {
+    public int createAll(List<WordRepetitionProgressMapping> words) {
         try {
             return super.create(words);
         } catch (SQLException e) {
@@ -75,7 +75,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByStatusAndByWordSetId(WordSetExperienceStatus status, int wordSetId) {
+    public List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -90,7 +90,7 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByCurrentAndByWordSetId(int wordSetId) {
+    public List<WordRepetitionProgressMapping> findByCurrentAndByWordSetId(int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -105,10 +105,10 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
+    public List<WordRepetitionProgressMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
         try {
-            QueryBuilder<PracticeWordSetExerciseMapping, Integer> builder = queryBuilder();
-            Where<PracticeWordSetExerciseMapping, Integer> where = builder.where();
+            QueryBuilder<WordRepetitionProgressMapping, Integer> builder = queryBuilder();
+            Where<WordRepetitionProgressMapping, Integer> where = builder.where();
             where.and(
                     where.eq(STATUS_FN, FINISHED),
                     where.or(
@@ -127,10 +127,10 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByWordAndByStatus(String word, WordSetExperienceStatus status) {
+    public List<WordRepetitionProgressMapping> findByWordAndByStatus(String word, WordSetProgressStatus status) {
         try {
             SelectArg selectWord = new SelectArg();
-            PreparedQuery<PracticeWordSetExerciseMapping> prepare = queryBuilder()
+            PreparedQuery<WordRepetitionProgressMapping> prepare = queryBuilder()
                     .where()
                     .eq(STATUS_FN, status)
                     .and()
@@ -143,11 +143,11 @@ public class PracticeWordSetExerciseDaoImpl extends BaseDaoImpl<PracticeWordSetE
     }
 
     @Override
-    public List<PracticeWordSetExerciseMapping> findByWordAndBySentenceAndByStatus(String word, String sentence, WordSetExperienceStatus status) {
+    public List<WordRepetitionProgressMapping> findByWordAndBySentenceAndByStatus(String word, String sentence, WordSetProgressStatus status) {
         try {
             SelectArg selectWord = new SelectArg();
             SelectArg selectSentence = new SelectArg();
-            PreparedQuery<PracticeWordSetExerciseMapping> prepare = queryBuilder()
+            PreparedQuery<WordRepetitionProgressMapping> prepare = queryBuilder()
                     .where()
                     .eq(STATUS_FN, status)
                     .and()

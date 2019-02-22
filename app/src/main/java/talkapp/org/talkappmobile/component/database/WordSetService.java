@@ -1,7 +1,7 @@
 package talkapp.org.talkappmobile.component.database;
 
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public interface WordSetService {
 
@@ -9,5 +9,5 @@ public interface WordSetService {
 
     int increaseExperience(WordSet wordSet, int value);
 
-    WordSet moveToAnotherState(int id, WordSetExperienceStatus value);
+    WordSet moveToAnotherState(int id, WordSetProgressStatus value);
 }

@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.database.PracticeWordSetExerciseService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -24,12 +24,12 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final Context context;
     private final RefereeService refereeService;
     private final AudioStuffFactory audioStuffFactory;
-    private final PracticeWordSetExerciseService exerciseService;
+    private final WordRepetitionProgressService exerciseService;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
-                                             PracticeWordSetExerciseService exerciseService,
+                                             WordRepetitionProgressService exerciseService,
                                              AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
