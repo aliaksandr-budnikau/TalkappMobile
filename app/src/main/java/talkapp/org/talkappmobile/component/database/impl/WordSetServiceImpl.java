@@ -46,10 +46,8 @@ public class WordSetServiceImpl implements WordSetService {
         int experience = wordSetMapping.getTrainingExperience() + value;
         if (experience > experienceUtils.getMaxTrainingProgress(wordSet)) {
             wordSetMapping.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
-            wordSet.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
         } else {
             wordSetMapping.setTrainingExperience(experience);
-            wordSet.setTrainingExperience(experience);
         }
         wordSetDao.createNewOrUpdate(wordSetMapping);
         return wordSetMapping.getTrainingExperience();
