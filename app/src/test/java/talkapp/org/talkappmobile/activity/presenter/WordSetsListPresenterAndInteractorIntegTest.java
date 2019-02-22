@@ -45,7 +45,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         PracticeWordSetExerciseDao exerciseDao = providePracticeWordSetExerciseDao();
         wordSetDao = provideWordSetDao();
         PracticeWordSetExerciseServiceImpl exerciseService = new PracticeWordSetExerciseServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
-        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao);
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao, new ObjectMapper());
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(getServer(), experienceService, exerciseService);
     }
 

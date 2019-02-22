@@ -1,5 +1,8 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import talkapp.org.talkappmobile.component.database.WordSetMapper;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -10,9 +13,11 @@ import static talkapp.org.talkappmobile.model.WordSetExperienceStatus.FIRST_CYCL
 
 public class WordSetServiceImpl implements WordSetService {
     private final WordSetDao wordSetDao;
+    private final WordSetMapper wordSetMapper;
 
-    public WordSetServiceImpl(WordSetDao wordSetDao) {
+    public WordSetServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
+        this.wordSetMapper = new WordSetMapper(mapper);
     }
 
     @Override
@@ -21,7 +26,7 @@ public class WordSetServiceImpl implements WordSetService {
         if (wordSetMapping == null) {
             return null;
         }
-        return toDto(wordSetMapping);
+        return wordSetMapper.toDto(wordSetMapping);
     }
 
     @Override
@@ -44,7 +49,7 @@ public class WordSetServiceImpl implements WordSetService {
             wordSet.setTrainingExperience(experience);
         }
         wordSetDao.createNewOrUpdate(wordSetMapping);
-        return toDto(wordSetMapping);
+        return wordSetMapper.toDto(wordSetMapping);
     }
 
     @Override
@@ -52,21 +57,11 @@ public class WordSetServiceImpl implements WordSetService {
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
         wordSetMapping.setStatus(value);
         wordSetDao.createNewOrUpdate(wordSetMapping);
-        return toDto(wordSetMapping);
+        return wordSetMapper.toDto(wordSetMapping);
     }
 
     @Override
     public int getMaxTrainingProgress(WordSet wordSet) {
         return wordSet.getWords().size() * 2;
-    }
-
-    private WordSet toDto(WordSetMapping mapping) {
-        WordSet wordSet = new WordSet();
-        wordSet.setId(Integer.valueOf(mapping.getId()));
-        wordSet.setTopicId(mapping.getTopicId());
-        wordSet.setTop(mapping.getTop());
-        wordSet.setTrainingExperience(mapping.getTrainingExperience());
-        wordSet.setStatus(mapping.getStatus());
-        return wordSet;
     }
 }

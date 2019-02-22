@@ -51,7 +51,6 @@ public class StudyingWordSetsListInteractorTest {
         topic.setId(1);
 
         // when
-        when(experienceRepository.findById(wordSet.getId())).thenReturn(null);
         interactor.itemClick(topic, wordSet, 3, listener);
 
         // then
