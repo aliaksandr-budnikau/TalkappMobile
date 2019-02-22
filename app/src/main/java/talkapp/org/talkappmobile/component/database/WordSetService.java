@@ -5,8 +5,6 @@ import talkapp.org.talkappmobile.model.WordSetExperienceStatus;
 
 public interface WordSetService {
 
-    WordSet findById(int id);
-
     void resetProgress(WordSet wordSet);
 
     int increaseExperience(WordSet wordSet, int value);

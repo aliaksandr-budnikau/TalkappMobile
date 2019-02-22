@@ -24,15 +24,6 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public WordSet findById(int id) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(id);
-        if (wordSetMapping == null) {
-            return null;
-        }
-        return wordSetMapper.toDto(wordSetMapping);
-    }
-
-    @Override
     public void resetProgress(WordSet wordSet) {
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);

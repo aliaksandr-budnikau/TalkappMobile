@@ -126,12 +126,14 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
+            wordSet.setStatus(SECOND_CYCLE);
             sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
         } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
+            wordSet.setStatus(FINISHED);
             listener.onTrainingFinished();
         } else {
             logger.i(TAG, "right answer");
