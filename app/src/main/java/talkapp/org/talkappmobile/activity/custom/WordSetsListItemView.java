@@ -16,6 +16,8 @@ import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemView
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetsListItemViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.database.ServiceFactory;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -24,6 +26,8 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
 
     @Bean(WordSetExperienceUtilsImpl.class)
     WordSetExperienceUtils experienceUtils;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
 
     @ViewById(R.id.wordSetRow)
     TextView wordSetRow;
@@ -47,7 +51,7 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
 
     @AfterViews
     public void init() {
-        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor(experienceUtils);
+        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor(experienceUtils, serviceFactory.getWordSetExperienceRepository());
         presenter = new WordSetsListItemViewPresenter(interactor, this);
     }
 
