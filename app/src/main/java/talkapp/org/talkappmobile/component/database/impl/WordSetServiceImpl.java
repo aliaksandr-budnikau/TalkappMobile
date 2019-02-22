@@ -28,7 +28,6 @@ public class WordSetServiceImpl implements WordSetService {
     public WordSet createNew(WordSet wordSet) {
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);
-        wordSetMapping.setMaxTrainingExperience(wordSet.getWords().size() * 2);
         wordSetMapping.setStatus(FIRST_CYCLE);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         wordSet.setStatus(FIRST_CYCLE);

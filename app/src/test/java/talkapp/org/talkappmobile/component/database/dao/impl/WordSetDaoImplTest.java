@@ -61,7 +61,6 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(1));
         exp.setTrainingExperience(3);
-        exp.setMaxTrainingExperience(10);
         exp.setStatus(FIRST_CYCLE);
 
         // when
@@ -148,7 +147,6 @@ public class WordSetDaoImplTest {
         WordSetMapping exp = new WordSetMapping();
         exp.setId(String.valueOf(1));
         exp.setTrainingExperience(3);
-        exp.setMaxTrainingExperience(10);
         exp.setStatus(null);
         experienceDao.createNewOrUpdate(exp);
     }
