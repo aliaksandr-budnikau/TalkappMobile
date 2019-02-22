@@ -10,8 +10,10 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +35,12 @@ public class PracticeWordSetViewStrategyTest {
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(23332);
-        wordSet.setMaxTrainingExperience(2332);
+        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens()));
 
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience())).thenReturn(progress);
+        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
+        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         strategy.onInitialiseExperience(wordSet);
 
         // then
@@ -73,11 +76,12 @@ public class PracticeWordSetViewStrategyTest {
         int progress = 232;
 
         WordSet wordSet = new WordSet();
-        wordSet.setMaxTrainingExperience(2332);
+        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens()));
         wordSet.setTrainingExperience(23332);
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience())).thenReturn(progress);
+        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
+        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         strategy.onUpdateProgress(wordSet);
 
         // then
