@@ -15,14 +15,14 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.UserExpService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
@@ -67,7 +67,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils(), MAPPER);
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils());
         return wordSetExperienceService;
     }
 

@@ -9,5 +9,5 @@ public interface WordSetService {
 
     int increaseExperience(WordSet wordSet, int value);
 
-    WordSet moveToAnotherState(int id, WordSetProgressStatus value);
+    void moveToAnotherState(int id, WordSetProgressStatus value);
 }

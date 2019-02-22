@@ -1,9 +1,6 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.database.WordSetMapper;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -14,13 +11,11 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
     private final WordSetDao wordSetDao;
-    private final WordSetMapper wordSetMapper;
     private final WordSetExperienceUtils experienceUtils;
 
-    public WordSetServiceImpl(WordSetDao wordSetDao, WordSetExperienceUtils experienceUtils, ObjectMapper mapper) {
+    public WordSetServiceImpl(WordSetDao wordSetDao, WordSetExperienceUtils experienceUtils) {
         this.wordSetDao = wordSetDao;
         this.experienceUtils = experienceUtils;
-        this.wordSetMapper = new WordSetMapper(mapper);
     }
 
     @Override
@@ -45,10 +40,9 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public WordSet moveToAnotherState(int id, WordSetProgressStatus value) {
+    public void moveToAnotherState(int id, WordSetProgressStatus value) {
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
         wordSetMapping.setStatus(value);
         wordSetDao.createNewOrUpdate(wordSetMapping);
-        return wordSetMapper.toDto(wordSetMapping);
     }
 }

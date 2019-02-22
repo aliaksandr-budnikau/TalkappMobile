@@ -67,7 +67,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, new ObjectMapper());
         LoggerBean logger = new LoggerBean();
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new ObjectMapper());
+        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
         interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
                 new SentenceProviderImpl(new BackendSentenceProviderStrategy(getServer()), new SentenceProviderRepetitionStrategy(getServer(), exerciseService)),
                 new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(getServer()), new EqualityScorerBean()),
