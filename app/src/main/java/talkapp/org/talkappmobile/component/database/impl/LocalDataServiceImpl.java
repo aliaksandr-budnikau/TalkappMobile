@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,6 +11,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
+import talkapp.org.talkappmobile.component.database.WordSetMapper;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
-    private final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
     private final WordSetDao wordSetDao;
     private final TopicDao topicDao;
     private final SentenceDao sentenceDao;
@@ -36,6 +35,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final ObjectMapper mapper;
     private final Logger logger;
     private final SentenceMapper sentenceMapper;
+    private final WordSetMapper wordSetMapper;
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -45,7 +45,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         this.mapper = mapper;
         this.logger = logger;
         this.sentenceMapper = new SentenceMapper(mapper);
-        LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
+        this.wordSetMapper = new WordSetMapper(mapper);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         List<WordSetMapping> allMappings = wordSetDao.findAll();
         List<WordSet> result = new LinkedList<>();
         for (WordSetMapping mapping : allMappings) {
-            result.add(toDto(mapping));
+            result.add(wordSetMapper.toDto(mapping));
         }
         return result;
     }
@@ -62,7 +62,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     public void saveWordSets(final List<WordSet> incomingSets) {
         LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
         for (WordSet wordSet : incomingSets) {
-            mappingsForSaving.add(toMapping(wordSet));
+            mappingsForSaving.add(wordSetMapper.toMapping(wordSet));
         }
         wordSetDao.save(mappingsForSaving);
     }
@@ -72,7 +72,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         List<WordSetMapping> allMappings = wordSetDao.findAllByTopicId(String.valueOf(topicId));
         List<WordSet> result = new LinkedList<>();
         for (WordSetMapping mapping : allMappings) {
-            result.add(toDto(mapping));
+            result.add(wordSetMapper.toDto(mapping));
         }
         return result;
     }
@@ -140,7 +140,7 @@ public class LocalDataServiceImpl implements LocalDataService {
                 LinkedList<String> result = new LinkedList<>();
                 List<Word2Tokens> tokens;
                 try {
-                    tokens = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE);
+                    tokens = mapper.readValue(mapping.getWords(), wordSetMapper.LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE);
                 } catch (IOException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
@@ -162,40 +162,6 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
             sentenceDao.save(mappings);
         }
-    }
-
-    private WordSetMapping toMapping(WordSet wordSet) {
-        WordSetMapping mapping = new WordSetMapping();
-        mapping.setId(String.valueOf(wordSet.getId()));
-
-        try {
-            mapping.setWords(mapper.writeValueAsString(wordSet.getWords()));
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
-        mapping.setTopicId(wordSet.getTopicId());
-        mapping.setTop(wordSet.getTop());
-        return mapping;
-    }
-
-    private WordSet toDto(WordSetMapping mapping) {
-        WordSet wordSet = new WordSet();
-        wordSet.setId(Integer.valueOf(mapping.getId()));
-        wordSet.setTopicId(mapping.getTopicId());
-        wordSet.setTop(mapping.getTop());
-        wordSet.setTrainingExperience(mapping.getTrainingExperience());
-        wordSet.setStatus(mapping.getStatus());
-
-        List<Word2Tokens> words;
-        try {
-            words = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-
-        wordSet.setWords(words);
-        return wordSet;
     }
 
     private TopicMapping toMapping(Topic topic) {
