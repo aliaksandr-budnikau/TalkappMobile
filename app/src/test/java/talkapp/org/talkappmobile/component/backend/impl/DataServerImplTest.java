@@ -106,7 +106,7 @@ public class DataServerImplTest {
         assertEquals(expectedSets.get(KEY), actualSets);
         verify(gitHubRestClient).findAllWordSets();
         verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
+        verify(wordSetDaoMock, times(2)).queryForAll();
         verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);
@@ -144,7 +144,7 @@ public class DataServerImplTest {
         assertEquals(expectedSets.get(KEY), actualSets);
         verify(gitHubRestClient).findAllWordSets();
         verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
+        verify(wordSetDaoMock, times(2)).queryForAll();
         verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
 
         reset(wordSetDaoMock);

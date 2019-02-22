@@ -62,7 +62,13 @@ public class LocalDataServiceImpl implements LocalDataService {
     public void saveWordSets(final List<WordSet> incomingSets) {
         LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
         for (WordSet wordSet : incomingSets) {
-            mappingsForSaving.add(wordSetMapper.toMapping(wordSet));
+            WordSetMapping newSet = wordSetMapper.toMapping(wordSet);
+            WordSetMapping old = wordSetDao.findById(wordSet.getId());
+            if (old != null) {
+                newSet.setStatus(old.getStatus());
+                newSet.setTrainingExperience(old.getTrainingExperience());
+            }
+            mappingsForSaving.add(newSet);
         }
         wordSetDao.save(mappingsForSaving);
     }

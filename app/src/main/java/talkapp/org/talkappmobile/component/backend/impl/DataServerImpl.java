@@ -82,7 +82,7 @@ public class DataServerImpl implements DataServer {
             result.addAll(wordSets);
         }
         localDataService.saveWordSets(result);
-        return result;
+        return localDataService.findAllWordSets();
     }
 
     @Override
