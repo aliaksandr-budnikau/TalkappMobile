@@ -74,7 +74,6 @@ public class WordSetDaoImplTest {
 
         assertEquals(exp.getId(), cursor.getString(cursor.getColumnIndex(ID_FN)));
         assertEquals(exp.getTrainingExperience(), cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(exp.getMaxTrainingExperience(), cursor.getInt(cursor.getColumnIndex(MAX_TRAINING_EXPERIENCE_FN)));
         assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getCount());
     }
@@ -196,7 +195,6 @@ public class WordSetDaoImplTest {
 
         assertEquals(String.valueOf(1), exp.getId());
         assertEquals(0, exp.getTrainingExperience());
-        assertEquals(10, exp.getMaxTrainingExperience());
         assertEquals(FINISHED, exp.getStatus());
     }
 
