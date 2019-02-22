@@ -86,10 +86,6 @@ public class WordSetMapping implements Serializable {
         this.trainingExperience = trainingExperience;
     }
 
-    public int getMaxTrainingExperience() {
-        return maxTrainingExperience;
-    }
-
     public void setMaxTrainingExperience(int maxTrainingExperience) {
         this.maxTrainingExperience = maxTrainingExperience;
     }
