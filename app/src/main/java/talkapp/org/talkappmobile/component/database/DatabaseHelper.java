@@ -15,50 +15,16 @@ import java.util.Map;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 29;
+    private static final int DATABASE_VERSION = 31;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        changes.put(15, singletonList(
+/*        changes.put(15, singletonList(
                 "CREATE TABLE WordSet (id VARCHAR NOT NULL PRIMARY KEY, topicId VARCHAR NOT NULL, word VARCHAR NOT NULL);"
-        ));
-        changes.put(16, asList(
-                "CREATE TABLE Topic (id INTEGER NOT NULL PRIMARY KEY, name VARCHAR NOT NULL);",
-                "CREATE TABLE Sentence (id VARCHAR NOT NULL PRIMARY KEY, text VARCHAR NOT NULL, translations VARCHAR NOT NULL, tokens VARCHAR NOT NULL, contentScore VARCHAR NOT NULL);"
-        ));
-        changes.put(17, singletonList(
-                "CREATE TABLE WordTranslation (word VARCHAR NOT NULL PRIMARY KEY, language VARCHAR NOT NULL, translation VARCHAR NOT NULL);"
-        ));
-        changes.put(18, asList(
-                "DROP TABLE Sentence;",
-                "CREATE TABLE Sentence (id VARCHAR NOT NULL PRIMARY KEY, text VARCHAR NOT NULL, translations VARCHAR NOT NULL, tokens VARCHAR NOT NULL, contentScore VARCHAR);"
-        ));
-        changes.put(19, asList(
-                "DROP TABLE WordSet;",
-                "CREATE TABLE WordSet (id VARCHAR NOT NULL PRIMARY KEY, topicId VARCHAR NOT NULL, word VARCHAR NOT NULL, top INTEGER);",
-                "DROP TABLE WordTranslation;",
-                "CREATE TABLE WordTranslation (word VARCHAR NOT NULL PRIMARY KEY, language VARCHAR NOT NULL, translation VARCHAR NOT NULL, top INTEGER);"
-        ));
-        changes.put(25, asList(
-                "DROP TABLE ExpAudit;",
-                "CREATE TABLE ExpAudit (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE NOT NULL, expScore REAL NOT NULL, activityType VARCHAR NOT NULL);"
-        ));
-        changes.put(26, singletonList(
-                "ALTER TABLE PracticeWordSetExercise RENAME TO WordRepetitionProgress;"
-        ));
-        changes.put(27, singletonList(
-                "ALTER TABLE WordRepetitionProgress ADD sentenceId VARCHAR;"
-        ));
-        changes.put(29, asList(
-                "ALTER TABLE WordSet ADD status VARCHAR;",
-                "ALTER TABLE WordSet ADD trainingExperience VARCHAR;"
-        ));
+        ));*/
     }
 
     @Override
