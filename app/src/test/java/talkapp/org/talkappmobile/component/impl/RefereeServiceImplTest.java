@@ -33,7 +33,6 @@ public class RefereeServiceImplTest {
         answer.setWordSetExperienceId(3);
 
         WordSet wordSet = new WordSet();
-        wordSet.setMaxTrainingExperience(12);
         wordSet.setTrainingExperience(0);
 
         // when
