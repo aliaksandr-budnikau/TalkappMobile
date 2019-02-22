@@ -81,7 +81,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(1);
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -101,7 +100,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setStatus(SECOND_CYCLE);
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -122,7 +120,6 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(2);
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         interactor.initialiseExperience(wordSet, listener);
 
         // then
@@ -212,7 +209,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
+        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet.getTrainingExperience() + 1);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -248,7 +245,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet);
+        when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet.getTrainingExperience());
         when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
