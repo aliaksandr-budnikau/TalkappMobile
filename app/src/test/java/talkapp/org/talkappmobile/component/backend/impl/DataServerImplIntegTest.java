@@ -17,6 +17,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.Logger;
+import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
@@ -26,12 +27,16 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
@@ -103,5 +108,17 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         assertEquals(FINISHED, actualSets.get(0).getStatus());
         assertEquals(11, actualSets.get(1).getTrainingExperience());
         assertEquals(SECOND_CYCLE, actualSets.get(1).getStatus());
+    }
+
+    @Test
+    public void sendSentenceScore() {
+        DataServer dataServer = getServer();
+        Sentence sentence = new Sentence();
+        sentence.setText("testText");
+        sentence.setTokens(asList(new TextToken(), new TextToken()));
+        sentence.setContentScore(CORRUPTED);
+        sentence.setTranslations(new HashMap<String, String>());
+        sentence.setId("testId#word#6");
+        assertTrue(dataServer.saveSentenceScore(sentence));
     }
 }
