@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.custom.interactor;
 
+import android.content.ActivityNotFoundException;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -54,5 +56,15 @@ public class RightAnswerTextViewInteractor {
             }
         }
         return textUtils.hideIntervalsInText(sentence.getText(), intervalsToHide);
+    }
+
+    public void openGoogleTranslate(Sentence sentence, boolean locked, OnRightAnswerTextViewListener listener) {
+        if (locked) {
+            try {
+                listener.onOpenGoogleTranslate(sentence.getText(), "en", "ru");
+            } catch (ActivityNotFoundException e) {
+                listener.onActivityNotFoundException();
+            }
+        }
     }
 }

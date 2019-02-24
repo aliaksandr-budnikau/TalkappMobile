@@ -1,5 +1,8 @@
 package talkapp.org.talkappmobile.activity.custom.presenter;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.listener.OnRightAnswerTextViewListener;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
@@ -34,6 +37,7 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
 
     public void rightAnswerTouched() {
         interactor.unmask(sentence, locked, this);
+        interactor.openGoogleTranslate(sentence, locked, this);
     }
 
     public void lock() {
@@ -56,5 +60,21 @@ public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListen
     @Override
     public void onAnswerHasBeenSeen() {
         view.answerHasBeenSeen();
+    }
+
+    @Override
+    public void onOpenGoogleTranslate(String input, String langFrom, String langTo) {
+        view.openGoogleTranslate(input, langFrom, langTo);
+    }
+
+    @Override
+    public void onActivityNotFoundException() {
+        view.onActivityNotFoundException();
+    }
+
+    public void turnAnswerToLink() {
+        String value = sentence.getText();
+        Spanned link = Html.fromHtml("<a href=\"https://translate.google.com/#view=home&op=translate&sl=en&tl=ru&text=" + value + "\">" + value + "</a>");
+        view.turnAnswerToLink(link);
     }
 }

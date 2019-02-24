@@ -1,8 +1,12 @@
 package talkapp.org.talkappmobile.activity.custom;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.Spanned;
 import android.util.AttributeSet;
+import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -65,6 +69,33 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
         eventBus.post(new AnswerHasBeenRevealedEM());
     }
 
+    @Override
+    public void turnAnswerToLink(Spanned value) {
+        this.setText(value);
+    }
+
+    @Override
+    public void openGoogleTranslate(String input, String langFrom, String langTo) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, input);
+        intent.putExtra("key_text_input", input);
+        intent.putExtra("key_text_output", "");
+        intent.putExtra("key_language_from", langFrom);
+        intent.putExtra("key_language_to", langTo);
+        intent.putExtra("key_suggest_translation", "");
+        intent.putExtra("key_from_floating_window", false);
+        intent.setComponent(new ComponentName(
+                "com.google.android.apps.translate",
+                "com.google.android.apps.translate.TranslateActivity"));
+        getContext().startActivity(intent);
+    }
+
+    @Override
+    public void onActivityNotFoundException() {
+        Toast.makeText(getContext(), "Sorry, No Google Translation Installed", Toast.LENGTH_SHORT).show();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.setModel(event.getSentence(), event.getWord());
@@ -75,6 +106,7 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ExerciseGotAnsweredEM event) {
         presenter.lock();
+        presenter.turnAnswerToLink();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
