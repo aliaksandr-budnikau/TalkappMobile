@@ -38,7 +38,7 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
     }
 
     @Override
-    public void save(List<WordSetMapping> mappings) {
+    public void refreshAll(List<WordSetMapping> mappings) {
         if (wordSets != null && !wordSets.isEmpty()) {
             return;
         }

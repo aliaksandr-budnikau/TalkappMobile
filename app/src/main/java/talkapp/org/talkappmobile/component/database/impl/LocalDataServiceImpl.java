@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.component.database.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,8 @@ public class LocalDataServiceImpl implements LocalDataService {
     public void saveWordSets(final List<WordSet> incomingSets) {
         LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
         for (WordSet wordSet : incomingSets) {
+            HashSet<Word2Tokens> setOfWords = new HashSet<>(wordSet.getWords());
+            wordSet.setWords(new LinkedList<>(setOfWords));
             WordSetMapping newSet = wordSetMapper.toMapping(wordSet);
             WordSetMapping old = wordSetDao.findById(wordSet.getId());
             if (old != null) {
@@ -70,7 +73,7 @@ public class LocalDataServiceImpl implements LocalDataService {
             }
             mappingsForSaving.add(newSet);
         }
-        wordSetDao.save(mappingsForSaving);
+        wordSetDao.refreshAll(mappingsForSaving);
     }
 
     @Override

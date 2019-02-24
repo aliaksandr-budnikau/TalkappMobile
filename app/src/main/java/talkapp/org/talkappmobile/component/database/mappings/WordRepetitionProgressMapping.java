@@ -135,23 +135,24 @@ public class WordRepetitionProgressMapping {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordRepetitionProgressMapping that = (WordRepetitionProgressMapping) o;
-        return id == that.id &&
-                Objects.equals(wordJSON, that.wordJSON) &&
-                Objects.equals(sentenceId, that.sentenceId);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, wordJSON, sentenceId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "WordRepetitionProgressMapping{" +
                 "id=" + id +
-                ", word='" + wordJSON + '\'' +
-                ", wordSetId='" + wordSetId + '\'' +
+                ", wordSetId=" + wordSetId +
                 ", sentenceId='" + sentenceId + '\'' +
+                ", status=" + status +
+                ", current=" + current +
+                ", updatedDate=" + updatedDate +
+                ", repetitionCounter=" + repetitionCounter +
                 '}';
     }
 }

@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
@@ -93,7 +95,11 @@ public class DataServerImplTest {
         // setup
         Call mockCall = mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
-        expectedSets.put(1, asList(new WordSet(), new WordSet()));
+        WordSet wordSet1 = new WordSet();
+        wordSet1.setWords(new LinkedList<Word2Tokens>());
+        WordSet wordSet2 = new WordSet();
+        wordSet2.setWords(new LinkedList<Word2Tokens>());
+        expectedSets.put(1, asList(wordSet1, wordSet2));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
@@ -131,7 +137,11 @@ public class DataServerImplTest {
         // setup
         Call mockCall = mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
-        expectedSets.put(1, asList(new WordSet(), new WordSet()));
+        WordSet wordSet1 = new WordSet();
+        wordSet1.setWords(new LinkedList<Word2Tokens>());
+        WordSet wordSet2 = new WordSet();
+        wordSet2.setWords(new LinkedList<Word2Tokens>());
+        expectedSets.put(1, asList(wordSet1, wordSet2));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
@@ -206,7 +216,11 @@ public class DataServerImplTest {
         // setup
         Call mockCall = mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
-        expectedSets.put(1, asList(new WordSet(), new WordSet()));
+        WordSet wordSet1 = new WordSet();
+        wordSet1.setWords(new LinkedList<Word2Tokens>());
+        WordSet wordSet2 = new WordSet();
+        wordSet2.setWords(new LinkedList<Word2Tokens>());
+        expectedSets.put(1, asList(wordSet1, wordSet2));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
         List<WordSetMapping> wordSetMappings = getWordSetMappings();
 

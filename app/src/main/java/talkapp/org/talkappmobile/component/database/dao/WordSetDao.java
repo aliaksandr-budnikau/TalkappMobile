@@ -7,7 +7,7 @@ import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMappin
 public interface WordSetDao {
     List<WordSetMapping> findAll();
 
-    void save(List<WordSetMapping> mappings);
+    void refreshAll(List<WordSetMapping> mappings);
 
     List<WordSetMapping> findAllByTopicId(String topicId);
 

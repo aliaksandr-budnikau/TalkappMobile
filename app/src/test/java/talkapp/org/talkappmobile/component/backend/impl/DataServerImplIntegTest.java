@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
@@ -83,16 +85,18 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         wordSetMapping2.setStatus(SECOND_CYCLE);
         wordSetMapping2.setTrainingExperience(11);
         List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
-        wordSetDao.save(wordSetsMappingsWithProgress);
+        wordSetDao.refreshAll(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
         wordSet1.setId(1);
         wordSet1.setTrainingExperience(0);
         wordSet1.setStatus(FIRST_CYCLE);
+        wordSet1.setWords(new LinkedList<Word2Tokens>());
         WordSet wordSet2 = new WordSet();
         wordSet2.setId(2);
         wordSet2.setTrainingExperience(0);
         wordSet2.setStatus(FIRST_CYCLE);
+        wordSet2.setWords(new LinkedList<Word2Tokens>());
         List<WordSet> wordSets = asList(wordSet1, wordSet2);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         expectedSets.put(1, wordSets);
@@ -108,6 +112,55 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         assertEquals(FINISHED, actualSets.get(0).getStatus());
         assertEquals(11, actualSets.get(1).getTrainingExperience());
         assertEquals(SECOND_CYCLE, actualSets.get(1).getStatus());
+    }
+
+    @Test
+    public void findAllWordSets_savingCopiesInWordSet() throws InterruptedException {
+        // setup
+        Call mockCall = mock(Call.class);
+
+        WordSetMapping wordSetMapping1 = new WordSetMapping();
+        wordSetMapping1.setId("1");
+        wordSetMapping1.setStatus(FINISHED);
+        wordSetMapping1.setTrainingExperience(10);
+        WordSetMapping wordSetMapping2 = new WordSetMapping();
+        wordSetMapping2.setId("2");
+        wordSetMapping2.setStatus(SECOND_CYCLE);
+        wordSetMapping2.setTrainingExperience(11);
+        List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
+        wordSetDao.refreshAll(wordSetsMappingsWithProgress);
+
+        WordSet wordSet1 = new WordSet();
+        wordSet1.setId(1);
+        wordSet1.setTrainingExperience(0);
+        wordSet1.setStatus(FIRST_CYCLE);
+        Word2Tokens word1 = new Word2Tokens();
+        word1.setWord("age");
+        Word2Tokens word2 = new Word2Tokens();
+        word2.setWord("age");
+        wordSet1.setWords(asList(word1, word2));
+        WordSet wordSet2 = new WordSet();
+        wordSet2.setId(2);
+        wordSet2.setTrainingExperience(0);
+        wordSet2.setStatus(FIRST_CYCLE);
+        word1 = new Word2Tokens();
+        word1.setWord("age");
+        word2 = new Word2Tokens();
+        word2.setWord("age");
+        wordSet2.setWords(asList(word1, word2));
+        List<WordSet> wordSets = asList(wordSet1, wordSet2);
+        Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
+        expectedSets.put(1, wordSets);
+        Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
+        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        when(requestExecutor.execute(mockCall)).thenReturn(response);
+
+        List<WordSet> actualSets = server.findAllWordSets();
+        Thread.sleep(1000);
+
+        // then
+        assertEquals(1, actualSets.get(0).getWords().size());
+        assertEquals(1, actualSets.get(1).getWords().size());
     }
 
     @Test

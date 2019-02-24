@@ -79,7 +79,7 @@ public abstract class PresenterAndInteractorIntegTest {
             }
 
             @Override
-            public void save(List<WordSetMapping> mappings) {
+            public void refreshAll(List<WordSetMapping> mappings) {
                 wordSets = splitAllWortSetsByTopicId(mappings);
             }
 
@@ -187,6 +187,7 @@ public abstract class PresenterAndInteractorIntegTest {
 
     protected WordRepetitionProgressDao provideWordRepetitionProgressDao() {
         return new WordRepetitionProgressDao() {
+            private int counter = 0;
             private Set<WordRepetitionProgressMapping> storage = new HashSet<>();
 
             @Override
@@ -202,6 +203,10 @@ public abstract class PresenterAndInteractorIntegTest {
 
             @Override
             public void createNewOrUpdate(WordRepetitionProgressMapping exercise) {
+                if (exercise.getId() == 0) {
+                    counter++;
+                    exercise.setId(counter);
+                }
                 storage.add(exercise);
             }
 
@@ -219,6 +224,10 @@ public abstract class PresenterAndInteractorIntegTest {
 
             @Override
             public int createAll(List<WordRepetitionProgressMapping> words) {
+                for (WordRepetitionProgressMapping word : words) {
+                    counter++;
+                    word.setId(counter);
+                }
                 storage.addAll(words);
                 return 0;
             }
