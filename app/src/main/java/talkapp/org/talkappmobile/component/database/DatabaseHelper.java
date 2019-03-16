@@ -12,18 +12,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.component.database.mappings.local.WordTranslationMapping;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 35;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-/*        changes.put(15, singletonList(
-                "CREATE TABLE WordSet (id VARCHAR NOT NULL PRIMARY KEY, topicId VARCHAR NOT NULL, word VARCHAR NOT NULL);"
+/*        changes.put(35, singletonList(
+                "SOME SQL;"
         ));*/
     }
 
@@ -32,6 +36,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTable(connectionSource, WordRepetitionProgressMapping.class);
             TableUtils.createTable(connectionSource, WordSetMapping.class);
+            TableUtils.createTable(connectionSource, ExpAuditMapping.class);
+            TableUtils.createTable(connectionSource, WordTranslationMapping.class);
+            TableUtils.createTable(connectionSource, TopicMapping.class);
+            TableUtils.createTable(connectionSource, SentenceMapping.class);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
