@@ -72,14 +72,12 @@ public class SentenceMapping {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SentenceMapping sentence = (SentenceMapping) o;
-        return Objects.equals(id, sentence.id) &&
-                Objects.equals(text, sentence.text) &&
-                Objects.equals(translations, sentence.translations);
+        return Objects.equals(id, sentence.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, translations);
+        return Objects.hash(id);
     }
 
     @Override

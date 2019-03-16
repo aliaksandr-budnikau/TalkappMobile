@@ -26,18 +26,19 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
     public void save(List<SentenceMapping> mappings) {
         for (SentenceMapping mapping : mappings) {
             String[] ids = mapping.getId().split("#");
-            List<SentenceMapping> list = sentences.get(getKey(ids[1], Integer.valueOf(ids[2])));
-            if (list != null && !list.isEmpty()) {
-                continue;
-            } else {
-                sentences.put(getKey(ids[1], Integer.valueOf(ids[2])), new LinkedList<SentenceMapping>());
+            String key = getKey(ids[1], Integer.valueOf(ids[2]));
+            List<SentenceMapping> list = sentences.get(key);
+            if (list == null) {
+                sentences.put(key, new LinkedList<SentenceMapping>());
             }
             try {
                 super.createOrUpdate(mapping);
             } catch (SQLException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            sentences.get(getKey(ids[1], Integer.valueOf(ids[2]))).add(mapping);
+            List<SentenceMapping> cached = sentences.get(key);
+            cached.remove(mapping);
+            cached.add(mapping);
         }
     }
 

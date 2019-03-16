@@ -6,21 +6,17 @@ import org.junit.runners.Suite;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenterTest;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategyTest;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.StudyingPracticeWordSetInteractorTest;
 import talkapp.org.talkappmobile.activity.presenter.StudyingWordSetsListInteractorTest;
-import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterTest;
-import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterTest;
-import talkapp.org.talkappmobile.component.backend.impl.DataServerImplIntegTest;
 import talkapp.org.talkappmobile.component.backend.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImplTest;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImplTest;
+import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImplTest;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImplTest;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;
@@ -58,7 +54,8 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         PracticeWordSetVocabularyPresenterTest.class,
         PronounceRightAnswerButtonInteractorTest.class,
         RightAnswerTextViewPresenterTest.class,
-        WordSetDaoImplTest.class
+        WordSetDaoImplTest.class,
+        SentenceDaoImplTest.class,
 })
 @RunWith(Suite.class)
 public class SuiteNotDepOnExternalServer {
