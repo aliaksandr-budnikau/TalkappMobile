@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
@@ -230,9 +230,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     public int markAsRepeated(Word2Tokens word, Sentence sentence) {
         List<WordRepetitionProgressMapping> exercises;
         try {
-            exercises = exerciseDao.findByWordAndBySentenceAndByStatus(
+            exercises = exerciseDao.findByWordAndBySentenceIdAndByStatus(
                     mapper.writeValueAsString(word),
-                    mapper.writeValueAsString(sentence),
+                    sentence.getId(),
                     FINISHED
             );
         } catch (JsonProcessingException e) {

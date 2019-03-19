@@ -34,6 +34,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private Word2Tokens currentWord;
     private Sentence currentSentence;
     private WordSet wordSet;
+    private int maxTrainingProgress;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceProvider sentenceProvider,
@@ -64,6 +65,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
         this.wordSet = wordSet;
+        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         sentenceProvider.enableRepetitionMode();
         listener.onEnableRepetitionMode();
@@ -112,11 +114,11 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
         wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         wordSet.getWords().remove(currentWord);
-        listener.onUpdateProgress(wordSet);
+        listener.onUpdateProgress(wordSet, maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
+        if (wordSet.getTrainingExperience() == maxTrainingProgress) {
             logger.i(TAG, "training finished");
             listener.onTrainingFinished();
         } else {

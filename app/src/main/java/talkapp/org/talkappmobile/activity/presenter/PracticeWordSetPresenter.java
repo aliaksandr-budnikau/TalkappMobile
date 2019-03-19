@@ -56,6 +56,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
+    public void onUpdateProgress(WordSet wordSet, int maxTrainingProgress) {
+        viewStrategy.onUpdateProgress(wordSet, maxTrainingProgress);
+    }
+
+    @Override
     public void onTrainingHalfFinished(Sentence currentSentence) {
         viewStrategy.onTrainingHalfFinished();
         viewStrategy.onRightAnswer(currentSentence);

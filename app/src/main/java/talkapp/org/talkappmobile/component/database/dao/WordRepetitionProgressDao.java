@@ -24,5 +24,5 @@ public interface WordRepetitionProgressDao {
 
     List<WordRepetitionProgressMapping> findByWordAndByStatus(String word, WordSetProgressStatus status);
 
-    List<WordRepetitionProgressMapping> findByWordAndBySentenceAndByStatus(String word, String sentence, WordSetProgressStatus status);
+    List<WordRepetitionProgressMapping> findByWordAndBySentenceIdAndByStatus(String word, String sentence, WordSetProgressStatus status);
 }

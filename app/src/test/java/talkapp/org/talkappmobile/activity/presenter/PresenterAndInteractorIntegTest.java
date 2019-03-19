@@ -18,9 +18,9 @@ import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
+import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
@@ -149,7 +149,7 @@ public abstract class PresenterAndInteractorIntegTest {
                     String[] ids = mapping.getId().split("#");
                     List<SentenceMapping> list = sentences.get(getKey(ids[1], Integer.valueOf(ids[2])));
                     if (list != null && !list.isEmpty()) {
-                        continue;
+                        //continue;
                     } else {
                         sentences.put(getKey(ids[1], Integer.valueOf(ids[2])), new LinkedList<SentenceMapping>());
                     }
@@ -261,12 +261,24 @@ public abstract class PresenterAndInteractorIntegTest {
 
             @Override
             public List<WordRepetitionProgressMapping> findByWordAndByStatus(String word, WordSetProgressStatus status) {
-                return null;
+                LinkedList<WordRepetitionProgressMapping> result = new LinkedList<>();
+                for (WordRepetitionProgressMapping mapping : storage) {
+                    if (mapping.getWordJSON().equals(word) && mapping.getStatus() == status) {
+                        result.add(mapping);
+                    }
+                }
+                return result;
             }
 
             @Override
-            public List<WordRepetitionProgressMapping> findByWordAndBySentenceAndByStatus(String s, String s1, WordSetProgressStatus finished) {
-                return null;
+            public List<WordRepetitionProgressMapping> findByWordAndBySentenceIdAndByStatus(String word, String sentenceId, WordSetProgressStatus finished) {
+                LinkedList<WordRepetitionProgressMapping> result = new LinkedList<>();
+                for (WordRepetitionProgressMapping mapping : storage) {
+                    if (mapping.getWordJSON().equals(word) && mapping.getStatus() == finished && mapping.getSentenceId().equals(sentenceId)) {
+                        result.add(mapping);
+                    }
+                }
+                return result;
             }
         };
     }
