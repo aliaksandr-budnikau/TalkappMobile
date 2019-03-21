@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.TabHost;
+
+import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -16,12 +19,16 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView;
 import talkapp.org.talkappmobile.activity.custom.WordSetsListListView;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsFinishedFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsStartedFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
@@ -42,6 +49,9 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
+    public static final String NEW = "new";
+    public static final String STARTED = "started";
+    public static final String FINISHED = "finished";
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
     @Bean(BackendServerFactoryBean.class)
@@ -49,10 +59,15 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
+    @EventBusGreenRobot
+    EventBus eventBus;
+
     @ViewById(R.id.wordSetsListView)
     WordSetsListListView wordSetsListView;
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
+    @ViewById(R.id.tabHost)
+    TabHost tabHost;
 
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
@@ -139,6 +154,37 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public void onWordSetsInitialized(final List<WordSet> wordSets) {
         wordSetsListView.addAll(wordSets);
         wordSetsListView.refreshModel();
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                if (NEW.equals(tabId)) {
+                    eventBus.post(new WordSetsNewFilterAppliedEM());
+                } else if (STARTED.equals(tabId)) {
+                    eventBus.post(new WordSetsStartedFilterAppliedEM());
+                } else if (FINISHED.equals(tabId)) {
+                    eventBus.post(new WordSetsFinishedFilterAppliedEM());
+                }
+            }
+        });
+        tabHost.setup();
+        //Tab 1
+        TabHost.TabSpec spec = tabHost.newTabSpec(NEW);
+        spec.setContent(R.id.wordSetsListView);
+        spec.setIndicator("New");
+        tabHost.addTab(spec);
+
+        //Tab 2
+        spec = tabHost.newTabSpec(STARTED);
+        spec.setContent(R.id.wordSetsListView);
+        spec.setIndicator("Started");
+        tabHost.addTab(spec);
+
+        //Tab 3
+        spec = tabHost.newTabSpec(FINISHED);
+        spec.setContent(R.id.wordSetsListView);
+        spec.setIndicator("Finished");
+        tabHost.addTab(spec);
     }
 
     @Override

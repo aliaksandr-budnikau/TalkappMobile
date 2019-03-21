@@ -87,6 +87,23 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
 
     @Override
     public void onModelPrepared(List<WordSet> wordSetList) {
+        super.clear();
+        childViews = new SparseArray<>(wordSetList.size());
         super.addAll(wordSetList);
+    }
+
+    public void filterNew() {
+        presenter.filterNew();
+        notifyDataSetChanged();
+    }
+
+    public void filterStarted() {
+        presenter.filterStarted();
+        notifyDataSetChanged();
+    }
+
+    public void filterFinished() {
+        presenter.filterFinished();
+        notifyDataSetChanged();
     }
 }
