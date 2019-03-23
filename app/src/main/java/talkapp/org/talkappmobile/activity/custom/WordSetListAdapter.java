@@ -22,6 +22,8 @@ import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+
 /**
  * @author Budnikau Aliaksandr
  */
@@ -59,7 +61,7 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
         }
         WordSet wordSet = presenter.getWordSet(position);
         itemView.setModel(wordSet);
-        if (wordSet.getId() == 0 || wordSet.getTrainingExperience() == 0) {
+        if (wordSet.getId() == 0 || wordSet.getTrainingExperience() == 0 || wordSet.getStatus() == FINISHED) {
             itemView.hideProgress();
         } else {
             itemView.showProgress();
@@ -104,6 +106,26 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
 
     public void filterFinished() {
         presenter.filterFinished();
+        notifyDataSetChanged();
+    }
+
+    public void filterNewRep() {
+        presenter.filterNewRep();
+        notifyDataSetChanged();
+    }
+
+    public void filterSeenRep() {
+        presenter.filterSeenRep();
+        notifyDataSetChanged();
+    }
+
+    public void filterRepeatedRep() {
+        presenter.filterRepeatedRep();
+        notifyDataSetChanged();
+    }
+
+    public void filterLearnedRep() {
+        presenter.filterLearnedRep();
         notifyDataSetChanged();
     }
 }

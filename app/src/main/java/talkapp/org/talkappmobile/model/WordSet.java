@@ -23,6 +23,8 @@ public class WordSet implements Serializable {
 
     private WordSetProgressStatus status = FIRST_CYCLE;
 
+    private RepetitionClass repetitionClass;
+
     public int getId() {
         return id;
     }
@@ -69,6 +71,14 @@ public class WordSet implements Serializable {
 
     public void setStatus(WordSetProgressStatus status) {
         this.status = status;
+    }
+
+    public void setRepetitionClass(RepetitionClass repetitionClass) {
+        this.repetitionClass = repetitionClass;
+    }
+
+    public RepetitionClass getRepetitionClass() {
+        return repetitionClass;
     }
 
     @Override

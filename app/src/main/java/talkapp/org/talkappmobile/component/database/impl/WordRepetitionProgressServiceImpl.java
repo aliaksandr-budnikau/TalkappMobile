@@ -1,15 +1,20 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NavigableMap;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
@@ -19,6 +24,7 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -27,7 +33,6 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
-import static org.apache.commons.collections4.ListUtils.partition;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
@@ -133,32 +138,65 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         Calendar cal = getInstance(UTC);
         //cal.add(Calendar.SECOND, -olderThenInHours);
         cal.add(Calendar.HOUR, -olderThenInHours);
-        List<WordRepetitionProgressMapping> words = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
-        Iterator<WordRepetitionProgressMapping> iterator = words.iterator();
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
+        Iterator<WordRepetitionProgressMapping> iterator = exercises.iterator();
         while (iterator.hasNext()) {
             WordRepetitionProgressMapping exe = iterator.next();
             cal = getInstance(UTC);
             // 5, 7, 13, 23, 37,
-            //cal.add(Calendar.SECOND, -(olderThenInHours + 48 * exe.getRepetitionCounter() * exe.getRepetitionCounter()));
-            cal.add(Calendar.HOUR, -(olderThenInHours + 48 * exe.getRepetitionCounter() * exe.getRepetitionCounter()));
+            //cal.add(Calendar.SECOND, -countHours(olderThenInHours, exe.getRepetitionCounter()));
+            cal.add(Calendar.HOUR, -(countHours(olderThenInHours, exe.getRepetitionCounter())));
             if (exe.getUpdatedDate().after(cal.getTime())) {
                 iterator.remove();
             }
         }
+        NavigableMap<Integer, List<Word2Tokens>> tree = getSortedTreeByRepetitionCount(exercises);
         List<WordSet> wordSets = new LinkedList<>();
-        for (List<WordRepetitionProgressMapping> exercises : partition(words, wordSetSize)) {
-            WordSet set = new WordSet();
-            set.setWords(new LinkedList<Word2Tokens>());
-            for (WordRepetitionProgressMapping mapping : exercises) {
-                try {
-                    set.getWords().add(mapper.readValue(mapping.getWordJSON(), Word2Tokens.class));
-                } catch (IOException e) {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            }
-            wordSets.add(set);
+        for (RepetitionClass clazz : RepetitionClass.values()) {
+            insertWordSetGroup(wordSets, tree.subMap(clazz.getFrom(), clazz.getTo()).values(), clazz);
         }
         return wordSets;
+    }
+
+    @NonNull
+    private NavigableMap<Integer, List<Word2Tokens>> getSortedTreeByRepetitionCount(List<WordRepetitionProgressMapping> exercises) {
+        NavigableMap<Integer, List<Word2Tokens>> tree = new TreeMap<>();
+        for (WordRepetitionProgressMapping exercise : exercises) {
+            Word2Tokens word2Tokens;
+            try {
+                word2Tokens = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+            if (tree.get(exercise.getRepetitionCounter()) == null) {
+                tree.put(exercise.getRepetitionCounter(), new LinkedList<Word2Tokens>());
+            }
+            tree.get(exercise.getRepetitionCounter()).add(word2Tokens);
+        }
+        return tree;
+    }
+
+    private void insertWordSetGroup(List<WordSet> allWordSets, Collection<List<Word2Tokens>> words, RepetitionClass clazz) {
+        LinkedList<Word2Tokens> flattenList = new LinkedList<>();
+        for (List<Word2Tokens> list : words) {
+            flattenList.addAll(list);
+        }
+        WordSet set = new WordSet();
+        set.setWords(new LinkedList<Word2Tokens>());
+        set.setRepetitionClass(clazz);
+        for (Word2Tokens word : flattenList) {
+            set.getWords().add(word);
+            if (set.getWords().size() == wordSetSize) {
+                allWordSets.add(set);
+                set = new WordSet();
+                set.setWords(new LinkedList<Word2Tokens>());
+                set.setRepetitionClass(clazz);
+            }
+        }
+    }
+
+    private int countHours(int olderThenInHours, int counter) {
+        return olderThenInHours + 48 * counter * counter;
     }
 
     @Override

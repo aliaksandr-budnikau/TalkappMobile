@@ -16,7 +16,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsFinishedFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsLearnedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewRepFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRepeatedRepFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsSeenRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsStartedFilterAppliedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -74,5 +78,25 @@ public class WordSetsListListView extends ListView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(WordSetsFinishedFilterAppliedEM event) {
         adapter.filterFinished();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetsNewRepFilterAppliedEM event) {
+        adapter.filterNewRep();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetsSeenRepFilterAppliedEM event) {
+        adapter.filterSeenRep();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetsRepeatedRepFilterAppliedEM event) {
+        adapter.filterRepeatedRep();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetsLearnedRepFilterAppliedEM event) {
+        adapter.filterLearnedRep();
     }
 }

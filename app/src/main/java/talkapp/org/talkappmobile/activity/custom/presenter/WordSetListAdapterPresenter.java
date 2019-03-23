@@ -55,4 +55,20 @@ public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener
     public void filterFinished() {
         interactor.filterFinished(wordSetList, this);
     }
+
+    public void filterNewRep() {
+        interactor.filterNewRep(wordSetList, this);
+    }
+
+    public void filterSeenRep() {
+        interactor.filterSeenRep(wordSetList, this);
+    }
+
+    public void filterRepeatedRep() {
+        interactor.filterRepeatedRep(wordSetList, this);
+    }
+
+    public void filterLearnedRep() {
+        interactor.filterLearnedRep(wordSetList, this);
+    }
 }
