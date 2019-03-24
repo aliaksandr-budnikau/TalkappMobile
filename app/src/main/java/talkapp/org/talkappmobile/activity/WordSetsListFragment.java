@@ -183,25 +183,25 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             //Tab 1
             TabHost.TabSpec spec = tabHost.newTabSpec(RepetitionClass.NEW.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("> 0");
+            spec.setIndicator("New");
             tabHost.addTab(spec);
 
             //Tab 2
             spec = tabHost.newTabSpec(SEEN.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("> 1");
+            spec.setIndicator("1 - 2");
             tabHost.addTab(spec);
 
             //Tab 3
             spec = tabHost.newTabSpec(REPEATED.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("> 3");
+            spec.setIndicator("3 - 6");
             tabHost.addTab(spec);
 
             //Tab 4
             spec = tabHost.newTabSpec(LEARNED.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("> 7");
+            spec.setIndicator("Learned");
             tabHost.addTab(spec);
         } else {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
