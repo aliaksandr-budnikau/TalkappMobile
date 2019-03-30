@@ -114,6 +114,11 @@ public abstract class PresenterAndInteractorIntegTest {
                 }
             }
 
+            @Override
+            public Integer getTheLastCustomWordSetsId() {
+                return 0;
+            }
+
             @NonNull
             private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
                 LinkedList<WordSetMapping> result = new LinkedList<>();

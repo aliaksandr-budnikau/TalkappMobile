@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +15,11 @@ import java.util.Map;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.ID_FN;
+
 public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implements WordSetDao {
 
+    public static final int CUSTOM_WORDSETS_STARTS_SINCE = 10000;
     private Map<String, List<WordSetMapping>> wordSets = new HashMap<>();
 
     public WordSetDaoImpl(ConnectionSource connectionSource, Class<WordSetMapping> dataClass) throws SQLException {
@@ -55,7 +59,7 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
     @Override
     public List<WordSetMapping> findAllByTopicId(String topicId) {
         findAll();
-        return wordSets.get(topicId);
+        return wordSets.get(topicId) == null ? Collections.<WordSetMapping>emptyList() : wordSets.get(topicId);
     }
 
     @Override
@@ -77,6 +81,20 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
             throw new RuntimeException(e.getMessage(), e);
         }
         wordSets = new HashMap<>();
+    }
+
+    @Override
+    public Integer getTheLastCustomWordSetsId() {
+        try {
+            String query = queryBuilder().selectRaw("MAX(" + ID_FN + ")").prepareStatementString();
+            String id = this.queryRaw(query).getFirstResult()[0];
+            if (id == null) {
+                return null;
+            }
+            return Integer.parseInt(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @NonNull

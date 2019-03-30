@@ -14,4 +14,6 @@ public interface WordSetDao {
     WordSetMapping findById(int id);
 
     void createNewOrUpdate(WordSetMapping wordSetMapping);
+
+    Integer getTheLastCustomWordSetsId();
 }
