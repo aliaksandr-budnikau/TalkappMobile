@@ -35,6 +35,11 @@ public class DataServerImpl implements DataServer {
     }
 
     @Override
+    public WordSet saveNewCustomWordSet(WordSet wordSet) {
+        return localDataService.saveNewWordSet(wordSet);
+    }
+
+    @Override
     public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
         Call<Map<String, List<Sentence>>> call = gitHubRestClient.findSentencesByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
@@ -45,6 +50,20 @@ public class DataServerImpl implements DataServer {
         }
         if (body != null) {
             localDataService.saveSentences(body, wordsNumber);
+        }
+    }
+
+    @Override
+    public void initLocalCacheOfAllSentencesForThisWord(String word, int wordsNumber) {
+        Call<List<Sentence>> call = gitHubRestClient.findSentencesByWord(word, wordsNumber);
+        List<Sentence> body = null;
+        try {
+            body = requestExecutor.execute(call).body();
+        } catch (InternetConnectionLostException e) {
+            // do nothing
+        }
+        if (body != null) {
+            localDataService.saveSentences(word, body, wordsNumber);
         }
     }
 

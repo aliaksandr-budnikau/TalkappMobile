@@ -14,6 +14,8 @@ public interface DataServer {
 
     void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber);
 
+    void initLocalCacheOfAllSentencesForThisWord(String word, int wordsNumber);
+
     List<Topic> findAllTopics();
 
     List<WordSet> findAllWordSets();
@@ -25,4 +27,6 @@ public interface DataServer {
     List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
 
     boolean saveSentenceScore(Sentence sentence);
+
+    WordSet saveNewCustomWordSet(WordSet wordSet);
 }

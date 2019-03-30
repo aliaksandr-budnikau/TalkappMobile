@@ -14,6 +14,11 @@ public class Word2Tokens implements Serializable {
         this.word = word;
     }
 
+    public Word2Tokens(String word, String tokens) {
+        this.word = word;
+        this.tokens = tokens;
+    }
+
     public String getWord() {
         return word;
     }

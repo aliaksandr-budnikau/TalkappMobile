@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.model;
 
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,16 @@ public class WordSet implements Serializable {
     private WordSetProgressStatus status = FIRST_CYCLE;
 
     private RepetitionClass repetitionClass;
+
+    public WordSet() {
+    }
+
+    public WordSet(List<String> newWords) {
+        words = new LinkedList<>();
+        for (String word : newWords) {
+            words.add(new Word2Tokens(word, word));
+        }
+    }
 
     public int getId() {
         return id;
@@ -73,12 +84,12 @@ public class WordSet implements Serializable {
         this.status = status;
     }
 
-    public void setRepetitionClass(RepetitionClass repetitionClass) {
-        this.repetitionClass = repetitionClass;
-    }
-
     public RepetitionClass getRepetitionClass() {
         return repetitionClass;
+    }
+
+    public void setRepetitionClass(RepetitionClass repetitionClass) {
+        this.repetitionClass = repetitionClass;
     }
 
     @Override
