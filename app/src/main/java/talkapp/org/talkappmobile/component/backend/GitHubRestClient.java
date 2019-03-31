@@ -20,6 +20,7 @@ public interface GitHubRestClient {
     String SENTENCES_PATH = COMMON_PART + "sentences/l{wordsNumber}/ws{wordSetId}.json";
     String SINGLE_WORDS_SENTENCES_PATH = COMMON_PART + "sentences/singlewords/l{wordsNumber}/{word}.json";
     String WORD_TRANSLATION_PATH = COMMON_PART + "words/{language}/ws{wordSetId}.json";
+    String SINGLE_WORD_TRANSLATION_PATH = COMMON_PART + "words/singlewords/{language}/{letter}/{word}.json";
     String TOPICS_PATH = COMMON_PART + "topics/topics.json";
     String WORD_SETS_PATH = COMMON_PART + "wordsets/wordSets.json";
 
@@ -31,6 +32,9 @@ public interface GitHubRestClient {
 
     @GET(WORD_TRANSLATION_PATH)
     Call<List<WordTranslation>> findWordTranslationsByWordSetIdAndByLanguage(@Path("wordSetId") int wordSetId, @Path("language") String language);
+
+    @GET(SINGLE_WORD_TRANSLATION_PATH)
+    Call<WordTranslation> findWordTranslationByWordAndByLanguageAndByLetter(@Path("word") String word, @Path("letter") String letter, @Path("language") String language);
 
     @GET(TOPICS_PATH)
     Call<List<Topic>> findAllTopics();

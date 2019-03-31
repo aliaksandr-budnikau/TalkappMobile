@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
+import android.support.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -121,12 +123,30 @@ public class DataServerImpl implements DataServer {
         try {
             body = requestExecutor.execute(call).body();
         } catch (InternetConnectionLostException e) {
-            return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
+            try {
+                return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
+            } catch (InternetConnectionLostException e1) {
+                body = getWordTranslations(language, words);
+            }
         }
-        if (body == null) {
+        if (body == null || body.isEmpty()) {
+            body = getWordTranslations(language, words);
+        }
+        if (body.isEmpty()) {
             return new LinkedList<>();
         } else {
             localDataService.saveWordTranslations(body, words, language);
+        }
+        return body;
+    }
+
+    @NonNull
+    private List<WordTranslation> getWordTranslations(String language, List<String> words) {
+        List<WordTranslation> body;
+        body = new LinkedList<>();
+        for (String word : words) {
+            Call<WordTranslation> callSingleWord = gitHubRestClient.findWordTranslationByWordAndByLanguageAndByLetter(word, String.valueOf(word.charAt(0)), language);
+            body.add(requestExecutor.execute(callSingleWord).body());
         }
         return body;
     }
