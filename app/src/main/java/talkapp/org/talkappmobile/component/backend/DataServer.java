@@ -26,6 +26,8 @@ public interface DataServer {
 
     List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
 
+    WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word);
+
     boolean saveSentenceScore(Sentence sentence);
 
     WordSet saveNewCustomWordSet(WordSet wordSet);

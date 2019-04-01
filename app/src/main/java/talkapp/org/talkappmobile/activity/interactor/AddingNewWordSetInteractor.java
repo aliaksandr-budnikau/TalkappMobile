@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
@@ -8,6 +9,7 @@ import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyExcepti
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -51,7 +53,13 @@ public class AddingNewWordSetInteractor {
         }
 
         if (valid) {
-            WordSet set = new WordSet(words);
+            WordSet set = new WordSet();
+            LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
+            for (String word : words) {
+                WordTranslation translation = server.findWordTranslationsByWordAndByLanguage("russian", word);
+                word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens()));
+            }
+            set.setWords(word2Tokens);
             set.setTopicId("43");
             WordSet wordSet = server.saveNewCustomWordSet(set);
             listener.onSubmitSuccessfully(wordSet);

@@ -16,6 +16,8 @@ public class WordTranslation {
 
     private Integer top;
 
+    private String tokens;
+
     public String getId() {
         return id;
     }
@@ -54,6 +56,14 @@ public class WordTranslation {
 
     public void setTop(Integer top) {
         this.top = top;
+    }
+
+    public String getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(String tokens) {
+        this.tokens = tokens;
     }
 
     @Override

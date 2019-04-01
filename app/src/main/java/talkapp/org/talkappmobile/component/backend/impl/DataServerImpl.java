@@ -152,6 +152,12 @@ public class DataServerImpl implements DataServer {
     }
 
     @Override
+    public WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word) {
+        Call<WordTranslation> callSingleWord = gitHubRestClient.findWordTranslationByWordAndByLanguageAndByLetter(word, String.valueOf(word.charAt(0)), language);
+        return requestExecutor.execute(callSingleWord).body();
+    }
+
+    @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
         return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
     }
