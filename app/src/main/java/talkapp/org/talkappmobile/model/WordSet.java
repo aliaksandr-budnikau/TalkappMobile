@@ -89,14 +89,12 @@ public class WordSet implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordSet wordSet = (WordSet) o;
-        return Objects.equals(id, wordSet.id) &&
-                Objects.equals(words, wordSet.words) &&
-                Objects.equals(topicId, wordSet.topicId);
+        return Objects.equals(id, wordSet.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, topicId, words);
+        return Objects.hash(id);
     }
 
     @Override

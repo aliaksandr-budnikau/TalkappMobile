@@ -97,6 +97,16 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
         }
     }
 
+    @Override
+    public void removeById(int id) {
+        try {
+            this.deleteById(String.valueOf(id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        wordSets = new HashMap<>();
+    }
+
     @NonNull
     private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
         LinkedList<WordSetMapping> result = new LinkedList<>();

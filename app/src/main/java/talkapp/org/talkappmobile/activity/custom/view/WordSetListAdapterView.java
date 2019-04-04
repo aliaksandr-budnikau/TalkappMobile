@@ -6,4 +6,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 
 public interface WordSetListAdapterView {
     void onModelPrepared(List<WordSet> wordSetList);
+
+    void onWordSetRemoved();
 }

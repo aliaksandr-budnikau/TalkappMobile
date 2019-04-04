@@ -119,6 +119,11 @@ public abstract class PresenterAndInteractorIntegTest {
                 return 0;
             }
 
+            @Override
+            public void removeById(int id) {
+
+            }
+
             @NonNull
             private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
                 LinkedList<WordSetMapping> result = new LinkedList<>();

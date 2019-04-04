@@ -10,4 +10,8 @@ public interface WordSetService {
     int increaseExperience(WordSet wordSet, int value);
 
     void moveToAnotherState(int id, WordSetProgressStatus value);
+
+    void remove(WordSet wordSet);
+
+    int getCustomWordSetsStartsSince();
 }

@@ -113,6 +113,12 @@ public class WordSetListAdapterInteractor {
         filter(origList, listener, onlyLearnedRepWordSets);
     }
 
+    public void remove(WordSet wordSet, List<WordSet> wordSetList, List<WordSet> filteredList, OnWordSetListAdapterListener listener) {
+        wordSetList.remove(wordSet);
+        filteredList.remove(wordSet);
+        listener.onWordSetRemoved(wordSet);
+    }
+
     private abstract class Filter {
         abstract boolean filter(WordSet wordSet);
     }

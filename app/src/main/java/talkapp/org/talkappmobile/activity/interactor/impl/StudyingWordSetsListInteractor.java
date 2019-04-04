@@ -17,12 +17,12 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     private final DataServer server;
-    private final WordSetService experienceService;
+    private final WordSetService wordSetService;
     private final WordRepetitionProgressService exerciseService;
 
-    public StudyingWordSetsListInteractor(DataServer server, WordSetService experienceService, WordRepetitionProgressService exerciseService) {
+    public StudyingWordSetsListInteractor(DataServer server, WordSetService wordSetService, WordRepetitionProgressService exerciseService) {
         this.server = server;
-        this.experienceService = experienceService;
+        this.wordSetService = wordSetService;
         this.exerciseService = exerciseService;
     }
 
@@ -59,9 +59,25 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     @Override
     public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         exerciseService.cleanByWordSetId(wordSet.getId());
-        experienceService.resetProgress(wordSet);
+        wordSetService.resetProgress(wordSet);
         wordSet.setTrainingExperience(0);
         wordSet.setStatus(FIRST_CYCLE);
         listener.onResetExperienceClick(wordSet, clickedItemNumber);
+    }
+
+    @Override
+    public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
+        exerciseService.cleanByWordSetId(wordSet.getId());
+        if (wordSet.getId() >= wordSetService.getCustomWordSetsStartsSince()) {
+            wordSetService.remove(wordSet);
+            listener.onWordSetRemoved(wordSet, clickedItemNumber);
+        } else {
+            listener.onWordSetNotRemoved(wordSet, clickedItemNumber);
+        }
+    }
+
+    @Override
+    public void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
+        listener.onItemLongClick(wordSet, clickedItemNumber);
     }
 }

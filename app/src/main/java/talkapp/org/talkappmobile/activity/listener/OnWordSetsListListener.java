@@ -13,4 +13,12 @@ public interface OnWordSetsListListener {
     void onResetExperienceClick(WordSet wordSet, int clickedItemNumber);
 
     void onWordSetNotFinished(Topic topic, WordSet wordSet);
+
+    void onWordSetRemoved(WordSet wordSet, int clickedItemNumber);
+
+    void onWordSetNotRemoved(WordSet wordSet, int clickedItemNumber);
+
+    void itemLongClick(WordSet wordSet, int clickedItemNumber);
+
+    void onItemLongClick(WordSet wordSet, int clickedItemNumber);
 }

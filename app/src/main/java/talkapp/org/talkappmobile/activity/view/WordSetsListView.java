@@ -19,4 +19,8 @@ public interface WordSetsListView {
     void onInitializeBeginning();
 
     void onInitializeEnd();
+
+    void onWordSetRemoved(WordSet wordSet, int clickedItemNumber);
+
+    void onWordSetNotRemoved();
 }

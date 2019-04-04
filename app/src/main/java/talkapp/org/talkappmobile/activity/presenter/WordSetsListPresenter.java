@@ -48,6 +48,16 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetNotFinished(topic, wordSet);
     }
 
+    @Override
+    public void onWordSetRemoved(WordSet wordSet, int clickedItemNumber) {
+        view.onWordSetRemoved(wordSet, clickedItemNumber);
+    }
+
+    @Override
+    public void onWordSetNotRemoved(WordSet wordSet, int clickedItemNumber) {
+        view.onWordSetNotRemoved();
+    }
+
     public void itemClick(WordSet wordSet, int clickedItemNumber) {
         interactor.itemClick(topic, wordSet, clickedItemNumber, this);
     }
@@ -57,6 +67,15 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     public void itemLongClick(WordSet wordSet, int clickedItemNumber) {
+        interactor.itemLongClick(wordSet, clickedItemNumber, this);
+    }
+
+    @Override
+    public void onItemLongClick(WordSet wordSet, int clickedItemNumber) {
         view.onItemLongClick(wordSet, clickedItemNumber);
+    }
+
+    public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
+        interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }
 }

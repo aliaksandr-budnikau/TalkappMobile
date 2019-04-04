@@ -94,6 +94,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
         super.addAll(wordSetList);
     }
 
+    @Override
+    public void onWordSetRemoved() {
+        notifyDataSetChanged();
+    }
+
     public void filterNew() {
         presenter.filterNew();
         notifyDataSetChanged();
@@ -127,5 +132,11 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
     public void filterLearnedRep() {
         presenter.filterLearnedRep();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void remove(@Nullable WordSet wordSet) {
+        presenter.remove(wordSet);
+        super.remove(wordSet);
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -30,6 +31,7 @@ import talkapp.org.talkappmobile.activity.event.wordset.WordSetsFinishedFilterAp
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsLearnedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewRepFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRemoveClickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRepeatedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsSeenRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsStartedFilterAppliedEM;
@@ -138,14 +140,33 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     private void askToResetExperience(final WordSet wordSet, final int clickedItemNumber) {
         new AlertDialog.Builder(getActivity())
-                .setMessage("Do you want to reset your progress?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        presenter.resetExperienceClick(wordSet, clickedItemNumber);
+                .setItems(new String[]{"Reset progress", "Edit words", "Delete words"}, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage("Do you want to reset your progress?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            presenter.resetExperienceClick(wordSet, clickedItemNumber);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null).show();
+                        } else if (which == 2) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setMessage("Do you want to remove these words?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            presenter.deleteWordSetClick(wordSet, clickedItemNumber);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null).show();
+                        }
+                        dialog.dismiss();
                     }
-                })
-                .setNegativeButton(android.R.string.no, null).show();
+                }).show();
     }
 
     private void startWordSetActivity(Topic topic, WordSet wordSet) {
@@ -247,5 +268,18 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @UiThread
     public void onInitializeEnd() {
         waitingForProgressBarManager.hideProgressBar();
+    }
+
+    @Override
+    @UiThread
+    public void onWordSetRemoved(WordSet wordSet, int clickedItemNumber) {
+        Toast.makeText(getActivity(), "The words were removed", Toast.LENGTH_LONG).show();
+        eventBus.post(new WordSetsRemoveClickedEM(wordSet, clickedItemNumber));
+    }
+
+    @Override
+    @UiThread
+    public void onWordSetNotRemoved() {
+        Toast.makeText(getActivity(), "Only custom words can be removed", Toast.LENGTH_LONG).show();
     }
 }

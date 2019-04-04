@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.activity.event.wordset.WordSetsFinishedFilterAp
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsLearnedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsNewRepFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRemoveClickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRepeatedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsSeenRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsStartedFilterAppliedEM;
@@ -93,6 +94,11 @@ public class WordSetsListListView extends ListView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(WordSetsRepeatedRepFilterAppliedEM event) {
         adapter.filterRepeatedRep();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetsRemoveClickedEM event) {
+        adapter.remove(event.getWordSet());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

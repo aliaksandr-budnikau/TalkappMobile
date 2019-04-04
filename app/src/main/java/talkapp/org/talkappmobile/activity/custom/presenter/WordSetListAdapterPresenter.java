@@ -36,6 +36,11 @@ public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener
         view.onModelPrepared(wordSetList);
     }
 
+    @Override
+    public void onWordSetRemoved(WordSet wordSet) {
+        view.onWordSetRemoved();
+    }
+
     public List<WordSet> getModel() {
         return wordSetList;
     }
@@ -70,5 +75,9 @@ public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener
 
     public void filterLearnedRep() {
         interactor.filterLearnedRep(wordSetList, this);
+    }
+
+    public void remove(WordSet wordSet) {
+        interactor.remove(wordSet, wordSetList, filteredList, this);
     }
 }

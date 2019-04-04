@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
+    private final int CUSTOM_WORD_SETS_STARTS_SINCE = 1000000;
     private final WordSetDao wordSetDao;
     private final WordSetExperienceUtils experienceUtils;
 
@@ -44,5 +45,15 @@ public class WordSetServiceImpl implements WordSetService {
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
         wordSetMapping.setStatus(value);
         wordSetDao.createNewOrUpdate(wordSetMapping);
+    }
+
+    @Override
+    public void remove(WordSet wordSet) {
+        wordSetDao.removeById(wordSet.getId());
+    }
+
+    @Override
+    public int getCustomWordSetsStartsSince() {
+        return CUSTOM_WORD_SETS_STARTS_SINCE;
     }
 }

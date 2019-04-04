@@ -10,4 +10,8 @@ public interface WordSetsListInteractor {
     void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 
     void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
+
+    void deleteWordSetClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
+
+    void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 }

@@ -29,4 +29,12 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
     @Override
     public void resetExperienceClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
     }
+
+    @Override
+    public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
+    }
+
+    @Override
+    public void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
+    }
 }
