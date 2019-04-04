@@ -86,7 +86,7 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
     @Override
     public Integer getTheLastCustomWordSetsId() {
         try {
-            String query = queryBuilder().selectRaw("MAX(" + ID_FN + ")").prepareStatementString();
+            String query = queryBuilder().selectRaw("MAX(CAST( " + ID_FN + " as INTEGER))").prepareStatementString();
             String id = this.queryRaw(query).getFirstResult()[0];
             if (id == null) {
                 return null;

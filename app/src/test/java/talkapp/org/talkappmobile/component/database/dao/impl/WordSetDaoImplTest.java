@@ -96,6 +96,32 @@ public class WordSetDaoImplTest {
     }
 
     @Test
+    public void getTheLastCustomWordSetsId_99vs165() {
+        // setup
+        WordSetMapping exp = new WordSetMapping();
+        exp.setWords("words,words,words,words,words,words,words,words,words,words,words,words");
+        exp.setTop(3);
+        exp.setTopicId(String.valueOf(45));
+        exp.setId(String.valueOf(99));
+        exp.setTrainingExperience(3);
+        exp.setStatus(FIRST_CYCLE);
+        experienceDao.createNewOrUpdate(exp);
+
+        exp = new WordSetMapping();
+        exp.setWords("words,words,words,words,words,words,words,words,words,words,words,words");
+        exp.setTop(3);
+        exp.setTopicId(String.valueOf(45));
+        exp.setId(String.valueOf(165));
+        exp.setTrainingExperience(3);
+        exp.setStatus(FIRST_CYCLE);
+        experienceDao.createNewOrUpdate(exp);
+
+        Integer lastId = experienceDao.getTheLastCustomWordSetsId();
+
+        assertEquals(new Integer(165), lastId);
+    }
+
+    @Test
     public void createNewOrUpdate_ordinaryCaseOfUpdate() {
         WordSetMapping exp;
         exp = new WordSetMapping();
