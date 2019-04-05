@@ -12,7 +12,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -22,22 +21,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     @Mock
     private PracticeWordSetVocabularyView view;
-    @Mock
-    private Speaker speaker;
     private PracticeWordSetVocabularyInteractor interactor;
 
     @Before
     public void setup() {
-        interactor = new PracticeWordSetVocabularyInteractor(getServer(), speaker);
+        interactor = new PracticeWordSetVocabularyInteractor(getServer());
     }
 
     @Test
@@ -65,16 +59,5 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
             }
             assertTrue(wordsForCheck.contains(translation.getWord()));
         }
-        verify(speaker, times(0)).speak(anyString());
-        reset(view);
-        reset(speaker);
-
-        presenter.onPronounceWordButtonClick(translations.get(0));
-        verify(speaker).speak(translations.get(0).getWord());
-        reset(view);
-        reset(speaker);
-
-        presenter.onPronounceWordButtonClick(null);
-        verify(speaker, times(0)).speak(anyString());
     }
 }

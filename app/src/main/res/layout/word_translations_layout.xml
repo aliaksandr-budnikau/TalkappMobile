@@ -14,8 +14,8 @@
         android:paddingTop="64dp"
         android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/wordTranslationsListView"
+    <talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView_
+        android:id="@+id/wordSetVocabularyView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

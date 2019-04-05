@@ -23,7 +23,7 @@
             android:name=".activity.PracticeWordSetActivity_"
             android:label="Используй слова"
             android:parentActivityName=".activity.MainActivity_"
-            android:theme="@style/Theme.AppCompat">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.MainActivity_" />

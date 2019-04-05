@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#FF32A4F6</color>
+    <color name="colorPrimaryDark">#FF32A4F6</color>
+    <color name="colorPrimaryLight">#FF3DAEFF</color>
+    <color name="colorEmptyBackground">#ececec</color>
+    <color name="colorPanelBackground">#ffffff</color>
+    <color name="color.word_set_vocabulary_item.word">#272e35</color>
+    <color name="color.word_set_vocabulary_item.translation">#72767b</color>
+
     <color name="colorAccent">#FF4081</color>
-    <color name="color.wordTranslation.word">#272e35</color>
-    <color name="color.wordTranslation.translation">#72767b</color>
     <color name="color.text.origin">#47525E</color>
     <color name="color.text.answer">#47525E</color>
     <color name="color.text.pron">#47525E</color>

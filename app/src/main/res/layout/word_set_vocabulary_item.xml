@@ -11,7 +11,8 @@
         android:layout_marginLeft="3pt"
         android:layout_marginRight="3pt"
 
-        android:textColor="@color/color.wordTranslation.word"
+        android:background="@color/colorPanelBackground"
+        android:textColor="@color/color.word_set_vocabulary_item.word"
         android:textSize="13pt" />
 
     <TextView
@@ -24,7 +25,8 @@
         android:layout_marginLeft="3pt"
         android:layout_marginRight="3pt"
 
-        android:textColor="@color/color.wordTranslation.translation"
+        android:background="@color/colorPanelBackground"
+        android:textColor="@color/color.word_set_vocabulary_item.translation"
         android:textSize="9pt" />
 
 </RelativeLayout>
