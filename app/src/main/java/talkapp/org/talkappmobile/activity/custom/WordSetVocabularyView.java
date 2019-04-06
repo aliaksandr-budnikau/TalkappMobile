@@ -47,10 +47,13 @@ public class WordSetVocabularyView extends RecyclerView {
     }
 
     private static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
-        private final WordTranslation[] translations;
+        private final WordTranslationExpandable[] translations;
 
         private VocabularyAdapter(WordTranslation[] translations) {
-            this.translations = translations;
+            this.translations = new WordTranslationExpandable[translations.length];
+            for (int i = 0; i < translations.length; i++) {
+                this.translations[i] = new WordTranslationExpandable(translations[i]);
+            }
         }
 
         @Override
@@ -61,7 +64,7 @@ public class WordSetVocabularyView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.bind(this.translations[position]);
+            holder.bind(this.translations[position], position);
         }
 
         @Override
@@ -78,10 +81,43 @@ public class WordSetVocabularyView extends RecyclerView {
                 this.view = view;
             }
 
-            void bind(final WordTranslation translation) {
-                view.setModel(translation);
-                view.refreshModel();
+            void bind(final WordTranslationExpandable translation, final int position) {
+                view.setModel(translation.getTranslation());
+                view.refreshModel(translation.isExpanded());
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean expanded = translation.isExpanded();
+                        translation.setExpanded(!expanded);
+                        notifyItemChanged(position);
+                    }
+                });
             }
+        }
+    }
+
+    private static class WordTranslationExpandable {
+        private WordTranslation translation;
+        private boolean expanded;
+
+        WordTranslationExpandable(WordTranslation translation) {
+            this.translation = translation;
+        }
+
+        public WordTranslation getTranslation() {
+            return translation;
+        }
+
+        public void setTranslation(WordTranslation translation) {
+            this.translation = translation;
+        }
+
+        public boolean isExpanded() {
+            return expanded;
+        }
+
+        public void setExpanded(boolean expanded) {
+            this.expanded = expanded;
         }
     }
 }

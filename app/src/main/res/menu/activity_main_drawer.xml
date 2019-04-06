@@ -3,25 +3,26 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/default_fragment"
-            android:title="Home" />
-        <item
             android:id="@+id/add_new_set"
-            android:title="Add new set" />
-        <item
-            android:id="@+id/word_set_practise"
-            android:title="Word sets practise" />
-        <item
-            android:id="@+id/topic_practise"
-            android:title="Topics" />
+            android:title="New words" />
     </group>
 
-    <item android:title="Settings">
+    <item android:title="Content">
         <menu>
             <item
-                android:id="@+id/nav_manage"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Tools" />
+                android:id="@+id/word_set_practise"
+                android:title="Words" />
+            <item
+                android:id="@+id/topic_practise"
+                android:title="Topics" />
+        </menu>
+    </item>
+
+    <item android:title="Tasks">
+        <menu>
+            <item
+                android:id="@+id/default_fragment"
+                android:title="Feed" />
         </menu>
     </item>
 

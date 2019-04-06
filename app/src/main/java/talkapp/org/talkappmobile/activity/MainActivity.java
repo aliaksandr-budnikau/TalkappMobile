@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -70,8 +69,6 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
                 } else if (id == R.id.topic_practise) {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
-                } else if (id == R.id.nav_manage) {
-                    Toast.makeText(getApplicationContext(), "Doesn't work still", Toast.LENGTH_LONG).show();
                 }
 
                 drawer.closeDrawer(GravityCompat.START);

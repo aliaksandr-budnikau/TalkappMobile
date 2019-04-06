@@ -8,6 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+
         android:background="@color/colorPanelBackground"
         android:textColor="@color/color.word_set_vocabulary_item.word"
         android:textSize="13pt" />
@@ -17,10 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:layout_below="@id/word"
 
         android:background="@color/colorPanelBackground"
         android:textColor="@color/color.word_set_vocabulary_item.translation"
-        android:textSize="9pt" />
+        android:textSize="7pt" />
 
 </RelativeLayout>

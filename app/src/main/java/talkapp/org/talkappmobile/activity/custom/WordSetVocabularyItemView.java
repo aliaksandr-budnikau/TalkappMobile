@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 @EViewGroup(R.layout.word_set_vocabulary_item)
 public class WordSetVocabularyItemView extends RelativeLayout {
+    public static final int MIN_LINES = 2;
     @Bean(SpeakerBean.class)
     Speaker speaker;
     @ViewById(R.id.word)
@@ -52,13 +53,22 @@ public class WordSetVocabularyItemView extends RelativeLayout {
         this.wordTranslation = wordTranslation;
     }
 
-    public void refreshModel() {
+    public void refreshModel(boolean expanded) {
         word.setText(wordTranslation.getWord());
         translation.setText(wordTranslation.getTranslation());
-        setOnClickListener(new OnClickListener() {
+        if (expanded) {
+            if (translation.getLineCount() != 0) {
+                translation.setLines(translation.getLineCount());
+            }
+            translation.setMinLines(MIN_LINES);
+        } else {
+            translation.setLines(MIN_LINES);
+        }
+        setOnLongClickListener(new OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
                 pronounceTranslation(wordTranslation);
+                return true;
             }
         });
     }
