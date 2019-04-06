@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -36,6 +37,8 @@ public class WordSetVocabularyView extends RecyclerView {
     public void init() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(layoutManager);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
+        addItemDecoration(itemDecor);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

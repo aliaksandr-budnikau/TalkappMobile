@@ -26,10 +26,6 @@ public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener
         return interactor.getWordSet(filteredList, position);
     }
 
-    public WordSet getWordSetExperience(int position) {
-        return wordSetList.get(position);
-    }
-
     @Override
     public void onModelPrepared(List<WordSet> wordSetList) {
         filteredList = wordSetList;

@@ -74,10 +74,6 @@ public class WordSetListAdapter extends ArrayAdapter<WordSet> implements WordSet
         return presenter.getWordSet(position);
     }
 
-    public WordSet getWordSetExperience(int position) {
-        return presenter.getWordSetExperience(position);
-    }
-
     public void addAll(List<WordSet> wordSetList) {
         childViews = new SparseArray<>(wordSetList.size());
         presenter.setModel(wordSetList);

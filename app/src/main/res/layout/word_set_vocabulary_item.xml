@@ -8,9 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:layout_marginLeft="3pt"
-        android:layout_marginRight="3pt"
-
         android:background="@color/colorPanelBackground"
         android:textColor="@color/color.word_set_vocabulary_item.word"
         android:textSize="13pt" />
@@ -21,9 +18,6 @@
         android:layout_height="match_parent"
 
         android:layout_below="@id/word"
-
-        android:layout_marginLeft="3pt"
-        android:layout_marginRight="3pt"
 
         android:background="@color/colorPanelBackground"
         android:textColor="@color/color.word_set_vocabulary_item.translation"
