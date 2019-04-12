@@ -15,6 +15,7 @@ import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class AddingNewWordSetInteractor {
+    private static final int DEFAULT_TOP_SUM = 20000;
     private static final int WORDS_NUMBER = 6;
     private final DataServer server;
 
@@ -55,10 +56,17 @@ public class AddingNewWordSetInteractor {
         if (valid) {
             WordSet set = new WordSet();
             LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
+            int topSum = 0;
             for (String word : words) {
                 WordTranslation translation = server.findWordTranslationsByWordAndByLanguage("russian", word);
+                if (translation.getTop() == null) {
+                    topSum += DEFAULT_TOP_SUM;
+                } else {
+                    topSum += translation.getTop();
+                }
                 word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens()));
             }
+            set.setTop(topSum / words.size());
             set.setWords(word2Tokens);
             set.setTopicId("43");
             WordSet wordSet = server.saveNewCustomWordSet(set);
