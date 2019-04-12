@@ -1,17 +1,30 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.util.HashSet;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.component.backend.DataServer;
+import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
+import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
+import talkapp.org.talkappmobile.component.database.dao.TopicDao;
+import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
+import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -21,7 +34,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
@@ -31,7 +46,17 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
     @Before
     public void setup() {
-        interactor = new PracticeWordSetVocabularyInteractor(getServer());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+
+        BackendServerFactoryBean factory = new BackendServerFactoryBean();
+        Whitebox.setInternalState(factory, "logger", new LoggerBean());
+        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
+        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
+        DataServer server = factory.get();
+
+        interactor = new PracticeWordSetVocabularyInteractor(server);
     }
 
     @Test

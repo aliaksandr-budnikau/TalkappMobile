@@ -1,12 +1,16 @@
 package talkapp.org.talkappmobile.component.backend.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.reflect.Whitebox;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,24 +20,30 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
+import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static android.os.Build.VERSION_CODES.M;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -43,32 +53,45 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = {M}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
 public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
-    @Mock
     private TopicDao topicDao;
-    @Mock
     private SentenceDao sentenceDao;
-    @Mock
     private WordTranslationDao wordTranslationDao;
-    @Mock
-    private SentenceRestClient sentenceRestClient;
-    @Mock
     private GitHubRestClient gitHubRestClient;
-    @Mock
     private Logger logger;
-    @Mock
     private RequestExecutor requestExecutor;
     private LocalDataService localDataService;
-    private DataServerImpl server;
+    private DataServer server;
     private ObjectMapper mapper = new ObjectMapper();
     private WordSetDao wordSetDao;
 
     @Before
     public void init() throws SQLException {
-        wordSetDao = provideWordSetDao();
+        topicDao = mock(TopicDao.class);
+        sentenceDao = mock(SentenceDao.class);
+        wordTranslationDao = mock(WordTranslationDao.class);
+        gitHubRestClient = mock(GitHubRestClient.class);
+        requestExecutor = mock(RequestExecutor.class);
+        logger = mock(Logger.class);
+
+        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+        wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, requestExecutor);
+
+        BackendServerFactoryBean factory = new BackendServerFactoryBean();
+        Whitebox.setInternalState(factory, "logger", new LoggerBean());
+        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
+        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
+        server = factory.get();
+    }
+
+    @After
+    public void tearDown() {
+        OpenHelperManager.releaseHelper();
     }
 
     @Test
@@ -80,10 +103,14 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         wordSetMapping1.setId("1");
         wordSetMapping1.setStatus(FINISHED);
         wordSetMapping1.setTrainingExperience(10);
+        wordSetMapping1.setTopicId("22");
+        wordSetMapping1.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
         WordSetMapping wordSetMapping2 = new WordSetMapping();
         wordSetMapping2.setId("2");
         wordSetMapping2.setStatus(SECOND_CYCLE);
         wordSetMapping2.setTrainingExperience(11);
+        wordSetMapping2.setTopicId("22");
+        wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
         List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
         wordSetDao.refreshAll(wordSetsMappingsWithProgress);
 
@@ -92,11 +119,15 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         wordSet1.setTrainingExperience(0);
         wordSet1.setStatus(FIRST_CYCLE);
         wordSet1.setWords(new LinkedList<Word2Tokens>());
+        wordSet1.setTopicId("22");
+        wordSet1.setWords(singletonList(new Word2Tokens()));
         WordSet wordSet2 = new WordSet();
         wordSet2.setId(2);
         wordSet2.setTrainingExperience(0);
         wordSet2.setStatus(FIRST_CYCLE);
         wordSet2.setWords(new LinkedList<Word2Tokens>());
+        wordSet2.setTopicId("22");
+        wordSet2.setWords(singletonList(new Word2Tokens()));
         List<WordSet> wordSets = asList(wordSet1, wordSet2);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         expectedSets.put(1, wordSets);
@@ -123,10 +154,14 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
         wordSetMapping1.setId("1");
         wordSetMapping1.setStatus(FINISHED);
         wordSetMapping1.setTrainingExperience(10);
+        wordSetMapping1.setTopicId("22");
+        wordSetMapping1.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
         WordSetMapping wordSetMapping2 = new WordSetMapping();
         wordSetMapping2.setId("2");
         wordSetMapping2.setStatus(SECOND_CYCLE);
         wordSetMapping2.setTrainingExperience(11);
+        wordSetMapping2.setTopicId("22");
+        wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
         List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
         wordSetDao.refreshAll(wordSetsMappingsWithProgress);
 
@@ -165,13 +200,12 @@ public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
 
     @Test
     public void sendSentenceScore() {
-        DataServer dataServer = getServer();
         Sentence sentence = new Sentence();
         sentence.setText("testText");
         sentence.setTokens(asList(new TextToken(), new TextToken()));
         sentence.setContentScore(CORRUPTED);
         sentence.setTranslations(new HashMap<String, String>());
         sentence.setId("testId#word#6");
-        assertTrue(dataServer.saveSentenceScore(sentence));
+        assertTrue(server.saveSentenceScore(sentence));
     }
 }
