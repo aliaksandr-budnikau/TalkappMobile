@@ -17,7 +17,12 @@ public class AddingNewWordSetPresenter implements OnAddingNewWordSetPresenterLis
     }
 
     public void submit(List<String> words) {
-        interactor.submit(words, this);
+        try {
+            view.showPleaseWaitProgressBar();
+            interactor.submit(words, this);
+        } finally {
+            view.hidePleaseWaitProgressBar();
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.view.View;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -20,6 +21,7 @@ import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -55,13 +57,20 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     TextView word11;
     @ViewById(R.id.word12)
     TextView word12;
+    @ViewById(R.id.please_wait_progress_bar)
+    View pleaseWaitProgressBar;
+    @ViewById(R.id.mainForm)
+    View mainForm;
 
     private List<TextView> allTextViews;
 
     private AddingNewWordSetPresenter presenter;
 
+    private WaitingForProgressBarManager waitingForProgressBarManager;
+
     @AfterViews
     public void init() {
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
         allTextViews = asList(word1, word2, word3, word4, word5, word6, word7, word8, word9, word10, word11, word12);
         AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get());
 
@@ -115,12 +124,26 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     }
 
     @Override
+    @UiThread
+    public void showPleaseWaitProgressBar() {
+        waitingForProgressBarManager.showProgressBar();
+    }
+
+    @Override
+    @UiThread
+    public void hidePleaseWaitProgressBar() {
+        waitingForProgressBarManager.hideProgressBar();
+    }
+
+    @Override
+    @UiThread
     public void markWordIsDuplicate(int wordIndex) {
         TextView textView = allTextViews.get(wordIndex);
         textView.setError("Duplicate!");
     }
 
     @Override
+    @UiThread
     public void markTranslationWasNotFound(int wordIndex) {
         TextView textView = allTextViews.get(wordIndex);
         textView.setError("No translation!");

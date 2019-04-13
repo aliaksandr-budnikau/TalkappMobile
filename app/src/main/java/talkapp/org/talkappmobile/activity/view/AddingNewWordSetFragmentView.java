@@ -15,4 +15,8 @@ public interface AddingNewWordSetFragmentView {
     void markWordIsDuplicate(int wordIndex);
 
     void markTranslationWasNotFound(int wordIndex);
+
+    void showPleaseWaitProgressBar();
+
+    void hidePleaseWaitProgressBar();
 }
