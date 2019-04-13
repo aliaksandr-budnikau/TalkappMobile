@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import android.support.annotation.NonNull;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,15 +26,90 @@ public class AddingNewWordSetInteractor {
     }
 
     public void submit(List<String> words, OnAddingNewWordSetPresenterListener listener) {
-        boolean valid = true;
+        normalizeAll(words);
+        if (isAnyEmpty(words, listener)) {
+            return;
+        }
+        if (hasDuplicates(words, listener)) {
+            return;
+        }
+
+        if (anyHasNoSentences(words, listener)) {
+            return;
+        }
+
+        List<WordTranslation> translations = findAllTranslations(words, listener);
+        if (words.size() != translations.size()) {
+            return;
+        }
+
+        int totalTop = countTotalTop(translations);
+        LinkedList<Word2Tokens> word2Tokens = getWord2Tokens(translations);
+        WordSet wordSet = server.saveNewCustomWordSet(makeWordSetDto(totalTop, word2Tokens));
+        listener.onSubmitSuccessfully(wordSet);
+    }
+
+    @NonNull
+    private WordSet makeWordSetDto(int totalTop, LinkedList<Word2Tokens> word2Tokens) {
+        WordSet set = new WordSet();
+        set.setTop(totalTop);
+        set.setWords(word2Tokens);
+        set.setTopicId("43");
+        return set;
+    }
+
+    @NonNull
+    private LinkedList<Word2Tokens> getWord2Tokens(List<WordTranslation> translations) {
+        LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
+        for (WordTranslation translation : translations) {
+            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens()));
+        }
+        return word2Tokens;
+    }
+
+    private int countTotalTop(List<WordTranslation> translations) {
+        int totalTop = 0;
+        for (WordTranslation translation : translations) {
+            if (translation.getTop() == null) {
+                totalTop += DEFAULT_TOP_SUM;
+            } else {
+                totalTop += translation.getTop();
+            }
+        }
+        totalTop /= translations.size();
+        return totalTop;
+    }
+
+    private List<WordTranslation> findAllTranslations(List<String> words, OnAddingNewWordSetPresenterListener listener) {
+        LinkedList<WordTranslation> translations = new LinkedList<>();
         for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i).trim().toLowerCase();
-            if (isEmpty(word)) {
-                valid = false;
-                listener.onWordIsEmpty(i);
+            WordTranslation translation = server.findWordTranslationsByWordAndByLanguage("russian", words.get(i));
+            if (translation == null) {
+                listener.onTranslationWasNotFound(i);
                 continue;
             }
-            words.set(i, word);
+            translations.add(translation);
+
+        }
+        return translations;
+    }
+
+    private boolean hasDuplicates(List<String> words, OnAddingNewWordSetPresenterListener listener) {
+        boolean hasDuplicates = false;
+        for (int i = 0; i < words.size(); i++) {
+            String word = words.get(i);
+            if (words.subList(0, i).contains(word)) {
+                hasDuplicates = true;
+                listener.onWordIsDuplicate(i);
+            }
+        }
+        return hasDuplicates;
+    }
+
+    private boolean anyHasNoSentences(List<String> words, OnAddingNewWordSetPresenterListener listener) {
+        boolean anyHasNoSentences = false;
+        for (int i = 0; i < words.size(); i++) {
+            String word = words.get(i);
             Word2Tokens tokens = new Word2Tokens(word, word);
             List<Sentence> sentences;
             try {
@@ -46,31 +123,29 @@ public class AddingNewWordSetInteractor {
                 }
             }
             if (sentences.isEmpty()) {
-                valid = false;
+                anyHasNoSentences = true;
                 listener.onSentencesWereNotFound(i);
             } else {
                 listener.onSentencesWereFound(i);
             }
         }
+        return anyHasNoSentences;
+    }
 
-        if (valid) {
-            WordSet set = new WordSet();
-            LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
-            int topSum = 0;
-            for (String word : words) {
-                WordTranslation translation = server.findWordTranslationsByWordAndByLanguage("russian", word);
-                if (translation.getTop() == null) {
-                    topSum += DEFAULT_TOP_SUM;
-                } else {
-                    topSum += translation.getTop();
-                }
-                word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens()));
+    private boolean isAnyEmpty(List<String> words, OnAddingNewWordSetPresenterListener listener) {
+        boolean anyEmpty = false;
+        for (int i = 0; i < words.size(); i++) {
+            if (isEmpty(words.get(i))) {
+                anyEmpty = true;
+                listener.onWordIsEmpty(i);
             }
-            set.setTop(topSum / words.size());
-            set.setWords(word2Tokens);
-            set.setTopicId("43");
-            WordSet wordSet = server.saveNewCustomWordSet(set);
-            listener.onSubmitSuccessfully(wordSet);
+        }
+        return anyEmpty;
+    }
+
+    private void normalizeAll(List<String> words) {
+        for (int i = 0; i < words.size(); i++) {
+            words.set(i, words.get(i).trim().toLowerCase());
         }
     }
 }

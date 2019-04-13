@@ -96,6 +96,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markSentencesWereFound(anyInt());
         verify(view, times(0)).markSentencesWereNotFound(anyInt());
         verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markWordIsDuplicate(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
     }
 
     @Test
@@ -118,6 +120,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markSentencesWereFound(anyInt());
         verify(view, times(0)).markSentencesWereNotFound(anyInt());
         verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markWordIsDuplicate(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
     }
 
     @Test
@@ -140,6 +144,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markWordIsEmpty(anyInt());
         verify(view, times(0)).markSentencesWereFound(anyInt());
         verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markWordIsDuplicate(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
     }
 
     @Test
@@ -165,6 +171,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markWordIsEmpty(anyInt());
         verify(view, times(3)).markSentencesWereFound(anyInt());
         verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markWordIsDuplicate(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
     }
 
     @Test
@@ -197,6 +205,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markWordIsEmpty(anyInt());
         verify(view, times(11)).markSentencesWereFound(anyInt());
         verify(view, times(0)).markSentencesWereNotFound(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
 
         ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(view, times(1)).submitSuccessfully(wordSetCaptor.capture());
@@ -341,6 +350,39 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(new Integer(10088), wordSet.getTop());
         assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID + 1, wordSet.getId());
         reset(view);
+    }
+
+    @Test
+    public void submit_wordSetWithDuplicates() {
+        String word0 = "house";
+        String word1 = "fox";
+        String word2 = "house";
+
+        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "));
+
+        verify(view, times(0)).markSentencesWereNotFound(anyInt());
+        verify(view, times(0)).markSentencesWereFound(anyInt());
+        verify(view, times(0)).markWordIsEmpty(anyInt());
+        verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
+        verify(view).markWordIsDuplicate(2);
+    }
+
+    @Test
+    public void submit_allAreDuplicates() {
+        String word0 = "house";
+        String word1 = "house";
+        String word2 = "house";
+
+        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "));
+
+        verify(view, times(0)).markSentencesWereNotFound(anyInt());
+        verify(view, times(0)).markSentencesWereFound(anyInt());
+        verify(view, times(0)).markWordIsEmpty(anyInt());
+        verify(view, times(0)).submitSuccessfully(any(WordSet.class));
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
+        verify(view).markWordIsDuplicate(2);
+        verify(view).markWordIsDuplicate(1);
     }
 
     @After

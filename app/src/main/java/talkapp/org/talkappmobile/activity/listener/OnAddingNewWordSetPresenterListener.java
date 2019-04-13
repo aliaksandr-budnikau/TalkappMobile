@@ -10,4 +10,8 @@ public interface OnAddingNewWordSetPresenterListener {
     void onSubmitSuccessfully(WordSet wordSet);
 
     void onWordIsEmpty(int wordIndex);
+
+    void onWordIsDuplicate(int wordIndex);
+
+    void onTranslationWasNotFound(int wordIndex);
 }

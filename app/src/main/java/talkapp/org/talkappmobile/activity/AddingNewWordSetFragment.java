@@ -114,6 +114,18 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         textView.setError("Empty!");
     }
 
+    @Override
+    public void markWordIsDuplicate(int wordIndex) {
+        TextView textView = allTextViews.get(wordIndex);
+        textView.setError("Duplicate!");
+    }
+
+    @Override
+    public void markTranslationWasNotFound(int wordIndex) {
+        TextView textView = allTextViews.get(wordIndex);
+        textView.setError("No translation!");
+    }
+
     private void startWordSetActivity(WordSet wordSet) {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);

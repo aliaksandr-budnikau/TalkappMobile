@@ -11,4 +11,8 @@ public interface AddingNewWordSetFragmentView {
     void submitSuccessfully(WordSet wordSet);
 
     void markWordIsEmpty(int wordIndex);
+
+    void markWordIsDuplicate(int wordIndex);
+
+    void markTranslationWasNotFound(int wordIndex);
 }

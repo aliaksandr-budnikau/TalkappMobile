@@ -39,4 +39,14 @@ public class AddingNewWordSetPresenter implements OnAddingNewWordSetPresenterLis
     public void onWordIsEmpty(int wordIndex) {
         view.markWordIsEmpty(wordIndex);
     }
+
+    @Override
+    public void onWordIsDuplicate(int wordIndex) {
+        view.markWordIsDuplicate(wordIndex);
+    }
+
+    @Override
+    public void onTranslationWasNotFound(int wordIndex) {
+        view.markTranslationWasNotFound(wordIndex);
+    }
 }
