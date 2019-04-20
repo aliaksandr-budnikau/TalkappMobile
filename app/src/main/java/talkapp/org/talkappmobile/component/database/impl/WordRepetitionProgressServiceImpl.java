@@ -134,7 +134,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours) {
+    public List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours) {
         Calendar cal = getInstance(UTC);
         //cal.add(Calendar.SECOND, -olderThenInHours);
         cal.add(Calendar.HOUR, -olderThenInHours);

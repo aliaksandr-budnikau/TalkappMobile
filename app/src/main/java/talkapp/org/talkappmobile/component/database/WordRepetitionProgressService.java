@@ -21,7 +21,7 @@ public interface WordRepetitionProgressService {
 
     Sentence getCurrentSentence(int wordSetId);
 
-    List<WordSet> findFinishedWordSetsSortByUpdatedDate(int limit, int olderThenInHours);
+    List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours);
 
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(int olderThenInHours);
 

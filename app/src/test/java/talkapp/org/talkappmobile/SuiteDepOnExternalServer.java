@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPre
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.component.backend.impl.DataServerImplIntegTest;
+import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImplIntegTest;
 
 @Suite.SuiteClasses({
         DataServerImplIntegTest.class,
@@ -18,7 +19,8 @@ import talkapp.org.talkappmobile.component.backend.impl.DataServerImplIntegTest;
         PracticeWordSetVocabularyPresenterAndInteractorIntegTest.class,
         PracticeWordSetPresenterAndInteractorIntegTest.class,
         AddingNewWordSetPresenterAndInteractorIntegTest.class,
-        TopicsFragmentPresenterAndInteractorIntegTest.class
+        TopicsFragmentPresenterAndInteractorIntegTest.class,
+        WordRepetitionProgressServiceImplIntegTest.class
 })
 @RunWith(Suite.class)
 public class SuiteDepOnExternalServer {
