@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenterTest;
+import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategyTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenterTest;
@@ -56,6 +57,7 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         RightAnswerTextViewPresenterTest.class,
         WordSetDaoImplTest.class,
         SentenceDaoImplTest.class,
+        WordSetListAdapterPresenterAndInteractorIntegTest.class
 })
 @RunWith(Suite.class)
 public class SuiteNotDepOnExternalServer {
