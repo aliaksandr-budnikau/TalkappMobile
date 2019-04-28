@@ -121,7 +121,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         listener.onUpdateProgress(wordSet);
 
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
-        double expScore = userExpService.increaseForRepetition(0, WORD_SET_PRACTICE);
+        double expScore = userExpService.increaseForRepetition(1, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
         if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
             logger.i(TAG, "training half finished");

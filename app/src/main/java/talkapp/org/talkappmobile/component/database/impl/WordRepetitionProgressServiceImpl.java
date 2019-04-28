@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
+import static java.lang.Math.log;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
@@ -196,7 +197,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private int countHours(int olderThenInHours, int counter) {
-        return olderThenInHours + 48 * counter * counter;
+        return (int) (olderThenInHours + log(counter) * 48 * counter);
     }
 
     @Override

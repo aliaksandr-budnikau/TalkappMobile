@@ -17,7 +17,9 @@ import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
@@ -29,18 +31,22 @@ import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
+import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.component.database.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -86,12 +92,12 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     @Before
     public void setup() throws SQLException {
         view = mock(PracticeWordSetView.class);
-        userExpService = mock(UserExpService.class);
         context = mock(Context.class);
 
         DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
         SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
         WordSetDao wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+        ExpAuditDao expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
         exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -106,6 +112,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
+        userExpService = new UserExpServiceImpl(expAuditDao);
         exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
         experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
@@ -213,6 +220,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 2
@@ -248,6 +256,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 3
@@ -285,11 +294,13 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).closeActivity();
         verify(view).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
     }
 
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() throws JsonProcessingException {
+        Map<String, Integer> sentencesCounter = new HashMap<>();
         createPresenter(interactor);
 
         presenter.initialise();
@@ -321,6 +332,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -329,6 +341,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 2
@@ -373,6 +386,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -381,6 +395,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 3
@@ -425,6 +440,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -433,6 +449,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 4
@@ -477,6 +494,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -485,6 +503,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 5
@@ -529,6 +548,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -537,6 +557,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 6
@@ -581,6 +602,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence(wordSet.getId());
+        increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -588,7 +610,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view, times(0)).closeActivity();
         verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
+    }
+
+    private void increaseCounter(Map<String, Integer> map, Sentence sentence) {
+        Integer counter = map.get(sentence.getText());
+        if (counter == null) {
+            map.put(sentence.getText(), 1);
+        } else {
+            map.put(sentence.getText(), counter + 1);
+        }
     }
 
     @Test

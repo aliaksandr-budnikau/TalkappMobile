@@ -26,18 +26,22 @@ import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
+import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.component.database.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
@@ -83,11 +87,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Before
     public void setup() throws SQLException {
         view = mock(PracticeWordSetView.class);
-        userExpService = mock(UserExpService.class);
         context = mock(Context.class);
         DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
         SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
         WordSetDao wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+        ExpAuditDao expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
         WordRepetitionProgressDao exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
@@ -101,6 +105,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
+        userExpService = new UserExpServiceImpl(expAuditDao);
         exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
         experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
@@ -198,6 +203,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 2
@@ -246,6 +252,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 3
@@ -294,6 +301,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 4
@@ -329,6 +337,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 5
@@ -364,6 +373,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 6
@@ -398,6 +408,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).closeActivity();
         verify(view).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
     }
 
@@ -455,6 +466,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 2
@@ -520,6 +532,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 3
@@ -585,6 +598,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 4
@@ -637,6 +651,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 5
@@ -689,6 +704,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showNextButton();
         verify(view).hideCheckButton();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 6
@@ -740,6 +756,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).closeActivity();
         verify(view).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
+        verify(view).onUpdateUserExp(1);
         reset(view);
     }
 
