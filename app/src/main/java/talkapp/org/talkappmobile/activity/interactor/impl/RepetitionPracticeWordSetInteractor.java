@@ -13,8 +13,8 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -47,7 +47,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordSetExperienceUtils experienceUtils,
             Context context,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceProvider, audioStuffFactory);
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
@@ -99,6 +99,11 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         logger.i(TAG, "chosen currentSentence {}", currentSentence);
         listener.onSentencesFound(currentSentence, word);
         logger.i(TAG, "currentSentence was initialized");
+    }
+
+    @Override
+    protected void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
+        // do nothing
     }
 
     @Override

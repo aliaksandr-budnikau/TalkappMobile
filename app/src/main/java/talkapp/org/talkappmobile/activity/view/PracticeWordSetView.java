@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.view;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
@@ -56,4 +58,8 @@ public interface PracticeWordSetView {
     void onExerciseGotAnswered();
 
     void onUpdateUserExp(double expScore);
+
+    void onNoSentencesToChange();
+
+    void onGotSentencesToChange(List<Sentence> sentences);
 }

@@ -14,8 +14,8 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -48,7 +48,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetExperienceUtils experienceUtils,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceProvider, audioStuffFactory);
         this.wordsCombinator = wordsCombinator;
         this.sentenceProvider = sentenceProvider;
         this.sentenceSelector = sentenceSelector;
@@ -99,10 +99,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         sentenceSelector.orderByScore(sentences);
         final Sentence sentence = sentenceSelector.selectSentence(sentences);
-        logger.i(TAG, "chosen sentence {}", sentences);
+        replaceSentence(sentence, word, wordSetId, listener);
+    }
+
+    @Override
+    protected void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
         exerciseService.save(word, wordSetId, sentence);
         listener.onSentencesFound(sentence, word);
-        logger.i(TAG, "sentence was initialized");
     }
 
     @Override

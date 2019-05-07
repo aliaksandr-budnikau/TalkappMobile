@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
@@ -26,6 +27,9 @@ import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
+import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChangeEM;
+import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
+import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 
 @EView
@@ -34,6 +38,8 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     @EventBusGreenRobot
     EventBus eventBus;
 
+    @StringRes(R.string.sentences_for_change_dialog_title)
+    String sentencesForChangeDialogTitle;
     @StringRes(R.string.score_sentence_dialog_title)
     String scoreSentenceDialogTitle;
     @StringRes(R.string.another_sentence_option)
@@ -78,6 +84,11 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final SentencesWereFoundForChangeEM event) {
+        presenter.prepareSentencesForPicking(event.getSentences());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OriginalTextClickEM event) {
         presenter.prepareDialog(anotherSentenceOption, poorSentenceOption, corruptedSentenceOption, insultSentenceOption);
     }
@@ -112,6 +123,20 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
                             which--;
                         }
                         eventBus.post(new ScoreSentenceOptionPickedEM(SentenceContentScore.values()[which], presenter.getSentence()));
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
+    }
+
+    @Override
+    public void openDialogForPickingNewSentence(final String[] options, final List<Sentence> sentences) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder
+                .setTitle(sentencesForChangeDialogTitle)
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        eventBus.post(new SentenceWasPickedForChangeEM(sentences.get(which)));
                         dialog.cancel();
                     }
                 });

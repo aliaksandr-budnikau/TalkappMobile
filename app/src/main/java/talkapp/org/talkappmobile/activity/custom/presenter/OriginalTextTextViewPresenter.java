@@ -63,4 +63,12 @@ public class OriginalTextTextViewPresenter {
     public void enableImmutableMode() {
         immutable = true;
     }
+
+    public void prepareSentencesForPicking(List<Sentence> sentences) {
+        LinkedList<String> options = new LinkedList<>();
+        for (Sentence sentence : sentences) {
+            options.add(sentence.getTranslations().get("russian"));
+        }
+        view.openDialogForPickingNewSentence(options.toArray(new String[sentences.size()]), sentences);
+    }
 }

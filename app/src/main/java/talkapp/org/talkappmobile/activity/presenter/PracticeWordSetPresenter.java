@@ -111,6 +111,16 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onUpdateUserExp(expScore);
     }
 
+    @Override
+    public void onNoSentencesToChange() {
+        viewStrategy.onNoSentencesToChange();
+    }
+
+    @Override
+    public void onGotSentencesToChange(List<Sentence> sentences) {
+        viewStrategy.onGotSentencesToChange(sentences);
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -163,6 +173,15 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
+    public void changeSentence(Sentence sentence) {
+        try {
+            viewStrategy.onChangeSentenceStart();
+            interactor.changeSentence(state.getWordSetId(), sentence, this);
+        } finally {
+            viewStrategy.onChangeSentenceFinish();
+        }
+    }
+
     public void scoreSentence(SentenceContentScore score, Sentence sentence) {
         try {
             viewStrategy.onScoreSentenceStart();
@@ -182,5 +201,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public void enableButtonsAfterPronunciation() {
         viewStrategy.onStopSpeaking();
+    }
+
+    public void findSentencesForChange() {
+        interactor.findSentencesForChange(state.getWordSetId(), this);
     }
 }

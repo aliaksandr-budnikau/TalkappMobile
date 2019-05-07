@@ -4,11 +4,14 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
+import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -25,16 +28,19 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final RefereeService refereeService;
     private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
+    private final SentenceProvider sentenceProvider;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
+                                             SentenceProvider sentenceProvider,
                                              AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
+        this.sentenceProvider = sentenceProvider;
         this.audioStuffFactory = audioStuffFactory;
     }
 
@@ -103,5 +109,25 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
         initialiseSentence(word, wordSetId, listener);
         listener.onSentenceChanged();
+    }
+
+    @Override
+    public void changeSentence(int wordSetId, Sentence sentence, OnPracticeWordSetListener listener) {
+        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
+        replaceSentence(sentence, word, wordSetId, listener);
+        listener.onSentenceChanged();
+    }
+
+    protected abstract void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
+
+    @Override
+    public void findSentencesForChange(int wordSetId, OnPracticeWordSetListener listener) {
+        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
+        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+        if (sentences.isEmpty()) {
+            listener.onNoSentencesToChange();
+        } else {
+            listener.onGotSentencesToChange(sentences);
+        }
     }
 }

@@ -173,4 +173,12 @@ public class PracticeWordSetViewStrategy {
     public void onUpdateUserExp(double expScore) {
         view.onUpdateUserExp(expScore);
     }
+
+    public void onNoSentencesToChange() {
+        view.onNoSentencesToChange();
+    }
+
+    public void onGotSentencesToChange(List<Sentence> sentences) {
+        view.onGotSentencesToChange(sentences);
+    }
 }
