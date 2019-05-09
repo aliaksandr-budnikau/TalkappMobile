@@ -8,6 +8,7 @@ import java.util.Objects;
 public class UncheckedAnswer {
     private String actualAnswer;
     private String expectedAnswer;
+    private Word2Tokens currentWord;
 
     public String getActualAnswer() {
         return actualAnswer;
@@ -23,6 +24,14 @@ public class UncheckedAnswer {
 
     public void setExpectedAnswer(String expectedAnswer) {
         this.expectedAnswer = expectedAnswer;
+    }
+
+    public Word2Tokens getCurrentWord() {
+        return currentWord;
+    }
+
+    public void setCurrentWord(Word2Tokens currentWord) {
+        this.currentWord = currentWord;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class RefereeServiceImpl implements RefereeService {
 
     @Override
     public boolean checkAnswer(UncheckedAnswer answer) {
-        return equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer()) >= EQUALITY_THRESHOLD;
+        return equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer(), answer.getCurrentWord()) >= EQUALITY_THRESHOLD;
     }
 
     @Override

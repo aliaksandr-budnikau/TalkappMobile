@@ -36,6 +36,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordSetExperienceUtils experienceUtils;
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
+    private Word2Tokens currentWord;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                              SentenceProvider sentenceProvider,
@@ -90,6 +91,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void initialiseSentence(Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+        this.currentWord = word;
         logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
         List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
         logger.i(TAG, "sentences size {}", sentences.size());
@@ -110,7 +112,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public boolean checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
-        if (!super.checkAnswer(answer, wordSet, sentence, answerHasBeenSeen, listener)) {
+        if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
         }
 

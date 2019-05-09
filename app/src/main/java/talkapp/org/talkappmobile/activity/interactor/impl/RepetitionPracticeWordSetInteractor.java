@@ -108,7 +108,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
-        if (!super.checkAnswer(answer, wordSet, sentence, answerHasBeenSeen, listener)) {
+        if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
         }
 

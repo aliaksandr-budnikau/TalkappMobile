@@ -35,7 +35,7 @@ public class RefereeServiceImplTest {
         wordSet.setTrainingExperience(0);
 
         // when
-        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(EQUALITY_THRESHOLD);
+        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer(), answer.getCurrentWord())).thenReturn(EQUALITY_THRESHOLD);
         boolean result = service.checkAnswer(answer);
 
         // then
@@ -50,7 +50,7 @@ public class RefereeServiceImplTest {
         answer.setExpectedAnswer("Who are duty today?");
 
         // when
-        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer())).thenReturn(79);
+        when(equalityScorer.score(answer.getExpectedAnswer(), answer.getActualAnswer(), answer.getCurrentWord())).thenReturn(79);
         boolean result = service.checkAnswer(answer);
 
         // then

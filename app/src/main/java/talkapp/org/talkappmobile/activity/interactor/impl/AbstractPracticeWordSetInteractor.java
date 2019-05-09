@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -44,8 +43,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.audioStuffFactory = audioStuffFactory;
     }
 
-    @Override
-    public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
+    protected boolean checkAccuracyOfAnswer(String answer, Word2Tokens word, Sentence sentence, OnPracticeWordSetListener listener) {
         logger.i(TAG, "check answer {} ", answer);
         if (isEmpty(answer)) {
             logger.i(TAG, "answer is empty");
@@ -55,6 +53,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         UncheckedAnswer uncheckedAnswer = new UncheckedAnswer();
         uncheckedAnswer.setActualAnswer(answer);
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
+        uncheckedAnswer.setCurrentWord(word);
 
         logger.i(TAG, "checking ... {}", uncheckedAnswer);
         if (!refereeService.checkAnswer(uncheckedAnswer)) {
