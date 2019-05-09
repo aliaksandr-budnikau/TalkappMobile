@@ -1,6 +1,11 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import android.support.annotation.NonNull;
+
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -19,7 +24,20 @@ public class SentenceProviderImpl implements SentenceProvider {
 
     @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
-        return currentStrategy.findByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentences = currentStrategy.findByWordAndWordSetId(word, wordSetId);
+        return getRidOfDuplicates(sentences);
+    }
+
+    @NonNull
+    private LinkedList<Sentence> getRidOfDuplicates(List<Sentence> sentences) {
+        Set<String> texts = new HashSet<>();
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (Sentence sentence : sentences) {
+            if (texts.add(sentence.getTranslations().get("russian"))) {
+                result.add(sentence);
+            }
+        }
+        return result;
     }
 
     @Override
