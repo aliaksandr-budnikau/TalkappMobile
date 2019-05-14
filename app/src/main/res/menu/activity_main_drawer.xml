@@ -1,28 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/add_new_set"
-            android:title="New words" />
-    </group>
-
     <item android:title="Content">
         <menu>
             <item
                 android:id="@+id/word_set_practise"
-                android:title="Words" />
-            <item
-                android:id="@+id/topic_practise"
-                android:title="Topics" />
-        </menu>
-    </item>
-
-    <item android:title="Tasks">
-        <menu>
+                android:title="Learn words" />
             <item
                 android:id="@+id/default_fragment"
-                android:title="Feed" />
+                android:title="Tasks" />
         </menu>
     </item>
 

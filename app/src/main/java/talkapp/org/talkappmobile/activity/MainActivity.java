@@ -1,11 +1,13 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,9 @@ import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.model.Topic;
+
+import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
@@ -63,12 +68,27 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 int id = item.getItemId();
                 if (id == R.id.default_fragment) {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new MainActivityDefaultFragment_()).commit();
-                } else if (id == R.id.add_new_set) {
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
                 } else if (id == R.id.word_set_practise) {
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
-                } else if (id == R.id.topic_practise) {
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder
+                            .setItems((new String[]{"Add your own set", "Only your sets", "All sets", "Sets by topics"}), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (which == 0) {
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
+                                    } else if (which == 1) {
+                                        Topic topic = new Topic();
+                                        topic.setId(43);
+                                        FragmentManager fragmentManager = getFragmentManager();
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, createWordSetsListFragment(topic)).commit();
+                                    } else if (which == 2) {
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
+                                    } else if (which == 3) {
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
+                                    }
+                                    dialog.cancel();
+                                }
+                            });
+                    builder.create().show();
                 }
 
                 drawer.closeDrawer(GravityCompat.START);

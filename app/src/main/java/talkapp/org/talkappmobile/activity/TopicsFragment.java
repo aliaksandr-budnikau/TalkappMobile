@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
@@ -27,7 +26,7 @@ import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.model.Topic;
 
-import static talkapp.org.talkappmobile.activity.WordSetsListFragment.TOPIC_MAPPING;
+import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 
 @EFragment(value = R.layout.all_topics_layout)
 public class TopicsFragment extends Fragment implements TopicsFragmentView {
@@ -78,12 +77,8 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
 
     @Override
     public void openTopicWordSetsFragment(Topic topic) {
-        Bundle args = new Bundle();
-        args.putSerializable(TOPIC_MAPPING, topic);
-        WordSetsListFragment fragment = new WordSetsListFragment_();
-        fragment.setArguments(args);
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, createWordSetsListFragment(topic)).commit();
     }
 
     @Override
