@@ -194,6 +194,14 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 set.setRepetitionClass(clazz);
             }
         }
+        if (!set.getWords().isEmpty()) {
+            allWordSets.add(set);
+        }
+    }
+
+    @Override
+    public int getMaxWordSetSize() {
+        return wordSetSize;
     }
 
     private int countHours(int olderThenInHours, int counter) {

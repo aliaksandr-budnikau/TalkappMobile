@@ -282,4 +282,9 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public void onWordSetNotRemoved() {
         Toast.makeText(getActivity(), "Only custom words can be removed", Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize) {
+        Toast.makeText(getActivity(), "The set is too small " + actualSize + "/" + maxWordSetSize + " for repetition", Toast.LENGTH_LONG).show();
+    }
 }

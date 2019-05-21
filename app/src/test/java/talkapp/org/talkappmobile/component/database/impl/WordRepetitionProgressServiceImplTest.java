@@ -144,9 +144,11 @@ public class WordRepetitionProgressServiceImplTest {
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
-        assertEquals(1, wordSets.size());
+        assertEquals(2, wordSets.size());
         assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
         assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
+        assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(1).getWords().get(0)));
+        assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
@@ -196,9 +198,11 @@ public class WordRepetitionProgressServiceImplTest {
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
-        assertEquals(1, wordSets.size());
+        assertEquals(2, wordSets.size());
         assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
         assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
+        assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(1).getWords().get(0)));
+        assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());

@@ -23,6 +23,8 @@ public interface WordRepetitionProgressService {
 
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours);
 
+    int getMaxWordSetSize();
+
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(int olderThenInHours);
 
     Word2Tokens getCurrentWord(int wordSetId);

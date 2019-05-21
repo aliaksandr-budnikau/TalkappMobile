@@ -23,7 +23,12 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
 
     @Override
     public void itemClick(Topic topic, WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
-        listener.onWordSetNotFinished(topic, wordSet);
+        int maxWordSetSize = exerciseService.getMaxWordSetSize();
+        if (wordSet.getWords().size() == maxWordSetSize) {
+            listener.onWordSetNotFinished(topic, wordSet);
+        } else {
+            listener.onWordSetTooSmallForRepetition(maxWordSetSize, wordSet.getWords().size());
+        }
     }
 
     @Override

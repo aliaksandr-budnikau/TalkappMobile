@@ -75,6 +75,11 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onItemLongClick(wordSet, clickedItemNumber);
     }
 
+    @Override
+    public void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize) {
+        view.onWordSetTooSmallForRepetition(maxWordSetSize, actualSize);
+    }
+
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }

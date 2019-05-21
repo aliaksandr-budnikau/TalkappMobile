@@ -23,4 +23,6 @@ public interface WordSetsListView {
     void onWordSetRemoved(WordSet wordSet, int clickedItemNumber);
 
     void onWordSetNotRemoved();
+
+    void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize);
 }
