@@ -31,8 +31,8 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import static java.lang.Integer.max;
 import static java.lang.Math.log;
+import static java.lang.Math.max;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
