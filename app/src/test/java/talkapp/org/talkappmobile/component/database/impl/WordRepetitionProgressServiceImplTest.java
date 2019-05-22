@@ -103,6 +103,37 @@ public class WordRepetitionProgressServiceImplTest {
     }
 
     @Test
+    public void findFinishedWordSetsSortByUpdatedDate_notEmptyDBButOnlyOneOldExerciseWithRepetition0() throws JsonProcessingException {
+        // setup
+        long limit = 2;
+        int olderThenInHours = 4;
+        Calendar cal = getInstance(UTC);
+
+        // when
+        ObjectMapper mapper = new ObjectMapper();
+
+        Word2Tokens value = new Word2Tokens();
+        value.setWord("ddd");
+        value.setTokens("sss");
+
+        LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
+        expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.get(0).setId(1);
+        expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
+        expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+
+        int wordSetSize = 1;
+        Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+                .thenReturn(expectedWordSets);
+        Whitebox.setInternalState(service, "mapper", mapper);
+        List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
+
+        // then
+        assertEquals(0, wordSets.size());
+    }
+
+    @Test
     public void findFinishedWordSetsSortByUpdatedDate_limitIsBig() throws JsonProcessingException {
         // setup
         long limit = 2;
