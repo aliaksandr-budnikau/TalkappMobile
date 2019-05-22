@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +35,7 @@ import static java.lang.Integer.max;
 import static java.lang.Math.log;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
 import static okhttp3.internal.Util.UTC;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -286,6 +288,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        sortExercises(exercises);
         WordRepetitionProgressMapping exercise = exercises.get(0);
         int counter = exercise.getRepetitionCounter();
         counter++;
@@ -293,6 +296,20 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
         return counter;
+    }
+
+    private void sortExercises(List<WordRepetitionProgressMapping> exercises) {
+        sort(exercises, new Comparator<WordRepetitionProgressMapping>() {
+            @Override
+            public int compare(WordRepetitionProgressMapping o1, WordRepetitionProgressMapping o2) {
+                int diff = o2.getRepetitionCounter() - o1.getRepetitionCounter();
+                if (diff != 0) {
+                    return diff;
+                }
+
+                return o1.getUpdatedDate().compareTo(o2.getUpdatedDate());
+            }
+        });
     }
 
     private boolean isNotThereCurrentExercise(List<WordRepetitionProgressMapping> current) {

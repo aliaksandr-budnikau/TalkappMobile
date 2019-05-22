@@ -20,8 +20,10 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.getInstance;
@@ -29,9 +31,11 @@ import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordRepetitionProgressServiceImplTest {
@@ -282,5 +286,59 @@ public class WordRepetitionProgressServiceImplTest {
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+    }
+
+    @Test
+    public void markAsRepeated_hasDuplicates() {
+        // setup
+        Word2Tokens word = new Word2Tokens();
+        Sentence sentence = new Sentence();
+        sentence.setId("id");
+
+        LinkedList<WordRepetitionProgressMapping> words = new LinkedList<>();
+        Calendar cal = getInstance(UTC);
+        for (int i = 0; i < 10; i++) {
+            words.addLast(new WordRepetitionProgressMapping());
+            words.getLast().setRepetitionCounter(i);
+            words.getLast().setWordJSON("setWordJSON");
+            words.getLast().setStatus(FINISHED);
+            words.getLast().setSentenceId("setSentenceId");
+            cal.add(HOUR, -4 * i);
+            words.getLast().setUpdatedDate(cal.getTime());
+        }
+
+        // when
+        when(exerciseDao.findByWordAndBySentenceIdAndByStatus(anyString(), anyString(), any(WordSetProgressStatus.class))).thenReturn(words);
+        int counter = service.markAsRepeated(word, sentence);
+        // then
+        assertEquals(10, counter);
+    }
+
+    @Test
+    public void markAsRepeated_hasDuplicatesAndEqualRepetitionCounter() {
+        // setup
+        Word2Tokens word = new Word2Tokens();
+        Sentence sentence = new Sentence();
+        sentence.setId("id");
+
+        LinkedList<WordRepetitionProgressMapping> words = new LinkedList<>();
+        Calendar cal = getInstance(UTC);
+        for (int i = 0; i < 10; i++) {
+            words.addLast(new WordRepetitionProgressMapping());
+            words.getLast().setRepetitionCounter(0);
+            words.getLast().setId(i);
+            words.getLast().setWordJSON("setWordJSON");
+            words.getLast().setStatus(FINISHED);
+            words.getLast().setSentenceId("setSentenceId");
+            cal.add(HOUR, -4 * i);
+            words.getLast().setUpdatedDate(cal.getTime());
+        }
+
+        // when
+        when(exerciseDao.findByWordAndBySentenceIdAndByStatus(anyString(), anyString(), any(WordSetProgressStatus.class))).thenReturn(words);
+        int counter = service.markAsRepeated(word, sentence);
+        // then
+        assertEquals(1, counter);
+        verify(exerciseDao).createNewOrUpdate(words.getFirst());
     }
 }
