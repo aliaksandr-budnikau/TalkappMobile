@@ -288,7 +288,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        sortExercises(exercises);
         WordRepetitionProgressMapping exercise = exercises.get(0);
         int counter = exercise.getRepetitionCounter();
         counter++;
@@ -296,6 +295,24 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
         return counter;
+    }
+
+    @Override
+    public void removeDuplicates(Word2Tokens word, Sentence sentence) {
+        List<WordRepetitionProgressMapping> exercises;
+        try {
+            exercises = exerciseDao.findByWordAndBySentenceIdAndByStatus(
+                    mapper.writeValueAsString(word),
+                    sentence.getId(),
+                    FINISHED
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        sortExercises(exercises);
+        if (exercises.remove(0) != null) {
+            exerciseDao.delete(exercises);
+        }
     }
 
     private void sortExercises(List<WordRepetitionProgressMapping> exercises) {

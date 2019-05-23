@@ -13,6 +13,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -29,6 +30,7 @@ import static java.util.Calendar.HOUR;
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,6 +41,7 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordRepetitionProgressServiceImplTest {
+    public static final int COUNT = 10;
     @Mock
     private WordRepetitionProgressDao exerciseDao;
     private WordRepetitionProgressServiceImpl service;
@@ -289,7 +292,7 @@ public class WordRepetitionProgressServiceImplTest {
     }
 
     @Test
-    public void markAsRepeated_hasDuplicates() {
+    public void removeDuplicates_hasDuplicates() {
         // setup
         Word2Tokens word = new Word2Tokens();
         Sentence sentence = new Sentence();
@@ -297,25 +300,32 @@ public class WordRepetitionProgressServiceImplTest {
 
         LinkedList<WordRepetitionProgressMapping> words = new LinkedList<>();
         Calendar cal = getInstance(UTC);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < COUNT; i++) {
             words.addLast(new WordRepetitionProgressMapping());
             words.getLast().setRepetitionCounter(i);
             words.getLast().setWordJSON("setWordJSON");
             words.getLast().setStatus(FINISHED);
             words.getLast().setSentenceId("setSentenceId");
+            words.getLast().setId(i);
             cal.add(HOUR, -4 * i);
             words.getLast().setUpdatedDate(cal.getTime());
         }
+        WordRepetitionProgressMapping last = words.getLast();
 
         // when
         when(exerciseDao.findByWordAndBySentenceIdAndByStatus(anyString(), anyString(), any(WordSetProgressStatus.class))).thenReturn(words);
-        int counter = service.markAsRepeated(word, sentence);
+        service.removeDuplicates(word, sentence);
+
         // then
-        assertEquals(10, counter);
+        ArgumentCaptor<Collection> captor = forClass(Collection.class);
+        verify(exerciseDao).delete(captor.capture());
+        Collection collection = captor.getValue();
+        assertEquals(COUNT - 1, collection.size());
+        assertFalse(collection.contains(last));
     }
 
     @Test
-    public void markAsRepeated_hasDuplicatesAndEqualRepetitionCounter() {
+    public void removeDuplicates_hasDuplicatesAndEqualRepetitionCounter() {
         // setup
         Word2Tokens word = new Word2Tokens();
         Sentence sentence = new Sentence();
@@ -323,7 +333,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         LinkedList<WordRepetitionProgressMapping> words = new LinkedList<>();
         Calendar cal = getInstance(UTC);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < COUNT; i++) {
             words.addLast(new WordRepetitionProgressMapping());
             words.getLast().setRepetitionCounter(0);
             words.getLast().setId(i);
@@ -333,12 +343,17 @@ public class WordRepetitionProgressServiceImplTest {
             cal.add(HOUR, -4 * i);
             words.getLast().setUpdatedDate(cal.getTime());
         }
+        WordRepetitionProgressMapping last = words.getLast();
 
         // when
         when(exerciseDao.findByWordAndBySentenceIdAndByStatus(anyString(), anyString(), any(WordSetProgressStatus.class))).thenReturn(words);
-        int counter = service.markAsRepeated(word, sentence);
+        service.removeDuplicates(word, sentence);
+
         // then
-        assertEquals(1, counter);
-        verify(exerciseDao).createNewOrUpdate(words.getFirst());
+        ArgumentCaptor<Collection> captor = forClass(Collection.class);
+        verify(exerciseDao).delete(captor.capture());
+        Collection collection = captor.getValue();
+        assertEquals(COUNT - 1, collection.size());
+        assertFalse(collection.contains(last));
     }
 }

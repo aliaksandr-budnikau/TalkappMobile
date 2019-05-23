@@ -36,4 +36,6 @@ public interface WordRepetitionProgressService {
     List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetProgressStatus status);
 
     int markAsRepeated(Word2Tokens word, Sentence sentence);
+
+    void removeDuplicates(Word2Tokens word, Sentence sentence);
 }

@@ -98,6 +98,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         currentSentence = sentenceSelector.selectSentence(sentences);
         logger.i(TAG, "chosen currentSentence {}", currentSentence);
         listener.onSentencesFound(currentSentence, word);
+        exerciseService.removeDuplicates(currentWord, currentSentence);
         logger.i(TAG, "currentSentence was initialized");
     }
 

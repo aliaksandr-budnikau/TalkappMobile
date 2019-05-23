@@ -9,6 +9,7 @@ import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -157,6 +158,15 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
             selectWord.setValue(word);
             selectSentence.setValue(sentenceId);
             return this.query(prepare);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int delete(Collection<WordRepetitionProgressMapping> progresses) {
+        try {
+            return super.delete(progresses);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
