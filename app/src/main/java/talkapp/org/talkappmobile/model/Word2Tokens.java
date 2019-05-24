@@ -1,11 +1,15 @@
 package talkapp.org.talkappmobile.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Word2Tokens implements Serializable {
     private String word;
     private String tokens;
+    @JsonIgnore
+    private Integer sourceWordSetId;
 
     public Word2Tokens() {
     }
@@ -33,6 +37,14 @@ public class Word2Tokens implements Serializable {
 
     public void setTokens(String tokens) {
         this.tokens = tokens;
+    }
+
+    public Integer getSourceWordSetId() {
+        return sourceWordSetId;
+    }
+
+    public void setSourceWordSetId(Integer sourceWordSetId) {
+        this.sourceWordSetId = sourceWordSetId;
     }
 
     @Override

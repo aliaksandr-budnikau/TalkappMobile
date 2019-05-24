@@ -144,7 +144,7 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByWordAndBySentenceIdAndByStatus(String word, String sentenceId, WordSetProgressStatus status) {
+    public List<WordRepetitionProgressMapping> findByWordAndBySentenceIdAndByStatus(String word, int sourceWordSetId, String sentenceId, WordSetProgressStatus status) {
         try {
             SelectArg selectWord = new SelectArg();
             SelectArg selectSentence = new SelectArg();
@@ -153,6 +153,8 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
                     .eq(STATUS_FN, status)
                     .and()
                     .eq(WORD_FN, selectWord)
+                    .and()
+                    .eq(WORD_SET_ID_FN, sourceWordSetId)
                     .and()
                     .eq(SENTENCE_ID_FN, selectSentence).prepare();
             selectWord.setValue(word);

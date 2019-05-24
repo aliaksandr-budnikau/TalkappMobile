@@ -143,31 +143,37 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         Word2Tokens age = new Word2Tokens("age");
         age.setTokens("age");
+        age.setSourceWordSetId(id);
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceId("AWbgboVdNEXFMlzHK5SR#" + age.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(age));
+        exercise.setWordSetId(id);
         exerciseDao.createNewOrUpdate(exercise);
 
 
         Word2Tokens anniversary = new Word2Tokens("anniversary");
         anniversary.setTokens("anniversary");
+        anniversary.setSourceWordSetId(id);
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceId("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(anniversary));
+        exercise.setWordSetId(id);
         exerciseDao.createNewOrUpdate(exercise);
 
 
         Word2Tokens birth = new Word2Tokens("birth");
         birth.setTokens("birth");
+        birth.setSourceWordSetId(id);
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceId("AWbgbsUXNEXFMlzHK5V2#" + birth.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(birth));
+        exercise.setWordSetId(id);
         exerciseDao.createNewOrUpdate(exercise);
 
 
