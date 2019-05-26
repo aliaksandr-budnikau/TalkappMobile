@@ -141,6 +141,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
+    public void finishActivity() {
+        viewStrategy.onFinishActivity();
+    }
+
     public void checkAnswerButtonClick(final String answer) {
         try {
             viewStrategy.onCheckAnswerStart();

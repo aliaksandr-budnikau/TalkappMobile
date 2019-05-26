@@ -122,6 +122,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     Button nextButton;
     @ViewById(R.id.checkButton)
     Button checkButton;
+    @ViewById(R.id.closeButton)
+    Button closeButton;
     @ViewById(R.id.speakButton)
     Button speakButton;
     @ViewById(R.id.playButton)
@@ -208,6 +210,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Background
     public void onNextButtonClick() {
         presenter.nextButtonClick();
+    }
+
+    @Click(R.id.closeButton)
+    @Background
+    public void onCloseButtonClick() {
+        presenter.finishActivity();
     }
 
     @Click(R.id.playButton)
@@ -305,6 +313,19 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @UiThread
     public void hideCheckButton() {
         checkButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void showCloseButton() {
+        closeButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    @UiThread
+    public void hideCloseButton() {
+        closeButton.setVisibility(View.GONE);
     }
 
     @Override

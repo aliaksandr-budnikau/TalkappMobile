@@ -19,6 +19,10 @@ public interface PracticeWordSetView {
 
     void hideCheckButton();
 
+    void showCloseButton();
+
+    void hideCloseButton();
+
     void setRightAnswer(String text);
 
     void setProgress(int progress);

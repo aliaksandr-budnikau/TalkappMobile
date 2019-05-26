@@ -297,11 +297,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view, times(0)).showNextButton();
         verify(view, times(0)).hideCheckButton();
         verify(view).showCongratulationMessage();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
+        verify(view).hideNextButton();
+        verify(view).showCloseButton();
+        verify(view, times(0)).closeActivity();
+        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        presenter.finishActivity();
+        verify(view).closeActivity();
+        verify(view).openAnotherActivity();
     }
 
     @Test

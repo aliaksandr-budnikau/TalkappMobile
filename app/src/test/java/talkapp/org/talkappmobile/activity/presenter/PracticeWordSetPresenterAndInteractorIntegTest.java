@@ -67,6 +67,7 @@ import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -405,11 +406,17 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
         verify(view).showCongratulationMessage();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
+        verify(view).hideNextButton();
+        verify(view).showCloseButton();
+        verify(view, times(0)).closeActivity();
+        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        presenter.finishActivity();
+        verify(view).closeActivity();
+        verify(view).openAnotherActivity();
     }
 
     @Test
@@ -753,11 +760,17 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
         verify(view).showCongratulationMessage();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
+        verify(view).hideNextButton();
+        verify(view).showCloseButton();
+        verify(view, times(0)).closeActivity();
+        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        presenter.finishActivity();
+        verify(view).closeActivity();
+        verify(view).openAnotherActivity();
     }
 
     @Test

@@ -51,6 +51,11 @@ public class PracticeWordSetViewStrategy {
 
     public void onTrainingFinished() {
         view.showCongratulationMessage();
+        view.showCloseButton();
+        view.hideNextButton();
+    }
+
+    public void onFinishActivity() {
         view.closeActivity();
         view.openAnotherActivity();
     }

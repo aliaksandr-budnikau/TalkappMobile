@@ -179,6 +179,26 @@
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/closeButton"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/answerTextLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20pt"
+                android:layout_marginTop="15pt"
+
+                android:background="@drawable/shape_rectangle"
+                android:minHeight="25pt"
+                android:minWidth="55pt"
+                android:text="CLOSE"
+                android:textColor="@color/color.button.text"
+                android:textSize="12sp"
+
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <Button
                 android:id="@+id/nextButton"
 
                 android:layout_width="wrap_content"

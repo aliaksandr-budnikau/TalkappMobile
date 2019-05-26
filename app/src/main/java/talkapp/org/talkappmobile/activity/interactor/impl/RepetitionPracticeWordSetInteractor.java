@@ -28,7 +28,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final SentenceSelector sentenceSelector;
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
-    private final WordSetService wordSetService;
     private final WordSetExperienceUtils experienceUtils;
     private Word2Tokens currentWord;
     private Sentence currentSentence;
@@ -51,7 +50,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.exerciseService = exerciseService;
-        this.wordSetService = wordSetService;
         this.userExpService = userExpService;
         this.experienceUtils = experienceUtils;
     }

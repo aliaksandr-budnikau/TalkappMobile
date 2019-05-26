@@ -93,8 +93,8 @@ public class PracticeWordSetViewStrategyTest {
     public void onTrainingFinished() {
         strategy.onTrainingFinished();
         verify(view).showCongratulationMessage();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
+        verify(view).showCloseButton();
+        verify(view).hideNextButton();
     }
 
     @Test

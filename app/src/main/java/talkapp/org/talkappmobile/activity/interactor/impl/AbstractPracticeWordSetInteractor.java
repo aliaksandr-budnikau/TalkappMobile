@@ -133,6 +133,9 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
+        if (words.isEmpty()) {
+            return null;
+        }
         if (words.size() == 1) {
             return words.get(0);
         }
