@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 import android.content.Context;
 
 import java.util.List;
-import java.util.Random;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
@@ -80,9 +79,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
-        List<Word2Tokens> words = wordSet.getWords();
-        int i = new Random().nextInt(words.size());
-        return words.get(i);
+        return peekRandomWordWithoutCurrentWord(wordSet.getWords(), currentWord);
     }
 
     @Override

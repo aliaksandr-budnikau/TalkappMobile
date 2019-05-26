@@ -24,8 +24,8 @@ import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.UserExpService;
+import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -34,6 +34,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -436,14 +437,18 @@ public class StudyingPracticeWordSetInteractorTest {
     public void peekAnyNewWordByWordSetId() {
         // setup
         int wordSetId = 5;
-        Word2Tokens value = new Word2Tokens("dsfs");
+        Word2Tokens newCurrentWord = new Word2Tokens("newCurrentWord");
+        Word2Tokens currentWord = new Word2Tokens("currentWord");
 
         // when
-        when(exerciseService.peekByWordSetIdAnyWord(wordSetId)).thenReturn(value);
+        when(exerciseService.getCurrentWord(wordSetId)).thenReturn(currentWord);
+        when(exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId)).thenReturn(asList(currentWord, newCurrentWord));
         Word2Tokens actual = interactor.peekAnyNewWordByWordSetId(wordSetId);
 
         // then
-        assertEquals(value, actual);
+        assertEquals(newCurrentWord, actual);
+        assertNotEquals(actual, currentWord);
         verify(exerciseService).putOffCurrentWord(wordSetId);
+        verify(exerciseService).markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
     }
 }

@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NavigableMap;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -115,18 +114,37 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public Word2Tokens peekByWordSetIdAnyWord(int wordSetId) {
+    public void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord) {
         WordSetMapping exp = wordSetDao.findById(wordSetId);
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
-        int i = new Random().nextInt(exercises.size());
-        WordRepetitionProgressMapping mapping = exercises.get(i);
-        mapping.setCurrent(true);
-        exerciseDao.createNewOrUpdate(mapping);
+        String newCurrentWordAsString;
         try {
-            return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
+            newCurrentWordAsString = mapper.writeValueAsString(newCurrentWord);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        for (WordRepetitionProgressMapping exercise : exercises) {
+            if (exercise.getWordJSON().equals(newCurrentWordAsString)) {
+                exercise.setCurrent(true);
+                exerciseDao.createNewOrUpdate(exercise);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId) {
+        WordSetMapping exp = wordSetDao.findById(wordSetId);
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
+        LinkedList<Word2Tokens> result = new LinkedList<>();
+        for (WordRepetitionProgressMapping exercise : exercises) {
+            try {
+                result.add(mapper.readValue(exercise.getWordJSON(), Word2Tokens.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
+        return result;
     }
 
     @Override

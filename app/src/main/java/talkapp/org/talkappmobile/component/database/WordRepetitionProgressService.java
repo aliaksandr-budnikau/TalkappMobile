@@ -17,7 +17,9 @@ public interface WordRepetitionProgressService {
 
     void createSomeIfNecessary(Set<Word2Tokens> words, int wordSetId);
 
-    Word2Tokens peekByWordSetIdAnyWord(int wordSetId);
+    void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord);
+
+    List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId);
 
     Sentence getCurrentSentence(int wordSetId);
 

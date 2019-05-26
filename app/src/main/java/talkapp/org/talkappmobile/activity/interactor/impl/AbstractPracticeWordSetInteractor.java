@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
@@ -18,6 +19,7 @@ import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
+import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public abstract class AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
@@ -128,5 +130,15 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         } else {
             listener.onGotSentencesToChange(sentences);
         }
+    }
+
+    protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
+        if (words.size() == 1) {
+            return words.get(0);
+        }
+        LinkedList<Word2Tokens> copyWords = new LinkedList<>(words);
+        copyWords.remove(currentWord);
+        shuffle(copyWords);
+        return copyWords.getFirst();
     }
 }
