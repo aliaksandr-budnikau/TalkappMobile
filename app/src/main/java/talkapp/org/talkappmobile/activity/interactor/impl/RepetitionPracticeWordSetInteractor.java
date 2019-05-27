@@ -66,7 +66,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         logger.i(TAG, "enable repetition mode");
         sentenceProvider.enableRepetitionMode();
         listener.onEnableRepetitionMode();
-        wordSet.setTrainingExperience(0);
         listener.onInitialiseExperience(wordSet);
     }
 

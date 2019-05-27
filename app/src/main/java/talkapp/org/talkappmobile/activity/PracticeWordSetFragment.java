@@ -335,6 +335,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
+    @IgnoreWhen(VIEW_DESTROYED)
     public void setProgress(int progress) {
         wordSetProgress.setProgress(progress);
     }
