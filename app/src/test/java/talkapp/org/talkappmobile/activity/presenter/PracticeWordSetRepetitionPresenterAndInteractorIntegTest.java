@@ -371,7 +371,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         createPresenter(interactor);
 
         presenter.initialise();
-        verify(view).setProgress(16);
+        verify(view).setProgress(0);
         reset(view);
 
         presenter.nextButtonClick();
@@ -401,7 +401,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
-        verify(view).setProgress(66);
+        verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
@@ -422,7 +422,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        wordSet.setTrainingExperience(0);
         createPresenter(interactor);
 
         presenter.initialise();
@@ -477,7 +476,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        wordSet.setTrainingExperience(0);
         createPresenter(interactor);
 
         presenter.initialise();
@@ -535,7 +533,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         createPresenter(interactor);
 
         presenter.initialise();
-        verify(view).setProgress(16);
+        verify(view).setProgress(0);
         reset(view);
 
         presenter.nextButtonClick();
@@ -565,7 +563,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
-        verify(view).setProgress(66);
+        verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
@@ -586,7 +584,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        wordSet.setTrainingExperience(0);
         createPresenter(interactor);
 
         presenter.initialise();
