@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import talkapp.org.talkappmobile.activity.FragmentTests;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetRepetitionPresenterAndInteractorIntegTest;
@@ -20,7 +21,8 @@ import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressS
         PracticeWordSetPresenterAndInteractorIntegTest.class,
         AddingNewWordSetPresenterAndInteractorIntegTest.class,
         TopicsFragmentPresenterAndInteractorIntegTest.class,
-        WordRepetitionProgressServiceImplIntegTest.class
+        WordRepetitionProgressServiceImplIntegTest.class,
+        FragmentTests.class
 })
 @RunWith(Suite.class)
 public class SuiteDepOnExternalServer {
