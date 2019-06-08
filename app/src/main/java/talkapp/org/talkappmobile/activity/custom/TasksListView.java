@@ -47,10 +47,13 @@ public class TasksListView extends RecyclerView {
     }
 
     private static class TasksAdapter extends Adapter<TasksAdapter.ViewHolder> {
-        private final Task[] tasks;
+        private final TaskExpandable[] tasks;
 
         private TasksAdapter(Task[] tasks) {
-            this.tasks = tasks;
+            this.tasks = new TaskExpandable[tasks.length];
+            for (int i = 0; i < tasks.length; i++) {
+                this.tasks[i] = new TaskExpandable(tasks[i]);
+            }
         }
 
         @Override
@@ -78,10 +81,43 @@ public class TasksListView extends RecyclerView {
                 this.view = view;
             }
 
-            void bind(final Task task, final int position) {
-                view.setModel(task);
-                view.refreshModel();
+            void bind(final TaskExpandable task, final int position) {
+                view.setModel(task.getTask());
+                view.refreshModel(task.isExpanded());
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean expanded = task.isExpanded();
+                        task.setExpanded(!expanded);
+                        notifyItemChanged(position);
+                    }
+                });
             }
+        }
+    }
+
+    private static class TaskExpandable {
+        private Task task;
+        private boolean expanded;
+
+        TaskExpandable(Task task) {
+            this.task = task;
+        }
+
+        public Task getTask() {
+            return task;
+        }
+
+        public void setTask(Task task) {
+            this.task = task;
+        }
+
+        public boolean isExpanded() {
+            return expanded;
+        }
+
+        public void setExpanded(boolean expanded) {
+            this.expanded = expanded;
         }
     }
 }

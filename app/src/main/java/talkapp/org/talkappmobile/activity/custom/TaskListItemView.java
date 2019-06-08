@@ -15,6 +15,7 @@ import talkapp.org.talkappmobile.model.Task;
 
 @EViewGroup(R.layout.task_list_item)
 public class TaskListItemView extends RelativeLayout {
+    public static final int MIN_LINES = 2;
     @ViewById(R.id.title)
     TextView title;
     @ViewById(R.id.description)
@@ -37,9 +38,17 @@ public class TaskListItemView extends RelativeLayout {
         this.task = task;
     }
 
-    public void refreshModel() {
+    public void refreshModel(boolean expanded) {
         title.setText(task.getTitle());
         description.setText(task.getDescription());
+        if (expanded) {
+            if (description.getLineCount() != 0) {
+                description.setLines(description.getLineCount());
+            }
+            description.setMinLines(MIN_LINES);
+        } else {
+            description.setLines(MIN_LINES);
+        }
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

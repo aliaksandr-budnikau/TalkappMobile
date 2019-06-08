@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
@@ -17,7 +18,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
@@ -65,16 +65,12 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
         presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
         presenter.init();
+        findTasks();
+    }
 
-        LinkedList<Task> tasksFake = new LinkedList<>();
-        tasksFake.add(new Task());
-        tasksFake.getLast().setTitle("Title 1");
-        tasksFake.getLast().setDescription("Description 1");
-        tasksFake.add(new Task());
-        tasksFake.getLast().setTitle("Title 2");
-        tasksFake.getLast().setDescription("Description 2");
-
-        setTasksList(tasksFake);
+    @Background
+    public void findTasks() {
+        presenter.findTasks();
     }
 
     @Override
