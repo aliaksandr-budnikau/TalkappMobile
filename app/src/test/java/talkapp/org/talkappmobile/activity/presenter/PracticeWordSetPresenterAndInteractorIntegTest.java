@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
@@ -46,15 +46,10 @@ import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgr
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
-import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -80,10 +75,10 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSet wordSet;
-    private StudyingPracticeWordSetInteractor interactor;
     private Context context;
     private WordSetService experienceService;
     private WordSetExperienceUtilsImpl experienceUtils;
+    private PresenterFactory presenterFactory;
 
     @Before
     public void setup() throws SQLException {
@@ -102,18 +97,31 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+
+        userExpService = new UserExpServiceImpl(expAuditDao);
+        when(mockServiceFactoryBean.getUserExpService()).thenReturn(userExpService);
+
+        exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
+        when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
+
+        experienceUtils = new WordSetExperienceUtilsImpl();
+        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
+
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        presenterFactory = new PresenterFactory();
+        Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
+        Whitebox.setInternalState(presenterFactory, "serviceFactory", mockServiceFactoryBean);
+        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
+        Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
+        Whitebox.setInternalState(presenterFactory, "experienceUtils", experienceUtils);
+        Whitebox.setInternalState(presenterFactory, "wordsCombinator", new RandomWordsCombinatorBean());
+        Whitebox.setInternalState(presenterFactory, "sentenceSelector", new RandomSentenceSelectorBean());
+        Whitebox.setInternalState(presenterFactory, "logger", logger);
+        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
-        userExpService = new UserExpServiceImpl(expAuditDao);
-        exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
-        experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
-        interactor = new StudyingPracticeWordSetInteractor(new RandomWordsCombinatorBean(),
-                new SentenceProviderImpl(new BackendSentenceProviderStrategy(server), new SentenceProviderRepetitionStrategy(server, exerciseService)),
-                new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(server), new EqualityScorerBean()),
-                logger, experienceService, exerciseService, userExpService, experienceUtils, context, new AudioStuffFactoryBean());
         server.findAllWordSets();
     }
 
@@ -122,7 +130,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         OpenHelperManager.releaseHelper();
     }
 
-    private void createPresenter(StudyingPracticeWordSetInteractor interactor) {
+    private void createPresenter() {
         int id = -1;
         int trainingExperience = 0;
         WordSetProgressStatus status = null;
@@ -146,13 +154,12 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
-        PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, firstCycleViewStrategy);
+        presenter = presenterFactory.create(wordSet, view, context, false);
     }
 
     @Test
     public void testPracticeWordSet_completeOneSet() {
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -421,7 +428,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(0);
@@ -488,7 +495,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(16);
@@ -554,7 +561,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(33);
@@ -620,7 +627,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(50);
@@ -673,7 +680,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(66);
@@ -726,7 +733,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         verify(view).setProgress(83);
@@ -775,7 +782,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
     @Test
     public void testPracticeWordSet_rightAnswerCheckedTouchRightAnswerUntouchBug() {
-        createPresenter(interactor);
+        createPresenter();
 
         presenter.initialise();
         presenter.nextButtonClick();

@@ -22,11 +22,8 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetVocabularyLoadedEM;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
@@ -38,8 +35,8 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 @EFragment(value = R.layout.word_translations_layout)
 public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView {
     public static final String WORD_SET_MAPPING = "wordSet";
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
+    @Bean
+    PresenterFactory presenterFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @EventBusGreenRobot
@@ -67,13 +64,12 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
 
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get());
-        initPresenter(interactor);
+        initPresenter();
     }
 
     @Background
-    public void initPresenter(PracticeWordSetVocabularyInteractor interactor) {
-        PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, this, interactor);
+    public void initPresenter() {
+        PracticeWordSetVocabularyPresenter presenter = presenterFactory.create(wordSet, this);
         presenter.initialise();
     }
 

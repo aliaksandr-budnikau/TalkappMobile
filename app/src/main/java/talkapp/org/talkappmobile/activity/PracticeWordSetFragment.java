@@ -44,37 +44,8 @@ import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceProvider;
-import talkapp.org.talkappmobile.component.SentenceSelector;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
-import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
-import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
-import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
-import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -89,27 +60,10 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String WORD_SET_MAPPING = "wordSet";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
-    @Bean(TextUtilsImpl.class)
-    TextUtils textUtils;
-    @Bean(WordSetExperienceUtilsImpl.class)
-    WordSetExperienceUtils experienceUtils;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-    @Bean(LoggerBean.class)
-    Logger logger;
-    @Bean(EqualityScorerBean.class)
-    EqualityScorer equalityScorer;
-    @Bean(RandomSentenceSelectorBean.class)
-    SentenceSelector sentenceSelector;
-    @Bean(AudioStuffFactoryBean.class)
-    AudioStuffFactory audioStuffFactory;
-    @Bean(RandomWordsCombinatorBean.class)
-    WordsCombinator wordsCombinator;
-
+    @Bean
+    PresenterFactory presenterFactory;
     @ViewById(R.id.originalText)
     TextView originalText;
     @ViewById(R.id.rightAnswer)
@@ -171,18 +125,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        BackendSentenceProviderStrategy backendStrategy = new BackendSentenceProviderStrategy(backendServerFactory.get());
-        SentenceProviderRepetitionStrategy repetitionStrategy = new SentenceProviderRepetitionStrategy(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
-        SentenceProvider sentenceProvider = new SentenceProviderImpl(backendStrategy, repetitionStrategy);
-        GrammarCheckServiceImpl grammarCheckService = new GrammarCheckServiceImpl(backendServerFactory.get());
-        RefereeService refereeService = new RefereeServiceImpl(grammarCheckService, equalityScorer);
-        PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(this, textUtils, experienceUtils);
-
-        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, getContext(), audioStuffFactory);
-        if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceProvider, sentenceSelector, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), serviceFactory.getWordSetExperienceRepository(), experienceUtils, getContext(), audioStuffFactory);
-        }
-        presenter = new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
+        presenter = presenterFactory.create(wordSet, this, getContext(), repetitionMode);
         presenter.initialise();
         presenter.nextButtonClick();
     }

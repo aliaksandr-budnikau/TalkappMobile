@@ -16,11 +16,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -29,8 +26,8 @@ import static java.util.Arrays.asList;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
 public class AddingNewWordSetFragment extends Fragment implements AddingNewWordSetFragmentView {
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
+    @Bean
+    PresenterFactory presenterFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @ViewById(R.id.word1)
@@ -72,9 +69,8 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
         allTextViews = asList(word1, word2, word3, word4, word5, word6, word7, word8, word9, word10, word11, word12);
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get());
 
-        presenter = new AddingNewWordSetPresenter(this, interactor);
+        presenter = presenterFactory.create(this);
     }
 
     @Click(R.id.buttonSubmit)
