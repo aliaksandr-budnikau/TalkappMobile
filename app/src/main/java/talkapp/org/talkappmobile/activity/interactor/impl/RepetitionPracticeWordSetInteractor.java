@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
@@ -90,14 +91,16 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             logger.w(TAG, "Sentences haven't been found with words '{}'. Check the db.", word);
             return;
         }
-        currentSentence = sentenceSelector.selectSentence(sentences);
-        logger.i(TAG, "chosen currentSentence {}", currentSentence);
+        List<Sentence> currentSentences = sentenceSelector.selectSentences(sentences);
+        logger.i(TAG, "chosen currentSentence {}", currentSentences);
+        shuffle(currentSentences);
+        currentSentence = currentSentences.get(0);
         listener.onSentencesFound(currentSentence, word);
         logger.i(TAG, "currentSentence was initialized");
     }
 
     @Override
-    protected void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
+    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
         // do nothing
     }
 

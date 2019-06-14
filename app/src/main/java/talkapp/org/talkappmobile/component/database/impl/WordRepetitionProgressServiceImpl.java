@@ -69,16 +69,23 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void save(Word2Tokens word, int wordSetId, Sentence sentence) {
+    public void save(Word2Tokens word, int wordSetId, List<Sentence> sentences) {
         WordRepetitionProgressMapping exercise;
         try {
             exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId).get(0);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        exercise.setSentenceIds(sentence.getId());
+        joinSentenceIds(sentences, exercise);
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
+    }
+
+    private void joinSentenceIds(List<Sentence> sentences, WordRepetitionProgressMapping exercise) {
+        exercise.setSentenceIds("");
+        for (Sentence sentence : sentences) {
+            exercise.setSentenceIds(exercise.getSentenceIds().equals("") ? sentence.getId() : "," + sentence.getId());
+        }
     }
 
     @Override

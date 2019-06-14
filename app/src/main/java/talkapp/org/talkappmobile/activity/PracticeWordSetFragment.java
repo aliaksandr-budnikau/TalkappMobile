@@ -437,7 +437,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(SentenceWasPickedForChangeEM event) {
-        presenter.changeSentence(event.getSentence());
+        presenter.changeSentence(event.getSentences());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

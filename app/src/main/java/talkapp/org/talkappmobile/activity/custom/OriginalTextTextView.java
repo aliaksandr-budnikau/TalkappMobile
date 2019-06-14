@@ -32,6 +32,8 @@ import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForCha
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 
+import static java.util.Arrays.asList;
+
 @EView
 public class OriginalTextTextView extends AppCompatTextView implements OriginalTextTextViewView {
 
@@ -136,7 +138,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
                 .setTitle(sentencesForChangeDialogTitle)
                 .setItems(options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        eventBus.post(new SentenceWasPickedForChangeEM(sentences.get(which)));
+                        eventBus.post(new SentenceWasPickedForChangeEM(asList(sentences.get(which))));
                         dialog.cancel();
                     }
                 });

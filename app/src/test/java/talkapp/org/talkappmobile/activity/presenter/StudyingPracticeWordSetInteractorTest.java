@@ -33,6 +33,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -163,11 +164,11 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(sentenceProvider.findByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
-        when(sentenceSelector.selectSentence(sentences)).thenReturn(selectedSentence);
+        when(sentenceSelector.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
-        verify(exerciseService).save(word, wordSetId, selectedSentence);
+        verify(exerciseService).save(word, wordSetId, singletonList(selectedSentence));
         verify(listener).onSentencesFound(selectedSentence, word);
     }
 
@@ -186,8 +187,8 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
-        verify(exerciseService, times(0)).save(word, wordSetId, selectedSentence);
-        verify(sentenceSelector, times(0)).selectSentence(any(List.class));
+        verify(exerciseService, times(0)).save(word, wordSetId, singletonList(selectedSentence));
+        verify(sentenceSelector, times(0)).selectSentences(any(List.class));
     }
 
     @Test

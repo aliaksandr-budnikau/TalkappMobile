@@ -113,13 +113,13 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
-    public void changeSentence(int wordSetId, Sentence sentence, OnPracticeWordSetListener listener) {
+    public void changeSentence(int wordSetId, List<Sentence> sentences, OnPracticeWordSetListener listener) {
         Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        replaceSentence(sentence, word, wordSetId, listener);
+        replaceSentence(sentences, word, wordSetId, listener);
         listener.onSentenceChanged();
     }
 
-    protected abstract void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
+    protected abstract void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
 
     @Override
     public void findSentencesForChange(int wordSetId, OnPracticeWordSetListener listener) {

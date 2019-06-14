@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.model.Sentence;
  * @author Budnikau Aliaksandr
  */
 public interface SentenceSelector {
-    Sentence selectSentence(List<Sentence> sentences);
+    List<Sentence> selectSentences(List<Sentence> sentences);
 
     void orderByScore(List<Sentence> sentences);
 }

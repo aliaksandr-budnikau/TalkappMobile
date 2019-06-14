@@ -26,7 +26,7 @@ public class RandomSentenceSelectorBeanTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getSentence_empty() throws Exception {
-        sentenceSelector.selectSentence(new ArrayList<Sentence>());
+        sentenceSelector.selectSentences(new ArrayList<Sentence>());
     }
 
     @Test
@@ -37,10 +37,10 @@ public class RandomSentenceSelectorBeanTest {
         sentences.add(e);
 
         // when
-        Sentence sentence = sentenceSelector.selectSentence(sentences);
+        List<Sentence> actualSentences = sentenceSelector.selectSentences(sentences);
 
         // then
-        assertEquals(e, sentence);
+        assertEquals(sentences, actualSentences);
     }
 
     @Test
@@ -53,10 +53,10 @@ public class RandomSentenceSelectorBeanTest {
         sentences.add(e2);
 
         // when
-        Sentence sentence = sentenceSelector.selectSentence(sentences);
+        List<Sentence> sentence = sentenceSelector.selectSentences(sentences);
 
         // then
-        assertTrue(sentence == e1 || sentence == e2);
+        assertTrue(sentence.get(0) == e1 || sentence.get(0) == e2);
     }
 
     @Test

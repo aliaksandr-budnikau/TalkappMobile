@@ -2,6 +2,8 @@ package talkapp.org.talkappmobile.activity.interactor;
 
 import android.net.Uri;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -27,7 +29,7 @@ public interface PracticeWordSetInteractor {
 
     void changeSentence(int wordSetId, OnPracticeWordSetListener listener);
 
-    void changeSentence(int wordSetId, Sentence sentence, OnPracticeWordSetListener listener);
+    void changeSentence(int wordSetId, List<Sentence> sentences, OnPracticeWordSetListener listener);
 
     void findSentencesForChange(int wordSetId, OnPracticeWordSetListener listener);
 }

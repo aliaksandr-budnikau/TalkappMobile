@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -20,12 +19,12 @@ import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 public class RandomSentenceSelectorBean implements SentenceSelector {
 
     @Override
-    public Sentence selectSentence(List<Sentence> sentences) {
+    public List<Sentence> selectSentences(List<Sentence> sentences) {
         if (sentences.isEmpty()) {
             throw new IllegalArgumentException("The list of sentences is empty");
         }
         if (sentences.size() == 1) {
-            return sentences.get(0);
+            return sentences;
         }
 
         LinkedList<Sentence> badSentences = new LinkedList<>();
@@ -41,19 +40,15 @@ public class RandomSentenceSelectorBean implements SentenceSelector {
                 badSentences.add(sentence);
             }
         }
-        Random random = new Random();
         if (!okSentences.isEmpty()) {
-            int i = random.nextInt(okSentences.size());
-            return okSentences.get(i);
+            return okSentences;
         }
 
         if (!otherSentences.isEmpty()) {
-            int i = random.nextInt(otherSentences.size());
-            return otherSentences.get(i);
+            return otherSentences;
         }
 
-        int i = random.nextInt(badSentences.size());
-        return badSentences.get(i);
+        return badSentences;
     }
 
     @Override

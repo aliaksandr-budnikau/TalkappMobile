@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 public interface WordRepetitionProgressService {
     Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId);
 
-    void save(Word2Tokens word, int wordSetId, Sentence sentence);
+    void save(Word2Tokens word, int wordSetId, List<Sentence> sentences);
 
     void cleanByWordSetId(int wordSetId);
 

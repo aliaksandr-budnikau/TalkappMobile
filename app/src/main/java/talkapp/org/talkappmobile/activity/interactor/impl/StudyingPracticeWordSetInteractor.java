@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
+import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -100,14 +101,15 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return;
         }
         sentenceSelector.orderByScore(sentences);
-        final Sentence sentence = sentenceSelector.selectSentence(sentences);
-        replaceSentence(sentence, word, wordSetId, listener);
+        List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
+        replaceSentence(selectSentences, word, wordSetId, listener);
     }
 
     @Override
-    protected void replaceSentence(Sentence sentence, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
-        exerciseService.save(word, wordSetId, sentence);
-        listener.onSentencesFound(sentence, word);
+    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+        exerciseService.save(word, wordSetId, sentences);
+        shuffle(sentences);
+        listener.onSentencesFound(sentences.get(0), word);
     }
 
     @Override

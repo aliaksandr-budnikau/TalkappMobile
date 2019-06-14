@@ -182,10 +182,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
-    public void changeSentence(Sentence sentence) {
+    public void changeSentence(List<Sentence> sentences) {
         try {
             viewStrategy.onChangeSentenceStart();
-            interactor.changeSentence(state.getWordSetId(), sentence, this);
+            interactor.changeSentence(state.getWordSetId(), sentences, this);
         } finally {
             viewStrategy.onChangeSentenceFinish();
         }

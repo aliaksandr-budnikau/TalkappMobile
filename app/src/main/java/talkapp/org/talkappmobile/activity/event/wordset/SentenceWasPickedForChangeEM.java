@@ -1,15 +1,17 @@
 package talkapp.org.talkappmobile.activity.event.wordset;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.model.Sentence;
 
 public class SentenceWasPickedForChangeEM {
-    private final Sentence sentence;
+    private final List<Sentence> sentences;
 
-    public SentenceWasPickedForChangeEM(Sentence sentence) {
-        this.sentence = sentence;
+    public SentenceWasPickedForChangeEM(List<Sentence> sentences) {
+        this.sentences = sentences;
     }
 
-    public Sentence getSentence() {
-        return sentence;
+    public List<Sentence> getSentences() {
+        return sentences;
     }
 }
