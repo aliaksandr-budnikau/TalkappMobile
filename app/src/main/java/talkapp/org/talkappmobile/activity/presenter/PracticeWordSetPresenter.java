@@ -121,6 +121,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onGotSentencesToChange(sentences);
     }
 
+    @Override
+    public void onForgottenAgain(int counter) {
+        viewStrategy.onForgottenAgain(counter);
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
         viewStrategy.onGotRecognitionResult(currentSentence, result);

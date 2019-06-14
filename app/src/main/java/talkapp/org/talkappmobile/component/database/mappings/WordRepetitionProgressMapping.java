@@ -21,6 +21,7 @@ public class WordRepetitionProgressMapping {
     public static final String SENTENCE_ID_FN = "sentenceId";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
+    public static final String FORGETTING_COUNTER_FN = "forgettingCounter";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
     public static final String WORD_REPETITION_PROGRESS_TABLE = "WordRepetitionProgress";
@@ -48,6 +49,9 @@ public class WordRepetitionProgressMapping {
 
     @DatabaseField(canBeNull = false, columnName = REPETITION_COUNTER_FN)
     private int repetitionCounter;
+
+    @DatabaseField(canBeNull = false, columnName = FORGETTING_COUNTER_FN)
+    private int forgettingCounter;
 
     public WordRepetitionProgressMapping() {
     }
@@ -130,6 +134,14 @@ public class WordRepetitionProgressMapping {
         this.repetitionCounter = repetitionCounter;
     }
 
+    public int getForgettingCounter() {
+        return forgettingCounter;
+    }
+
+    public void setForgettingCounter(int forgettingCounter) {
+        this.forgettingCounter = forgettingCounter;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -153,6 +165,7 @@ public class WordRepetitionProgressMapping {
                 ", current=" + current +
                 ", updatedDate=" + updatedDate +
                 ", repetitionCounter=" + repetitionCounter +
+                ", forgettingCounter=" + forgettingCounter +
                 '}';
     }
 }

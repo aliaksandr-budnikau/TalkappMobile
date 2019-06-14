@@ -186,4 +186,8 @@ public class PracticeWordSetViewStrategy {
     public void onGotSentencesToChange(List<Sentence> sentences) {
         view.onGotSentencesToChange(sentences);
     }
+
+    public void onForgottenAgain(int counter) {
+        view.onForgottenAgain(counter);
+    }
 }

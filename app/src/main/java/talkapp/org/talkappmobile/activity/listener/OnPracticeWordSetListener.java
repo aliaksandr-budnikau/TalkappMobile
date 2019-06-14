@@ -42,4 +42,6 @@ public interface OnPracticeWordSetListener {
     void onNoSentencesToChange();
 
     void onGotSentencesToChange(List<Sentence> sentences);
+
+    void onForgottenAgain(int counter);
 }

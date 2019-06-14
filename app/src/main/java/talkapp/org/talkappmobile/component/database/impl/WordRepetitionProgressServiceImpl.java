@@ -297,6 +297,26 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
     @Override
     public int markAsRepeated(Word2Tokens word, Sentence sentence) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word, sentence);
+        int counter = exercise.getRepetitionCounter();
+        counter++;
+        exercise.setRepetitionCounter(counter);
+        exercise.setUpdatedDate(getInstance(UTC).getTime());
+        exerciseDao.createNewOrUpdate(exercise);
+        return counter;
+    }
+
+    @Override
+    public int markAsForgottenAgain(Word2Tokens word, Sentence sentence) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word, sentence);
+        int counter = exercise.getForgettingCounter();
+        counter++;
+        exercise.setForgettingCounter(counter);
+        exerciseDao.createNewOrUpdate(exercise);
+        return counter;
+    }
+
+    private WordRepetitionProgressMapping getWordRepetitionProgressMapping(Word2Tokens word, Sentence sentence) {
         List<WordRepetitionProgressMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndBySentenceIdAndByStatus(
@@ -308,13 +328,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        WordRepetitionProgressMapping exercise = exercises.get(0);
-        int counter = exercise.getRepetitionCounter();
-        counter++;
-        exercise.setRepetitionCounter(counter);
-        exercise.setUpdatedDate(getInstance(UTC).getTime());
-        exerciseDao.createNewOrUpdate(exercise);
-        return counter;
+        return exercises.get(0);
     }
 
     private boolean isNotThereCurrentExercise(List<WordRepetitionProgressMapping> current) {

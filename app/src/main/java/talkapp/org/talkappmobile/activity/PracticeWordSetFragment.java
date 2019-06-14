@@ -418,6 +418,13 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         eventBus.post(new SentencesWereFoundForChangeEM(sentences));
     }
 
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onForgottenAgain(int counter) {
+        Toast.makeText(getContext(), "The word wasn't remembered " + counter + " times.", Toast.LENGTH_SHORT).show();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.refreshSentence();

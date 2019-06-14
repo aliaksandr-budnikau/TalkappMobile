@@ -33,6 +33,7 @@ import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.FORGETTING_COUNTER_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_REPETITION_PROGRESS_TABLE;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.REPETITION_COUNTER_FN;
@@ -586,17 +587,17 @@ public class WordRepetitionProgressDaoImplTest {
     }
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current) {
-        insertExercise(id, wordSetId, word, sentence, status, current, new Date(), 0);
+        insertExercise(id, wordSetId, word, sentence, status, current, new Date(), 0, 0);
     }
 
     private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate) {
-        insertExercise(id, wordSetId, word, sentence, status, current, updatedDate, 0);
+        insertExercise(id, wordSetId, word, sentence, status, current, updatedDate, 0, 0);
     }
 
-    private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate, int repCount) {
-        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s');", WORD_REPETITION_PROGRESS_TABLE,
-                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_ID_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN,
-                id, wordSetId, word, sentence, status, current, updatedDate.getTime(), repCount);
+    private void insertExercise(int id, int wordSetId, String word, String sentence, String status, String current, Date updatedDate, int repCount, int forgettingCounter) {
+        String sql = format("INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s');", WORD_REPETITION_PROGRESS_TABLE,
+                ID_FN, WORD_SET_ID_FN, WORD_FN, SENTENCE_ID_FN, STATUS_FN, CURRENT_FN, UPDATED_DATE_FN, REPETITION_COUNTER_FN, FORGETTING_COUNTER_FN,
+                id, wordSetId, word, sentence, status, current, updatedDate.getTime(), repCount, forgettingCounter);
         databaseHelper.getWritableDatabase().execSQL(sql);
     }
 }
