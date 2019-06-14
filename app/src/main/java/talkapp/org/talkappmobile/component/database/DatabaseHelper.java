@@ -20,17 +20,19 @@ import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMappin
 import talkapp.org.talkappmobile.component.database.mappings.local.WordTranslationMapping;
 
 import static java.util.Collections.singletonList;
-import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.FORGETTING_COUNTER_FN;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 37;
+    private static final int DATABASE_VERSION = 38;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         changes.put(37, singletonList(
-                "ALTER TABLE WordRepetitionProgress ADD " + FORGETTING_COUNTER_FN + " INTEGER DEFAULT 0 NOT NULL;"
+                "ALTER TABLE WordRepetitionProgress ADD forgettingCounter INTEGER DEFAULT 0 NOT NULL;"
+        ));
+        changes.put(38, singletonList(
+                "ALTER TABLE WordRepetitionProgress RENAME COLUMN sentenceId TO sentenceIds;"
         ));
     }
 

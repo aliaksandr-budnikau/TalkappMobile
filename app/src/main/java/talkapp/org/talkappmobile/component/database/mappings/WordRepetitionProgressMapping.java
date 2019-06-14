@@ -18,10 +18,9 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 public class WordRepetitionProgressMapping {
     public static final String ID_FN = "id";
     public static final String WORD_FN = "word";
-    public static final String SENTENCE_ID_FN = "sentenceId";
+    public static final String SENTENCE_IDS_FN = "sentenceIds";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
-    public static final String FORGETTING_COUNTER_FN = "forgettingCounter";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
     public static final String WORD_REPETITION_PROGRESS_TABLE = "WordRepetitionProgress";
@@ -35,8 +34,8 @@ public class WordRepetitionProgressMapping {
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String wordJSON;
 
-    @DatabaseField(columnName = SENTENCE_ID_FN)
-    private String sentenceId;
+    @DatabaseField(columnName = SENTENCE_IDS_FN)
+    private String sentenceIds;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private WordSetProgressStatus status = FIRST_CYCLE;
@@ -50,21 +49,21 @@ public class WordRepetitionProgressMapping {
     @DatabaseField(canBeNull = false, columnName = REPETITION_COUNTER_FN)
     private int repetitionCounter;
 
-    @DatabaseField(canBeNull = false, columnName = FORGETTING_COUNTER_FN)
+    @DatabaseField(canBeNull = false, columnName = "forgettingCounter")
     private int forgettingCounter;
 
     public WordRepetitionProgressMapping() {
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetProgressStatus status, boolean current) {
-        this(id, wordSetId, wordJSON, sentenceId, status, current, getInstance(UTC).getTime());
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, WordSetProgressStatus status, boolean current) {
+        this(id, wordSetId, wordJSON, sentenceIds, status, current, getInstance(UTC).getTime());
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceId, WordSetProgressStatus status, boolean current, Date updatedDate) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, WordSetProgressStatus status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordJSON = wordJSON;
-        this.sentenceId = sentenceId;
+        this.sentenceIds = sentenceIds;
         this.status = status;
         this.current = current;
         this.updatedDate = updatedDate;
@@ -94,12 +93,12 @@ public class WordRepetitionProgressMapping {
         this.wordSetId = wordSetId;
     }
 
-    public String getSentenceId() {
-        return sentenceId;
+    public String getSentenceIds() {
+        return sentenceIds;
     }
 
-    public void setSentenceId(String sentenceJSON) {
-        this.sentenceId = sentenceJSON;
+    public void setSentenceIds(String sentenceJSON) {
+        this.sentenceIds = sentenceJSON;
     }
 
     public WordSetProgressStatus getStatus() {
@@ -160,7 +159,7 @@ public class WordRepetitionProgressMapping {
         return "WordRepetitionProgressMapping{" +
                 "id=" + id +
                 ", wordSetId=" + wordSetId +
-                ", sentenceId='" + sentenceId + '\'' +
+                ", sentenceIds='" + sentenceIds + '\'' +
                 ", status=" + status +
                 ", current=" + current +
                 ", updatedDate=" + updatedDate +

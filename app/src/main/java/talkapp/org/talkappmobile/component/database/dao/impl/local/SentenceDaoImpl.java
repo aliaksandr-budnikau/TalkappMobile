@@ -63,13 +63,12 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
         return mappings;
     }
 
-    @Override
-    public SentenceMapping findById(String id) {
+    public List<SentenceMapping> findAllByIds(String[] ids) {
         try {
-            return this.queryForFirst(
+            return this.query(
                     queryBuilder()
                             .where()
-                            .like(ID_FN, id + "%")
+                            .in(ID_FN, ids)
                             .prepare()
             );
         } catch (SQLException e) {

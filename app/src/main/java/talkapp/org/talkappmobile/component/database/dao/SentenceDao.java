@@ -9,5 +9,5 @@ public interface SentenceDao {
 
     List<SentenceMapping> findAllByWord(String word, int wordsNumber);
 
-    SentenceMapping findById(String id);
+    List<SentenceMapping> findAllByIds(String[] ids);
 }

@@ -145,7 +145,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         age.setTokens("age");
         age.setSourceWordSetId(id);
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceId("AWbgboVdNEXFMlzHK5SR#" + age.getWord() + "#6");
+        exercise.setSentenceIds("AWbgboVdNEXFMlzHK5SR#" + age.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(age));
@@ -157,7 +157,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         anniversary.setTokens("anniversary");
         anniversary.setSourceWordSetId(id);
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceId("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
+        exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(anniversary));
@@ -169,7 +169,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         birth.setTokens("birth");
         birth.setSourceWordSetId(id);
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceId("AWbgbsUXNEXFMlzHK5V2#" + birth.getWord() + "#6");
+        exercise.setSentenceIds("AWbgbsUXNEXFMlzHK5V2#" + birth.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED);
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(birth));

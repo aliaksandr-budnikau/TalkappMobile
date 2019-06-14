@@ -76,7 +76,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        exercise.setSentenceId(sentence.getId());
+        exercise.setSentenceIds(sentence.getId());
         exercise.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(exercise);
     }
@@ -288,7 +288,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private Sentence getSentence(WordRepetitionProgressMapping exercise) {
-        SentenceMapping mapping = sentenceDao.findById(exercise.getSentenceId());
+        String sentenceIds = exercise.getSentenceIds();
+        List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds.split(","));
+        SentenceMapping mapping = (sentences.isEmpty() ? null : sentences.get(0));
         if (mapping == null) {
             throw new RuntimeException("Sentence wasn't found");
         }
