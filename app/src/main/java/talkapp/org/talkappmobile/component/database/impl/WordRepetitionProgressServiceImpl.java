@@ -319,10 +319,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     private WordRepetitionProgressMapping getWordRepetitionProgressMapping(Word2Tokens word, Sentence sentence) {
         List<WordRepetitionProgressMapping> exercises;
         try {
-            exercises = exerciseDao.findByWordAndBySentenceIdAndByStatus(
+            exercises = exerciseDao.findByWordAndByWordSetIdAndByStatus(
                     mapper.writeValueAsString(word),
                     word.getSourceWordSetId(),
-                    sentence.getId(),
                     FINISHED
             );
         } catch (JsonProcessingException e) {

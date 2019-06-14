@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgr
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.CURRENT_FN;
-import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.SENTENCE_ID_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_FN;
@@ -144,21 +143,17 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByWordAndBySentenceIdAndByStatus(String word, int sourceWordSetId, String sentenceId, WordSetProgressStatus status) {
+    public List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, WordSetProgressStatus status) {
         try {
             SelectArg selectWord = new SelectArg();
-            SelectArg selectSentence = new SelectArg();
             PreparedQuery<WordRepetitionProgressMapping> prepare = queryBuilder()
                     .where()
                     .eq(STATUS_FN, status)
                     .and()
                     .eq(WORD_FN, selectWord)
                     .and()
-                    .eq(WORD_SET_ID_FN, sourceWordSetId)
-                    .and()
-                    .eq(SENTENCE_ID_FN, selectSentence).prepare();
+                    .eq(WORD_SET_ID_FN, sourceWordSetId).prepare();
             selectWord.setValue(word);
-            selectSentence.setValue(sentenceId);
             return this.query(prepare);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
