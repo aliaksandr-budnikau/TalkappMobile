@@ -150,6 +150,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onFinishActivity();
     }
 
+    public Sentence getCurrentSentence() {
+        return interactor.getCurrentSentence(state.getWordSetId());
+    }
+
     public void checkAnswerButtonClick(final String answer) {
         try {
             viewStrategy.onCheckAnswerStart();

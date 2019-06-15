@@ -38,6 +38,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private Word2Tokens currentWord;
+    private Sentence currentSentence;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                              SentenceProvider sentenceProvider,
@@ -102,14 +103,15 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         sentenceSelector.orderByScore(sentences);
         List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
+        shuffle(sentences);
+        currentSentence = selectSentences.get(0);
         replaceSentence(selectSentences, word, wordSetId, listener);
     }
 
     @Override
     protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
         exerciseService.save(word, wordSetId, sentences);
-        shuffle(sentences);
-        listener.onSentencesFound(sentences.get(0), word);
+        listener.onSentencesFound(currentSentence, word);
     }
 
     @Override
@@ -151,7 +153,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public Sentence getCurrentSentence(int wordSetId) {
-        return exerciseService.getCurrentSentence(wordSetId);
+        return currentSentence;
     }
 
     @Override

@@ -202,7 +202,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        Sentence sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
@@ -251,7 +251,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -300,7 +300,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
@@ -336,7 +336,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
@@ -372,7 +372,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
@@ -408,7 +408,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
@@ -471,7 +471,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        Sentence sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
@@ -537,7 +537,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -603,7 +603,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
@@ -656,7 +656,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
@@ -709,7 +709,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
@@ -762,7 +762,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
@@ -790,7 +790,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        Sentence sentence = exerciseService.getCurrentSentence(wordSet.getId());
+        Sentence sentence = presenter.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
 
         verify(view).onExerciseGotAnswered();

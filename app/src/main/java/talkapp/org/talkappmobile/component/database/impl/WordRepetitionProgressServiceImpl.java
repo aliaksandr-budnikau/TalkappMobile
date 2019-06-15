@@ -84,7 +84,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     private void joinSentenceIds(List<Sentence> sentences, WordRepetitionProgressMapping exercise) {
         exercise.setSentenceIds("");
         for (Sentence sentence : sentences) {
-            exercise.setSentenceIds(exercise.getSentenceIds().equals("") ? sentence.getId() : "," + sentence.getId());
+            exercise.setSentenceIds(exercise.getSentenceIds() + (exercise.getSentenceIds().equals("") ? sentence.getId() : "," + sentence.getId()));
         }
     }
 
@@ -152,12 +152,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
             }
         }
         return result;
-    }
-
-    @Override
-    public Sentence getCurrentSentence(int wordSetId) {
-        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        return getSentence(current.get(0));
     }
 
     @Override

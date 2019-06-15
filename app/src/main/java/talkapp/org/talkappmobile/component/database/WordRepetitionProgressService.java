@@ -21,8 +21,6 @@ public interface WordRepetitionProgressService {
 
     List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId);
 
-    Sentence getCurrentSentence(int wordSetId);
-
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours);
 
     int getMaxWordSetSize();
