@@ -70,7 +70,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
-public class FragmentTests {
+public class CapitalLetterInNewWordTest {
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSetService experienceService;

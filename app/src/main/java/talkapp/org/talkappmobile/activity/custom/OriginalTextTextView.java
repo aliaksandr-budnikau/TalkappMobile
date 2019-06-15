@@ -52,7 +52,6 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     @StringRes(R.string.insult_sentence_option)
     String insultSentenceOption;
 
-    private Map<SentenceContentScore, String> options;
     private OriginalTextTextViewPresenter presenter;
 
     public OriginalTextTextView(Context context) {

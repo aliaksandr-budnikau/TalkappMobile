@@ -104,12 +104,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         sentenceSelector.orderByScore(sentences);
         List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
         shuffle(sentences);
-        currentSentence = selectSentences.get(0);
         replaceSentence(selectSentences, word, wordSetId, listener);
     }
 
     @Override
     protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+        currentSentence = sentences.get(0);
         exerciseService.save(word, wordSetId, sentences);
         listener.onSentencesFound(currentSentence, word);
     }
