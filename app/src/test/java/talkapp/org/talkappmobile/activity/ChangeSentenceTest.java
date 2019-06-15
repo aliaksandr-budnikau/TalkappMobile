@@ -195,7 +195,8 @@ public class ChangeSentenceTest {
         verify(eventBus).post(captorNewSentenceEM.capture());
         reset(eventBus);
         NewSentenceEM newSentenceEM = captorNewSentenceEM.getValue();
-        originalTextTextViewPresenter.setModel(newSentenceEM.getSentence());
+        Sentence displayedSentence = newSentenceEM.getSentence();
+        originalTextTextViewPresenter.setModel(displayedSentence);
         originalTextTextViewPresenter.unlock();
         originalTextTextViewPresenter.refresh();
 
@@ -211,18 +212,20 @@ public class ChangeSentenceTest {
         assertEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
         reset(eventBus);
 
-        List<Sentence> pickedSentences = asList(sentencesWereFoundForChangeEM.getSentences().get(5), sentencesWereFoundForChangeEM.getSentences().get(3));
+        List<Sentence> pickedSentences = asList(sentencesWereFoundForChangeEM.getSentences().get(5), displayedSentence);
         SentenceWasPickedForChangeEM wasPickedForChangeEM = new SentenceWasPickedForChangeEM(pickedSentences);
+        for (int i = 0; i < 10; i++) {
+            practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
 
-        practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
+            captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
+            verify(eventBus).post(captorNewSentenceEM.capture());
+            reset(eventBus);
 
-        captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
-        verify(eventBus).post(captorNewSentenceEM.capture());
-        reset(eventBus);
-
-        newSentenceEM = captorNewSentenceEM.getValue();
-        assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
-
+            newSentenceEM = captorNewSentenceEM.getValue();
+            assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
+            assertNotEquals(displayedSentence, newSentenceEM.getSentence());
+            displayedSentence = newSentenceEM.getSentence();
+        }
         originalTextTextViewPresenter.setModel(newSentenceEM.getSentence());
         originalTextTextViewPresenter.unlock();
         originalTextTextViewPresenter.refresh();

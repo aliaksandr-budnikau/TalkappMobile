@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -103,14 +104,21 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         sentenceSelector.orderByScore(sentences);
         List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
-        shuffle(sentences);
         replaceSentence(selectSentences, word, wordSetId, listener);
     }
 
     @Override
     protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
-        currentSentence = sentences.get(0);
-        exerciseService.save(word, wordSetId, sentences);
+        List<Sentence> shuffledSentences = new ArrayList<>(sentences);
+        shuffle(shuffledSentences);
+        if (shuffledSentences.size() > 1 && shuffledSentences.remove(currentSentence)) {
+            Sentence removedOne = this.currentSentence;
+            this.currentSentence = shuffledSentences.get(0);
+            shuffledSentences.add(removedOne);
+        } else {
+            currentSentence = shuffledSentences.get(0);
+        }
+        exerciseService.save(word, wordSetId, shuffledSentences);
         listener.onSentencesFound(currentSentence, word);
     }
 
