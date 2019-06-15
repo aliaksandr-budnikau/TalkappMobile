@@ -11,5 +11,5 @@ public interface OriginalTextTextViewView {
 
     void openDialog(String[] options, boolean mutable);
 
-    void openDialogForPickingNewSentence(String[] options, List<Sentence> sentences);
+    void openDialogForPickingNewSentence(String[] options, List<Sentence> sentences, boolean[] selectedOnes);
 }

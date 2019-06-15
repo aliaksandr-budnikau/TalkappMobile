@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +32,6 @@ import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChan
 import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
-
-import static java.util.Arrays.asList;
 
 @EView
 public class OriginalTextTextView extends AppCompatTextView implements OriginalTextTextViewView {
@@ -87,7 +86,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(final SentencesWereFoundForChangeEM event) {
-        presenter.prepareSentencesForPicking(event.getSentences());
+        presenter.prepareSentencesForPicking(event.getSentences(), event.getAlreadyPickedSentences());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -132,16 +131,38 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     }
 
     @Override
-    public void openDialogForPickingNewSentence(final String[] options, final List<Sentence> sentences) {
+    public void openDialogForPickingNewSentence(final String[] options, final List<Sentence> sentences, boolean[] selectedOnes) {
+        final boolean[] newSelectedOnes = new boolean[selectedOnes.length];
+        System.arraycopy(selectedOnes, 0, newSelectedOnes, 0, selectedOnes.length);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder
                 .setTitle(sentencesForChangeDialogTitle)
-                .setItems(options, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        eventBus.post(new SentenceWasPickedForChangeEM(asList(sentences.get(which))));
-                        dialog.cancel();
+                .setMultiChoiceItems(options, selectedOnes, new DialogInterface.OnMultiChoiceClickListener() {
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        newSelectedOnes[which] = isChecked;
                     }
                 });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                LinkedList<Sentence> result = new LinkedList<>();
+                for (int i = 0; i < newSelectedOnes.length; i++) {
+                    if (newSelectedOnes[i]) {
+                        result.add(sentences.get(i));
+                    }
+                }
+                eventBus.post(new SentenceWasPickedForChangeEM(result));
+                dialog.cancel();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
         builder.create().show();
     }
 }

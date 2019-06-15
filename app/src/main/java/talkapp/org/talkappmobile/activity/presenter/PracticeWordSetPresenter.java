@@ -117,8 +117,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onGotSentencesToChange(List<Sentence> sentences) {
-        viewStrategy.onGotSentencesToChange(sentences);
+    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
+        viewStrategy.onGotSentencesToChange(sentences, alreadyPickedSentences);
     }
 
     @Override

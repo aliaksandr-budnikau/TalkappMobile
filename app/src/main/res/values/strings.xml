@@ -25,7 +25,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_scoring">Scoring</string>
     <string name="score_sentence_dialog_title">Score the sentence</string>
-    <string name="sentences_for_change_dialog_title">Sentences for change</string>
+    <string name="sentences_for_change_dialog_title">Sentences for asking</string>
     <string name="another_sentence_option">Get another sentence</string>
     <string name="poor_sentence_option">Poor or short</string>
     <string name="corrupted_sentence_option">Corrupted or weird</string>

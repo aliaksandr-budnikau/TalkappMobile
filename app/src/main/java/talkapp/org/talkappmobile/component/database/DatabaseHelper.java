@@ -31,9 +31,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         changes.put(37, singletonList(
                 "ALTER TABLE WordRepetitionProgress ADD forgettingCounter INTEGER DEFAULT 0 NOT NULL;"
         ));
-        changes.put(38, singletonList(
-                "ALTER TABLE WordRepetitionProgress RENAME COLUMN sentenceId TO sentenceIds;"
-        ));
     }
 
     @Override

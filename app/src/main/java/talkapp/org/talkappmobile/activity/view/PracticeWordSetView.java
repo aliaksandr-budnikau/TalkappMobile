@@ -65,7 +65,7 @@ public interface PracticeWordSetView {
 
     void onNoSentencesToChange();
 
-    void onGotSentencesToChange(List<Sentence> sentences);
+    void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences);
 
     void onForgottenAgain(int counter);
 }

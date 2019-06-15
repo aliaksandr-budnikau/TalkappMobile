@@ -414,8 +414,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void onGotSentencesToChange(List<Sentence> sentences) {
-        eventBus.post(new SentencesWereFoundForChangeEM(sentences));
+    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
+        eventBus.post(new SentencesWereFoundForChangeEM(sentences, alreadyPickedSentences));
     }
 
     @Override

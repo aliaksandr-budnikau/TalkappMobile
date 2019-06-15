@@ -18,7 +18,7 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 public class WordRepetitionProgressMapping {
     public static final String ID_FN = "id";
     public static final String WORD_FN = "word";
-    public static final String SENTENCE_IDS_FN = "sentenceIds";
+    public static final String SENTENCE_IDS_FN = "sentenceId";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
     public static final String STATUS_FN = "status";

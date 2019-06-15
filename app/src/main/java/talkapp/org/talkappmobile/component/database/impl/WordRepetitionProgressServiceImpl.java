@@ -33,6 +33,7 @@ import static java.lang.Math.log;
 import static java.lang.Math.max;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.shuffle;
 import static okhttp3.internal.Util.UTC;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -55,7 +56,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public Sentence findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
         List<WordRepetitionProgressMapping> exercises;
         try {
             exercises = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId);
@@ -283,19 +284,22 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         LinkedList<Sentence> sentences = new LinkedList<>();
         for (WordRepetitionProgressMapping exercise : exercises) {
-            sentences.add(getSentence(exercise));
+            sentences.addAll(getSentence(exercise));
         }
         return sentences;
     }
 
-    private Sentence getSentence(WordRepetitionProgressMapping exercise) {
+    private List<Sentence> getSentence(WordRepetitionProgressMapping exercise) {
         String sentenceIds = exercise.getSentenceIds();
         List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds.split(","));
-        SentenceMapping mapping = (sentences.isEmpty() ? null : sentences.get(0));
-        if (mapping == null) {
+        if (sentences.isEmpty()) {
             throw new RuntimeException("Sentence wasn't found");
         }
-        return sentenceMapper.toDto(mapping);
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (SentenceMapping sentence : sentences) {
+            result.add(sentenceMapper.toDto(sentence));
+        }
+        return result;
     }
 
     @Override

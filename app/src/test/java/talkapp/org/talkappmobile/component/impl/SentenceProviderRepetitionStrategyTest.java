@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.component.database.WordRepetitionProgressServic
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -31,7 +32,7 @@ public class SentenceProviderRepetitionStrategyTest {
         Word2Tokens word = new Word2Tokens();
 
         // when
-        when(exerciseService.findByWordAndWordSetId(word, wordSetId)).thenReturn(new Sentence());
+        when(exerciseService.findByWordAndWordSetId(word, wordSetId)).thenReturn(singletonList(new Sentence()));
         List<Sentence> list = strategy.findByWordAndWordSetId(word, wordSetId);
 
         // then

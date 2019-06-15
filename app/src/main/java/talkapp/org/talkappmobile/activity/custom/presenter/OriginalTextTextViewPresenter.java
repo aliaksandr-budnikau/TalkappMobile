@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity.custom.presenter;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,11 +65,16 @@ public class OriginalTextTextViewPresenter {
         immutable = true;
     }
 
-    public void prepareSentencesForPicking(List<Sentence> sentences) {
+    public void prepareSentencesForPicking(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
         LinkedList<String> options = new LinkedList<>();
         for (Sentence sentence : sentences) {
             options.add(sentence.getTranslations().get("russian"));
         }
-        view.openDialogForPickingNewSentence(options.toArray(new String[sentences.size()]), sentences);
+        HashSet<Sentence> sentencesIdsSet = new HashSet<>(alreadyPickedSentences);
+        boolean[] selectedOnes = new boolean[sentences.size()];
+        for (int i = 0; i < sentences.size(); i++) {
+            selectedOnes[i] = sentencesIdsSet.contains(sentences.get(i));
+        }
+        view.openDialogForPickingNewSentence(options.toArray(new String[sentences.size()]), sentences, selectedOnes);
     }
 }
