@@ -136,7 +136,7 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
         server.findAllWordSets();
-        wordSet = createWordSet(-1, "age", "birth", "anniversary");
+        wordSet = createWordSet(-1, "age");
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
@@ -245,5 +245,16 @@ public class ChangeSentenceTest {
         for (Sentence alreadyPickedSentence : sentencesWereFoundForChangeEM.getAlreadyPickedSentences()) {
             assertTrue(pickedSentences.contains(alreadyPickedSentence));
         }
+
+        practiceWordSetFragment.onNextButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM());
+
+        captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
+        verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
+        reset(eventBus);
+
+        sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
+        assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
     }
 }

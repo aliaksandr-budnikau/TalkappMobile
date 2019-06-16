@@ -96,7 +96,10 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     public void initialiseSentence(Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
         this.currentWord = word;
         logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
-        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word, wordSetId);
+        if (sentences.isEmpty()) {
+            sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+        }
         logger.i(TAG, "sentences size {}", sentences.size());
         if (sentences.isEmpty()) {
             logger.w(TAG, "Sentences haven't been found with words '{}'. Fill the storage.", word);

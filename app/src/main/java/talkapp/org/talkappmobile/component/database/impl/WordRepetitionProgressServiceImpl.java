@@ -33,8 +33,8 @@ import static java.lang.Math.log;
 import static java.lang.Math.max;
 import static java.util.Calendar.getInstance;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.shuffle;
 import static okhttp3.internal.Util.UTC;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
@@ -64,9 +64,13 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
             throw new RuntimeException(e.getMessage(), e);
         }
         if (exercises.isEmpty()) {
-            return null;
+            return emptyList();
         }
-        return getSentence(exercises.get(0));
+        WordRepetitionProgressMapping exercise = exercises.get(0);
+        if (isEmpty(exercise.getSentenceIds())) {
+            return emptyList();
+        }
+        return getSentence(exercise);
     }
 
     @Override
