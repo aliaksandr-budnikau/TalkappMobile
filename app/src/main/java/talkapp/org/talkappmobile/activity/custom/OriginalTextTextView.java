@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -15,9 +18,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
@@ -32,6 +35,8 @@ import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChan
 import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
+
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 @EView
 public class OriginalTextTextView extends AppCompatTextView implements OriginalTextTextViewView {
@@ -51,6 +56,8 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     String corruptedSentenceOption;
     @StringRes(R.string.insult_sentence_option)
     String insultSentenceOption;
+    @StringRes(R.string.error_invalid_unchecking_all)
+    String errorInvalidUncheckingAll;
 
     private OriginalTextTextViewPresenter presenter;
 
@@ -134,34 +141,71 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
         final boolean[] newSelectedOnes = new boolean[selectedOnes.length];
         System.arraycopy(selectedOnes, 0, newSelectedOnes, 0, selectedOnes.length);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder
-                .setTitle(sentencesForChangeDialogTitle)
-                .setMultiChoiceItems(options, selectedOnes, new DialogInterface.OnMultiChoiceClickListener() {
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        newSelectedOnes[which] = isChecked;
-                    }
-                });
+        builder.setTitle(sentencesForChangeDialogTitle);
+        setItemClickListner(options, selectedOnes, newSelectedOnes, builder);
+        builder.setPositiveButton("OK", null);
+        setButtonCancel(builder);
+        setButtonNotOneAll(sentences, newSelectedOnes, builder);
+        final AlertDialog alertDialog = builder.create();
+        setButtonOK(sentences, newSelectedOnes, alertDialog);
+        alertDialog.show();
+    }
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                LinkedList<Sentence> result = new LinkedList<>();
-                for (int i = 0; i < newSelectedOnes.length; i++) {
-                    if (newSelectedOnes[i]) {
-                        result.add(sentences.get(i));
-                    }
-                }
-                eventBus.post(new SentenceWasPickedForChangeEM(result));
-                dialog.cancel();
+    private void setItemClickListner(String[] options, boolean[] selectedOnes, final boolean[] newSelectedOnes, AlertDialog.Builder builder) {
+        builder.setMultiChoiceItems(options, selectedOnes, new DialogInterface.OnMultiChoiceClickListener() {
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                newSelectedOnes[which] = isChecked;
             }
         });
+    }
 
+    private void setButtonCancel(AlertDialog.Builder builder) {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-        builder.create().show();
+    }
+
+    private void setButtonOK(final List<Sentence> sentences, final boolean[] newSelectedOnes, final AlertDialog alertDialog) {
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button ok = alertDialog.getButton(BUTTON_POSITIVE);
+                ok.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LinkedList<Sentence> result = new LinkedList<>();
+                        for (int i = 0; i < newSelectedOnes.length; i++) {
+                            if (newSelectedOnes[i]) {
+                                result.add(sentences.get(i));
+                            }
+                        }
+                        if (result.isEmpty()) {
+                            Toast.makeText(getContext(), errorInvalidUncheckingAll, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        eventBus.post(new SentenceWasPickedForChangeEM(result));
+                        alertDialog.cancel();
+                    }
+                });
+            }
+        });
+    }
+
+    private void setButtonNotOneAll(final List<Sentence> sentences, final boolean[] newSelectedOnes, AlertDialog.Builder builder) {
+        builder.setNeutralButton("Not one/all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for (boolean item : newSelectedOnes) {
+                    if (item) {
+                        presenter.prepareSentencesForPicking(sentences, Collections.<Sentence>emptyList());
+                        return;
+                    }
+                }
+                presenter.prepareSentencesForPicking(sentences, sentences);
+            }
+        });
     }
 }

@@ -30,4 +30,5 @@
     <string name="poor_sentence_option">Poor or short</string>
     <string name="corrupted_sentence_option">Corrupted or weird</string>
     <string name="insult_sentence_option">Insult or rude</string>
+    <string name="error_invalid_unchecking_all">impossible to uncheck all</string>
 </resources>
