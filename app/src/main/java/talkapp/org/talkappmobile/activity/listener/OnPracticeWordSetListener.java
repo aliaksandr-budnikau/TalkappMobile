@@ -41,7 +41,9 @@ public interface OnPracticeWordSetListener {
 
     void onNoSentencesToChange();
 
-    void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences);
+    void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word);
 
     void onForgottenAgain(int counter);
+
+    void onOriginalTextClickEMPrepared(Word2Tokens word);
 }

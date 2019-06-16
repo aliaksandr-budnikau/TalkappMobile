@@ -113,23 +113,21 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
-    public void changeSentence(int wordSetId, List<Sentence> sentences, OnPracticeWordSetListener listener) {
-        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        replaceSentence(sentences, word, wordSetId, listener);
+    public void changeSentence(Word2Tokens currentWord, List<Sentence> sentences, OnPracticeWordSetListener listener) {
+        replaceSentence(sentences, currentWord, currentWord.getSourceWordSetId(), listener);
         listener.onSentenceChanged();
     }
 
     protected abstract void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
 
     @Override
-    public void findSentencesForChange(int wordSetId, OnPracticeWordSetListener listener) {
-        Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(word, wordSetId);
-        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+    public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
+        List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
+        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
         if (sentences.isEmpty()) {
             listener.onNoSentencesToChange();
         } else {
-            listener.onGotSentencesToChange(sentences, alreadyPickedSentences);
+            listener.onGotSentencesToChange(sentences, alreadyPickedSentences, currentWord);
         }
     }
 
@@ -145,4 +143,10 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         shuffle(copyWords);
         return copyWords.getFirst();
     }
+
+    public void prepareOriginalTextClickEM(OnPracticeWordSetListener listener) {
+        listener.onOriginalTextClickEMPrepared(getCurrentWord());
+    }
+
+    protected abstract Word2Tokens getCurrentWord();
 }

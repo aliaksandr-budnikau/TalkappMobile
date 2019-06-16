@@ -29,12 +29,12 @@ import talkapp.org.talkappmobile.activity.event.wordset.ChangeSentenceOptionPick
 import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
 import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
-import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
@@ -92,17 +92,12 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(final SentencesWereFoundForChangeEM event) {
-        presenter.prepareSentencesForPicking(event.getSentences(), event.getAlreadyPickedSentences());
+        presenter.prepareSentencesForPicking(event.getSentences(), event.getAlreadyPickedSentences(), event.getWord());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OriginalTextClickEM event) {
-        presenter.prepareDialog(anotherSentenceOption, poorSentenceOption, corruptedSentenceOption, insultSentenceOption);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PracticeHalfFinishedEM event) {
-        presenter.enableImmutableMode();
+        presenter.prepareDialog(event.getWord(), anotherSentenceOption, poorSentenceOption, corruptedSentenceOption, insultSentenceOption);
     }
 
     @Override
@@ -111,12 +106,12 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     }
 
     @Override
-    public void onChangeSentence() {
-        eventBus.post(new ChangeSentenceOptionPickedEM());
+    public void onChangeSentence(Word2Tokens word) {
+        eventBus.post(new ChangeSentenceOptionPickedEM(word));
     }
 
     @Override
-    public void openDialog(String[] options, final boolean mutable) {
+    public void openDialog(final Word2Tokens word, String[] options, final boolean mutable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder
                 .setTitle(scoreSentenceDialogTitle)
@@ -124,7 +119,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
                     public void onClick(DialogInterface dialog, int which) {
                         if (mutable) {
                             if (which == 0) {
-                                presenter.changeSentence();
+                                presenter.changeSentence(word);
                                 return;
                             }
                             which--;
@@ -137,7 +132,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
     }
 
     @Override
-    public void openDialogForPickingNewSentence(final String[] options, final List<Sentence> sentences, boolean[] selectedOnes) {
+    public void openDialogForPickingNewSentence(Word2Tokens word, final String[] options, final List<Sentence> sentences, boolean[] selectedOnes) {
         final boolean[] newSelectedOnes = new boolean[selectedOnes.length];
         System.arraycopy(selectedOnes, 0, newSelectedOnes, 0, selectedOnes.length);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -145,9 +140,9 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
         setItemClickListner(options, selectedOnes, newSelectedOnes, builder);
         builder.setPositiveButton("OK", null);
         setButtonCancel(builder);
-        setButtonNotOneAll(sentences, newSelectedOnes, builder);
+        setButtonNotOneAll(word, sentences, newSelectedOnes, builder);
         final AlertDialog alertDialog = builder.create();
-        setButtonOK(sentences, newSelectedOnes, alertDialog);
+        setButtonOK(word, sentences, newSelectedOnes, alertDialog);
         alertDialog.show();
     }
 
@@ -168,7 +163,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
         });
     }
 
-    private void setButtonOK(final List<Sentence> sentences, final boolean[] newSelectedOnes, final AlertDialog alertDialog) {
+    private void setButtonOK(final Word2Tokens word, final List<Sentence> sentences, final boolean[] newSelectedOnes, final AlertDialog alertDialog) {
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -186,7 +181,7 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
                             Toast.makeText(getContext(), errorInvalidUncheckingAll, Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        eventBus.post(new SentenceWasPickedForChangeEM(result));
+                        eventBus.post(new SentenceWasPickedForChangeEM(result, word));
                         alertDialog.cancel();
                     }
                 });
@@ -194,17 +189,17 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
         });
     }
 
-    private void setButtonNotOneAll(final List<Sentence> sentences, final boolean[] newSelectedOnes, AlertDialog.Builder builder) {
+    private void setButtonNotOneAll(final Word2Tokens word, final List<Sentence> sentences, final boolean[] newSelectedOnes, AlertDialog.Builder builder) {
         builder.setNeutralButton("Not one/all", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 for (boolean item : newSelectedOnes) {
                     if (item) {
-                        presenter.prepareSentencesForPicking(sentences, Collections.<Sentence>emptyList());
+                        presenter.prepareSentencesForPicking(sentences, Collections.<Sentence>emptyList(), word);
                         return;
                     }
                 }
-                presenter.prepareSentencesForPicking(sentences, sentences);
+                presenter.prepareSentencesForPicking(sentences, sentences, word);
             }
         });
     }

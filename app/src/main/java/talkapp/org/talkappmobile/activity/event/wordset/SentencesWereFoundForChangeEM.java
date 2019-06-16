@@ -3,14 +3,17 @@ package talkapp.org.talkappmobile.activity.event.wordset;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public class SentencesWereFoundForChangeEM {
     private final List<Sentence> sentences;
     private final List<Sentence> alreadyPickedSentences;
+    private final Word2Tokens word;
 
-    public SentencesWereFoundForChangeEM(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
+    public SentencesWereFoundForChangeEM(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word) {
         this.sentences = sentences;
         this.alreadyPickedSentences = alreadyPickedSentences;
+        this.word = word;
     }
 
     public List<Sentence> getSentences() {
@@ -19,5 +22,9 @@ public class SentencesWereFoundForChangeEM {
 
     public List<Sentence> getAlreadyPickedSentences() {
         return alreadyPickedSentences;
+    }
+
+    public Word2Tokens getWord() {
+        return word;
     }
 }

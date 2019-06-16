@@ -132,7 +132,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Click(R.id.originalText)
     public void onOriginalTextClick() {
-        eventBus.post(new OriginalTextClickEM());
+        presenter.prepareOriginalTextClickEM();
     }
 
     @Touch(R.id.rightAnswer)
@@ -414,8 +414,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
-    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
-        eventBus.post(new SentencesWereFoundForChangeEM(sentences, alreadyPickedSentences));
+    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word) {
+        eventBus.post(new SentencesWereFoundForChangeEM(sentences, alreadyPickedSentences, word));
     }
 
     @Override
@@ -425,6 +425,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         Toast.makeText(getContext(), "The word wasn't remembered " + counter + " times.", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onOriginalTextClickEMPrepared(Word2Tokens word) {
+        eventBus.post(new OriginalTextClickEM(word));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewSentenceEM event) {
         presenter.refreshSentence();
@@ -432,12 +437,12 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(ChangeSentenceOptionPickedEM event) {
-        presenter.findSentencesForChange();
+        presenter.findSentencesForChange(event.getWord());
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(SentenceWasPickedForChangeEM event) {
-        presenter.changeSentence(event.getSentences());
+        presenter.changeSentence(event.getSentences(), event.getWord());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

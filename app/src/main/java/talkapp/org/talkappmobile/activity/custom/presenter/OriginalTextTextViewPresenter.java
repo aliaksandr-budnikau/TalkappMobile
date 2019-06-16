@@ -9,12 +9,12 @@ import java.util.Map;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public class OriginalTextTextViewPresenter {
     private Sentence sentence;
     private OriginalTextTextViewView view;
     private boolean locked;
-    private boolean immutable;
 
     public OriginalTextTextViewPresenter(OriginalTextTextViewView view) {
         this.view = view;
@@ -40,32 +40,28 @@ public class OriginalTextTextViewPresenter {
         locked = true;
     }
 
-    public void changeSentence() {
-        view.onChangeSentence();
+    public void changeSentence(Word2Tokens word) {
+        view.onChangeSentence(word);
     }
 
-    public void prepareDialog(String anotherSentenceOption, String poorSentenceOption, String corruptedSentenceOption, String insultSentenceOption) {
+    public void prepareDialog(Word2Tokens word, String anotherSentenceOption, String poorSentenceOption, String corruptedSentenceOption, String insultSentenceOption) {
         Map<SentenceContentScore, String> options = new HashMap<>();
         options.put(SentenceContentScore.POOR, poorSentenceOption);
         options.put(SentenceContentScore.CORRUPTED, corruptedSentenceOption);
         options.put(SentenceContentScore.INSULT, insultSentenceOption);
 
         List<String> optionsList = new LinkedList<>();
-        boolean mutable = !locked && !immutable;
+        boolean mutable = !locked;
         if (mutable) {
             optionsList.add(anotherSentenceOption);
         }
         for (SentenceContentScore value : SentenceContentScore.values()) {
             optionsList.add(options.get(value));
         }
-        view.openDialog(optionsList.toArray(new String[SentenceContentScore.values().length]), mutable);
+        view.openDialog(word, optionsList.toArray(new String[SentenceContentScore.values().length]), mutable);
     }
 
-    public void enableImmutableMode() {
-        immutable = true;
-    }
-
-    public void prepareSentencesForPicking(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
+    public void prepareSentencesForPicking(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word) {
         LinkedList<String> options = new LinkedList<>();
         for (Sentence sentence : sentences) {
             options.add(sentence.getTranslations().get("russian"));
@@ -75,6 +71,6 @@ public class OriginalTextTextViewPresenter {
         for (int i = 0; i < sentences.size(); i++) {
             selectedOnes[i] = sentencesIdsSet.contains(sentences.get(i));
         }
-        view.openDialogForPickingNewSentence(options.toArray(new String[sentences.size()]), sentences, selectedOnes);
+        view.openDialogForPickingNewSentence(word, options.toArray(new String[sentences.size()]), sentences, selectedOnes);
     }
 }

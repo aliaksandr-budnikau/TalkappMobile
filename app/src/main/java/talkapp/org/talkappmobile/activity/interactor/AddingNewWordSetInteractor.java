@@ -62,7 +62,7 @@ public class AddingNewWordSetInteractor {
     private LinkedList<Word2Tokens> getWord2Tokens(List<WordTranslation> translations) {
         LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
         for (WordTranslation translation : translations) {
-            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens()));
+            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens(), null));
         }
         return word2Tokens;
     }
@@ -110,7 +110,7 @@ public class AddingNewWordSetInteractor {
         boolean anyHasNoSentences = false;
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
-            Word2Tokens tokens = new Word2Tokens(word, word);
+            Word2Tokens tokens = new Word2Tokens(word, word, null);
             List<Sentence> sentences;
             try {
                 sentences = server.findSentencesByWords(tokens, WORDS_NUMBER, 0);

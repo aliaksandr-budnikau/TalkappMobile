@@ -183,11 +183,15 @@ public class PracticeWordSetViewStrategy {
         view.onNoSentencesToChange();
     }
 
-    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
-        view.onGotSentencesToChange(sentences, alreadyPickedSentences);
+    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word) {
+        view.onGotSentencesToChange(sentences, alreadyPickedSentences, word);
     }
 
     public void onForgottenAgain(int counter) {
         view.onForgottenAgain(counter);
+    }
+
+    public void onOriginalTextClickEMPrepared(Word2Tokens word) {
+        view.onOriginalTextClickEMPrepared(word);
     }
 }

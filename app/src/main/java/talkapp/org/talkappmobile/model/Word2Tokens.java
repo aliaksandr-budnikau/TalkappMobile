@@ -18,9 +18,10 @@ public class Word2Tokens implements Serializable {
         this.word = word;
     }
 
-    public Word2Tokens(String word, String tokens) {
+    public Word2Tokens(String word, String tokens, Integer sourceWordSetId) {
         this.word = word;
         this.tokens = tokens;
+        this.sourceWordSetId = sourceWordSetId;
     }
 
     public String getWord() {
@@ -53,19 +54,19 @@ public class Word2Tokens implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Word2Tokens that = (Word2Tokens) o;
         return Objects.equals(word, that.word) &&
-                Objects.equals(tokens, that.tokens);
+                Objects.equals(sourceWordSetId, that.sourceWordSetId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(word, tokens);
+        return Objects.hash(word, sourceWordSetId);
     }
 
     @Override
     public String toString() {
         return "Word2Tokens{" +
                 "word='" + word + '\'' +
-                ", tokens='" + tokens + '\'' +
+                ", tokens='" + sourceWordSetId + '\'' +
                 '}';
     }
 }

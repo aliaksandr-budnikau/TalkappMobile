@@ -132,4 +132,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
         return true;
     }
+
+    @Override
+    protected Word2Tokens getCurrentWord() {
+        return currentWord;
+    }
 }

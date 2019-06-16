@@ -173,7 +173,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         exerciseService.putOffCurrentWord(wordSetId);
         List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId);
         Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
+        newCurrentWord.setSourceWordSetId(wordSetId);
         exerciseService.markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
         return newCurrentWord;
+    }
+
+    @Override
+    protected Word2Tokens getCurrentWord() {
+        return currentWord;
     }
 }

@@ -117,13 +117,18 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     @Override
-    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences) {
-        viewStrategy.onGotSentencesToChange(sentences, alreadyPickedSentences);
+    public void onGotSentencesToChange(List<Sentence> sentences, List<Sentence> alreadyPickedSentences, Word2Tokens word) {
+        viewStrategy.onGotSentencesToChange(sentences, alreadyPickedSentences, word);
     }
 
     @Override
     public void onForgottenAgain(int counter) {
         viewStrategy.onForgottenAgain(counter);
+    }
+
+    @Override
+    public void onOriginalTextClickEMPrepared(Word2Tokens word) {
+        viewStrategy.onOriginalTextClickEMPrepared(word);
     }
 
     public void gotRecognitionResult(List<String> result) {
@@ -186,10 +191,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         }
     }
 
-    public void changeSentence(List<Sentence> sentences) {
+    public void changeSentence(List<Sentence> sentences, Word2Tokens currentWord) {
         try {
             viewStrategy.onChangeSentenceStart();
-            interactor.changeSentence(state.getWordSetId(), sentences, this);
+            interactor.changeSentence(currentWord, sentences, this);
         } finally {
             viewStrategy.onChangeSentenceFinish();
         }
@@ -216,7 +221,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onStopSpeaking();
     }
 
-    public void findSentencesForChange() {
-        interactor.findSentencesForChange(state.getWordSetId(), this);
+    public void findSentencesForChange(Word2Tokens currentWord) {
+        interactor.findSentencesForChange(currentWord, this);
+    }
+
+    public void prepareOriginalTextClickEM() {
+        interactor.prepareOriginalTextClickEM(this);
     }
 }
