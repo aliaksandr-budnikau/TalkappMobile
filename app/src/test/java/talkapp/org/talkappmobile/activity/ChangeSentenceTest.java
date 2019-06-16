@@ -92,6 +92,7 @@ public class ChangeSentenceTest {
     private WordSet wordSet;
     private PracticeWordSetFragment practiceWordSetFragment;
     private OriginalTextTextViewPresenter originalTextTextViewPresenter;
+    private TextView answerTextMock;
 
 
     @Before
@@ -145,7 +146,8 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(practiceWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
-        Whitebox.setInternalState(practiceWordSetFragment, "answerText", mock(TextView.class));
+        answerTextMock = mock(TextView.class);
+        Whitebox.setInternalState(practiceWordSetFragment, "answerText", answerTextMock);
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetProgress", mock(ProgressBar.class));
         Whitebox.setInternalState(practiceWordSetFragment, "nextButton", mock(Button.class));
         Whitebox.setInternalState(practiceWordSetFragment, "checkButton", mock(Button.class));
@@ -192,70 +194,90 @@ public class ChangeSentenceTest {
 
         practiceWordSetFragment.init();
 
-        ArgumentCaptor<NewSentenceEM> captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
-        verify(eventBus).post(captorNewSentenceEM.capture());
-        reset(eventBus);
-        NewSentenceEM newSentenceEM = captorNewSentenceEM.getValue();
-        Sentence displayedSentence = newSentenceEM.getSentence();
-        originalTextTextViewPresenter.setModel(displayedSentence);
-        originalTextTextViewPresenter.unlock();
-        originalTextTextViewPresenter.refresh();
+        for (int cycle = 1; cycle < 3; cycle++) {
+            ArgumentCaptor<NewSentenceEM> captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
+            verify(eventBus).post(captorNewSentenceEM.capture());
+            reset(eventBus);
+            NewSentenceEM newSentenceEM = captorNewSentenceEM.getValue();
+            Sentence displayedSentence = newSentenceEM.getSentence();
+            originalTextTextViewPresenter.setModel(displayedSentence);
+            originalTextTextViewPresenter.unlock();
+            originalTextTextViewPresenter.refresh();
 
-        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
+            practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
 
-        ArgumentCaptor<SentencesWereFoundForChangeEM> captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
-        verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
-        reset(eventBus);
+            ArgumentCaptor<SentencesWereFoundForChangeEM> captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
+            verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
+            reset(eventBus);
 
-        SentencesWereFoundForChangeEM sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
-        originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), newSentenceEM.getWord());
+            SentencesWereFoundForChangeEM sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
+            originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), newSentenceEM.getWord());
 
-        assertEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
-        reset(eventBus);
+            assertEquals(16, sentencesWereFoundForChangeEM.getSentences().size());
+            if (cycle == 1) {
+                assertEquals(16, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+                assertEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+            } else {
+                assertEquals(2, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+                assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+            }
+            reset(eventBus);
 
-        List<Sentence> pickedSentences = asList(sentencesWereFoundForChangeEM.getSentences().get(5), displayedSentence);
-        SentenceWasPickedForChangeEM wasPickedForChangeEM = new SentenceWasPickedForChangeEM(pickedSentences, newSentenceEM.getWord());
-        for (int i = 0; i < 10; i++) {
-            practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
+            List<Sentence> pickedSentences = asList(sentencesWereFoundForChangeEM.getSentences().get(5), displayedSentence);
+            SentenceWasPickedForChangeEM wasPickedForChangeEM = new SentenceWasPickedForChangeEM(pickedSentences, newSentenceEM.getWord());
+            for (int i = 0; i < 10; i++) {
+                practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
 
+                captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
+                verify(eventBus).post(captorNewSentenceEM.capture());
+                reset(eventBus);
+
+                newSentenceEM = captorNewSentenceEM.getValue();
+                assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
+                assertNotEquals(displayedSentence, newSentenceEM.getSentence());
+                displayedSentence = newSentenceEM.getSentence();
+            }
+            originalTextTextViewPresenter.setModel(newSentenceEM.getSentence());
+            originalTextTextViewPresenter.unlock();
+            originalTextTextViewPresenter.refresh();
+
+            practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
+
+            captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
+            verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
+            reset(eventBus);
+
+            sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
+            originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), newSentenceEM.getWord());
+
+            assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+            assertEquals(2, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+
+            for (Sentence alreadyPickedSentence : sentencesWereFoundForChangeEM.getAlreadyPickedSentences()) {
+                assertTrue(pickedSentences.contains(alreadyPickedSentence));
+            }
+
+            practiceWordSetFragment.onNextButtonClick();
             captorNewSentenceEM = ArgumentCaptor.forClass(NewSentenceEM.class);
             verify(eventBus).post(captorNewSentenceEM.capture());
             reset(eventBus);
 
             newSentenceEM = captorNewSentenceEM.getValue();
-            assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
-            assertNotEquals(displayedSentence, newSentenceEM.getSentence());
             displayedSentence = newSentenceEM.getSentence();
+
+            practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
+
+            captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
+            verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
+            reset(eventBus);
+
+            sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
+            assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+
+            when(answerTextMock.getText()).thenReturn(displayedSentence.getText());
+            practiceWordSetFragment.onCheckAnswerButtonClick();
+            reset(eventBus);
+            practiceWordSetFragment.onNextButtonClick();
         }
-        originalTextTextViewPresenter.setModel(newSentenceEM.getSentence());
-        originalTextTextViewPresenter.unlock();
-        originalTextTextViewPresenter.refresh();
-
-        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
-
-        captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
-        verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
-        reset(eventBus);
-
-        sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
-        originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), newSentenceEM.getWord());
-
-        assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
-        assertEquals(2, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
-
-        for (Sentence alreadyPickedSentence : sentencesWereFoundForChangeEM.getAlreadyPickedSentences()) {
-            assertTrue(pickedSentences.contains(alreadyPickedSentence));
-        }
-
-        practiceWordSetFragment.onNextButtonClick();
-        reset(eventBus);
-        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(newSentenceEM.getWord()));
-
-        captorSentencesWereFoundForChangeEM = ArgumentCaptor.forClass(SentencesWereFoundForChangeEM.class);
-        verify(eventBus).post(captorSentencesWereFoundForChangeEM.capture());
-        reset(eventBus);
-
-        sentencesWereFoundForChangeEM = captorSentencesWereFoundForChangeEM.getValue();
-        assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
     }
 }

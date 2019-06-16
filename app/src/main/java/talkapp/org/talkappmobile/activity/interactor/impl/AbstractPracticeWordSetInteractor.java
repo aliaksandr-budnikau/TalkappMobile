@@ -123,7 +123,9 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
         List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
+        sentenceProvider.disableRepetitionMode();
         List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
+        sentenceProvider.enableRepetitionMode();
         if (sentences.isEmpty()) {
             listener.onNoSentencesToChange();
         } else {
