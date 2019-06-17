@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -118,7 +119,20 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         listener.onSentenceChanged();
     }
 
-    protected abstract void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
+    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+        List<Sentence> shuffledSentences = new ArrayList<>(sentences);
+        shuffle(shuffledSentences);
+
+        if (shuffledSentences.size() > 1 && shuffledSentences.remove(getCurrentSentence())) {
+            Sentence removedOne = this.getCurrentSentence();
+            setCurrentSentence(shuffledSentences.get(0));
+            shuffledSentences.add(removedOne);
+        } else {
+            setCurrentSentence(shuffledSentences.get(0));
+        }
+        exerciseService.save(word, wordSetId, shuffledSentences);
+        listener.onSentencesFound(getCurrentSentence(), word);
+    }
 
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
@@ -151,4 +165,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     protected abstract Word2Tokens getCurrentWord();
+
+    protected abstract Sentence getCurrentSentence();
+
+    protected abstract void setCurrentSentence(Sentence sentence);
 }

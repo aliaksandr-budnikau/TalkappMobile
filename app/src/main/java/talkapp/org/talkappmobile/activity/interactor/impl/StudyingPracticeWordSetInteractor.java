@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +21,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -111,21 +109,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
-        List<Sentence> shuffledSentences = new ArrayList<>(sentences);
-        shuffle(shuffledSentences);
-        if (shuffledSentences.size() > 1 && shuffledSentences.remove(currentSentence)) {
-            Sentence removedOne = this.currentSentence;
-            this.currentSentence = shuffledSentences.get(0);
-            shuffledSentences.add(removedOne);
-        } else {
-            currentSentence = shuffledSentences.get(0);
-        }
-        exerciseService.save(word, wordSetId, shuffledSentences);
-        listener.onSentencesFound(currentSentence, word);
-    }
-
-    @Override
     public boolean checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
@@ -181,5 +164,15 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     protected Word2Tokens getCurrentWord() {
         return currentWord;
+    }
+
+    @Override
+    protected Sentence getCurrentSentence() {
+        return currentSentence;
+    }
+
+    @Override
+    protected void setCurrentSentence(Sentence sentence) {
+        this.currentSentence = sentence;
     }
 }

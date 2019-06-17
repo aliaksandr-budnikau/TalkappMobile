@@ -100,11 +100,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
-        // do nothing
-    }
-
-    @Override
     public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
@@ -136,5 +131,15 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     protected Word2Tokens getCurrentWord() {
         return currentWord;
+    }
+
+    @Override
+    protected Sentence getCurrentSentence() {
+        return currentSentence;
+    }
+
+    @Override
+    protected void setCurrentSentence(Sentence sentence) {
+        this.currentSentence = sentence;
     }
 }
