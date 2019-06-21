@@ -8,8 +8,6 @@ import talkapp.org.talkappmobile.component.database.WordRepetitionProgressServic
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-
 public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy {
     private final WordRepetitionProgressService exerciseService;
 
@@ -20,9 +18,6 @@ public class SentenceProviderRepetitionStrategy extends SentenceProviderStrategy
 
     @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
-        if (wordSetId == 0) {
-            return exerciseService.findByWordAndByStatus(word, FINISHED);
-        }
-        return new ArrayList<>(exerciseService.findByWordAndWordSetId(word, wordSetId));
+        return new ArrayList<>(exerciseService.findByWordAndWordSetId(word, word.getSourceWordSetId()));
     }
 }

@@ -29,7 +29,7 @@ public class SentenceProviderRepetitionStrategyTest {
     public void findByWordAndWordSetId() {
         // setup
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens();
+        Word2Tokens word = new Word2Tokens("", "", wordSetId);
 
         // when
         when(exerciseService.findByWordAndWordSetId(word, wordSetId)).thenReturn(singletonList(new Sentence()));
