@@ -9,8 +9,8 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
@@ -24,7 +24,7 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
-    private final SentenceProvider sentenceProvider;
+    private final SentenceService sentenceService;
     private final Logger logger;
     private final SentenceSelector sentenceSelector;
     private final WordRepetitionProgressService exerciseService;
@@ -36,7 +36,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private int maxTrainingProgress;
 
     public RepetitionPracticeWordSetInteractor(
-            SentenceProvider sentenceProvider,
+            SentenceService sentenceService,
             SentenceSelector sentenceSelector,
             RefereeService refereeService,
             Logger logger,
@@ -46,8 +46,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordSetExperienceUtils experienceUtils,
             Context context,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceProvider, audioStuffFactory);
-        this.sentenceProvider = sentenceProvider;
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
+        this.sentenceService = sentenceService;
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.exerciseService = exerciseService;
@@ -65,7 +65,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.wordSet = wordSet;
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
-        sentenceProvider.enableRepetitionMode();
         listener.onEnableRepetitionMode();
         wordSet.setTrainingExperience(0);
         listener.onInitialiseExperience(wordSet);
@@ -85,7 +84,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     public void initialiseSentence(Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
         this.currentWord = word;
         logger.i(TAG, "initialise currentSentence for currentWord {}, for currentWord set id {}", word, wordSetId);
-        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word, wordSetId);
         logger.i(TAG, "sentences size {}", sentences.size());
         if (sentences.isEmpty()) {
             logger.w(TAG, "Sentences haven't been found with words '{}'. Check the db.", word);

@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.component.GrammarCheckService;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.WordSet;
 
@@ -18,7 +18,7 @@ import static talkapp.org.talkappmobile.component.impl.RefereeServiceImpl.EQUALI
 @RunWith(MockitoJUnitRunner.class)
 public class RefereeServiceImplTest {
     @Mock
-    private GrammarCheckService grammarCheckService;
+    private SentenceService sentenceService;
     @Mock
     private EqualityScorer equalityScorer;
     @InjectMocks

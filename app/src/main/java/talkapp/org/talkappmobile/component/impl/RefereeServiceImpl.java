@@ -1,18 +1,18 @@
 package talkapp.org.talkappmobile.component.impl;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.component.GrammarCheckService;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 
 public class RefereeServiceImpl implements RefereeService {
     public static final int EQUALITY_THRESHOLD = 80;
-    private final GrammarCheckService grammarCheckService;
+    private final SentenceService serviceService;
     private final EqualityScorer equalityScorer;
 
-    public RefereeServiceImpl(GrammarCheckService grammarCheckService, EqualityScorer equalityScorer) {
-        this.grammarCheckService = grammarCheckService;
+    public RefereeServiceImpl(SentenceService serviceService, EqualityScorer equalityScorer) {
+        this.serviceService = serviceService;
         this.equalityScorer = equalityScorer;
     }
 
@@ -23,6 +23,6 @@ public class RefereeServiceImpl implements RefereeService {
 
     @Override
     public boolean scoreCurrentSentence(Sentence sentence) {
-        return grammarCheckService.score(sentence);
+        return serviceService.classifySentence(sentence);
     }
 }

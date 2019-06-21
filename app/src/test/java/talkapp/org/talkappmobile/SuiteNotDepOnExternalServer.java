@@ -26,8 +26,7 @@ import talkapp.org.talkappmobile.component.impl.LoggerBeanTest;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBeanTest;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBeanTest;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImplTest;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategyTest;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderStrategyTest;
+import talkapp.org.talkappmobile.component.impl.SentenceServiceImplTest;
 import talkapp.org.talkappmobile.component.impl.SpeakerBeanTest;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
 
@@ -42,7 +41,7 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         SpeakerBeanTest.class,
         RandomSentenceSelectorBeanTest.class,
         PracticeWordSetPresenterTest.class,
-        SentenceProviderRepetitionStrategyTest.class,
+        SentenceServiceImplTest.class,
         EqualityScorerBeanTest.class,
         TextUtilsImplTest.class,
         LoggerBeanTest.class,
@@ -52,7 +51,6 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         WordRepetitionProgressDaoImplTest.class,
         DataServerImplTest.class,
         ExampleUnitTest.class,
-        SentenceProviderStrategyTest.class,
         PracticeWordSetVocabularyPresenterTest.class,
         PronounceRightAnswerButtonInteractorTest.class,
         RightAnswerTextViewPresenterTest.class,

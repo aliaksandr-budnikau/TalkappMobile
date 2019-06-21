@@ -24,6 +24,7 @@ import java.util.Map;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
@@ -51,14 +52,11 @@ import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgr
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.component.impl.BackendSentenceProviderStrategy;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.component.impl.GrammarCheckServiceImpl;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceProviderRepetitionStrategy;
+import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -116,8 +114,9 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
         experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
-        interactor = new RepetitionPracticeWordSetInteractor(new SentenceProviderImpl(new BackendSentenceProviderStrategy(server), new SentenceProviderRepetitionStrategy(server, exerciseService)),
-                new RandomSentenceSelectorBean(), new RefereeServiceImpl(new GrammarCheckServiceImpl(server), new EqualityScorerBean()),
+        SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
+        interactor = new RepetitionPracticeWordSetInteractor(sentenceService,
+                new RandomSentenceSelectorBean(), new RefereeServiceImpl(sentenceService, new EqualityScorerBean()),
                 logger, exerciseService, userExpService, experienceService, experienceUtils, context, new AudioStuffFactoryBean());
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }

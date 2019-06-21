@@ -10,8 +10,8 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceProvider;
 import talkapp.org.talkappmobile.component.SentenceSelector;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.UserExpService;
@@ -29,7 +29,7 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
     private final WordsCombinator wordsCombinator;
-    private final SentenceProvider sentenceProvider;
+    private final SentenceService sentenceService;
     private final SentenceSelector sentenceSelector;
     private final Logger logger;
     private final WordSetService experienceService;
@@ -40,7 +40,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private Sentence currentSentence;
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
-                                             SentenceProvider sentenceProvider,
+                                             SentenceService sentenceService,
                                              SentenceSelector sentenceSelector,
                                              RefereeService refereeService,
                                              Logger logger,
@@ -50,9 +50,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetExperienceUtils experienceUtils,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceProvider, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
         this.wordsCombinator = wordsCombinator;
-        this.sentenceProvider = sentenceProvider;
+        this.sentenceService = sentenceService;
         this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.experienceService = experienceService;
@@ -71,11 +71,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         if (SECOND_CYCLE.equals(wordSet.getStatus())) {
             logger.i(TAG, "enable repetition mode");
-            sentenceProvider.enableRepetitionMode();
             listener.onEnableRepetitionMode();
         } else {
             logger.i(TAG, "disable repetition mode for state {} ", wordSet.getStatus());
-            sentenceProvider.disableRepetitionMode();
         }
         logger.i(TAG, "experience was initialized");
         listener.onInitialiseExperience(wordSet);
@@ -96,7 +94,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word, wordSetId);
         if (sentences.isEmpty()) {
-            sentences = sentenceProvider.findByWordAndWordSetId(word, wordSetId);
+            sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
         }
         logger.i(TAG, "sentences size {}", sentences.size());
         if (sentences.isEmpty()) {
@@ -130,7 +128,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             logger.i(TAG, "training half finished");
             experienceService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
             wordSet.setStatus(SECOND_CYCLE);
-            sentenceProvider.enableRepetitionMode();
             listener.onTrainingHalfFinished(sentence);
             listener.onEnableRepetitionMode();
         } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {

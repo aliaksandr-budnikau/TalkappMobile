@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceProvider;
+import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -30,19 +30,19 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final RefereeService refereeService;
     private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
-    private final SentenceProvider sentenceProvider;
+    private final SentenceService sentenceService;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
-                                             SentenceProvider sentenceProvider,
+                                             SentenceService sentenceService,
                                              AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
-        this.sentenceProvider = sentenceProvider;
+        this.sentenceService = sentenceService;
         this.audioStuffFactory = audioStuffFactory;
     }
 
@@ -137,9 +137,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
         List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
-        sentenceProvider.disableRepetitionMode();
-        List<Sentence> sentences = sentenceProvider.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
-        sentenceProvider.enableRepetitionMode();
+        List<Sentence> sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
         if (sentences.isEmpty()) {
             listener.onNoSentencesToChange();
         } else {
