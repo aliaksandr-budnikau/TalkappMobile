@@ -23,7 +23,6 @@ import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressS
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;
 import talkapp.org.talkappmobile.component.impl.LoggerBeanTest;
-import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBeanTest;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBeanTest;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImplTest;
 import talkapp.org.talkappmobile.component.impl.SentenceServiceImplTest;
@@ -39,7 +38,6 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         RandomWordsCombinatorBeanTest.class,
         ExceptionHandlerTest.class,
         SpeakerBeanTest.class,
-        RandomSentenceSelectorBeanTest.class,
         PracticeWordSetPresenterTest.class,
         SentenceServiceImplTest.class,
         EqualityScorerBeanTest.class,

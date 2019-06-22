@@ -60,7 +60,6 @@ import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMappin
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
@@ -135,7 +134,6 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
         Whitebox.setInternalState(presenterFactory, "experienceUtils", experienceUtils);
         Whitebox.setInternalState(presenterFactory, "wordsCombinator", new RandomWordsCombinatorBean());
-        Whitebox.setInternalState(presenterFactory, "sentenceSelector", new RandomSentenceSelectorBean());
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 

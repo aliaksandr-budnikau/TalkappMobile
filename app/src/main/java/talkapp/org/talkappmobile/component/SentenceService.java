@@ -11,4 +11,8 @@ public interface SentenceService {
     List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word, int wordSetId);
 
     List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word, int wordSetId);
+
+    List<Sentence> selectSentences(List<Sentence> sentences);
+
+    void orderByScore(List<Sentence> sentences);
 }

@@ -20,7 +20,6 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
@@ -57,8 +56,6 @@ public class StudyingPracticeWordSetInteractorTest {
     private WordsCombinator wordsCombinator;
     @Mock
     private SentenceService sentenceService;
-    @Mock
-    private SentenceSelector sentenceSelector;
     @Mock
     private RefereeService refereeService;
     @Mock
@@ -161,7 +158,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
-        when(sentenceSelector.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
+        when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         interactor.initialiseSentence(word, wordSetId, listener);
 
         // then
@@ -185,7 +182,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
         verify(exerciseService, times(0)).save(word, wordSetId, singletonList(selectedSentence));
-        verify(sentenceSelector, times(0)).selectSentences(any(List.class));
+        verify(sentenceService, times(0)).selectSentences(any(List.class));
     }
 
     @Test

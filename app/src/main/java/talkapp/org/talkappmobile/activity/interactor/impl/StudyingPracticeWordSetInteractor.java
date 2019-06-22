@@ -10,7 +10,6 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
@@ -30,7 +29,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
     private final WordsCombinator wordsCombinator;
     private final SentenceService sentenceService;
-    private final SentenceSelector sentenceSelector;
     private final Logger logger;
     private final WordSetService experienceService;
     private final WordSetExperienceUtils experienceUtils;
@@ -41,7 +39,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
                                              SentenceService sentenceService,
-                                             SentenceSelector sentenceSelector,
                                              RefereeService refereeService,
                                              Logger logger,
                                              WordSetService experienceService,
@@ -53,7 +50,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
         this.wordsCombinator = wordsCombinator;
         this.sentenceService = sentenceService;
-        this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
@@ -97,8 +93,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             if (sentences.isEmpty()) {
                 return;
             }
-            sentenceSelector.orderByScore(sentences);
-            List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
+            sentenceService.orderByScore(sentences);
+            List<Sentence> selectSentences = sentenceService.selectSentences(sentences);
             replaceSentence(selectSentences, word, wordSetId, listener);
         } else {
             setCurrentSentence(sentences.get(0));

@@ -6,13 +6,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
@@ -25,6 +29,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.component.impl.SentenceServiceImpl.WORDS_NUMBER;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
+import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {
@@ -148,5 +155,86 @@ public class SentenceServiceImplTest {
 
         // then
         list.clear();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getSentence_empty() throws Exception {
+        sentenceService.selectSentences(new ArrayList<Sentence>());
+    }
+
+    @Test
+    public void getSentence_count1() throws Exception {
+        // setup
+        List<Sentence> sentences = new ArrayList<>();
+        Sentence e = new Sentence();
+        sentences.add(e);
+
+        // when
+        List<Sentence> actualSentences = sentenceService.selectSentences(sentences);
+
+        // then
+        assertEquals(sentences, actualSentences);
+    }
+
+    @Test
+    public void getSentence_count2() throws Exception {
+        // setup
+        List<Sentence> sentences = new ArrayList<>();
+        Sentence e1 = new Sentence();
+        sentences.add(e1);
+        Sentence e2 = new Sentence();
+        sentences.add(e2);
+
+        // when
+        List<Sentence> sentence = sentenceService.selectSentences(sentences);
+
+        // then
+        assertTrue(sentence.get(0) == e1 || sentence.get(0) == e2);
+    }
+
+    @Test
+    public void orderByScore() {
+        // setup
+        LinkedList<Sentence> sentences = new LinkedList<>();
+        for (SentenceContentScore score : SentenceContentScore.values()) {
+            Sentence sentence = new Sentence();
+            sentence.setContentScore(score);
+            sentences.addFirst(sentence);
+        }
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+        sentences.addLast(new Sentence());
+
+        Collections.shuffle(sentences);
+
+        // when
+        sentenceService.orderByScore(sentences);
+
+        // then
+        Iterator<Sentence> iterator = sentences.iterator();
+        Sentence sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(null, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(POOR, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(CORRUPTED, sentence.getContentScore());
+        sentence = iterator.next();
+        assertEquals(INSULT, sentence.getContentScore());
     }
 }

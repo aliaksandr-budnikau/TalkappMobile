@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.component.database.dao;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -23,9 +22,5 @@ public interface WordRepetitionProgressDao {
 
     List<WordRepetitionProgressMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours);
 
-    List<WordRepetitionProgressMapping> findByWordAndByStatus(String word, WordSetProgressStatus status);
-
     List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, WordSetProgressStatus status);
-
-    int delete(Collection<WordRepetitionProgressMapping> progresses);
 }
