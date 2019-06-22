@@ -226,7 +226,8 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(12);
-        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens(), new Word2Tokens()));
+        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()),
+                new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");

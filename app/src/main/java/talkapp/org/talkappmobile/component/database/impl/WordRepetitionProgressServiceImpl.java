@@ -180,7 +180,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         for (WordRepetitionProgressMapping exercise : exercises) {
             try {
                 Word2Tokens word = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
-                word.setSourceWordSetId(wordSetId);
                 result.add(word);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
@@ -223,9 +222,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 word2Tokens = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
-            }
-            if (word2Tokens.getSourceWordSetId() == null) {
-                word2Tokens.setSourceWordSetId(exercise.getWordSetId());
             }
             if (tree.get(exercise.getRepetitionCounter()) == null) {
                 tree.put(exercise.getRepetitionCounter(), new LinkedList<Word2Tokens>());
@@ -291,7 +287,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordRepetitionProgressMapping mapping = current.get(0);
         try {
             Word2Tokens word2Tokens = mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
-            word2Tokens.setSourceWordSetId(wordSetId);
             return word2Tokens;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);

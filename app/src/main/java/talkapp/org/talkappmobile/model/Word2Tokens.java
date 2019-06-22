@@ -1,53 +1,46 @@
 package talkapp.org.talkappmobile.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Word2Tokens implements Serializable {
-    private String word;
-    private String tokens;
-    @JsonIgnore
-    private Integer sourceWordSetId;
+    private final String word;
+    private final String tokens;
+    private final Integer sourceWordSetId;
 
     public Word2Tokens() {
+        word = null;
+        tokens = null;
+        sourceWordSetId = null;
     }
 
-    public Word2Tokens(String word, Integer sourceWordSetId) {
+    public Word2Tokens(@NonNull String word, @NonNull Integer sourceWordSetId) {
         this.word = word;
         this.tokens = word;
         this.sourceWordSetId = sourceWordSetId;
     }
 
-    public Word2Tokens(String word, String tokens, Integer sourceWordSetId) {
+    public Word2Tokens(@NonNull String word, @NonNull String tokens, @NonNull Integer sourceWordSetId) {
         this.word = word;
         this.tokens = tokens;
         this.sourceWordSetId = sourceWordSetId;
     }
 
+    @NonNull
     public String getWord() {
         return word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
-    }
-
+    @NonNull
     public String getTokens() {
         return tokens;
     }
 
-    public void setTokens(String tokens) {
-        this.tokens = tokens;
-    }
-
+    @NonNull
     public Integer getSourceWordSetId() {
         return sourceWordSetId;
-    }
-
-    public void setSourceWordSetId(Integer sourceWordSetId) {
-        this.sourceWordSetId = sourceWordSetId;
     }
 
     @Override

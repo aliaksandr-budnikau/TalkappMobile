@@ -32,11 +32,11 @@ public class MainActivityDefaultFragmentInteractorTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
         wordSets.addLast(new WordSet());
         wordSets.getLast().setWords(new LinkedList<Word2Tokens>());
-        wordSets.getLast().getWords().add(new Word2Tokens());
-        wordSets.getLast().getWords().add(new Word2Tokens());
+        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
+        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
         wordSets.addLast(new WordSet());
         wordSets.getLast().setWords(new LinkedList<Word2Tokens>());
-        wordSets.getLast().getWords().add(new Word2Tokens());
+        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
 
         when(exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2)).thenReturn(wordSets);
         when(exerciseService.getMaxWordSetSize()).thenReturn(2);

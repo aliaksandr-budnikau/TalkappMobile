@@ -77,9 +77,7 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value = new Word2Tokens();
-        value.setWord("ddd");
-        value.setTokens("sss");
+        Word2Tokens value = new Word2Tokens("ddd", "sss", 3);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
@@ -113,9 +111,7 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value = new Word2Tokens();
-        value.setWord("ddd");
-        value.setTokens("sss");
+        Word2Tokens value = new Word2Tokens("ddd", "sss", 3);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
@@ -145,17 +141,9 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value1 = new Word2Tokens();
-        value1.setWord("ddd1");
-        value1.setTokens("sss1");
-
-        Word2Tokens value2 = new Word2Tokens();
-        value2.setWord("ddd2");
-        value2.setTokens("sss2");
-
-        Word2Tokens value3 = new Word2Tokens();
-        value3.setWord("ddd3");
-        value3.setTokens("sss3");
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
+        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", 3);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
@@ -198,17 +186,9 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value1 = new Word2Tokens();
-        value1.setWord("ddd1");
-        value1.setTokens("sss1");
-
-        Word2Tokens value2 = new Word2Tokens();
-        value2.setWord("ddd2");
-        value2.setTokens("sss2");
-
-        Word2Tokens value3 = new Word2Tokens();
-        value3.setWord("ddd3");
-        value3.setTokens("sss3");
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
+        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", 3);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
@@ -252,13 +232,8 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value1 = new Word2Tokens();
-        value1.setWord("ddd1");
-        value1.setTokens("sss1");
-
-        Word2Tokens value2 = new Word2Tokens();
-        value2.setWord("ddd2");
-        value2.setTokens("sss2");
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());

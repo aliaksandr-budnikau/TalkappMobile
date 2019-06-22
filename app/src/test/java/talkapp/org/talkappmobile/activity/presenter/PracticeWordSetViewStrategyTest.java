@@ -35,7 +35,7 @@ public class PracticeWordSetViewStrategyTest {
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(23332);
-        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens()));
+        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
 
 
         // when
@@ -76,7 +76,7 @@ public class PracticeWordSetViewStrategyTest {
         int progress = 232;
 
         WordSet wordSet = new WordSet();
-        wordSet.setWords(asList(new Word2Tokens(), new Word2Tokens()));
+        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
         wordSet.setTrainingExperience(23332);
 
         // when

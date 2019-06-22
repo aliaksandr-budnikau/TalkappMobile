@@ -44,7 +44,6 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(2).setToken("");
 
         Word2Tokens word = new Word2Tokens("know", 4);
-        word.setTokens("know");
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -65,8 +64,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(3);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("icing", 3);
-        word.setTokens("icing,ice");
+        Word2Tokens word = new Word2Tokens("icing", "icing,ice", 3);
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -87,8 +85,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(9);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("greeting", 3);
-        word.setTokens("greeting,greet");
+        Word2Tokens word = new Word2Tokens("greeting", "greeting,greet", 3);
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -112,7 +109,6 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(2).setToken("");
 
         Word2Tokens word = new Word2Tokens("know", 5);
-        word.setTokens("know");
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -140,9 +136,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(3).setEndOffset(15);
         sentence.getTokens().get(3).setToken("ear");
 
-        Word2Tokens word = new Word2Tokens("earth", 3);
-        word.setWord("earth");
-        word.setTokens("earth,ear");
+        Word2Tokens word = new Word2Tokens("earth", "earth,ear", 3);
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -166,7 +160,6 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(2).setToken("");
 
         Word2Tokens word = new Word2Tokens("know", 3);
-        word.setTokens("know");
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
@@ -186,8 +179,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(3);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("icing", 3);
-        word.setTokens("icing,ice");
+        Word2Tokens word = new Word2Tokens("icing", "icing,ice", 3);
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
@@ -207,8 +199,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(9);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("greeting", 1);
-        word.setTokens("greeting,greet");
+        Word2Tokens word = new Word2Tokens("greeting", "greeting,greet", 1);
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
@@ -231,7 +222,6 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(2).setToken("");
 
         Word2Tokens word = new Word2Tokens("know", 3);
-        word.setTokens("know");
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
@@ -258,9 +248,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(3).setEndOffset(15);
         sentence.getTokens().get(3).setToken("ear");
 
-        Word2Tokens word = new Word2Tokens("earth", 3);
-        word.setWord("earth");
-        word.setTokens("earth,ear");
+        Word2Tokens word = new Word2Tokens("earth", "earth,ear", 3);
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
