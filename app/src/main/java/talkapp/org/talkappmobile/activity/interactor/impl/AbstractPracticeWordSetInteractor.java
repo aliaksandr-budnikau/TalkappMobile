@@ -99,7 +99,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener) {
         sentence.setContentScore(score);
-        if (refereeService.scoreCurrentSentence(sentence)) {
+        if (sentenceService.classifySentence(sentence)) {
             listener.onScoringSuccessful();
         } else {
             listener.onScoringUnsuccessful();
