@@ -145,6 +145,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         try {
             viewStrategy.onNextButtonStart();
             Word2Tokens word = interactor.peekAnyNewWordByWordSetId(state.getWordSetId());
+            if (word == null) {
+                return;
+            }
             interactor.initialiseSentence(word, state.getWordSetId(), this);
         } finally {
             viewStrategy.onNextButtonFinish();

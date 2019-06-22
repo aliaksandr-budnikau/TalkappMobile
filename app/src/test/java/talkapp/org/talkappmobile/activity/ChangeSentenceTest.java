@@ -71,6 +71,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -94,6 +95,7 @@ public class ChangeSentenceTest {
     private PracticeWordSetFragment practiceWordSetFragment;
     private OriginalTextTextViewPresenter originalTextTextViewPresenter;
     private TextView answerTextMock;
+    private WordRepetitionProgressDao exerciseDao;
 
 
     @Before
@@ -102,7 +104,7 @@ public class ChangeSentenceTest {
         SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
         WordSetDao wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
         ExpAuditDao expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
-        WordRepetitionProgressDao exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
+        exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
 
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
@@ -374,6 +376,165 @@ public class ChangeSentenceTest {
         assertEquals(16, sentencesWereFoundForChangeEM.getSentences().size());
         assertEquals(16, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
         reset(eventBus);
+
+
+        //
+        // TEST OF SENTENCES CYCLICAL MOVEMENT FIRST STAGE
+        //
+        exerciseDao.cleanByWordSetId(-1);
+        reset(eventBus);
+
+        wordSet = createWordSet(-1, "birth", "anniversary");
+        Whitebox.setInternalState(practiceWordSetFragment, "repetitionMode", false);
+        Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
+        practiceWordSetFragment.init();
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        Sentence displayedSentenceForFirstWord = newSentenceEM.getSentence();
+        Word2Tokens displayedWordForFirstWord = newSentenceEM.getWord();
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        List<Sentence> allSentencesForFirstWord = sentencesWereFoundForChangeEM.getSentences();
+        List<Sentence> alreadyPickedSentencesForFirstWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+        assertEquals(allSentencesForFirstWord.size(), alreadyPickedSentencesForFirstWord.size());
+
+        alreadyPickedSentencesForFirstWord = newArrayList(allSentencesForFirstWord.get(0), allSentencesForFirstWord.get(2), allSentencesForFirstWord.get(6));
+        practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForFirstWord, displayedWordForFirstWord));
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        displayedSentenceForFirstWord = newSentenceEM.getSentence();
+        displayedWordForFirstWord = newSentenceEM.getWord();
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        alreadyPickedSentencesForFirstWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
+
+        // finished the first word for the first cycle
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        Sentence displayedSentenceForSecondWord = newSentenceEM.getSentence();
+        Word2Tokens displayedWordForSecondWord = newSentenceEM.getWord();
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        List<Sentence> allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
+        List<Sentence> alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+        assertEquals(allSentencesForSecondWord.size(), alreadyPickedSentencesForSecondWord.size());
+
+        alreadyPickedSentencesForSecondWord = newArrayList(allSentencesForSecondWord.get(0), allSentencesForSecondWord.get(6));
+        practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForSecondWord, displayedWordForSecondWord));
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        displayedSentenceForSecondWord = newSentenceEM.getSentence();
+        displayedWordForSecondWord = newSentenceEM.getWord();
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
+
+        // finished the second word for the first cycle
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        assertEquals(displayedSentenceForFirstWord, newSentenceEM.getSentence());
+        assertEquals(displayedWordForFirstWord, newSentenceEM.getWord());
+
+        //
+        // TEST OF SENTENCES CYCLICAL MOVEMENT SECOND STAGE
+        //
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        assertEquals(allSentencesForFirstWord, sentencesWereFoundForChangeEM.getSentences());
+
+        assertEquals(alreadyPickedSentencesForFirstWord, sentencesWereFoundForChangeEM.getAlreadyPickedSentences());
+        assertEquals(3, alreadyPickedSentencesForFirstWord.size());
+        assertEquals(3, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
+
+        // finished the first word for the second cycle
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        assertEquals(displayedSentenceForSecondWord, newSentenceEM.getSentence());
+        assertEquals(displayedWordForSecondWord, newSentenceEM.getWord());
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        assertEquals(allSentencesForSecondWord, sentencesWereFoundForChangeEM.getSentences());
+
+        assertEquals(alreadyPickedSentencesForSecondWord, sentencesWereFoundForChangeEM.getAlreadyPickedSentences());
+        assertEquals(2, alreadyPickedSentencesForSecondWord.size());
+        assertEquals(2, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
+        alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+
+        alreadyPickedSentencesForSecondWord = newArrayList(allSentencesForSecondWord.get(0), allSentencesForSecondWord.get(2), allSentencesForSecondWord.get(6));
+        practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForSecondWord, displayedWordForSecondWord));
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        displayedSentenceForSecondWord = newSentenceEM.getSentence();
+        displayedWordForSecondWord = newSentenceEM.getWord();
+
+        practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
+        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus);
+        allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
+        alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
+
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
+
+        // finished the second word for the second cycle
+
+        //
+        // REPETITION MODE
+        //
+        Whitebox.setInternalState(practiceWordSetFragment, "repetitionMode", true);
+        reset(eventBus);
+        practiceWordSetFragment.init();
+
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 2);
+        while (!displayedWordForFirstWord.equals(newSentenceEM.getWord())) {
+            practiceWordSetFragment.onNextButtonClick();
+            newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        }
+        assertNotEquals(displayedSentenceForFirstWord, newSentenceEM.getSentence());
+        assertEquals(alreadyPickedSentencesForFirstWord.get(1), newSentenceEM.getSentence());
+
+        displayedSentenceForFirstWord = newSentenceEM.getSentence();
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
+
+        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        assertNotEquals(displayedSentenceForSecondWord, newSentenceEM.getSentence());
+        assertEquals(alreadyPickedSentencesForSecondWord.get(1), newSentenceEM.getSentence());
+
+        displayedSentenceForSecondWord = newSentenceEM.getSentence();
+        when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
+        practiceWordSetFragment.onCheckAnswerButtonClick();
+        reset(eventBus);
+        practiceWordSetFragment.onNextButtonClick();
     }
 
     private void displayNewSentence(Sentence displayedSentence) {

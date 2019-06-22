@@ -6,12 +6,13 @@ import java.util.Set;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public interface WordRepetitionProgressService {
     List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId);
 
     void save(Word2Tokens word, int wordSetId, List<Sentence> sentences);
+
+    void shiftSentences(Word2Tokens word);
 
     void cleanByWordSetId(int wordSetId);
 
@@ -32,8 +33,6 @@ public interface WordRepetitionProgressService {
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);
-
-    List<Sentence> findByWordAndByStatus(Word2Tokens word, WordSetProgressStatus status);
 
     int markAsRepeated(Word2Tokens word, Sentence sentence);
 

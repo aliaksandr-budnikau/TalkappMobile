@@ -19,7 +19,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
@@ -83,19 +82,12 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     public void initialiseSentence(Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
         this.currentWord = word;
-        logger.i(TAG, "initialise currentSentence for currentWord {}, for currentWord set id {}", word, wordSetId);
         List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word, wordSetId);
-        logger.i(TAG, "sentences size {}", sentences.size());
         if (sentences.isEmpty()) {
-            logger.w(TAG, "Sentences haven't been found with words '{}'. Check the db.", word);
             return;
         }
-        List<Sentence> currentSentences = sentenceSelector.selectSentences(sentences);
-        logger.i(TAG, "chosen currentSentence {}", currentSentences);
-        shuffle(currentSentences);
-        currentSentence = currentSentences.get(0);
-        listener.onSentencesFound(currentSentence, word);
-        logger.i(TAG, "currentSentence was initialized");
+        setCurrentSentence(sentences.get(0));
+        listener.onSentencesFound(getCurrentSentence(), word);
     }
 
     @Override
@@ -115,6 +107,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         wordSet.getWords().remove(currentWord);
         listener.onUpdateProgress(wordSet, maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
+        exerciseService.shiftSentences(currentWord);
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
         if (wordSet.getTrainingExperience() == maxTrainingProgress) {

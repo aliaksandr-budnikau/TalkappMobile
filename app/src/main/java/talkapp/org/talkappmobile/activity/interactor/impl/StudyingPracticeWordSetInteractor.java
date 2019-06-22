@@ -91,19 +91,19 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void initialiseSentence(Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
         this.currentWord = word;
-        logger.i(TAG, "initialise sentence for word {}, for word set id {}", word, wordSetId);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word, wordSetId);
         if (sentences.isEmpty()) {
             sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+            if (sentences.isEmpty()) {
+                return;
+            }
+            sentenceSelector.orderByScore(sentences);
+            List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
+            replaceSentence(selectSentences, word, wordSetId, listener);
+        } else {
+            setCurrentSentence(sentences.get(0));
+            listener.onSentencesFound(getCurrentSentence(), word);
         }
-        logger.i(TAG, "sentences size {}", sentences.size());
-        if (sentences.isEmpty()) {
-            logger.w(TAG, "Sentences haven't been found with words '{}'. Fill the storage.", word);
-            return;
-        }
-        sentenceSelector.orderByScore(sentences);
-        List<Sentence> selectSentences = sentenceSelector.selectSentences(sentences);
-        replaceSentence(selectSentences, word, wordSetId, listener);
     }
 
     @Override
@@ -133,10 +133,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
+            exerciseService.shiftSentences(currentWord);
             wordSet.setStatus(FINISHED);
             listener.onTrainingFinished();
         } else {
-            logger.i(TAG, "right answer");
+            if (wordSet.getStatus() == SECOND_CYCLE) {
+                exerciseService.shiftSentences(currentWord);
+            }
             listener.onRightAnswer(sentence);
         }
         return true;
