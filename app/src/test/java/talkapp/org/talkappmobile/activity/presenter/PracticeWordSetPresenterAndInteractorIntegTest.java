@@ -170,7 +170,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -183,20 +183,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         String wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         Sentence sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
@@ -219,7 +219,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -232,20 +232,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
@@ -268,7 +268,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -281,20 +281,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
@@ -317,20 +317,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
@@ -353,20 +353,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
@@ -389,20 +389,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
         verify(view).showCongratulationMessage();
@@ -439,7 +439,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -452,20 +452,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         String wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         Sentence sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(16);
         verify(view).setRightAnswer(sentence.getText());
@@ -505,7 +505,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -518,20 +518,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
@@ -571,7 +571,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence();
+        presenter.changeSentence(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
@@ -584,20 +584,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnableNextButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(50);
         verify(view).setRightAnswer(sentence.getText());
@@ -637,20 +637,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
@@ -690,20 +690,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(83);
         verify(view).setRightAnswer(sentence.getText());
@@ -743,20 +743,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.checkAnswerButtonClick("");
+        presenter.checkAnswerButtonClick("", wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord);
+        presenter.checkAnswerButtonClick(wrongWord, wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
         verify(view).showCongratulationMessage();
@@ -784,7 +784,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         Sentence sentence = presenter.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
 
         verify(view).onExerciseGotAnswered();
     }

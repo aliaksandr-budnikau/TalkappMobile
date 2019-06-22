@@ -66,7 +66,7 @@ public class PresenterFactory {
         if (repetitionMode) {
             interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, wordsCombinator, context, audioStuffFactory);
         }
-        return new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
+        return new PracticeWordSetPresenter(interactor, viewStrategy);
     }
 
     public AddingNewWordSetPresenter create(AddingNewWordSetFragmentView view) {

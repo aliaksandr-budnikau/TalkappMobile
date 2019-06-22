@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.util.HashMap;
 
@@ -26,14 +25,11 @@ public class PracticeWordSetPresenterTest {
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetFirstCycleViewStrategy viewStrategy;
-    @Mock
-    private PracticeWordSetPresenterCurrentState state;
     private PracticeWordSetPresenter presenter;
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(new WordSet(), interactor, viewStrategy);
-        Whitebox.setInternalState(presenter, "state", state);
+        presenter = new PracticeWordSetPresenter(interactor, viewStrategy);
     }
 
     @Test
@@ -159,9 +155,8 @@ public class PracticeWordSetPresenterTest {
         sentence.setId("323");
 
         // when
-        when(state.getWordSet()).thenReturn(wordSet);
         when(interactor.getCurrentSentence()).thenReturn(sentence);
-        presenter.checkAnswerButtonClick(answer);
+        presenter.checkAnswerButtonClick(answer, wordSet);
 
         // then
         verify(viewStrategy).onCheckAnswerFinish();
@@ -177,7 +172,7 @@ public class PracticeWordSetPresenterTest {
         // when
         doThrow(new RuntimeException()).when(viewStrategy).onCheckAnswerStart();
         try {
-            presenter.checkAnswerButtonClick(answer);
+            presenter.checkAnswerButtonClick(answer, null);
         } catch (Exception e) {
         }
 
@@ -203,7 +198,6 @@ public class PracticeWordSetPresenterTest {
         Uri empty = Uri.EMPTY;
 
         // when
-        when(state.getVoiceRecordUri()).thenReturn(empty);
         presenter.playVoiceButtonClick();
 
         // then

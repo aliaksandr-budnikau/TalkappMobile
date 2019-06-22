@@ -182,9 +182,9 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public void onCheckAnswerButtonClick() {
         String answer = answerText.getText().toString();
         if (CHEAT_SEND_WRITE_ANSWER.equals(answer)) {
-            presenter.checkRightAnswerCommandRecognized();
+            presenter.checkRightAnswerCommandRecognized(wordSet);
         } else {
-            presenter.checkAnswerButtonClick(answer);
+            presenter.checkAnswerButtonClick(answer, wordSet);
         }
     }
 

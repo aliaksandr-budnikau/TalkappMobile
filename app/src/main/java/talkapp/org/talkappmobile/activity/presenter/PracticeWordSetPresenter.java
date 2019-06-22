@@ -12,16 +12,14 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
-    private final PracticeWordSetPresenterCurrentState state;
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
     private boolean answerHasBeenSeen;
+    private Uri voiceRecordUri;
 
-    public PracticeWordSetPresenter(WordSet wordSet,
-                                    PracticeWordSetInteractor interactor,
+    public PracticeWordSetPresenter(PracticeWordSetInteractor interactor,
                                     PracticeWordSetViewStrategy viewStrategy) {
         this.interactor = interactor;
-        state = new PracticeWordSetPresenterCurrentState(wordSet);
         this.viewStrategy = viewStrategy;
     }
 
@@ -162,33 +160,33 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         return interactor.getCurrentSentence();
     }
 
-    public void checkAnswerButtonClick(final String answer) {
+    public void checkAnswerButtonClick(final String answer, WordSet wordSet) {
         try {
             viewStrategy.onCheckAnswerStart();
             Sentence currentSentence = interactor.getCurrentSentence();
-            interactor.checkAnswer(answer, state.getWordSet(), currentSentence, answerHasBeenSeen, this);
+            interactor.checkAnswer(answer, wordSet, currentSentence, answerHasBeenSeen, this);
         } finally {
             viewStrategy.onCheckAnswerFinish();
         }
     }
 
     public void playVoiceButtonClick() {
-        interactor.playVoice(state.getVoiceRecordUri(), this);
+        interactor.playVoice(this.voiceRecordUri, this);
     }
 
     public void voiceRecorded(Uri voiceRecordUri) {
-        state.setVoiceRecordUri(voiceRecordUri);
+        this.voiceRecordUri = voiceRecordUri;
     }
 
-    public void checkRightAnswerCommandRecognized() {
+    public void checkRightAnswerCommandRecognized(WordSet wordSet) {
         Sentence currentSentence = interactor.getCurrentSentence();
-        checkAnswerButtonClick(currentSentence.getText());
+        checkAnswerButtonClick(currentSentence.getText(), wordSet);
     }
 
-    public void changeSentence() {
+    public void changeSentence(int wordSetId) {
         try {
             viewStrategy.onChangeSentenceStart();
-            interactor.changeSentence(state.getWordSetId(), this);
+            interactor.changeSentence(wordSetId, this);
         } finally {
             viewStrategy.onChangeSentenceFinish();
         }
