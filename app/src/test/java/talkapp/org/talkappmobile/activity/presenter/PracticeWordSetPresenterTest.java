@@ -162,8 +162,7 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(state.getWordSet()).thenReturn(wordSet);
-        when(state.getWordSetId()).thenReturn(wordSet.getId());
-        when(interactor.getCurrentSentence(wordSet.getId())).thenReturn(sentence);
+        when(interactor.getCurrentSentence()).thenReturn(sentence);
         presenter.checkAnswerButtonClick(answer);
 
         // then

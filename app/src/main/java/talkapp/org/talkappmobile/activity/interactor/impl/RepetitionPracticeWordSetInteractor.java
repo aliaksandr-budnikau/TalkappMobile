@@ -9,12 +9,10 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceSelector;
 import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -25,7 +23,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
     private final SentenceService sentenceService;
     private final Logger logger;
-    private final SentenceSelector sentenceSelector;
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private final WordSetExperienceUtils experienceUtils;
@@ -36,18 +33,15 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
-            SentenceSelector sentenceSelector,
             RefereeService refereeService,
             Logger logger,
             WordRepetitionProgressService exerciseService,
             UserExpService userExpService,
-            WordSetService wordSetService,
             WordSetExperienceUtils experienceUtils,
             Context context,
             AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
         this.sentenceService = sentenceService;
-        this.sentenceSelector = sentenceSelector;
         this.logger = logger;
         this.exerciseService = exerciseService;
         this.userExpService = userExpService;
@@ -55,8 +49,13 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public Sentence getCurrentSentence(int wordSetId) {
+    public Sentence getCurrentSentence() {
         return currentSentence;
+    }
+
+    @Override
+    protected void setCurrentSentence(Sentence sentence) {
+        this.currentSentence = sentence;
     }
 
     @Override
@@ -123,15 +122,5 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     protected Word2Tokens getCurrentWord() {
         return currentWord;
-    }
-
-    @Override
-    protected Sentence getCurrentSentence() {
-        return currentSentence;
-    }
-
-    @Override
-    protected void setCurrentSentence(Sentence sentence) {
-        this.currentSentence = sentence;
     }
 }

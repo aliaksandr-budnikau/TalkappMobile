@@ -132,7 +132,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void gotRecognitionResult(List<String> result) {
-        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
+        Sentence currentSentence = interactor.getCurrentSentence();
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
@@ -159,13 +159,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public Sentence getCurrentSentence() {
-        return interactor.getCurrentSentence(state.getWordSetId());
+        return interactor.getCurrentSentence();
     }
 
     public void checkAnswerButtonClick(final String answer) {
         try {
             viewStrategy.onCheckAnswerStart();
-            Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
+            Sentence currentSentence = interactor.getCurrentSentence();
             interactor.checkAnswer(answer, state.getWordSet(), currentSentence, answerHasBeenSeen, this);
         } finally {
             viewStrategy.onCheckAnswerFinish();
@@ -181,7 +181,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     }
 
     public void checkRightAnswerCommandRecognized() {
-        Sentence currentSentence = interactor.getCurrentSentence(state.getWordSetId());
+        Sentence currentSentence = interactor.getCurrentSentence();
         checkAnswerButtonClick(currentSentence.getText());
     }
 

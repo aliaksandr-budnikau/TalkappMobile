@@ -146,11 +146,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public Sentence getCurrentSentence(int wordSetId) {
-        return currentSentence;
-    }
-
-    @Override
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
         Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
         exerciseService.putOffCurrentWord(wordSetId);
@@ -161,18 +156,19 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         return newCurrentWord;
     }
 
-    @Override
-    protected Word2Tokens getCurrentWord() {
-        return currentWord;
-    }
 
     @Override
-    protected Sentence getCurrentSentence() {
+    public Sentence getCurrentSentence() {
         return currentSentence;
     }
 
     @Override
     protected void setCurrentSentence(Sentence sentence) {
         this.currentSentence = sentence;
+    }
+
+    @Override
+    protected Word2Tokens getCurrentWord() {
+        return currentWord;
     }
 }

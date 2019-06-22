@@ -54,7 +54,6 @@ import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMappin
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.component.impl.RandomSentenceSelectorBean;
 import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
@@ -115,9 +114,8 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         experienceUtils = new WordSetExperienceUtilsImpl();
         experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
-        interactor = new RepetitionPracticeWordSetInteractor(sentenceService,
-                new RandomSentenceSelectorBean(), new RefereeServiceImpl(sentenceService, new EqualityScorerBean()),
-                logger, exerciseService, userExpService, experienceService, experienceUtils, context, new AudioStuffFactoryBean());
+        interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(sentenceService, new EqualityScorerBean()),
+                logger, exerciseService, userExpService, experienceUtils, context, new AudioStuffFactoryBean());
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }
 
@@ -216,7 +214,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        Sentence sentence = interactor.getCurrentSentence(wordSet.getId());
+        Sentence sentence = interactor.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -252,7 +250,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
@@ -288,7 +286,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
@@ -342,7 +340,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        Sentence sentence = interactor.getCurrentSentence(wordSet.getId());
+        Sentence sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -396,7 +394,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -450,7 +448,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -504,7 +502,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -558,7 +556,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -612,7 +610,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         reset(view);
 
-        sentence = interactor.getCurrentSentence(wordSet.getId());
+        sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setEnableCheckButton(false);
@@ -644,7 +642,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        Sentence sentence = interactor.getCurrentSentence(wordSet.getId());
+        Sentence sentence = interactor.getCurrentSentence();
         presenter.checkAnswerButtonClick(sentence.getText());
 
         verify(view).onExerciseGotAnswered();

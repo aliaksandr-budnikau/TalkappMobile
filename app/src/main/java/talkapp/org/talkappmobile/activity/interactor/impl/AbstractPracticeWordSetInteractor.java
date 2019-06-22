@@ -164,7 +164,5 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     protected abstract Word2Tokens getCurrentWord();
 
-    protected abstract Sentence getCurrentSentence();
-
     protected abstract void setCurrentSentence(Sentence sentence);
 }
