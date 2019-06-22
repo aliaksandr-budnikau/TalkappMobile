@@ -14,8 +14,10 @@ public class Word2Tokens implements Serializable {
     public Word2Tokens() {
     }
 
-    public Word2Tokens(String word) {
+    public Word2Tokens(String word, Integer sourceWordSetId) {
         this.word = word;
+        this.tokens = word;
+        this.sourceWordSetId = sourceWordSetId;
     }
 
     public Word2Tokens(String word, String tokens, Integer sourceWordSetId) {
@@ -66,7 +68,7 @@ public class Word2Tokens implements Serializable {
     public String toString() {
         return "Word2Tokens{" +
                 "word='" + word + '\'' +
-                ", tokens='" + sourceWordSetId + '\'' +
+                ", sourceWordSetId='" + sourceWordSetId + '\'' +
                 '}';
     }
 }

@@ -43,7 +43,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know");
+        Word2Tokens word = new Word2Tokens("know", 4);
         word.setTokens("know");
 
         // when
@@ -65,7 +65,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(3);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("icing");
+        Word2Tokens word = new Word2Tokens("icing", 3);
         word.setTokens("icing,ice");
 
         // when
@@ -87,7 +87,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(9);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("greeting");
+        Word2Tokens word = new Word2Tokens("greeting", 3);
         word.setTokens("greeting,greet");
 
         // when
@@ -111,7 +111,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know2");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know");
+        Word2Tokens word = new Word2Tokens("know", 5);
         word.setTokens("know");
 
         // when
@@ -140,7 +140,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(3).setEndOffset(15);
         sentence.getTokens().get(3).setToken("ear");
 
-        Word2Tokens word = new Word2Tokens("earth");
+        Word2Tokens word = new Word2Tokens("earth", 3);
         word.setWord("earth");
         word.setTokens("earth,ear");
 
@@ -165,7 +165,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know");
+        Word2Tokens word = new Word2Tokens("know", 3);
         word.setTokens("know");
 
         // when
@@ -186,7 +186,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(3);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("icing");
+        Word2Tokens word = new Word2Tokens("icing", 3);
         word.setTokens("icing,ice");
 
         // when
@@ -207,7 +207,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setStartOffset(0);
         sentence.getTokens().get(0).setEndOffset(9);
         sentence.getTokens().get(0).setPosition(0);
-        Word2Tokens word = new Word2Tokens("greeting");
+        Word2Tokens word = new Word2Tokens("greeting", 1);
         word.setTokens("greeting,greet");
 
         // when
@@ -230,7 +230,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know2");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know");
+        Word2Tokens word = new Word2Tokens("know", 3);
         word.setTokens("know");
 
         // when
@@ -258,7 +258,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(3).setEndOffset(15);
         sentence.getTokens().get(3).setToken("ear");
 
-        Word2Tokens word = new Word2Tokens("earth");
+        Word2Tokens word = new Word2Tokens("earth", 3);
         word.setWord("earth");
         word.setTokens("earth,ear");
 

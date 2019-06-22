@@ -35,21 +35,21 @@ public class SentenceServiceImpl implements SentenceService {
     }
 
     @Override
-    public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word, int wordSetId) {
+    public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word) {
         List<Sentence> result;
         try {
-            result = new LinkedList<>(server.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
+            result = new LinkedList<>(server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId()));
         } catch (LocalCacheIsEmptyException e) {
-            server.initLocalCacheOfAllSentencesForThisWordset(wordSetId, WORDS_NUMBER);
-            List<Sentence> cached = server.findSentencesByWords(word, WORDS_NUMBER, wordSetId);
+            server.initLocalCacheOfAllSentencesForThisWordset(word.getSourceWordSetId(), WORDS_NUMBER);
+            List<Sentence> cached = server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId());
             result = new LinkedList<>(cached);
         }
         return getRidOfDuplicates(result);
     }
 
     @Override
-    public List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word, int wordSetId) {
-        return getRidOfDuplicates(new ArrayList<>(exerciseService.findByWordAndWordSetId(word, word.getSourceWordSetId())));
+    public List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word) {
+        return getRidOfDuplicates(new ArrayList<>(exerciseService.findByWordAndWordSetId(word)));
     }
 
 

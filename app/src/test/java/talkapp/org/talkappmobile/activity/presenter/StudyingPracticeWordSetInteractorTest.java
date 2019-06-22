@@ -129,8 +129,8 @@ public class StudyingPracticeWordSetInteractorTest {
     public void initialiseWordsSequence() {
         // setup
         WordSet wordSet = new WordSet();
-        wordSet.setWords(asList(new Word2Tokens("fdsfs"), new Word2Tokens("sdfs")));
         wordSet.setId(4);
+        wordSet.setWords(asList(new Word2Tokens("fdsfs", wordSet.getId()), new Word2Tokens("sdfs", wordSet.getId())));
 
         HashSet<Word2Tokens> words = new HashSet<>(wordSet.getWords());
 
@@ -139,7 +139,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
-        verify(exerciseService).createSomeIfNecessary(words, wordSet.getId());
+        verify(exerciseService).createSomeIfNecessary(words);
     }
 
     @Test
@@ -153,16 +153,16 @@ public class StudyingPracticeWordSetInteractorTest {
 
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
-        Word2Tokens word = new Word2Tokens("sdfs");
         int wordSetId = 3;
+        Word2Tokens word = new Word2Tokens("sdfs", wordSetId);
 
         // when
-        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId)).thenReturn(sentences);
+        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
-        interactor.initialiseSentence(word, wordSetId, listener);
+        interactor.initialiseSentence(word, listener);
 
         // then
-        verify(exerciseService).save(word, wordSetId, singletonList(selectedSentence));
+        verify(exerciseService).save(word, singletonList(selectedSentence));
         verify(listener).onSentencesFound(selectedSentence, word);
     }
 
@@ -172,16 +172,16 @@ public class StudyingPracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
 
-        Word2Tokens word = new Word2Tokens("SDFDS");
         int wordSetId = 3;
+        Word2Tokens word = new Word2Tokens("SDFDS", wordSetId);
 
         // when
-        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId)).thenReturn(Collections.<Sentence>emptyList());
-        interactor.initialiseSentence(word, wordSetId, listener);
+        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(Collections.<Sentence>emptyList());
+        interactor.initialiseSentence(word, listener);
 
         // then
         verify(listener, times(0)).onSentencesFound(selectedSentence, word);
-        verify(exerciseService, times(0)).save(word, wordSetId, singletonList(selectedSentence));
+        verify(exerciseService, times(0)).save(word, singletonList(selectedSentence));
         verify(sentenceService, times(0)).selectSentences(any(List.class));
     }
 
@@ -427,8 +427,8 @@ public class StudyingPracticeWordSetInteractorTest {
     public void peekAnyNewWordByWordSetId() {
         // setup
         int wordSetId = 5;
-        Word2Tokens newCurrentWord = new Word2Tokens("newCurrentWord");
-        Word2Tokens currentWord = new Word2Tokens("currentWord");
+        Word2Tokens newCurrentWord = new Word2Tokens("newCurrentWord", wordSetId);
+        Word2Tokens currentWord = new Word2Tokens("currentWord", wordSetId);
 
         // when
         when(exerciseService.getCurrentWord(wordSetId)).thenReturn(currentWord);

@@ -136,19 +136,19 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
-    public void initialise() {
-        interactor.initialiseExperience(state.getWordSet(), this);
-        interactor.initialiseWordsSequence(state.getWordSet(), this);
+    public void initialise(WordSet wordSet) {
+        interactor.initialiseExperience(wordSet, this);
+        interactor.initialiseWordsSequence(wordSet, this);
     }
 
-    public void nextButtonClick() {
+    public void nextButtonClick(int wordSetId) {
         try {
             viewStrategy.onNextButtonStart();
-            Word2Tokens word = interactor.peekAnyNewWordByWordSetId(state.getWordSetId());
+            Word2Tokens word = interactor.peekAnyNewWordByWordSetId(wordSetId);
             if (word == null) {
                 return;
             }
-            interactor.initialiseSentence(word, state.getWordSetId(), this);
+            interactor.initialiseSentence(word, this);
         } finally {
             viewStrategy.onNextButtonFinish();
         }

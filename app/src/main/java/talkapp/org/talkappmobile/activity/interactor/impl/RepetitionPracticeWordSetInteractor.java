@@ -11,6 +11,7 @@ import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -38,9 +39,10 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordRepetitionProgressService exerciseService,
             UserExpService userExpService,
             WordSetExperienceUtils experienceUtils,
+            WordsCombinator wordsCombinator,
             Context context,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordsCombinator, audioStuffFactory);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
@@ -69,19 +71,14 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
-        // do nothing
-    }
-
-    @Override
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
         return peekRandomWordWithoutCurrentWord(wordSet.getWords(), currentWord);
     }
 
     @Override
-    public void initialiseSentence(Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener) {
+    public void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener) {
         this.currentWord = word;
-        List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             return;
         }

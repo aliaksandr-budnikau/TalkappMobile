@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 import android.content.Context;
 
 import java.util.List;
-import java.util.Set;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
@@ -27,7 +26,6 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
-    private final WordsCombinator wordsCombinator;
     private final SentenceService sentenceService;
     private final Logger logger;
     private final WordSetService experienceService;
@@ -47,8 +45,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetExperienceUtils experienceUtils,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory);
-        this.wordsCombinator = wordsCombinator;
+        super(logger, context, refereeService, exerciseService, sentenceService, wordsCombinator, audioStuffFactory);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.experienceService = experienceService;
@@ -76,26 +73,17 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
-        logger.i(TAG, "initialise words sequence {}", wordSet);
-        Set<Word2Tokens> words = wordsCombinator.combineWords(wordSet.getWords());
-        logger.i(TAG, "words sequence {}", words);
-        exerciseService.createSomeIfNecessary(words, wordSet.getId());
-        logger.i(TAG, "word sequence was initialized");
-    }
-
-    @Override
-    public void initialiseSentence(Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+    public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
         this.currentWord = word;
-        List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
-            sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+            sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
             if (sentences.isEmpty()) {
                 return;
             }
             sentenceService.orderByScore(sentences);
             List<Sentence> selectSentences = sentenceService.selectSentences(sentences);
-            replaceSentence(selectSentences, word, wordSetId, listener);
+            replaceSentence(selectSentences, word, listener);
         } else {
             setCurrentSentence(sentences.get(0));
             listener.onSentencesFound(getCurrentSentence(), word);

@@ -19,7 +19,7 @@ public interface PracticeWordSetInteractor {
 
     Word2Tokens peekAnyNewWordByWordSetId(int wordSetId);
 
-    void initialiseSentence(Word2Tokens word, int wordSetId, OnPracticeWordSetListener listener);
+    void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener);
 
     boolean checkAnswer(String answer, WordSet wordSet, Sentence currentSentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener);
 

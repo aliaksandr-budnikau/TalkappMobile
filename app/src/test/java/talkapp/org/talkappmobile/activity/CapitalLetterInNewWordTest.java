@@ -204,8 +204,7 @@ public class CapitalLetterInNewWordTest {
 
         LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
         for (String word : words) {
-            Word2Tokens age = new Word2Tokens(word);
-            age.setTokens(word);
+            Word2Tokens age = new Word2Tokens(word, wordSet.getId());
             word2Tokens.add(age);
         }
 

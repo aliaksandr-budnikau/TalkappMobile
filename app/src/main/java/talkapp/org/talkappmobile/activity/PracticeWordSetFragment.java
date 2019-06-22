@@ -126,8 +126,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Background
     public void initPresenter() {
         presenter = presenterFactory.create(wordSet, this, getContext(), repetitionMode);
-        presenter.initialise();
-        presenter.nextButtonClick();
+        presenter.initialise(wordSet);
+        presenter.nextButtonClick(wordSet.getId());
     }
 
     @Click(R.id.originalText)
@@ -152,7 +152,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Click(R.id.nextButton)
     @Background
     public void onNextButtonClick() {
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
     }
 
     @Click(R.id.closeButton)

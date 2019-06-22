@@ -8,15 +8,15 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public interface WordRepetitionProgressService {
-    List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId);
+    List<Sentence> findByWordAndWordSetId(Word2Tokens word);
 
-    void save(Word2Tokens word, int wordSetId, List<Sentence> sentences);
+    void save(Word2Tokens word, List<Sentence> sentences);
 
     void shiftSentences(Word2Tokens word);
 
     void cleanByWordSetId(int wordSetId);
 
-    void createSomeIfNecessary(Set<Word2Tokens> words, int wordSetId);
+    void createSomeIfNecessary(Set<Word2Tokens> words);
 
     void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord);
 

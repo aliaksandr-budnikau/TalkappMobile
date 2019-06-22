@@ -56,8 +56,7 @@ public class WordRepetitionProgressServiceImplIntegTest extends PresenterAndInte
 
         Calendar cal = getInstance(UTC);
 
-        Word2Tokens anniversary = new Word2Tokens("anniversary");
-        anniversary.setTokens("anniversary");
+        Word2Tokens anniversary = new Word2Tokens("anniversary", 3);
 
         for (int c = 0; c < 12; c++) {
             for (int i = 2; i <= 13; i++) {

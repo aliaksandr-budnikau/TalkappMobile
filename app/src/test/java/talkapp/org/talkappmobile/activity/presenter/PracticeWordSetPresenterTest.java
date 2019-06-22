@@ -54,7 +54,7 @@ public class PracticeWordSetPresenterTest {
         sentence.setTranslations(new HashMap<String, String>());
         sentence.getTranslations().put("russian", "fsdfsfs");
 
-        Word2Tokens word = new Word2Tokens("word");
+        Word2Tokens word = new Word2Tokens("word", 100);
 
         // when
         presenter.onSentencesFound(sentence, word);
@@ -112,8 +112,7 @@ public class PracticeWordSetPresenterTest {
         WordSet wordSet = new WordSet();
 
         // when
-        when(state.getWordSet()).thenReturn(wordSet);
-        presenter.initialise();
+        presenter.initialise(wordSet);
 
         // then
         verify(interactor).initialiseExperience(wordSet, presenter);
@@ -123,18 +122,17 @@ public class PracticeWordSetPresenterTest {
     @Test
     public void onNextButtonClick() {
         // setup
-        Word2Tokens word1 = new Word2Tokens("sdfsd");
         int wordSetId = 3;
+        Word2Tokens word1 = new Word2Tokens("sdfsd", wordSetId);
 
         // when
         when(interactor.peekAnyNewWordByWordSetId(wordSetId)).thenReturn(word1);
-        when(state.getWordSetId()).thenReturn(wordSetId);
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(word1.getSourceWordSetId());
 
         // then
         verify(viewStrategy).onNextButtonStart();
         verify(viewStrategy).onNextButtonFinish();
-        verify(interactor).initialiseSentence(word1, wordSetId, presenter);
+        verify(interactor).initialiseSentence(word1, presenter);
     }
 
     @Test
@@ -142,7 +140,7 @@ public class PracticeWordSetPresenterTest {
         // when
         doThrow(new RuntimeException()).when(viewStrategy).onNextButtonStart();
         try {
-            presenter.nextButtonClick();
+            presenter.nextButtonClick(3);
         } catch (Exception e) {
         }
 

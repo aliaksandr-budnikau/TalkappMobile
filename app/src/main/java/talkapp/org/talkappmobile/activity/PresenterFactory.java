@@ -64,7 +64,7 @@ public class PresenterFactory {
 
         PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceService, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
         if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, wordsCombinator, context, audioStuffFactory);
         }
         return new PracticeWordSetPresenter(wordSet, interactor, viewStrategy);
     }

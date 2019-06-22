@@ -57,7 +57,7 @@ public class SentenceServiceImplTest {
 
         // when
         when(dataServer.findSentencesByWords(any(Word2Tokens.class), anyInt(), anyInt())).thenReturn(sentences);
-        List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens(), 2);
+        List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens("sdfsd", 2));
 
         // then
         assertEquals(2, result.size());
@@ -84,7 +84,7 @@ public class SentenceServiceImplTest {
 
         // when
         when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
         assertEquals(sentences.get(0), sentencesActual.get(0));
@@ -96,8 +96,8 @@ public class SentenceServiceImplTest {
     @Test
     public void findByWord_sentenceInImmutableList() {
         // setup
-        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
+        Word2Tokens word = new Word2Tokens("word", wordSetId);
 
         Sentence sentence1 = new Sentence();
         sentence1.setId("fds32ddd");
@@ -107,7 +107,7 @@ public class SentenceServiceImplTest {
 
         // when
         when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
         sentencesActual.clear();
@@ -116,14 +116,14 @@ public class SentenceServiceImplTest {
     @Test
     public void findByWord_sentenceNotFound() {
         // setup
-        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
+        Word2Tokens word = new Word2Tokens("word", wordSetId);
 
         List<Sentence> sentences = emptyList();
 
         // when
         when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
         assertTrue(sentencesActual.isEmpty());
@@ -132,12 +132,12 @@ public class SentenceServiceImplTest {
     @Test(expected = RuntimeException.class)
     public void findByWord_exception() {
         // setup
-        Word2Tokens word = new Word2Tokens("word");
         int wordSetId = 3;
+        Word2Tokens word = new Word2Tokens("word", wordSetId);
 
         // when
         doThrow(RuntimeException.class).when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word, wordSetId);
+        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
         assertTrue(sentencesActual.isEmpty());
@@ -150,8 +150,8 @@ public class SentenceServiceImplTest {
         Word2Tokens word = new Word2Tokens("", "", wordSetId);
 
         // when
-        when(exerciseService.findByWordAndWordSetId(word, wordSetId)).thenReturn(singletonList(new Sentence()));
-        List<Sentence> list = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word, wordSetId);
+        when(exerciseService.findByWordAndWordSetId(word)).thenReturn(singletonList(new Sentence()));
+        List<Sentence> list = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
 
         // then
         list.clear();

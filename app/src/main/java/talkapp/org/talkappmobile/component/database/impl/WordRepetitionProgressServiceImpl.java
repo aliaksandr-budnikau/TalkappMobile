@@ -60,10 +60,10 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(Word2Tokens word, int wordSetId) {
+    public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
         List<WordRepetitionProgressMapping> exercises;
         try {
-            exercises = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId);
+            exercises = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -78,10 +78,10 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void save(Word2Tokens word, int wordSetId, List<Sentence> sentences) {
+    public void save(Word2Tokens word, List<Sentence> sentences) {
         WordRepetitionProgressMapping exercise;
         try {
-            exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId).get(0);
+            exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId()).get(0);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -127,12 +127,12 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void createSomeIfNecessary(Set<Word2Tokens> words, int wordSetId) {
+    public void createSomeIfNecessary(Set<Word2Tokens> words) {
         List<WordRepetitionProgressMapping> wordsEx = new LinkedList<>();
         for (Word2Tokens word : words) {
             List<WordRepetitionProgressMapping> alreadyCreatedWord = null;
             try {
-                alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), wordSetId);
+                alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId());
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
@@ -146,7 +146,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 throw new RuntimeException(e.getMessage(), e);
             }
             exercise.setStatus(FIRST_CYCLE);
-            exercise.setWordSetId(wordSetId);
+            exercise.setWordSetId(word.getSourceWordSetId());
             exercise.setUpdatedDate(getInstance(UTC).getTime());
             wordsEx.add(exercise);
         }
@@ -179,7 +179,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         LinkedList<Word2Tokens> result = new LinkedList<>();
         for (WordRepetitionProgressMapping exercise : exercises) {
             try {
-                result.add(mapper.readValue(exercise.getWordJSON(), Word2Tokens.class));
+                Word2Tokens word = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
+                word.setSourceWordSetId(wordSetId);
+                result.add(word);
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
@@ -288,7 +290,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         WordRepetitionProgressMapping mapping = current.get(0);
         try {
-            return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
+            Word2Tokens word2Tokens = mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
+            word2Tokens.setSourceWordSetId(wordSetId);
+            return word2Tokens;
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

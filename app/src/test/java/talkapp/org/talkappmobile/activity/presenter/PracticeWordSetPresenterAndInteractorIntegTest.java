@@ -139,14 +139,9 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet = new WordSet();
         wordSet.setId(id);
 
-        Word2Tokens age = new Word2Tokens("age");
-        age.setTokens("age");
-
-        Word2Tokens anniversary = new Word2Tokens("anniversary");
-        anniversary.setTokens("anniversary");
-
-        Word2Tokens birth = new Word2Tokens("birth");
-        birth.setTokens("birth");
+        Word2Tokens age = new Word2Tokens("age", wordSet.getId());
+        Word2Tokens anniversary = new Word2Tokens("anniversary", wordSet.getId());
+        Word2Tokens birth = new Word2Tokens("birth", wordSet.getId());
 
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
@@ -159,12 +154,12 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     public void testPracticeWordSet_completeOneSet() {
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(0);
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -213,7 +208,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -262,7 +257,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -311,7 +306,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 4
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -347,7 +342,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 5
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -383,7 +378,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 6
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -428,12 +423,12 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(0);
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -482,7 +477,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -495,11 +490,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(16);
         reset(view);
 
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -548,7 +543,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -561,11 +556,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(33);
         reset(view);
 
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -614,7 +609,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 4
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -627,11 +622,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(50);
         reset(view);
 
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -667,7 +662,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 5
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -680,11 +675,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(66);
         reset(view);
 
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -720,7 +715,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 6
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -733,11 +728,11 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         createPresenter();
 
-        presenter.initialise();
+        presenter.initialise(wordSet);
         verify(view).setProgress(83);
         reset(view);
 
-        presenter.nextButtonClick();
+        presenter.nextButtonClick(wordSet.getId());
         verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
@@ -782,8 +777,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     public void testPracticeWordSet_rightAnswerCheckedTouchRightAnswerUntouchBug() {
         createPresenter();
 
-        presenter.initialise();
-        presenter.nextButtonClick();
+        presenter.initialise(wordSet);
+        presenter.nextButtonClick(wordSet.getId());
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);

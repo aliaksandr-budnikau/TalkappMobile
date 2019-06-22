@@ -7,6 +7,7 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
@@ -14,11 +15,13 @@ import talkapp.org.talkappmobile.component.AudioStuffFactory;
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceService;
+import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -31,18 +34,21 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
+    private final WordsCombinator wordsCombinator;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
+                                             WordsCombinator wordsCombinator,
                                              AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
         this.sentenceService = sentenceService;
+        this.wordsCombinator = wordsCombinator;
         this.audioStuffFactory = audioStuffFactory;
     }
 
@@ -97,6 +103,15 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
+    public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
+        logger.i(TAG, "initialise words sequence {}", wordSet);
+        Set<Word2Tokens> words = wordsCombinator.combineWords(wordSet.getWords());
+        logger.i(TAG, "words sequence {}", words);
+        exerciseService.createSomeIfNecessary(words);
+        logger.i(TAG, "word sequence was initialized");
+    }
+
+    @Override
     public void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener) {
         sentence.setContentScore(score);
         if (sentenceService.classifySentence(sentence)) {
@@ -109,17 +124,17 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void changeSentence(int wordSetId, OnPracticeWordSetListener listener) {
         Word2Tokens word = exerciseService.getCurrentWord(wordSetId);
-        initialiseSentence(word, wordSetId, listener);
+        initialiseSentence(word, listener);
         listener.onSentenceChanged();
     }
 
     @Override
     public void changeSentence(Word2Tokens currentWord, List<Sentence> sentences, OnPracticeWordSetListener listener) {
-        replaceSentence(sentences, currentWord, currentWord.getSourceWordSetId(), listener);
+        replaceSentence(sentences, currentWord, listener);
         listener.onSentenceChanged();
     }
 
-    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, int wordSetId, final OnPracticeWordSetListener listener) {
+    protected void replaceSentence(List<Sentence> sentences, Word2Tokens word, final OnPracticeWordSetListener listener) {
         List<Sentence> shuffledSentences = new ArrayList<>(sentences);
         shuffle(shuffledSentences);
 
@@ -130,14 +145,14 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         } else {
             setCurrentSentence(shuffledSentences.get(0));
         }
-        exerciseService.save(word, wordSetId, shuffledSentences);
+        exerciseService.save(word, shuffledSentences);
         listener.onSentencesFound(getCurrentSentence(), word);
     }
 
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
-        List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
-        List<Sentence> sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord, currentWord.getSourceWordSetId());
+        List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord);
+        List<Sentence> sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord);
         if (sentences.isEmpty()) {
             listener.onNoSentencesToChange();
         } else {

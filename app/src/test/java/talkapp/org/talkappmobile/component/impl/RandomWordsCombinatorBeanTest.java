@@ -27,7 +27,7 @@ public class RandomWordsCombinatorBeanTest {
     public void combineWords_count1() throws Exception {
         // setup
         ArrayList<Word2Tokens> words = new ArrayList<>();
-        words.add(new Word2Tokens("word1"));
+        words.add(new Word2Tokens("word1", 3));
 
         // when
         Set<Word2Tokens> set = combinator.combineWords(words);
@@ -40,8 +40,8 @@ public class RandomWordsCombinatorBeanTest {
     public void combineWords_count2() throws Exception {
         // setup
         ArrayList<Word2Tokens> words = new ArrayList<>();
-        Word2Tokens word1 = new Word2Tokens("word1");
-        Word2Tokens word2 = new Word2Tokens("word2");
+        Word2Tokens word1 = new Word2Tokens("word1", 3);
+        Word2Tokens word2 = new Word2Tokens("word2", 3);
         words.add(word1);
         words.add(word2);
 
@@ -58,9 +58,9 @@ public class RandomWordsCombinatorBeanTest {
     public void combineWords_count3() throws Exception {
         // setup
         ArrayList<Word2Tokens> words = new ArrayList<>();
-        Word2Tokens word1 = new Word2Tokens("word1");
-        Word2Tokens word2 = new Word2Tokens("word2");
-        Word2Tokens word3 = new Word2Tokens("word3");
+        Word2Tokens word1 = new Word2Tokens("word1", 3);
+        Word2Tokens word2 = new Word2Tokens("word2", 3);
+        Word2Tokens word3 = new Word2Tokens("word3", 3);
         words.add(word1);
         words.add(word2);
         words.add(word3);
