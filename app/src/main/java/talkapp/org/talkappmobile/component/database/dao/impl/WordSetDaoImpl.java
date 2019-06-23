@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.dao.impl.local;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.ID_FN;
 

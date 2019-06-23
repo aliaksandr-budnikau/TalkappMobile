@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.dao.impl.local;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
 
-import static talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping.ID_FN;
+import static talkapp.org.talkappmobile.component.database.mappings.SentenceMapping.ID_FN;
 
 public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implements SentenceDao {
 

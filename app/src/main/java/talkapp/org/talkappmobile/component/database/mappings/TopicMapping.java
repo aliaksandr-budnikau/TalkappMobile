@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.mappings.local;
+package talkapp.org.talkappmobile.component.database.mappings;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

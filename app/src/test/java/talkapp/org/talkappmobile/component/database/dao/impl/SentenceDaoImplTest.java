@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.dao.impl.local;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import android.database.Cursor;
 
@@ -20,12 +20,12 @@ import java.util.Map;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
-import static talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping.SENTENCE_TABLE;
+import static talkapp.org.talkappmobile.component.database.mappings.SentenceMapping.SENTENCE_TABLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl.local")

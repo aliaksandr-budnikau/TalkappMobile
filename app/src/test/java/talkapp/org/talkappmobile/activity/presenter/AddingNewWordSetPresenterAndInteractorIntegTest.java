@@ -24,12 +24,12 @@ import talkapp.org.talkappmobile.component.database.WordSetMapper;
 import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.local.WordSetDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
-import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
+import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.model.WordSet;
 

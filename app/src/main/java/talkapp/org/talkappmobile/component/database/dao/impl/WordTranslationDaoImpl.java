@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.dao.impl.local;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.mappings.local.WordTranslationMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordTranslationMapping;
 
 public class WordTranslationDaoImpl extends BaseDaoImpl<WordTranslationMapping, String> implements WordTranslationDao {
 

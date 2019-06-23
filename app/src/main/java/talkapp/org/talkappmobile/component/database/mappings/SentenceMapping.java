@@ -1,11 +1,9 @@
-package talkapp.org.talkappmobile.component.database.mappings.local;
+package talkapp.org.talkappmobile.component.database.mappings;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Objects;
-
-import talkapp.org.talkappmobile.model.SentenceContentScore;
 
 @DatabaseTable(tableName = SentenceMapping.SENTENCE_TABLE)
 public class SentenceMapping {

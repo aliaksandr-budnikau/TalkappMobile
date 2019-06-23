@@ -18,7 +18,7 @@ import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterTest;
 import talkapp.org.talkappmobile.component.backend.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImplTest;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImplTest;
-import talkapp.org.talkappmobile.component.database.dao.impl.local.SentenceDaoImplTest;
+import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImplTest;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImplTest;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;

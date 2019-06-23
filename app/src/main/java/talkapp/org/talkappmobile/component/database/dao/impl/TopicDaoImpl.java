@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.dao.impl.local;
+package talkapp.org.talkappmobile.component.database.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
+import talkapp.org.talkappmobile.component.database.mappings.TopicMapping;
 
 public class TopicDaoImpl extends BaseDaoImpl<TopicMapping, Integer> implements TopicDao {
 

@@ -14,10 +14,10 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
-import talkapp.org.talkappmobile.component.database.mappings.local.TopicMapping;
-import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
-import talkapp.org.talkappmobile.component.database.mappings.local.WordTranslationMapping;
+import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.TopicMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordTranslationMapping;
 
 import static java.util.Collections.singletonList;
 

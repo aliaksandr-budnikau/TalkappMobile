@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.component.database.mappings.local;
+package talkapp.org.talkappmobile.component.database.mappings;
 
 
 import com.j256.ormlite.field.DatabaseField;
@@ -6,10 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.Objects;
-
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 /**
  * @author Budnikau Aliaksandr
