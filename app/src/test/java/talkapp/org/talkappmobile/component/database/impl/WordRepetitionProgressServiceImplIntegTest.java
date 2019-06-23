@@ -62,7 +62,7 @@ public class WordRepetitionProgressServiceImplIntegTest extends PresenterAndInte
             for (int i = 2; i <= 13; i++) {
                 WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
                 exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
-                exercise.setStatus(WordSetProgressStatus.FINISHED);
+                exercise.setStatus(WordSetProgressStatus.FINISHED.name());
                 cal.add(Calendar.HOUR, -2 * 24 * i);
                 exercise.setUpdatedDate(cal.getTime());
                 exercise.setRepetitionCounter(c);

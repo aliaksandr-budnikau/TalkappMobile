@@ -14,14 +14,12 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.CURRENT_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.STATUS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.UPDATED_DATE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_SET_ID_FN;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionProgressMapping, Integer> implements WordRepetitionProgressDao {
 
@@ -74,7 +72,7 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId) {
+    public List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(String status, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
@@ -104,12 +102,12 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours) {
+    public List<WordRepetitionProgressMapping> findWordSetsSortByUpdatedDateAndByStatus(long limit, Date olderThenInHours, String status) {
         try {
             QueryBuilder<WordRepetitionProgressMapping, Integer> builder = queryBuilder();
             Where<WordRepetitionProgressMapping, Integer> where = builder.where();
             where.and(
-                    where.eq(STATUS_FN, FINISHED),
+                    where.eq(STATUS_FN, status),
                     where.or(
                             where.lt(UPDATED_DATE_FN, olderThenInHours),
                             where.eq(UPDATED_DATE_FN, new Date(0)),
@@ -126,7 +124,7 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, WordSetProgressStatus status) {
+    public List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, String status) {
         try {
             SelectArg selectWord = new SelectArg();
             PreparedQuery<WordRepetitionProgressMapping> prepare = queryBuilder()

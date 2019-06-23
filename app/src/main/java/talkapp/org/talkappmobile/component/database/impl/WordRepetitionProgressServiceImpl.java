@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.log;
@@ -145,7 +146,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            exercise.setStatus(FIRST_CYCLE);
+            exercise.setStatus(FIRST_CYCLE.name());
             exercise.setWordSetId(word.getSourceWordSetId());
             exercise.setUpdatedDate(getInstance(UTC).getTime());
             wordsEx.add(exercise);
@@ -193,7 +194,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         Calendar cal = getInstance(UTC);
         //cal.add(Calendar.SECOND, -olderThenInHours);
         cal.add(Calendar.HOUR, -olderThenInHours);
-        List<WordRepetitionProgressMapping> exercises = exerciseDao.findFinishedWordSetsSortByUpdatedDate(limit * wordSetSize, cal.getTime());
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(limit * wordSetSize, cal.getTime(), FINISHED.name());
         Iterator<WordRepetitionProgressMapping> iterator = exercises.iterator();
         while (iterator.hasNext()) {
             WordRepetitionProgressMapping exe = iterator.next();
@@ -297,7 +298,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     public void moveCurrentWordToNextState(int wordSetId) {
         List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
         WordRepetitionProgressMapping mapping = current.get(0);
-        mapping.setStatus(next(mapping.getStatus()));
+        mapping.setStatus(next(WordSetProgressStatus.valueOf(mapping.getStatus())).name());
         mapping.setUpdatedDate(getInstance(UTC).getTime());
         exerciseDao.createNewOrUpdate(mapping);
     }
@@ -346,7 +347,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
             exercises = exerciseDao.findByWordAndByWordSetIdAndByStatus(
                     mapper.writeValueAsString(word),
                     word.getSourceWordSetId(),
-                    FINISHED
+                    FINISHED.name()
             );
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);

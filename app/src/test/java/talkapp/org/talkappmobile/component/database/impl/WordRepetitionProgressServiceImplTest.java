@@ -55,14 +55,14 @@ public class WordRepetitionProgressServiceImplTest {
 
         // when
         int wordSetSize = 12;
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(Collections.<WordRepetitionProgressMapping>emptyList());
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
         assertEquals(0, wordSets.size());
         ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
@@ -87,7 +87,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 1;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
@@ -97,7 +97,7 @@ public class WordRepetitionProgressServiceImplTest {
         assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
@@ -121,7 +121,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 1;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
@@ -158,7 +158,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
@@ -171,7 +171,7 @@ public class WordRepetitionProgressServiceImplTest {
         assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
@@ -204,7 +204,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(new ArrayList<>(expectedWordSets));
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
@@ -217,7 +217,7 @@ public class WordRepetitionProgressServiceImplTest {
         assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
@@ -245,7 +245,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(exerciseDao.findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), any(Date.class)))
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
@@ -256,7 +256,7 @@ public class WordRepetitionProgressServiceImplTest {
         assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findFinishedWordSetsSortByUpdatedDate(eq(limit * wordSetSize), captor.capture());
+        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 }

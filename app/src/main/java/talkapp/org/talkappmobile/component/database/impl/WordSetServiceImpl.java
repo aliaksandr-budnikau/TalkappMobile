@@ -23,7 +23,7 @@ public class WordSetServiceImpl implements WordSetService {
     public void resetProgress(WordSet wordSet) {
         WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
         wordSetMapping.setTrainingExperience(0);
-        wordSetMapping.setStatus(FIRST_CYCLE);
+        wordSetMapping.setStatus(FIRST_CYCLE.name());
         wordSetDao.createNewOrUpdate(wordSetMapping);
     }
 
@@ -43,7 +43,7 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public void moveToAnotherState(int id, WordSetProgressStatus value) {
         WordSetMapping wordSetMapping = wordSetDao.findById(id);
-        wordSetMapping.setStatus(value);
+        wordSetMapping.setStatus(value.name());
         wordSetDao.createNewOrUpdate(wordSetMapping);
     }
 

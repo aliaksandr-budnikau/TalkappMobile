@@ -13,6 +13,7 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.mappings.local.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.TextToken;
 
 public class SentenceMapper {
@@ -30,7 +31,7 @@ public class SentenceMapper {
         SentenceMapping mapping = new SentenceMapping();
         mapping.setId(sentence.getId() + "#" + word + "#" + wordsNumber);
         mapping.setText(sentence.getText());
-        mapping.setContentScore(sentence.getContentScore());
+        mapping.setContentScore(sentence.getContentScore() == null ? null : sentence.getContentScore().name());
         try {
             mapping.setTranslations(mapper.writeValueAsString(sentence.getTranslations()));
         } catch (JsonProcessingException e) {
@@ -48,7 +49,7 @@ public class SentenceMapper {
         Sentence sentence = new Sentence();
         sentence.setId(mapping.getId());
         sentence.setText(mapping.getText());
-        sentence.setContentScore(mapping.getContentScore());
+        sentence.setContentScore(mapping.getContentScore() == null ? null : SentenceContentScore.valueOf(mapping.getContentScore()));
         Map<String, String> translation = null;
         try {
             translation = mapper.readValue(mapping.getTranslations(), HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE);

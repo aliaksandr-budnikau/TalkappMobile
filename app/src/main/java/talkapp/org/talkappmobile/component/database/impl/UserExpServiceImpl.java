@@ -26,10 +26,10 @@ public class UserExpServiceImpl implements UserExpService {
     @Override
     public double increaseForRepetition(int repetitionCounter, ExpActivityType type) {
         Date today = new Date();
-        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(today, type);
+        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(today, type.name());
         if (mapping == null) {
             mapping = new ExpAuditMapping();
-            mapping.setActivityType(type);
+            mapping.setActivityType(type.name());
             mapping.setDate(today);
             mapping.setExpScore(repetitionCounter);
         } else {

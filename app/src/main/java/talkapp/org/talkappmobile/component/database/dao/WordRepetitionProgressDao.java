@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public interface WordRepetitionProgressDao {
 
@@ -16,11 +15,11 @@ public interface WordRepetitionProgressDao {
 
     int createAll(List<WordRepetitionProgressMapping> words);
 
-    List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId);
+    List<WordRepetitionProgressMapping> findByStatusAndByWordSetId(String status, int wordSetId);
 
     List<WordRepetitionProgressMapping> findByCurrentAndByWordSetId(int wordSetId);
 
-    List<WordRepetitionProgressMapping> findFinishedWordSetsSortByUpdatedDate(long limit, Date olderThenInHours);
+    List<WordRepetitionProgressMapping> findWordSetsSortByUpdatedDateAndByStatus(long limit, Date olderThenInHours, String status);
 
-    List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, WordSetProgressStatus status);
+    List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, String status);
 }

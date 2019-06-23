@@ -7,8 +7,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 import java.util.Objects;
 
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
 import static talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping.WORD_REPETITION_PROGRESS_TABLE;
@@ -38,7 +36,7 @@ public class WordRepetitionProgressMapping {
     private String sentenceIds;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetProgressStatus status = FIRST_CYCLE;
+    private String status;
 
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
@@ -55,11 +53,11 @@ public class WordRepetitionProgressMapping {
     public WordRepetitionProgressMapping() {
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, WordSetProgressStatus status, boolean current) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, String status, boolean current) {
         this(id, wordSetId, wordJSON, sentenceIds, status, current, getInstance(UTC).getTime());
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, WordSetProgressStatus status, boolean current, Date updatedDate) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, String status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordJSON = wordJSON;
@@ -101,11 +99,11 @@ public class WordRepetitionProgressMapping {
         this.sentenceIds = sentenceJSON;
     }
 
-    public WordSetProgressStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(WordSetProgressStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

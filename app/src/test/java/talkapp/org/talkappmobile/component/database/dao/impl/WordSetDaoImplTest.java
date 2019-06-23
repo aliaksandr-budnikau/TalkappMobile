@@ -61,7 +61,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(1));
         exp.setTrainingExperience(3);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
 
         // when
         experienceDao.createNewOrUpdate(exp);
@@ -72,7 +72,7 @@ public class WordSetDaoImplTest {
 
         assertEquals(exp.getId(), cursor.getString(cursor.getColumnIndex(ID_FN)));
         assertEquals(exp.getTrainingExperience(), cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
+        assertEquals(exp.getStatus(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getCount());
     }
 
@@ -85,7 +85,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(3));
         exp.setTrainingExperience(3);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
 
         Integer lastId1 = experienceDao.getTheLastCustomWordSetsId();
         experienceDao.createNewOrUpdate(exp);
@@ -104,7 +104,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(99));
         exp.setTrainingExperience(3);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         exp = new WordSetMapping();
@@ -113,7 +113,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(165));
         exp.setTrainingExperience(3);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         Integer lastId = experienceDao.getTheLastCustomWordSetsId();
@@ -130,7 +130,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(1));
         exp.setTrainingExperience(0);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         exp = new WordSetMapping();
@@ -139,7 +139,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(0);
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         exp = new WordSetMapping();
@@ -148,7 +148,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(1);
-        exp.setStatus(SECOND_CYCLE);
+        exp.setStatus(SECOND_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         exp = new WordSetMapping();
@@ -157,7 +157,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(2);
-        exp.setStatus(SECOND_CYCLE);
+        exp.setStatus(SECOND_CYCLE.name());
         experienceDao.createNewOrUpdate(exp);
 
         exp = new WordSetMapping();
@@ -166,7 +166,7 @@ public class WordSetDaoImplTest {
         exp.setTopicId(String.valueOf(45));
         exp.setId(String.valueOf(2));
         exp.setTrainingExperience(3);
-        exp.setStatus(FINISHED);
+        exp.setStatus(FINISHED.name());
         experienceDao.createNewOrUpdate(exp);
 
         Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s WHERE id = %s;", WORD_SET_TABLE, 1), new String[]{});
@@ -203,7 +203,7 @@ public class WordSetDaoImplTest {
         exp.setWords("words,words,words,words,words,words,words,words,words,words,words,words");
         exp.setTop(3);
         exp.setTopicId(String.valueOf(45));
-        exp.setStatus(FIRST_CYCLE);
+        exp.setStatus(FIRST_CYCLE.name());
         exp.setId("0");
 
         // when
@@ -215,7 +215,7 @@ public class WordSetDaoImplTest {
 
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(0, cursor.getInt(cursor.getColumnIndex(TRAINING_EXPERIENCE_FN)));
-        assertEquals(exp.getStatus().name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
+        assertEquals(exp.getStatus(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
         assertEquals(1, cursor.getCount());
     }
 
@@ -229,7 +229,7 @@ public class WordSetDaoImplTest {
 
         assertEquals(String.valueOf(1), exp.getId());
         assertEquals(0, exp.getTrainingExperience());
-        assertEquals(FINISHED, exp.getStatus());
+        assertEquals(FINISHED.name(), exp.getStatus());
     }
 
     @Test

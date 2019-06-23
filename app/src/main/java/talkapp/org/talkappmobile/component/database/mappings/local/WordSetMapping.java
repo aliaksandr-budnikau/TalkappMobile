@@ -40,7 +40,7 @@ public class WordSetMapping implements Serializable {
     private int trainingExperience;
 
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
-    private WordSetProgressStatus status = FIRST_CYCLE;
+    private String status = "FIRST_CYCLE";
 
     public String getId() {
         return id;
@@ -82,11 +82,11 @@ public class WordSetMapping implements Serializable {
         this.trainingExperience = trainingExperience;
     }
 
-    public WordSetProgressStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(WordSetProgressStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

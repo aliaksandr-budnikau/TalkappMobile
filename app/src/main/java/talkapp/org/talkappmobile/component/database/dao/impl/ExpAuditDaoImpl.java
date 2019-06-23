@@ -10,7 +10,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.model.ExpActivityType;
 
 import static talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping.ACTIVITY_TYPE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping.DATE_FN;
@@ -40,7 +39,7 @@ public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> imple
     }
 
     @Override
-    public ExpAuditMapping findByDateAndActivityType(Date today, ExpActivityType type) {
+    public ExpAuditMapping findByDateAndActivityType(Date today, String type) {
         try {
             PreparedQuery<ExpAuditMapping> prepare = queryBuilder()
                     .where()

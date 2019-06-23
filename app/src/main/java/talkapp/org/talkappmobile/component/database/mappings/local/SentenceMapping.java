@@ -25,7 +25,7 @@ public class SentenceMapping {
     @DatabaseField(canBeNull = false, columnName = TOKENS_FN)
     private String tokens;
     @DatabaseField(columnName = CONTENT_SCORE_FN)
-    private SentenceContentScore contentScore;
+    private String contentScore;
 
     public String getId() {
         return id;
@@ -59,11 +59,11 @@ public class SentenceMapping {
         this.tokens = tokens;
     }
 
-    public SentenceContentScore getContentScore() {
+    public String getContentScore() {
         return contentScore;
     }
 
-    public void setContentScore(SentenceContentScore contentScore) {
+    public void setContentScore(String contentScore) {
         this.contentScore = contentScore;
     }
 

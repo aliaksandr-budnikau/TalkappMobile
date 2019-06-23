@@ -6,8 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-import talkapp.org.talkappmobile.model.ExpActivityType;
-
 @DatabaseTable(tableName = ExpAuditMapping.EXP_AUDIT_TABLE)
 public class ExpAuditMapping {
     public static final String EXP_AUDIT_TABLE = "ExpAudit";
@@ -27,7 +25,7 @@ public class ExpAuditMapping {
     private double expScore;
 
     @DatabaseField(canBeNull = false, columnName = ACTIVITY_TYPE_FN)
-    private ExpActivityType activityType;
+    private String activityType;
 
     public int getId() {
         return id;
@@ -53,11 +51,11 @@ public class ExpAuditMapping {
         this.expScore = expScore;
     }
 
-    public ExpActivityType getActivityType() {
+    public String getActivityType() {
         return activityType;
     }
 
-    public void setActivityType(ExpActivityType activityType) {
+    public void setActivityType(String activityType) {
         this.activityType = activityType;
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.component.database.mappings.local.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public class WordSetMapper {
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
@@ -41,7 +42,7 @@ public class WordSetMapper {
         wordSet.setTopicId(mapping.getTopicId());
         wordSet.setTop(mapping.getTop());
         wordSet.setTrainingExperience(mapping.getTrainingExperience());
-        wordSet.setStatus(mapping.getStatus());
+        wordSet.setStatus(WordSetProgressStatus.valueOf(mapping.getStatus()));
 
         List<Word2Tokens> words;
         try {
