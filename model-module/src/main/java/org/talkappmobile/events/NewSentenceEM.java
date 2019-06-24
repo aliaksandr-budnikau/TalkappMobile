@@ -3,20 +3,15 @@ package org.talkappmobile.events;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NonNull;
+
+@Getter
+@AllArgsConstructor
 public class NewSentenceEM {
-    private final Sentence sentence;
-    private final Word2Tokens word;
-
-    public NewSentenceEM(Sentence sentence, Word2Tokens word) {
-        this.sentence = sentence;
-        this.word = word;
-    }
-
-    public Sentence getSentence() {
-        return sentence;
-    }
-
-    public Word2Tokens getWord() {
-        return word;
-    }
+    @NonNull
+    private Sentence sentence;
+    @NonNull
+    private Word2Tokens word;
 }
