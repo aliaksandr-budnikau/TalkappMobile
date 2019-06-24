@@ -2,9 +2,9 @@ package talkapp.org.talkappmobile.activity.listener;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 public interface OnPracticeWordSetListener {
     void onInitialiseExperience(WordSet wordSet);

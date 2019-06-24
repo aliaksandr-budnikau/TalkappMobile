@@ -9,8 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.custom.presenter.PronounceRightAnswerButtonPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.PronounceRightAnswerButtonView;
 import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

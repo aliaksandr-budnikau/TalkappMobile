@@ -8,8 +8,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
 import talkapp.org.talkappmobile.component.SentenceService;
-import talkapp.org.talkappmobile.model.UncheckedAnswer;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.UncheckedAnswer;
+import org.talkappmobile.model.WordSet;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;

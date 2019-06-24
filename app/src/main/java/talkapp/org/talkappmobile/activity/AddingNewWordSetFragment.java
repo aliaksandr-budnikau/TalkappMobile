@@ -20,7 +20,7 @@ import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 

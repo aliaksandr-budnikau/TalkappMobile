@@ -14,11 +14,11 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
+import static org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();

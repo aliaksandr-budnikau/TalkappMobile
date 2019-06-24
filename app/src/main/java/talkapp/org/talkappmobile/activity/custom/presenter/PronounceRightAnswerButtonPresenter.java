@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.activity.custom.presenter;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractor;
 import talkapp.org.talkappmobile.activity.custom.listener.PronounceRightAnswerButtonListener;
 import talkapp.org.talkappmobile.activity.custom.view.PronounceRightAnswerButtonView;
-import talkapp.org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Sentence;
 
 public class PronounceRightAnswerButtonPresenter implements PronounceRightAnswerButtonListener {
     private final PronounceRightAnswerButtonView view;

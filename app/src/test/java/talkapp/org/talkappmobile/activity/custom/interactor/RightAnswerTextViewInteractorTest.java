@@ -11,9 +11,9 @@ import java.util.Collections;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnRightAnswerTextViewListener;
 import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.TextToken;
+import org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

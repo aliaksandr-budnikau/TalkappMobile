@@ -1,7 +1,7 @@
 package talkapp.org.talkappmobile.component.database;
 
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 public interface WordSetService {
 

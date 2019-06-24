@@ -59,10 +59,10 @@ import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;

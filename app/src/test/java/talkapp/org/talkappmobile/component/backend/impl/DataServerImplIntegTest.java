@@ -36,10 +36,10 @@ import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.TextToken;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static android.os.Build.VERSION_CODES.M;
 import static java.util.Arrays.asList;
@@ -48,10 +48,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
+import static org.talkappmobile.model.SentenceContentScore.CORRUPTED;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {M}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")

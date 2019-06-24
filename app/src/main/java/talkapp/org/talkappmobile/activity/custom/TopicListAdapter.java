@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 /**
  * @author Budnikau Aliaksandr

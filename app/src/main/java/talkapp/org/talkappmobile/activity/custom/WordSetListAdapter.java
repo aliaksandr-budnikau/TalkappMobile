@@ -20,9 +20,9 @@ import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPre
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 /**
  * @author Budnikau Aliaksandr

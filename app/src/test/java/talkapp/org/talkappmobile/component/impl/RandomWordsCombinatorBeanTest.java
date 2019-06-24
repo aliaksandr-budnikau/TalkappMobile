@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Word2Tokens;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

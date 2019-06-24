@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 public class WordSetMapper {
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;

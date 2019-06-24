@@ -36,7 +36,7 @@ import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {

@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.TextToken;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.TextToken;
 
 public class SentenceMapper {
     private final MapType HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE;

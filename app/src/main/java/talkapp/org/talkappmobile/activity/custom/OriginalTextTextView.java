@@ -32,9 +32,9 @@ import talkapp.org.talkappmobile.activity.event.wordset.OriginalTextClickEM;
 import talkapp.org.talkappmobile.activity.event.wordset.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.activity.event.wordset.SentencesWereFoundForChangeEM;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.Word2Tokens;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 

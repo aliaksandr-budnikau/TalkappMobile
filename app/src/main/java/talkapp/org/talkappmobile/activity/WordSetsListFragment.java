@@ -46,14 +46,14 @@ import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
+import static org.talkappmobile.model.RepetitionClass.LEARNED;
+import static org.talkappmobile.model.RepetitionClass.REPEATED;
+import static org.talkappmobile.model.RepetitionClass.SEEN;
 
 @EFragment(value = R.layout.word_sets_list_layout)
 public class WordSetsListFragment extends Fragment implements WordSetsListView {

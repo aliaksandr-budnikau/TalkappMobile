@@ -1,9 +1,9 @@
-package talkapp.org.talkappmobile.model;
-
-import android.support.annotation.NonNull;
+package org.talkappmobile.model;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import lombok.NonNull;
 
 public class Word2Tokens implements Serializable {
     private final String word;

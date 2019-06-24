@@ -19,7 +19,7 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {

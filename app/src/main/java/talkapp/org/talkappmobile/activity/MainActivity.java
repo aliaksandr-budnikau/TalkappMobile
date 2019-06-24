@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 

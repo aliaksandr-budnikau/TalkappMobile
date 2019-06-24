@@ -24,7 +24,7 @@ import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 

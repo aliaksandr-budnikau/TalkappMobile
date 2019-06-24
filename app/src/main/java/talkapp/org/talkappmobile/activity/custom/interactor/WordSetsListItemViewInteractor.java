@@ -6,8 +6,8 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetsListItemViewListener;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 public class WordSetsListItemViewInteractor {
     private final WordSetExperienceUtils experienceUtils;

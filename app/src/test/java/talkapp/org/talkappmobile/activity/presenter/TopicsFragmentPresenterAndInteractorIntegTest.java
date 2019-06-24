@@ -24,7 +24,7 @@ import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;

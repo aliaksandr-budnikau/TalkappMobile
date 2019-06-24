@@ -2,8 +2,8 @@ package talkapp.org.talkappmobile.component;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 public interface SentenceService {
     boolean classifySentence(Sentence sentence);

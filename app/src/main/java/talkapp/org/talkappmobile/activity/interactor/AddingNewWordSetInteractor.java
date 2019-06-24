@@ -8,10 +8,10 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -62,7 +62,7 @@ public class AddingNewWordSetInteractor {
     private LinkedList<Word2Tokens> getWord2Tokens(List<WordTranslation> translations) {
         LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
         for (WordTranslation translation : translations) {
-            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens(), null));
+            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens(), 0));
         }
         return word2Tokens;
     }
@@ -110,7 +110,7 @@ public class AddingNewWordSetInteractor {
         boolean anyHasNoSentences = false;
         for (int i = 0; i < words.size(); i++) {
             String word = words.get(i);
-            Word2Tokens tokens = new Word2Tokens(word, word, null);
+            Word2Tokens tokens = new Word2Tokens(word, word, 0);
             List<Sentence> sentences;
             try {
                 sentences = server.findSentencesByWords(tokens, WORDS_NUMBER, 0);

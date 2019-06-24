@@ -3,9 +3,9 @@ package talkapp.org.talkappmobile.component.database;
 import java.util.List;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 public interface WordRepetitionProgressService {
     List<Sentence> findByWordAndWordSetId(Word2Tokens word);

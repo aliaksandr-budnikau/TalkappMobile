@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.model;
+package org.talkappmobile.model;
 
 public enum WordSetProgressStatus {
     FIRST_CYCLE(0), SECOND_CYCLE(1), FINISHED(2);

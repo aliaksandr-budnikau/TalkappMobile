@@ -31,7 +31,7 @@ import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;

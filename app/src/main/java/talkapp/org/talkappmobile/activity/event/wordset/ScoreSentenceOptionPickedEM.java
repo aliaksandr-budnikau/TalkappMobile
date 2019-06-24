@@ -1,7 +1,7 @@
 package talkapp.org.talkappmobile.activity.event.wordset;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
 
 public class ScoreSentenceOptionPickedEM {
     private SentenceContentScore score;

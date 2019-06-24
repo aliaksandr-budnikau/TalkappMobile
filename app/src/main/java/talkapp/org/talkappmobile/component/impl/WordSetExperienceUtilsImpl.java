@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.component.impl;
 import org.androidannotations.annotations.EBean;
 
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 import static org.androidannotations.annotations.EBean.Scope.Singleton;
 

@@ -6,8 +6,8 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyIn
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
 

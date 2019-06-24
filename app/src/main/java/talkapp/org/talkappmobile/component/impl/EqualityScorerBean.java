@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Word2Tokens;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 

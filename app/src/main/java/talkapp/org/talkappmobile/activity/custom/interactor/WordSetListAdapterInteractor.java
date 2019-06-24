@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetListAdapterListener;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.NEW;
-import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.RepetitionClass.LEARNED;
+import static org.talkappmobile.model.RepetitionClass.NEW;
+import static org.talkappmobile.model.RepetitionClass.REPEATED;
+import static org.talkappmobile.model.RepetitionClass.SEEN;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 
 public class WordSetListAdapterInteractor {
 

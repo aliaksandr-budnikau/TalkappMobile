@@ -14,10 +14,10 @@ import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
-import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
+import static org.talkappmobile.model.SentenceContentScore.POOR;
 
 public class SentenceServiceImpl implements SentenceService {
     public static final int WORDS_NUMBER = 6;

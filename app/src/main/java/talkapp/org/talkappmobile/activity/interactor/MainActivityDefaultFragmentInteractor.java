@@ -6,11 +6,11 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.Task;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Task;
+import org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
+import static org.talkappmobile.model.RepetitionClass.LEARNED;
 
 public class MainActivityDefaultFragmentInteractor {
 

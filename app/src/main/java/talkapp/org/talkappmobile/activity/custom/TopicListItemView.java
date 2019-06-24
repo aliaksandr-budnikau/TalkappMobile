@@ -9,7 +9,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 @EViewGroup(R.layout.row_topics_list)
 public class TopicListItemView extends RelativeLayout {

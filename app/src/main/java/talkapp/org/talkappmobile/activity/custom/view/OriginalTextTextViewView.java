@@ -2,8 +2,8 @@ package talkapp.org.talkappmobile.activity.custom.view;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 public interface OriginalTextTextViewView {
     void setOriginalText(String originalText);

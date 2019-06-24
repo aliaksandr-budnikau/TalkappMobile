@@ -25,9 +25,9 @@ import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;

@@ -15,9 +15,9 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -29,9 +29,9 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.component.impl.SentenceServiceImpl.WORDS_NUMBER;
-import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
-import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
-import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
+import static org.talkappmobile.model.SentenceContentScore.CORRUPTED;
+import static org.talkappmobile.model.SentenceContentScore.INSULT;
+import static org.talkappmobile.model.SentenceContentScore.POOR;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {

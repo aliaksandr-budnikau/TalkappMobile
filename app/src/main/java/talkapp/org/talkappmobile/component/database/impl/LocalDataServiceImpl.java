@@ -21,11 +21,11 @@ import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.TopicMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordTranslationMapping;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();

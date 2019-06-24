@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.model;
+package org.talkappmobile.model;
 
 public class Task {
     private String title;

@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.activity.custom.presenter;
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetsListItemViewListener;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public class WordSetsListItemViewPresenter implements OnWordSetsListItemViewListener {
     private final WordSetsListItemViewView view;

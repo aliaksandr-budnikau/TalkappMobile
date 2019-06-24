@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.activity.event.wordset.TasksListLoadedEM;
-import talkapp.org.talkappmobile.model.Task;
+import org.talkappmobile.model.Task;
 
 @EView
 public class TasksListView extends RecyclerView {

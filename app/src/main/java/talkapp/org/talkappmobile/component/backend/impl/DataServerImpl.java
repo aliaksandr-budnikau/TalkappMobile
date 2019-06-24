@@ -11,11 +11,11 @@ import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.SentenceRestClient;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 public class DataServerImpl implements DataServer {
     private final SentenceRestClient sentenceRestClient;

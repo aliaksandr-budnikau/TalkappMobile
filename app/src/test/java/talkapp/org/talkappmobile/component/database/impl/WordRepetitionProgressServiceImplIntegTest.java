@@ -22,19 +22,19 @@ import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDa
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Calendar.getInstance;
 import static okhttp3.internal.Util.UTC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.NEW;
-import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
+import static org.talkappmobile.model.RepetitionClass.LEARNED;
+import static org.talkappmobile.model.RepetitionClass.NEW;
+import static org.talkappmobile.model.RepetitionClass.REPEATED;
+import static org.talkappmobile.model.RepetitionClass.SEEN;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")

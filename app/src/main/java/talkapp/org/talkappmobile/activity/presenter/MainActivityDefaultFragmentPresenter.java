@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
-import talkapp.org.talkappmobile.model.Task;
+import org.talkappmobile.model.Task;
 
 public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefaultFragmentListener {
     private final MainActivityDefaultFragmentView view;

@@ -5,7 +5,7 @@ import java.util.Date;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.model.ExpActivityType;
+import org.talkappmobile.model.ExpActivityType;
 
 public class UserExpServiceImpl implements UserExpService {
     private final ExpAuditDao expAuditDao;

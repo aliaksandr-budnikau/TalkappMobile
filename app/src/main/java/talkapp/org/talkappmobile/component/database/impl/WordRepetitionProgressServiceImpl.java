@@ -25,11 +25,11 @@ import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.log;
@@ -39,9 +39,9 @@ import static java.util.Collections.emptyList;
 import static okhttp3.internal.Util.UTC;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.join;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
     public static final String SPLITER = ",";

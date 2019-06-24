@@ -14,8 +14,8 @@ import org.androidannotations.annotations.ViewById;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.PracticeWordSetPagerAdapter;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 import static android.view.KeyEvent.KEYCODE_BACK;
 

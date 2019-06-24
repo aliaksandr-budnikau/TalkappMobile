@@ -17,11 +17,11 @@ import talkapp.org.talkappmobile.component.RefereeService;
 import talkapp.org.talkappmobile.component.SentenceService;
 import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.UncheckedAnswer;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.UncheckedAnswer;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

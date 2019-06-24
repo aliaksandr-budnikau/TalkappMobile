@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import android.os.Bundle;
 
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.TOPIC_MAPPING;
 

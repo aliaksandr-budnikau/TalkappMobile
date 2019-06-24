@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import talkapp.org.talkappmobile.activity.PracticeWordSetFragment;
 import talkapp.org.talkappmobile.activity.PracticeWordSetVocabularyFragment;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public class PracticeWordSetPagerAdapter extends FragmentPagerAdapter {
 

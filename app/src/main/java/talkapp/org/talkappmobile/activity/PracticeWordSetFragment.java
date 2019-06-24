@@ -48,9 +48,9 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static android.app.Activity.RESULT_OK;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;

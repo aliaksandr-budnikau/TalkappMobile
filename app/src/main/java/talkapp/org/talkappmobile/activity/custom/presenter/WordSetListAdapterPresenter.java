@@ -5,7 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterInteractor;
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetListAdapterListener;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public class WordSetListAdapterPresenter implements OnWordSetListAdapterListener {
     private final WordSetListAdapterView view;

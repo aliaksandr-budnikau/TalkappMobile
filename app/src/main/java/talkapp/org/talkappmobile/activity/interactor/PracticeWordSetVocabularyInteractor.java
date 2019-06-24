@@ -7,9 +7,9 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 public class PracticeWordSetVocabularyInteractor {
     private final DataServer server;

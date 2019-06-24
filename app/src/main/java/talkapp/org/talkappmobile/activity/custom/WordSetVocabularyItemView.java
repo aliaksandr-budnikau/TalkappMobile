@@ -13,7 +13,7 @@ import org.androidannotations.annotations.ViewById;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.WordTranslation;
 
 @EViewGroup(R.layout.word_set_vocabulary_item)
 public class WordSetVocabularyItemView extends RelativeLayout {

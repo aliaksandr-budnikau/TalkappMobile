@@ -30,7 +30,7 @@ import talkapp.org.talkappmobile.component.database.ServiceFactory;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.model.Task;
+import org.talkappmobile.model.Task;
 
 import static java.lang.String.format;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;

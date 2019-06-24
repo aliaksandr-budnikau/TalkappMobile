@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.component;
 import java.util.List;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Word2Tokens;
 
 /**
  * @author Budnikau Aliaksandr

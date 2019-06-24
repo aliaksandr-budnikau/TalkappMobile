@@ -9,11 +9,11 @@ import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     private final DataServer server;

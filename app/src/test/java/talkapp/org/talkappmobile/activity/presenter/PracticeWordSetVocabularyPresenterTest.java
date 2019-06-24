@@ -7,7 +7,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;

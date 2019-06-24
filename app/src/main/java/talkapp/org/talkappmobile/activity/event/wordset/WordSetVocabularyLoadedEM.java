@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.activity.event.wordset;
 
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.WordTranslation;
 
 public class WordSetVocabularyLoadedEM {
     private final WordTranslation[] translations;

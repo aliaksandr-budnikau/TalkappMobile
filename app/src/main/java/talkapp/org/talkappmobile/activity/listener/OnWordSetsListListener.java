@@ -2,8 +2,8 @@ package talkapp.org.talkappmobile.activity.listener;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 public interface OnWordSetsListListener {
     void onWordSetsInitialized(List<WordSet> wordSets);

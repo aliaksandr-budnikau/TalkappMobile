@@ -23,7 +23,7 @@ import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRemoveClickedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsRepeatedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsSeenRepFilterAppliedEM;
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetsStartedFilterAppliedEM;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 @EView
 public class WordSetsListListView extends ListView {

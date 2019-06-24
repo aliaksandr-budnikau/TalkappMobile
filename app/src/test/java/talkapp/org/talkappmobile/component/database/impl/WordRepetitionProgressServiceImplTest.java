@@ -20,8 +20,8 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.getInstance;

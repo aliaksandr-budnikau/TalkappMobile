@@ -11,8 +11,8 @@ import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.verify;
 

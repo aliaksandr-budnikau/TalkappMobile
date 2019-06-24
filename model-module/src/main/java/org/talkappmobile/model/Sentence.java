@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.model;
+package org.talkappmobile.model;
 
 import java.util.HashMap;
 import java.util.LinkedList;

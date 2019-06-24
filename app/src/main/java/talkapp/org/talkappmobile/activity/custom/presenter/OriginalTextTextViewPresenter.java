@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.Word2Tokens;
 
 public class OriginalTextTextViewPresenter {
     private Sentence sentence;

@@ -26,10 +26,10 @@ import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.UncheckedAnswer;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.UncheckedAnswer;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -41,9 +41,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingPracticeWordSetInteractorTest {

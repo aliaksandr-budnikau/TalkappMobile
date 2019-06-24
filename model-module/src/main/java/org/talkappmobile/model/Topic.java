@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.model;
+package org.talkappmobile.model;
 
 import java.io.Serializable;
 import java.util.Objects;

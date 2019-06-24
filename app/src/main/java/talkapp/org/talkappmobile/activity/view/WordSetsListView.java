@@ -2,8 +2,8 @@ package talkapp.org.talkappmobile.activity.view;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 public interface WordSetsListView {
     void onWordSetsInitialized(List<WordSet> wordSets);

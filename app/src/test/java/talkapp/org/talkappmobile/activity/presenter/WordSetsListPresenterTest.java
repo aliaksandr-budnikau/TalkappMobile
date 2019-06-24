@@ -8,7 +8,7 @@ import org.powermock.reflect.Whitebox;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
-import talkapp.org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Topic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

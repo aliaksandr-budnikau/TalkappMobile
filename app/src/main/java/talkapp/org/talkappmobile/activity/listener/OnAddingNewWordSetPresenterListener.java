@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.activity.listener;
 
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public interface OnAddingNewWordSetPresenterListener {
     void onSentencesWereNotFound(int wordIndex);

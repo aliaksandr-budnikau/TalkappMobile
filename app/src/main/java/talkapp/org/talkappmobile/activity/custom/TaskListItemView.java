@@ -11,7 +11,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.model.Task;
+import org.talkappmobile.model.Task;
 
 @EViewGroup(R.layout.task_list_item)
 public class TaskListItemView extends RelativeLayout {

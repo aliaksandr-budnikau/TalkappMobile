@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.activity.event.wordset.WordSetVocabularyLoadedEM;
-import talkapp.org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.model.WordTranslation;
 
 @EView
 public class WordSetVocabularyView extends RecyclerView {

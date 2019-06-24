@@ -15,21 +15,21 @@ import java.util.Random;
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterInteractor;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.NEW;
-import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
-import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
+import static org.talkappmobile.model.RepetitionClass.LEARNED;
+import static org.talkappmobile.model.RepetitionClass.NEW;
+import static org.talkappmobile.model.RepetitionClass.REPEATED;
+import static org.talkappmobile.model.RepetitionClass.SEEN;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordSetListAdapterPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {

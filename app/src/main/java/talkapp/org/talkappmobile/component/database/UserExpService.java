@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.component.database;
 
-import talkapp.org.talkappmobile.model.ExpActivityType;
+import org.talkappmobile.model.ExpActivityType;
 
 public interface UserExpService {
     double getOverallExp();

@@ -29,9 +29,9 @@ import static talkapp.org.talkappmobile.component.database.mappings.WordSetMappi
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetMapping.TRAINING_EXPERIENCE_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetMapping.WORDS_FN;
 import static talkapp.org.talkappmobile.component.database.mappings.WordSetMapping.WORD_SET_TABLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")

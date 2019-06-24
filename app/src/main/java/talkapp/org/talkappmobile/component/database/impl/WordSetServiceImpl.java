@@ -4,10 +4,10 @@ import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.component.database.WordSetService;
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
     private final int CUSTOM_WORD_SETS_STARTS_SINCE = 1000000;

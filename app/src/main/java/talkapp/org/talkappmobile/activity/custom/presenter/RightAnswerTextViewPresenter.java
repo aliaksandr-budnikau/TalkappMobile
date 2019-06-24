@@ -6,8 +6,8 @@ import android.text.Spanned;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.listener.OnRightAnswerTextViewListener;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 public class RightAnswerTextViewPresenter implements OnRightAnswerTextViewListener {
     private final RightAnswerTextViewView view;

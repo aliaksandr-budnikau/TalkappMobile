@@ -1,7 +1,7 @@
 package talkapp.org.talkappmobile.activity.event.wordset;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 public class NewSentenceEM {
     private final Sentence sentence;

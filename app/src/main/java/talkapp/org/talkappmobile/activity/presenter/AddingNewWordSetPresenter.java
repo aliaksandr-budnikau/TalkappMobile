@@ -5,7 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public class AddingNewWordSetPresenter implements OnAddingNewWordSetPresenterListener {
     private final AddingNewWordSetFragmentView view;

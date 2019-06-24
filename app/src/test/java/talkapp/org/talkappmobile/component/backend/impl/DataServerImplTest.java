@@ -33,8 +33,8 @@ import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

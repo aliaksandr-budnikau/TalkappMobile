@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import java.util.Comparator;
 
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSet;
 
 public class WordSetComparator implements Comparator<WordSet> {
     private static final int MAX_TOP_VALUE = 20000;

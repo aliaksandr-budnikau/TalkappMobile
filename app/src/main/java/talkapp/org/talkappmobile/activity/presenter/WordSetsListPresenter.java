@@ -5,8 +5,8 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;

@@ -1,11 +1,11 @@
-package talkapp.org.talkappmobile.model;
+package org.talkappmobile.model;
 
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
+import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 /**
  * @author Budnikau Aliaksandr

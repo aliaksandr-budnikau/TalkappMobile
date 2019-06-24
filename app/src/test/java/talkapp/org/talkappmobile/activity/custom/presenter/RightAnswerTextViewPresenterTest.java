@@ -9,8 +9,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;

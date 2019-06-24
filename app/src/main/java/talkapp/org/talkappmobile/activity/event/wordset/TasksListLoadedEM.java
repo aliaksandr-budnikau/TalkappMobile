@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.activity.event.wordset;
 
-import talkapp.org.talkappmobile.model.Task;
+import org.talkappmobile.model.Task;
 
 public class TasksListLoadedEM {
     private Task[] tasks;

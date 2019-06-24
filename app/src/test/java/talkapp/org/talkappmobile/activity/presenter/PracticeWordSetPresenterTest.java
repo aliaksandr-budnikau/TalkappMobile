@@ -11,9 +11,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.HashMap;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
