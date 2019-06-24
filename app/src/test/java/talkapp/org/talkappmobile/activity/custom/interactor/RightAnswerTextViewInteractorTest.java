@@ -6,14 +6,14 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.TextToken;
+import org.talkappmobile.model.Word2Tokens;
 
 import java.util.Collections;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnRightAnswerTextViewListener;
 import talkapp.org.talkappmobile.component.TextUtils;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.TextToken;
-import org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -40,10 +40,11 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(0).setToken("");
         sentence.getTokens().get(1).setStartOffset(8);
         sentence.getTokens().get(1).setEndOffset(12);
-        sentence.getTokens().get(1).setToken("know");
+        String know = "know";
+        sentence.getTokens().get(1).setToken(know);
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know", 4);
+        Word2Tokens word = new Word2Tokens(know, know, 4);
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -108,7 +109,8 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know2");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know", 5);
+        String know = "know";
+        Word2Tokens word = new Word2Tokens(know, know, 5);
 
         // when
         when(textUtils.hideIntervalsInText(anyString(), ArgumentMatchers.<Integer>anyList())).thenReturn("test");
@@ -159,7 +161,7 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know", 3);
+        Word2Tokens word = new Word2Tokens("know", "know", 3);
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);
@@ -221,7 +223,8 @@ public class RightAnswerTextViewInteractorTest {
         sentence.getTokens().get(1).setToken("know2");
         sentence.getTokens().get(2).setToken("");
 
-        Word2Tokens word = new Word2Tokens("know", 3);
+        String know = "know";
+        Word2Tokens word = new Word2Tokens(know, know, 3);
 
         // when
         interactor.maskOnlyWord(sentence, word, true, listener);

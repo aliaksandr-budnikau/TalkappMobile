@@ -14,6 +14,10 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -39,8 +43,8 @@ import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDa
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
@@ -48,8 +52,8 @@ import talkapp.org.talkappmobile.component.database.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
@@ -59,10 +63,6 @@ import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -139,7 +139,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens age = new Word2Tokens("age", id);
+        Word2Tokens age = new Word2Tokens("age", "age", id);
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds("AWbgboVdNEXFMlzHK5SR#" + age.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
@@ -149,7 +149,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exerciseDao.createNewOrUpdate(exercise);
 
 
-        Word2Tokens anniversary = new Word2Tokens("anniversary", id);
+        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", id);
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
@@ -159,7 +159,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exerciseDao.createNewOrUpdate(exercise);
 
 
-        Word2Tokens birth = new Word2Tokens("birth", id);
+        Word2Tokens birth = new Word2Tokens("birth", "birth", id);
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds("AWbgbsUXNEXFMlzHK5V2#" + birth.getWord() + "#6");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());

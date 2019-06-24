@@ -29,7 +29,8 @@ public class RightAnswerTextViewPresenterTest {
         presenter = new RightAnswerTextViewPresenter(interactor, view);
         Sentence sentence = new Sentence();
         sentence.setText("dsd");
-        Word2Tokens word = new Word2Tokens("dsfds54e3whggfdA", 3);
+        String wordAsString = "dsfds54e3whggfdA";
+        Word2Tokens word = new Word2Tokens(wordAsString, wordAsString, 3);
         presenter.setModel(sentence, word);
     }
 

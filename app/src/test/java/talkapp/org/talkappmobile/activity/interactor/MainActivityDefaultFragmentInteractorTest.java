@@ -5,13 +5,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,11 +32,12 @@ public class MainActivityDefaultFragmentInteractorTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
         wordSets.addLast(new WordSet());
         wordSets.getLast().setWords(new LinkedList<Word2Tokens>());
-        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
-        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
+        String word = "sdfsd";
+        wordSets.getLast().getWords().add(new Word2Tokens(word, word, 3));
+        wordSets.getLast().getWords().add(new Word2Tokens(word, word, 3));
         wordSets.addLast(new WordSet());
         wordSets.getLast().setWords(new LinkedList<Word2Tokens>());
-        wordSets.getLast().getWords().add(new Word2Tokens("sdfsd", 3));
+        wordSets.getLast().getWords().add(new Word2Tokens(word, word, 3));
 
         when(exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2)).thenReturn(wordSets);
         when(exerciseService.getMaxWordSetSize()).thenReturn(2);

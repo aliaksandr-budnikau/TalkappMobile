@@ -7,13 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import java.util.HashMap;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -50,7 +50,7 @@ public class PracticeWordSetPresenterTest {
         sentence.setTranslations(new HashMap<String, String>());
         sentence.getTranslations().put("russian", "fsdfsfs");
 
-        Word2Tokens word = new Word2Tokens("word", 100);
+        Word2Tokens word = new Word2Tokens("word", "word", 100);
 
         // when
         presenter.onSentencesFound(sentence, word);
@@ -119,7 +119,7 @@ public class PracticeWordSetPresenterTest {
     public void onNextButtonClick() {
         // setup
         int wordSetId = 3;
-        Word2Tokens word1 = new Word2Tokens("sdfsd", wordSetId);
+        Word2Tokens word1 = new Word2Tokens("sdfsd", "sdfsd", wordSetId);
 
         // when
         when(interactor.peekAnyNewWordByWordSetId(wordSetId)).thenReturn(word1);

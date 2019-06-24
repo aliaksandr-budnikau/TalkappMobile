@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import java.util.Calendar;
 import java.util.List;
@@ -22,9 +25,6 @@ import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDa
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Calendar.getInstance;
@@ -56,7 +56,7 @@ public class WordRepetitionProgressServiceImplIntegTest extends PresenterAndInte
 
         Calendar cal = getInstance(UTC);
 
-        Word2Tokens anniversary = new Word2Tokens("anniversary", 3);
+        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", 3);
 
         for (int c = 0; c < 12; c++) {
             for (int i = 2; i <= 13; i++) {

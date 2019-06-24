@@ -9,6 +9,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +28,6 @@ import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordTranslation;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -62,7 +62,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     @Test
     public void test() {
         int id = -1;
-        List<Word2Tokens> words = asList(new Word2Tokens("age", id), new Word2Tokens("anniversary", id), new Word2Tokens("birth", id));
+        List<Word2Tokens> words = asList(new Word2Tokens("age", "age", id), new Word2Tokens("anniversary", "anniversary", id), new Word2Tokens("birth", "birth", id));
 
         WordSet wordSet = new WordSet();
         wordSet.setId(id);

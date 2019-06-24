@@ -13,6 +13,10 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
 
 import java.sql.SQLException;
 
@@ -33,8 +37,8 @@ import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDa
 import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
 import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.dao.impl.ExpAuditDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImpl;
+import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
@@ -42,8 +46,8 @@ import talkapp.org.talkappmobile.component.database.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
@@ -51,10 +55,6 @@ import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -139,9 +139,9 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet = new WordSet();
         wordSet.setId(id);
 
-        Word2Tokens age = new Word2Tokens("age", wordSet.getId());
-        Word2Tokens anniversary = new Word2Tokens("anniversary", wordSet.getId());
-        Word2Tokens birth = new Word2Tokens("birth", wordSet.getId());
+        Word2Tokens age = new Word2Tokens("age", "age", wordSet.getId());
+        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", wordSet.getId());
+        Word2Tokens birth = new Word2Tokens("birth", "birth", wordSet.getId());
 
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");

@@ -5,13 +5,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
@@ -35,7 +35,7 @@ public class PracticeWordSetViewStrategyTest {
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(23332);
-        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
+        wordSet.setWords(asList(new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId())));
 
 
         // when
@@ -76,7 +76,7 @@ public class PracticeWordSetViewStrategyTest {
         int progress = 232;
 
         WordSet wordSet = new WordSet();
-        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
+        wordSet.setWords(asList(new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId())));
         wordSet.setTrainingExperience(23332);
 
         // when

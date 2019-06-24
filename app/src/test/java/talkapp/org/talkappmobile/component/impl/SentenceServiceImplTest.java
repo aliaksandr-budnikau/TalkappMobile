@@ -5,6 +5,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.Word2Tokens;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,9 +18,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.SentenceContentScore;
-import org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -28,10 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.component.impl.SentenceServiceImpl.WORDS_NUMBER;
 import static org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static org.talkappmobile.model.SentenceContentScore.INSULT;
 import static org.talkappmobile.model.SentenceContentScore.POOR;
+import static talkapp.org.talkappmobile.component.impl.SentenceServiceImpl.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {
@@ -57,7 +57,7 @@ public class SentenceServiceImplTest {
 
         // when
         when(dataServer.findSentencesByWords(any(Word2Tokens.class), anyInt(), anyInt())).thenReturn(sentences);
-        List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens("sdfsd", 2));
+        List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens("sdfsd", "sdfsd", 2));
 
         // then
         assertEquals(2, result.size());
@@ -97,7 +97,7 @@ public class SentenceServiceImplTest {
     public void findByWord_sentenceInImmutableList() {
         // setup
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("word", wordSetId);
+        Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
         Sentence sentence1 = new Sentence();
         sentence1.setId("fds32ddd");
@@ -117,7 +117,7 @@ public class SentenceServiceImplTest {
     public void findByWord_sentenceNotFound() {
         // setup
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("word", wordSetId);
+        Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
         List<Sentence> sentences = emptyList();
 
@@ -133,7 +133,7 @@ public class SentenceServiceImplTest {
     public void findByWord_exception() {
         // setup
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("word", wordSetId);
+        Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
         // when
         doThrow(RuntimeException.class).when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));

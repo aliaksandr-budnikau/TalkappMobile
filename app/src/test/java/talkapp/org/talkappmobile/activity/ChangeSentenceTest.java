@@ -172,7 +172,7 @@ public class ChangeSentenceTest {
 
         LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
         for (String word : words) {
-            Word2Tokens age = new Word2Tokens(word, id);
+            Word2Tokens age = new Word2Tokens(word, word, id);
             word2Tokens.add(age);
         }
 

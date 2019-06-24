@@ -9,6 +9,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.UncheckedAnswer;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -26,10 +30,6 @@ import talkapp.org.talkappmobile.component.WordsCombinator;
 import talkapp.org.talkappmobile.component.database.UserExpService;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.component.database.WordSetService;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.UncheckedAnswer;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -130,7 +130,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         WordSet wordSet = new WordSet();
         wordSet.setId(4);
-        wordSet.setWords(asList(new Word2Tokens("fdsfs", wordSet.getId()), new Word2Tokens("sdfs", wordSet.getId())));
+        wordSet.setWords(asList(new Word2Tokens("fdsfs", "fdsfs", wordSet.getId()), new Word2Tokens("sdfs", "sdfs", wordSet.getId())));
 
         HashSet<Word2Tokens> words = new HashSet<>(wordSet.getWords());
 
@@ -154,7 +154,7 @@ public class StudyingPracticeWordSetInteractorTest {
         Sentence selectedSentence = new Sentence();
         selectedSentence.setId("fds32");
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("sdfs", wordSetId);
+        Word2Tokens word = new Word2Tokens("sdfs", "sdfs", wordSetId);
 
         // when
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
@@ -173,7 +173,7 @@ public class StudyingPracticeWordSetInteractorTest {
         selectedSentence.setId("fds32");
 
         int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("SDFDS", wordSetId);
+        Word2Tokens word = new Word2Tokens("SDFDS", "SDFDS", wordSetId);
 
         // when
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(Collections.<Sentence>emptyList());
@@ -226,8 +226,8 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setTrainingExperience(12);
-        wordSet.setWords(asList(new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()),
-                new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId()), new Word2Tokens("sds", wordSet.getId())));
+        wordSet.setWords(asList(new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId()),
+                new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId())));
 
         Sentence sentence = new Sentence();
         sentence.setId("dsfds3");
@@ -428,8 +428,8 @@ public class StudyingPracticeWordSetInteractorTest {
     public void peekAnyNewWordByWordSetId() {
         // setup
         int wordSetId = 5;
-        Word2Tokens newCurrentWord = new Word2Tokens("newCurrentWord", wordSetId);
-        Word2Tokens currentWord = new Word2Tokens("currentWord", wordSetId);
+        Word2Tokens newCurrentWord = new Word2Tokens("newCurrentWord", "newCurrentWord", wordSetId);
+        Word2Tokens currentWord = new Word2Tokens("currentWord", "currentWord", wordSetId);
 
         // when
         when(exerciseService.getCurrentWord(wordSetId)).thenReturn(currentWord);

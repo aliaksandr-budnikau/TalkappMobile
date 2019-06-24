@@ -5,12 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
 
 import talkapp.org.talkappmobile.activity.custom.presenter.PronounceRightAnswerButtonPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.PronounceRightAnswerButtonView;
 import talkapp.org.talkappmobile.component.Speaker;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -29,7 +29,8 @@ public class PronounceRightAnswerButtonInteractorTest {
         presenter = new PronounceRightAnswerButtonPresenter(interactor, view);
         Sentence sentence = new Sentence();
         sentence.setText("dsd");
-        Word2Tokens word = new Word2Tokens("dsfds54e3whggfdA", 3);
+        String wordAsString = "dsfds54e3whggfdA";
+        Word2Tokens word = new Word2Tokens(wordAsString, wordAsString, 3);
         presenter.setModel(sentence);
     }
 
