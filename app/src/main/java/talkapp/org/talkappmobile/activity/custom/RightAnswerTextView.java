@@ -21,12 +21,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
-import talkapp.org.talkappmobile.activity.event.wordset.AnswerHasBeenRevealedEM;
-import talkapp.org.talkappmobile.activity.event.wordset.ExerciseGotAnsweredEM;
-import talkapp.org.talkappmobile.activity.event.wordset.NewSentenceEM;
-import talkapp.org.talkappmobile.activity.event.wordset.PracticeHalfFinishedEM;
-import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerTouchedEM;
-import talkapp.org.talkappmobile.activity.event.wordset.RightAnswerUntouchedEM;
+import org.talkappmobile.events.AnswerHasBeenRevealedEM;
+import org.talkappmobile.events.ExerciseGotAnsweredEM;
+import org.talkappmobile.events.NewSentenceEM;
+import org.talkappmobile.events.PracticeHalfFinishedEM;
+import org.talkappmobile.events.RightAnswerTouchedEM;
+import org.talkappmobile.events.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.component.TextUtils;
 import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 

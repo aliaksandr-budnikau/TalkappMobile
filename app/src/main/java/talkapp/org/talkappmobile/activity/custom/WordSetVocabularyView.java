@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import talkapp.org.talkappmobile.activity.event.wordset.WordSetVocabularyLoadedEM;
+import org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import org.talkappmobile.model.WordTranslation;
 
 @EView

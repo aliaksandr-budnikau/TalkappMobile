@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.event.wordset.WordSetVocabularyLoadedEM;
+import org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;

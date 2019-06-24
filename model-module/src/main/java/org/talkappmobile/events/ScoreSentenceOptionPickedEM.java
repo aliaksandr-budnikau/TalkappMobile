@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity.event.wordset;
+package org.talkappmobile.events;
 
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.SentenceContentScore;

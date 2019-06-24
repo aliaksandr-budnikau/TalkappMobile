@@ -22,7 +22,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
-import talkapp.org.talkappmobile.activity.event.wordset.TasksListLoadedEM;
+import org.talkappmobile.events.TasksListLoadedEM;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
