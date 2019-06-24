@@ -12,6 +12,18 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.DatabaseHelper;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordRepetitionProgressDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.WordTranslationDao;
+import org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
+import org.talkappmobile.dao.impl.WordSetDaoImpl;
+import org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,24 +34,12 @@ import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.DatabaseHelper;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.WordSetServiceImpl;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.WordSet;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +55,7 @@ import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
 public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private WordSetsListView view;
     private StudyingWordSetsListInteractor studyingWordSetsInteractor;

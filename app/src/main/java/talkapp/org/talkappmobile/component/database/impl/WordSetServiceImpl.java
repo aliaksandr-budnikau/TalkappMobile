@@ -1,11 +1,12 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.database.WordSetService;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.mappings.WordSetMapping;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordSetProgressStatus;
+
+import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.component.database.WordSetService;
 
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 

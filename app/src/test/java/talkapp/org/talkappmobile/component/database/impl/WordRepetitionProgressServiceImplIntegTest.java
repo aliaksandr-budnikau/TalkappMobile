@@ -10,6 +10,12 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.DatabaseHelper;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.WordRepetitionProgressDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
+import org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordSetProgressStatus;
@@ -19,12 +25,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegTest;
-import talkapp.org.talkappmobile.component.database.DatabaseHelper;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImpl;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Calendar.getInstance;
@@ -37,7 +37,7 @@ import static org.talkappmobile.model.RepetitionClass.REPEATED;
 import static org.talkappmobile.model.RepetitionClass.SEEN;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
 public class WordRepetitionProgressServiceImplIntegTest extends PresenterAndInteractorIntegTest {
 
     private WordRepetitionProgressServiceImpl service;

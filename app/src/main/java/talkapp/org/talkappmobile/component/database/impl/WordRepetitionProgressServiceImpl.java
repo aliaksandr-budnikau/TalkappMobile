@@ -5,6 +5,18 @@ import android.support.annotation.NonNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.WordRepetitionProgressDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.mappings.SentenceMapping;
+import org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetProgressStatus;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
@@ -19,17 +31,6 @@ import java.util.TreeMap;
 
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
 import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import org.talkappmobile.model.RepetitionClass;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordSetProgressStatus;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Math.log;

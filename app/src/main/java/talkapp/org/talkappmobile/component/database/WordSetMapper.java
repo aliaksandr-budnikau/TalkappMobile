@@ -3,14 +3,14 @@ package talkapp.org.talkappmobile.component.database;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
+import org.talkappmobile.mappings.WordSetMapping;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordSetProgressStatus;
+
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WordSetMapper {
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;

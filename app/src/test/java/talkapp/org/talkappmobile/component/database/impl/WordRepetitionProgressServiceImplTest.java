@@ -10,6 +10,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
+import org.talkappmobile.dao.WordRepetitionProgressDao;
+import org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,11 +21,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import talkapp.org.talkappmobile.component.database.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.component.database.mappings.WordRepetitionProgressMapping;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.getInstance;

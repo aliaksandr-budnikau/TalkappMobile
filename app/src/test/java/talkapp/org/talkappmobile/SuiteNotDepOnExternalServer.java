@@ -16,9 +16,6 @@ import talkapp.org.talkappmobile.activity.presenter.StudyingWordSetsListInteract
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterTest;
 import talkapp.org.talkappmobile.component.backend.impl.DataServerImplTest;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordRepetitionProgressDaoImplTest;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImplTest;
-import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImplTest;
 import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImplTest;
 import talkapp.org.talkappmobile.component.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;
@@ -46,14 +43,11 @@ import talkapp.org.talkappmobile.component.impl.TextUtilsImplTest;
         PracticeWordSetViewStrategyTest.class,
         WordRepetitionProgressServiceImplTest.class,
         TopicsFragmentPresenterTest.class,
-        WordRepetitionProgressDaoImplTest.class,
         DataServerImplTest.class,
         ExampleUnitTest.class,
         PracticeWordSetVocabularyPresenterTest.class,
         PronounceRightAnswerButtonInteractorTest.class,
         RightAnswerTextViewPresenterTest.class,
-        WordSetDaoImplTest.class,
-        SentenceDaoImplTest.class,
         MainActivityDefaultFragmentInteractorTest.class,
         WordSetListAdapterPresenterAndInteractorIntegTest.class
 })

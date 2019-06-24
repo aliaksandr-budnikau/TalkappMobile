@@ -8,6 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.WordTranslationDao;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -21,10 +25,6 @@ import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 

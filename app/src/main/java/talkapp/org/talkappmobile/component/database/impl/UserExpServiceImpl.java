@@ -1,11 +1,12 @@
 package talkapp.org.talkappmobile.component.database.impl;
 
+import org.talkappmobile.dao.ExpAuditDao;
+import org.talkappmobile.mappings.ExpAuditMapping;
+import org.talkappmobile.model.ExpActivityType;
+
 import java.util.Date;
 
 import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.component.database.mappings.ExpAuditMapping;
-import org.talkappmobile.model.ExpActivityType;
 
 public class UserExpServiceImpl implements UserExpService {
     private final ExpAuditDao expAuditDao;

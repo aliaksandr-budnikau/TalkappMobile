@@ -2,6 +2,20 @@ package talkapp.org.talkappmobile.component.database.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.WordTranslationDao;
+import org.talkappmobile.mappings.SentenceMapping;
+import org.talkappmobile.mappings.TopicMapping;
+import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.mappings.WordTranslationMapping;
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,19 +27,6 @@ import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyExcepti
 import talkapp.org.talkappmobile.component.database.LocalDataService;
 import talkapp.org.talkappmobile.component.database.SentenceMapper;
 import talkapp.org.talkappmobile.component.database.WordSetMapper;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.component.database.mappings.TopicMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordTranslationMapping;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordTranslation;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();

@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
+import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.SentenceContentScore;
 import org.talkappmobile.model.TextToken;

@@ -12,6 +12,15 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.DatabaseHelper;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordTranslationDao;
+import org.talkappmobile.dao.impl.SentenceDaoImpl;
+import org.talkappmobile.dao.impl.WordSetDaoImpl;
+import org.talkappmobile.mappings.SentenceMapping;
+import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.WordSet;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
@@ -19,19 +28,10 @@ import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.WordSetMapper;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.dao.impl.SentenceDaoImpl;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.database.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import org.talkappmobile.model.WordSet;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl.CUSTOM_WORDSETS_STARTS_SINCE_ID;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
 public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private AddingNewWordSetPresenter presenter;
     private AddingNewWordSetFragmentView view;

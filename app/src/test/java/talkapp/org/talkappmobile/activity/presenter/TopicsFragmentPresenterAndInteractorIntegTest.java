@@ -9,6 +9,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.WordTranslationDao;
+import org.talkappmobile.model.Topic;
 
 import java.util.List;
 
@@ -17,14 +22,9 @@ import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import org.talkappmobile.model.Topic;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;

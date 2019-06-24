@@ -1,1 +1,1 @@
-include ':app', ':model-module'
+include ':app', ':model-module', ':dao-layer'

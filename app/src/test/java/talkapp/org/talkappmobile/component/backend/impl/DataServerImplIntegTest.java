@@ -11,6 +11,13 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.talkappmobile.DatabaseHelper;
+import org.talkappmobile.dao.SentenceDao;
+import org.talkappmobile.dao.TopicDao;
+import org.talkappmobile.dao.WordSetDao;
+import org.talkappmobile.dao.WordTranslationDao;
+import org.talkappmobile.dao.impl.WordSetDaoImpl;
+import org.talkappmobile.mappings.WordSetMapping;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.TextToken;
 import org.talkappmobile.model.Word2Tokens;
@@ -29,16 +36,9 @@ import talkapp.org.talkappmobile.activity.presenter.PresenterAndInteractorIntegT
 import talkapp.org.talkappmobile.component.Logger;
 import talkapp.org.talkappmobile.component.backend.DataServer;
 import talkapp.org.talkappmobile.component.backend.GitHubRestClient;
-import talkapp.org.talkappmobile.component.database.DatabaseHelper;
 import talkapp.org.talkappmobile.component.database.LocalDataService;
-import talkapp.org.talkappmobile.component.database.dao.SentenceDao;
-import talkapp.org.talkappmobile.component.database.dao.TopicDao;
-import talkapp.org.talkappmobile.component.database.dao.WordSetDao;
-import talkapp.org.talkappmobile.component.database.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.component.database.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.database.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 import static android.os.Build.VERSION_CODES.M;
@@ -53,7 +53,7 @@ import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {M}, packageName = "talkapp.org.talkappmobile.component.database.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {M}, packageName = "org.talkappmobile.dao.impl")
 public class DataServerImplIntegTest extends PresenterAndInteractorIntegTest {
     private TopicDao topicDao;
     private SentenceDao sentenceDao;
