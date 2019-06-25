@@ -2,21 +2,22 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.AudioStuffFactory;
+import org.talkappmobile.service.Logger;
+import org.talkappmobile.service.RefereeService;
+import org.talkappmobile.service.SentenceService;
+import org.talkappmobile.service.UserExpService;
+import org.talkappmobile.service.WordRepetitionProgressService;
+import org.talkappmobile.service.WordSetExperienceUtils;
+import org.talkappmobile.service.WordsCombinator;
+
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceService;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 

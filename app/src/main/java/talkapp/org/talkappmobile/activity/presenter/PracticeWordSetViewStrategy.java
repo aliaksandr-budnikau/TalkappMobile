@@ -1,13 +1,14 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.TextUtils;
+import org.talkappmobile.service.WordSetExperienceUtils;
+
+import java.util.List;
+
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 
 public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;

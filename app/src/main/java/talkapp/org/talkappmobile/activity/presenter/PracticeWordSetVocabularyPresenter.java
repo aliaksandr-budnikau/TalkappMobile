@@ -1,13 +1,14 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordTranslation;
 
 public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
 

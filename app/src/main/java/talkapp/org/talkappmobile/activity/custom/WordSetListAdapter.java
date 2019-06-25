@@ -12,15 +12,15 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetListAdapterInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetListAdapterView;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import org.talkappmobile.model.WordSet;
 
 import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 

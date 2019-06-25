@@ -1,12 +1,13 @@
 package talkapp.org.talkappmobile.component.impl;
 
+import org.talkappmobile.service.impl.InternetConnectionLostException;
+import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.presenter.ExceptionHandlerPresenter;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
-import talkapp.org.talkappmobile.component.backend.impl.InternetConnectionLostException;
-import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 
 public class ExceptionHandler implements UncaughtExceptionHandler {
 

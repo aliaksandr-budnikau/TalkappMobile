@@ -4,6 +4,26 @@ import android.content.Context;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.AudioStuffFactory;
+import org.talkappmobile.service.BackendServerFactory;
+import org.talkappmobile.service.EqualityScorer;
+import org.talkappmobile.service.Logger;
+import org.talkappmobile.service.RefereeService;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.TextUtils;
+import org.talkappmobile.service.WordSetExperienceUtils;
+import org.talkappmobile.service.WordsCombinator;
+import org.talkappmobile.service.impl.AudioStuffFactoryBean;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
+import org.talkappmobile.service.impl.EqualityScorerBean;
+import org.talkappmobile.service.impl.LoggerBean;
+import org.talkappmobile.service.impl.RandomWordsCombinatorBean;
+import org.talkappmobile.service.impl.RefereeServiceImpl;
+import org.talkappmobile.service.impl.SentenceServiceImpl;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
+import org.talkappmobile.service.impl.TextUtilsImpl;
+import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
@@ -17,26 +37,6 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPre
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.EqualityScorer;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.component.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
-import talkapp.org.talkappmobile.component.impl.RandomWordsCombinatorBean;
-import talkapp.org.talkappmobile.component.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.component.impl.SentenceServiceImpl;
-import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import org.talkappmobile.model.WordSet;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {

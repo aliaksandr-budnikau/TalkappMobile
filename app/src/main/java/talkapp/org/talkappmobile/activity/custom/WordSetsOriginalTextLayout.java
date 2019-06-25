@@ -15,8 +15,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
-import org.talkappmobile.events.AnswerHasBeenRevealedEM;
-import org.talkappmobile.events.NewSentenceEM;
+import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
+import talkapp.org.talkappmobile.events.NewSentenceEM;
 
 @EView
 public class WordSetsOriginalTextLayout extends RelativeLayout {

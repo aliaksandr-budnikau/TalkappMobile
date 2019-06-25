@@ -14,17 +14,17 @@ import org.talkappmobile.dao.TopicDao;
 import org.talkappmobile.dao.WordSetDao;
 import org.talkappmobile.dao.WordTranslationDao;
 import org.talkappmobile.model.Topic;
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
+import org.talkappmobile.service.impl.LocalDataServiceImpl;
+import org.talkappmobile.service.impl.LoggerBean;
+import org.talkappmobile.service.impl.RequestExecutor;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;

@@ -11,18 +11,14 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetRepetitionPre
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterAndInteractorIntegTest;
-import talkapp.org.talkappmobile.component.backend.impl.DataServerImplIntegTest;
-import talkapp.org.talkappmobile.component.database.impl.WordRepetitionProgressServiceImplIntegTest;
 
 @Suite.SuiteClasses({
-        DataServerImplIntegTest.class,
         WordSetsListPresenterAndInteractorIntegTest.class,
         PracticeWordSetRepetitionPresenterAndInteractorIntegTest.class,
         PracticeWordSetVocabularyPresenterAndInteractorIntegTest.class,
         PracticeWordSetPresenterAndInteractorIntegTest.class,
         AddingNewWordSetPresenterAndInteractorIntegTest.class,
         TopicsFragmentPresenterAndInteractorIntegTest.class,
-        WordRepetitionProgressServiceImplIntegTest.class,
         CapitalLetterInNewWordTest.class,
         ChangeSentenceTest.class
 })

@@ -13,6 +13,15 @@ import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.UncheckedAnswer;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.AudioStuffFactory;
+import org.talkappmobile.service.Logger;
+import org.talkappmobile.service.RefereeService;
+import org.talkappmobile.service.SentenceService;
+import org.talkappmobile.service.UserExpService;
+import org.talkappmobile.service.WordRepetitionProgressService;
+import org.talkappmobile.service.WordSetExperienceUtils;
+import org.talkappmobile.service.WordSetService;
+import org.talkappmobile.service.WordsCombinator;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -21,15 +30,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceService;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.UserExpService;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.component.database.WordSetService;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

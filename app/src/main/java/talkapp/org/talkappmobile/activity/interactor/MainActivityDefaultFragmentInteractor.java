@@ -1,14 +1,15 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Task;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.WordRepetitionProgressService;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import org.talkappmobile.model.RepetitionClass;
-import org.talkappmobile.model.Task;
-import org.talkappmobile.model.WordSet;
 
 import static org.talkappmobile.model.RepetitionClass.LEARNED;
 

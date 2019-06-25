@@ -19,16 +19,16 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.service.BackendServerFactory;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 

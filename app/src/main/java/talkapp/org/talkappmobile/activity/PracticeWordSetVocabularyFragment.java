@@ -17,18 +17,18 @@ import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import org.talkappmobile.events.WordSetVocabularyLoadedEM;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.model.WordTranslation;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 

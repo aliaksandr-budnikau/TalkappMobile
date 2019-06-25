@@ -1,8 +1,9 @@
 package talkapp.org.talkappmobile.activity.custom.interactor;
 
+import org.talkappmobile.model.Sentence;
+
 import talkapp.org.talkappmobile.activity.custom.listener.PronounceRightAnswerButtonListener;
 import talkapp.org.talkappmobile.component.Speaker;
-import org.talkappmobile.model.Sentence;
 
 public class PronounceRightAnswerButtonInteractor {
     private final Speaker speaker;

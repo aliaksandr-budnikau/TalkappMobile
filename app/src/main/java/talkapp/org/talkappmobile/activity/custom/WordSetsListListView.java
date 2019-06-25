@@ -15,14 +15,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
-import org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
-import org.talkappmobile.events.WordSetsNewFilterAppliedEM;
-import org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
-import org.talkappmobile.events.WordSetsRemoveClickedEM;
-import org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
-import org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
-import org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
+import talkapp.org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
 import org.talkappmobile.model.WordSet;
 
 @EView

@@ -13,16 +13,16 @@ import org.androidannotations.annotations.EView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
+import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
+import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
+import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
+import talkapp.org.talkappmobile.events.NewSentenceEM;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.PronounceRightAnswerButtonPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.PronounceRightAnswerButtonView;
-import org.talkappmobile.events.AnswerHasBeenRevealedEM;
-import org.talkappmobile.events.AnswerPronunciationStartedEM;
-import org.talkappmobile.events.AnswerPronunciationStoppedEM;
-import org.talkappmobile.events.ExerciseGotAnsweredEM;
-import org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 

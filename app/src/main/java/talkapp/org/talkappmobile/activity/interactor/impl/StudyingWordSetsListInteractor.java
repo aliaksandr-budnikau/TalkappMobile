@@ -1,16 +1,17 @@
 package talkapp.org.talkappmobile.activity.interactor.impl;
 
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.WordRepetitionProgressService;
+import org.talkappmobile.service.WordSetService;
+import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+
 import java.util.Collections;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.component.database.WordSetService;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.WordSet;
 
 import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;

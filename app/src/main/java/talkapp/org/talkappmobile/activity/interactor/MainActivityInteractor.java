@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.UserExpService;
+
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityListener;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.database.UserExpService;
 
 public class MainActivityInteractor {
 

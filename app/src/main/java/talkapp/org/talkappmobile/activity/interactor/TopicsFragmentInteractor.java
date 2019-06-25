@@ -1,10 +1,11 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.service.DataServer;
+
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnTopicsFragmentPresenterListener;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import org.talkappmobile.model.Topic;
 
 public class TopicsFragmentInteractor {
     private final DataServer server;

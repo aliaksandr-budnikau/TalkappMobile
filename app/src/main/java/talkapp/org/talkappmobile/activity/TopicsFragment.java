@@ -12,19 +12,19 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.service.BackendServerFactory;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TopicListAdapter;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
-import talkapp.org.talkappmobile.component.backend.BackendServerFactory;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 

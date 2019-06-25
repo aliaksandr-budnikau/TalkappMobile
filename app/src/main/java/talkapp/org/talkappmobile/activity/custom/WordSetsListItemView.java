@@ -10,16 +10,16 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.WordSetExperienceUtils;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
+import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetsListItemViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.WordSetExperienceUtilsImpl;
-import org.talkappmobile.model.WordSet;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {

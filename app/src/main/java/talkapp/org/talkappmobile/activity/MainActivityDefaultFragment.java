@@ -17,20 +17,20 @@ import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+import talkapp.org.talkappmobile.events.TasksListLoadedEM;
+import org.talkappmobile.model.Task;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
-import org.talkappmobile.events.TasksListLoadedEM;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
-import talkapp.org.talkappmobile.component.database.ServiceFactory;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.model.Task;
 
 import static java.lang.String.format;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;

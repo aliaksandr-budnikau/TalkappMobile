@@ -9,11 +9,11 @@ import android.widget.TextView;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.WordTranslation;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
-import org.talkappmobile.model.WordTranslation;
 
 @EViewGroup(R.layout.word_set_vocabulary_item)
 public class WordSetVocabularyItemView extends RelativeLayout {

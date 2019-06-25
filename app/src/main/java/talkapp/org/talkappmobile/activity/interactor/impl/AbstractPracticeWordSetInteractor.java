@@ -4,6 +4,18 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.SentenceContentScore;
+import org.talkappmobile.model.UncheckedAnswer;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.AudioStuffFactory;
+import org.talkappmobile.service.Logger;
+import org.talkappmobile.service.RefereeService;
+import org.talkappmobile.service.SentenceService;
+import org.talkappmobile.service.WordRepetitionProgressService;
+import org.talkappmobile.service.WordsCombinator;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,17 +23,6 @@ import java.util.Set;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.component.AudioStuffFactory;
-import talkapp.org.talkappmobile.component.Logger;
-import talkapp.org.talkappmobile.component.RefereeService;
-import talkapp.org.talkappmobile.component.SentenceService;
-import talkapp.org.talkappmobile.component.WordsCombinator;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.SentenceContentScore;
-import org.talkappmobile.model.UncheckedAnswer;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

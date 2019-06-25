@@ -8,10 +8,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.TextUtils;
+import org.talkappmobile.service.WordSetExperienceUtils;
 
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;

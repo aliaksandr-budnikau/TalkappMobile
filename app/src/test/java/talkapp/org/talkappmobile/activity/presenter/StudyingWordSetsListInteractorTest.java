@@ -5,14 +5,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.WordRepetitionProgressService;
+import org.talkappmobile.service.WordSetService;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.component.database.WordSetService;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.WordSet;
 
 import static org.mockito.Mockito.verify;
 

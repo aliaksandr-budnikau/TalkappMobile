@@ -1,13 +1,13 @@
 package talkapp.org.talkappmobile.activity.custom.interactor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.WordSetExperienceUtils;
 
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetsListItemViewListener;
-import talkapp.org.talkappmobile.component.WordSetExperienceUtils;
-import org.talkappmobile.model.Word2Tokens;
-import org.talkappmobile.model.WordSet;
 
 public class WordSetsListItemViewInteractor {
     private final WordSetExperienceUtils experienceUtils;

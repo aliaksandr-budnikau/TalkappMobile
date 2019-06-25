@@ -7,11 +7,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.WordRepetitionProgressService;
 
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
-import talkapp.org.talkappmobile.component.database.WordRepetitionProgressService;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

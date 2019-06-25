@@ -1,7 +1,8 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.talkappmobile.service.Logger;
+
 import talkapp.org.talkappmobile.activity.listener.ExceptionHandlerListner;
-import talkapp.org.talkappmobile.component.Logger;
 
 public class ExceptionHandlerInteractor {
     private static final String TAG = ExceptionHandlerInteractor.class.getSimpleName();

@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import org.talkappmobile.events.TasksListLoadedEM;
+import talkapp.org.talkappmobile.events.TasksListLoadedEM;
 import org.talkappmobile.model.Task;
 
 @EView

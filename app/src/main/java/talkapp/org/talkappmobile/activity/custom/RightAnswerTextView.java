@@ -17,18 +17,18 @@ import org.androidannotations.annotations.UiThread;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
+import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
+import talkapp.org.talkappmobile.events.NewSentenceEM;
+import talkapp.org.talkappmobile.events.PracticeHalfFinishedEM;
+import talkapp.org.talkappmobile.events.RightAnswerTouchedEM;
+import talkapp.org.talkappmobile.events.RightAnswerUntouchedEM;
+import org.talkappmobile.service.TextUtils;
+import org.talkappmobile.service.impl.TextUtilsImpl;
 
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
-import org.talkappmobile.events.AnswerHasBeenRevealedEM;
-import org.talkappmobile.events.ExerciseGotAnsweredEM;
-import org.talkappmobile.events.NewSentenceEM;
-import org.talkappmobile.events.PracticeHalfFinishedEM;
-import org.talkappmobile.events.RightAnswerTouchedEM;
-import org.talkappmobile.events.RightAnswerUntouchedEM;
-import talkapp.org.talkappmobile.component.TextUtils;
-import talkapp.org.talkappmobile.component.impl.TextUtilsImpl;
 
 @EView
 public class RightAnswerTextView extends AppCompatTextView implements RightAnswerTextViewView {

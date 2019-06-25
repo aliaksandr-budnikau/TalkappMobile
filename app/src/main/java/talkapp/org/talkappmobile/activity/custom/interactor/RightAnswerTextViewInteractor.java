@@ -2,14 +2,15 @@ package talkapp.org.talkappmobile.activity.custom.interactor;
 
 import android.content.ActivityNotFoundException;
 
+import org.talkappmobile.model.Sentence;
+import org.talkappmobile.model.TextToken;
+import org.talkappmobile.model.Word2Tokens;
+import org.talkappmobile.service.TextUtils;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnRightAnswerTextViewListener;
-import talkapp.org.talkappmobile.component.TextUtils;
-import org.talkappmobile.model.Sentence;
-import org.talkappmobile.model.TextToken;
-import org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Arrays.asList;
 

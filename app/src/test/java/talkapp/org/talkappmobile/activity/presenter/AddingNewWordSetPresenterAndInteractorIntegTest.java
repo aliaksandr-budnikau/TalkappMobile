@@ -21,17 +21,17 @@ import org.talkappmobile.dao.impl.WordSetDaoImpl;
 import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordSetMapping;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
+import org.talkappmobile.service.impl.LocalDataServiceImpl;
+import org.talkappmobile.service.impl.LoggerBean;
+import org.talkappmobile.service.impl.RequestExecutor;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.component.backend.impl.RequestExecutor;
-import talkapp.org.talkappmobile.component.database.WordSetMapper;
-import talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl;
-import talkapp.org.talkappmobile.component.database.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.LoggerBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.component.database.impl.LocalDataServiceImpl.CUSTOM_WORDSETS_STARTS_SINCE_ID;
+import static org.talkappmobile.service.impl.LocalDataServiceImpl.CUSTOM_WORDSETS_STARTS_SINCE_ID;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")

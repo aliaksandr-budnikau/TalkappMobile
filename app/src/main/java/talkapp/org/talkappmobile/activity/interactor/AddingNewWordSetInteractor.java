@@ -2,16 +2,17 @@ package talkapp.org.talkappmobile.activity.interactor;
 
 import android.support.annotation.NonNull;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
-import talkapp.org.talkappmobile.component.backend.DataServer;
-import talkapp.org.talkappmobile.component.backend.impl.LocalCacheIsEmptyException;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordTranslation;
+import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

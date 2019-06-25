@@ -12,15 +12,15 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.WordSet;
 
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManager;
-import talkapp.org.talkappmobile.component.view.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 
