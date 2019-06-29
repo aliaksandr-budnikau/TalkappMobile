@@ -77,7 +77,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     @Override
     public void onWordsForRepetitionCounted(int counter) {
-        wordsForRepetitionTextView.setText(format("Words for repetition %s", counter));
+        wordsForRepetitionTextView.setText(format("Sets for repetition %s", counter));
     }
 
     @Click(R.id.wordsForRepetitionTextView)

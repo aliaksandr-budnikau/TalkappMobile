@@ -13,6 +13,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 
+import static java.lang.String.format;
 import static org.talkappmobile.model.RepetitionClass.LEARNED;
 
 public class MainActivityDefaultFragmentInteractor {
@@ -73,8 +74,9 @@ public class MainActivityDefaultFragmentInteractor {
                 continue;
             }
             for (WordSet set : sets) {
-                if (set.getRepetitionClass().equals(clazz)) {
-                    String title = "Repetition number " + clazz.getFrom() + " - " + clazz.getTo();
+                if (set.getRepetitionClass().equals(clazz) && set.getWords().size() == exerciseService.getMaxWordSetSize()) {
+                    int counter = countSetsOfThisClass(sets, clazz);
+                    String title = format("Sets for repetition %s", counter);
                     String description = "The experience that you'll get depends on " +
                             "number of repetitions you did. Than more you repeat any single word " +
                             "than more you gain experience.";
@@ -90,5 +92,15 @@ public class MainActivityDefaultFragmentInteractor {
         }
         tasks.addAll(result);
         return result.size();
+    }
+
+    private int countSetsOfThisClass(List<WordSet> sets, RepetitionClass clazz) {
+        int result = 0;
+        for (WordSet set : sets) {
+            if (set.getRepetitionClass() == clazz) {
+                result++;
+            }
+        }
+        return result;
     }
 }

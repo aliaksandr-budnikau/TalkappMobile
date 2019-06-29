@@ -5,17 +5,16 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <talkapp.org.talkappmobile.activity.custom.TasksListView_
+        android:id="@+id/tasksListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp" />
 
     <TextView
         android:id="@+id/wordsForRepetitionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="128dp"
+        android:paddingTop="90dp"
         android:textAlignment="center" />
-
-    <talkapp.org.talkappmobile.activity.custom.TasksListView_
-        android:id="@+id/tasksListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="90dp" />
 </LinearLayout>
