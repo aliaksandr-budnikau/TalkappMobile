@@ -1,14 +1,19 @@
 package talkapp.org.talkappmobile.events;
 
+import android.support.annotation.NonNull;
+
 import org.talkappmobile.model.Word2Tokens;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-
-@Getter
-@AllArgsConstructor
 public class OriginalTextClickEM {
     @NonNull
     private Word2Tokens word;
+
+    public OriginalTextClickEM(@NonNull Word2Tokens word) {
+        this.word = word;
+    }
+
+    @NonNull
+    public Word2Tokens getWord() {
+        return word;
+    }
 }

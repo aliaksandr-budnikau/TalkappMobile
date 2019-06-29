@@ -1,17 +1,28 @@
 package talkapp.org.talkappmobile.events;
 
+import android.support.annotation.NonNull;
+
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-
-@Getter
-@AllArgsConstructor
 public class NewSentenceEM {
     @NonNull
-    private Sentence sentence;
+    private final Sentence sentence;
     @NonNull
-    private Word2Tokens word;
+    private final Word2Tokens word;
+
+    public NewSentenceEM(@NonNull Sentence sentence, @NonNull Word2Tokens word) {
+        this.sentence = sentence;
+        this.word = word;
+    }
+
+    @NonNull
+    public Sentence getSentence() {
+        return sentence;
+    }
+
+    @NonNull
+    public Word2Tokens getWord() {
+        return word;
+    }
 }

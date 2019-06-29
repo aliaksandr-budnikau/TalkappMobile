@@ -48,9 +48,9 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile project(':model-module')
-    compile(project(':service-layer')) {
+    compile(project(':service-layer')) /*{
         exclude module: 'dao-layer'
-    }
+    }*/
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.apache.commons:commons-lang3:3.5'
@@ -60,7 +60,6 @@ dependencies {
     compile 'org.androidannotations:androidannotations-api:4.5.2'
     compile 'com.tmtron:green-annotations-api:1.0.2'
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile "org.projectlombok:lombok:1.18.8"
     testCompile project(':dao-layer')
     testCompile 'org.mockito:mockito-core:2.21.0'
     testCompile 'org.powermock:powermock-reflect:1.6.1'
