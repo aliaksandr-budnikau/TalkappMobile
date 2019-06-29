@@ -41,7 +41,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
             }
         }
         Collections.sort(wordSets, new WordSetComparator());
-        listener.onWordSetsInitialized(wordSets);
+        listener.onWordSetsInitialized(wordSets, null);
     }
 
     private void initLocalCache() {

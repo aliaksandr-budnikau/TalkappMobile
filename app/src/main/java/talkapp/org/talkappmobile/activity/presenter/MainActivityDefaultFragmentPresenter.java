@@ -1,11 +1,13 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Task;
+
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
-import org.talkappmobile.model.Task;
 
 public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefaultFragmentListener {
     private final MainActivityDefaultFragmentView view;
@@ -29,6 +31,16 @@ public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefau
     @Override
     public void onFoundTasks(LinkedList<Task> tasks) {
         view.setTasksList(tasks);
+    }
+
+    @Override
+    public void onNewWordSetTaskClicked() {
+        view.onNewWordSetTaskClicked();
+    }
+
+    @Override
+    public void onWordSetRepetitionTaskClick(RepetitionClass clazz) {
+        view.onWordSetRepetitionTaskClick(clazz);
     }
 
     public void findTasks() {

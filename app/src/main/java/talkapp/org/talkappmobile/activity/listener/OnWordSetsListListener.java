@@ -1,12 +1,13 @@
 package talkapp.org.talkappmobile.activity.listener;
 
-import java.util.List;
-
+import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 
+import java.util.List;
+
 public interface OnWordSetsListListener {
-    void onWordSetsInitialized(List<WordSet> wordSets);
+    void onWordSetsInitialized(List<WordSet> wordSets, RepetitionClass repetitionClass);
 
     void onWordSetFinished(WordSet wordSet, int clickedItemNumber);
 

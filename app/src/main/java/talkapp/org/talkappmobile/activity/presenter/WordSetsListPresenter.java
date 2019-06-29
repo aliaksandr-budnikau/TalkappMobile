@@ -1,12 +1,14 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
+
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.WordSet;
 
 public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;
@@ -29,8 +31,8 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     @Override
-    public void onWordSetsInitialized(List<WordSet> wordSets) {
-        view.onWordSetsInitialized(wordSets);
+    public void onWordSetsInitialized(List<WordSet> wordSets, RepetitionClass repetitionClass) {
+        view.onWordSetsInitialized(wordSets, repetitionClass);
     }
 
     @Override

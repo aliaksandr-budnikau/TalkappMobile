@@ -17,7 +17,7 @@ import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
-import talkapp.org.talkappmobile.events.TasksListLoadedEM;
+import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Task;
 import org.talkappmobile.service.ServiceFactory;
 import org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -31,9 +31,11 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
+import talkapp.org.talkappmobile.events.TasksListLoadedEM;
 
 import static java.lang.String.format;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_MODE_MAPPING;
 
 @EFragment(value = R.layout.main_activity_default_fragment_layout)
@@ -80,11 +82,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     @Click(R.id.wordsForRepetitionTextView)
     public void onWordsForRepetitionTextViewClick() {
-        Bundle args = new Bundle();
-        args.putBoolean(REPETITION_MODE_MAPPING, true);
-        WordSetsListFragment fragment = new WordSetsListFragment_();
-        fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        openWordSetsListFragment(true);
     }
 
     @Override
@@ -94,5 +92,28 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         Task[] tasksArray = tasks.toArray(new Task[0]);
         TasksListLoadedEM event = new TasksListLoadedEM(tasksArray);
         eventBus.post(event);
+    }
+
+    @Override
+    public void onNewWordSetTaskClicked() {
+        openWordSetsListFragment(false);
+    }
+
+    @Override
+    public void onWordSetRepetitionTaskClick(RepetitionClass clazz) {
+        openWordSetsListFragment(true, clazz);
+    }
+
+    private void openWordSetsListFragment(boolean repetitionMode, RepetitionClass clazz1) {
+        Bundle args = new Bundle();
+        args.putBoolean(REPETITION_MODE_MAPPING, repetitionMode);
+        args.putSerializable(REPETITION_CLASS_MAPPING, clazz1);
+        WordSetsListFragment fragment = new WordSetsListFragment_();
+        fragment.setArguments(args);
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+    }
+
+    private void openWordSetsListFragment(boolean repetitionMode) {
+        openWordSetsListFragment(repetitionMode, null);
     }
 }

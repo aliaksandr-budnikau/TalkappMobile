@@ -1,17 +1,17 @@
 package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+import org.talkappmobile.model.Task;
 
 import talkapp.org.talkappmobile.R;
-import org.talkappmobile.model.Task;
 
 @EViewGroup(R.layout.task_list_item)
 public class TaskListItemView extends RelativeLayout {
@@ -20,6 +20,7 @@ public class TaskListItemView extends RelativeLayout {
     TextView title;
     @ViewById(R.id.description)
     TextView description;
+    @NonNull
     private Task task;
 
     public TaskListItemView(Context context) {
@@ -49,10 +50,11 @@ public class TaskListItemView extends RelativeLayout {
         } else {
             description.setLines(MIN_LINES);
         }
-        setOnClickListener(new OnClickListener() {
+        setOnLongClickListener(new OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Tasked!", Toast.LENGTH_SHORT).show();
+            public boolean onLongClick(View v) {
+                task.start();
+                return true;
             }
         });
     }

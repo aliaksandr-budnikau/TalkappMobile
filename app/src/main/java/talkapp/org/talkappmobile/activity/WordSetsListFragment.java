@@ -21,14 +21,6 @@ import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
-import talkapp.org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
-import talkapp.org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
@@ -49,6 +41,14 @@ import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsList
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
+import talkapp.org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
+import talkapp.org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
+import talkapp.org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static org.talkappmobile.model.RepetitionClass.LEARNED;
@@ -59,6 +59,7 @@ import static org.talkappmobile.model.RepetitionClass.SEEN;
 public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
+    public static final String REPETITION_CLASS_MAPPING = "repetitionClass";
     public static final String NEW = "new";
     public static final String STARTED = "started";
     public static final String FINISHED = "finished";
@@ -83,6 +84,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     Topic topic;
     @FragmentArg(REPETITION_MODE_MAPPING)
     boolean repetitionMode;
+    @FragmentArg(REPETITION_CLASS_MAPPING)
+    RepetitionClass repetitionClass;
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private WordSetsListPresenter presenter;
 
@@ -97,7 +100,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     public void initPresenter() {
         WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
-            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
+            RepetitionClass repetitionClass = this.repetitionClass == null ? RepetitionClass.NEW : this.repetitionClass;
+            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository(), repetitionClass);
         }
         presenter = new WordSetsListPresenter(topic, this, interactor);
         presenter.initialize();
@@ -180,7 +184,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @Override
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
-    public void onWordSetsInitialized(final List<WordSet> wordSets) {
+    public void onWordSetsInitialized(final List<WordSet> wordSets, RepetitionClass selectedClass) {
         wordSetsListView.addAll(wordSets);
         wordSetsListView.refreshModel();
 
@@ -224,6 +228,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             spec.setContent(R.id.wordSetsListView);
             spec.setIndicator("Learned");
             tabHost.addTab(spec);
+
+            tabHost.setCurrentTabByTag(selectedClass.name());
         } else {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
                 @Override

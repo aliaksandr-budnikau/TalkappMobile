@@ -22,6 +22,7 @@ import org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import org.talkappmobile.dao.impl.WordSetDaoImpl;
 import org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.DataServer;
@@ -46,6 +47,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -94,7 +96,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetsListPresenter presenter = new WordSetsListPresenter(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
-        verify(view).onWordSetsInitialized(setsCaptor.capture());
+        verify(view).onWordSetsInitialized(setsCaptor.capture(), (RepetitionClass) isNull());
         assertFalse(setsCaptor.getValue().isEmpty());
 
         List<WordSet> wordSets = setsCaptor.getValue();
@@ -132,7 +134,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
-        verify(view).onWordSetsInitialized(setsCaptor.capture());
+        verify(view).onWordSetsInitialized(setsCaptor.capture(), (RepetitionClass) isNull());
         assertFalse(setsCaptor.getValue().isEmpty());
 
         List<WordSet> wordSets = setsCaptor.getValue();

@@ -1,8 +1,10 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.talkappmobile.model.NewWordSetTask;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Task;
 import org.talkappmobile.model.WordSet;
+import org.talkappmobile.model.WordSetRepetitionTask;
 import org.talkappmobile.service.WordRepetitionProgressService;
 
 import java.util.Iterator;
@@ -41,37 +43,47 @@ public class MainActivityDefaultFragmentInteractor {
     public void findTasks(OnMainActivityDefaultFragmentListener listener) {
         LinkedList<Task> tasks = new LinkedList<>();
 
-        int repetitionTasks = findRepetitionTasks(tasks);
+        int repetitionTasks = findRepetitionTasks(tasks, listener);
         if (repetitionTasks < 3) {
-            findStudyTaks(tasks);
+            findStudyTaks(tasks, listener);
         }
 
         listener.onFoundTasks(tasks);
     }
 
-    private int findStudyTaks(LinkedList<Task> tasks) {
+    private int findStudyTaks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
         LinkedList<Task> result = new LinkedList<>();
-        result.add(new Task());
-        result.getLast().setTitle("Studying new words");
-        result.getLast().setDescription("Start learning new words.");
+        String title = "Studying new words";
+        String description = "Start learning new words.";
+        result.add(new NewWordSetTask(title, description) {
+            @Override
+            public void start() {
+                listener.onNewWordSetTaskClicked();
+            }
+        });
         tasks.addAll(result);
         return result.size();
     }
 
-    private int findRepetitionTasks(LinkedList<Task> tasks) {
+    private int findRepetitionTasks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
         LinkedList<Task> result = new LinkedList<>();
         List<WordSet> sets = exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2);
-        for (RepetitionClass clazz : RepetitionClass.values()) {
+        for (final RepetitionClass clazz : RepetitionClass.values()) {
             if (clazz.equals(LEARNED)) {
                 continue;
             }
             for (WordSet set : sets) {
                 if (set.getRepetitionClass().equals(clazz)) {
-                    result.add(new Task());
-                    result.getLast().setTitle("Repetition number " + clazz.getFrom() + " - " + clazz.getTo());
-                    result.getLast().setDescription("The experience that you'll get depends on " +
+                    String title = "Repetition number " + clazz.getFrom() + " - " + clazz.getTo();
+                    String description = "The experience that you'll get depends on " +
                             "number of repetitions you did. Than more you repeat any single word " +
-                            "than more you gain experience.");
+                            "than more you gain experience.";
+                    result.add(new WordSetRepetitionTask(title, description, clazz) {
+                        @Override
+                        public void start() {
+                            listener.onWordSetRepetitionTaskClick(clazz);
+                        }
+                    });
                     break;
                 }
             }
