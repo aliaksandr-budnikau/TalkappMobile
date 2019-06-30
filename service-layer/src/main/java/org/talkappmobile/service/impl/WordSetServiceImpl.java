@@ -1,22 +1,36 @@
 package org.talkappmobile.service.impl;
 
+import android.support.annotation.NonNull;
+
 import org.talkappmobile.dao.WordSetDao;
 import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.WordTranslation;
 import org.talkappmobile.service.WordSetExperienceUtils;
 import org.talkappmobile.service.WordSetService;
+import org.talkappmobile.service.mapper.WordSetMapper;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
+    private static final int DEFAULT_TOP_SUM = 20000;
     private final int CUSTOM_WORD_SETS_STARTS_SINCE = 1000000;
+    @NonNull
     private final WordSetDao wordSetDao;
+    @NonNull
     private final WordSetExperienceUtils experienceUtils;
+    @NonNull
+    private final WordSetMapper wordSetMapper;
 
-    public WordSetServiceImpl(WordSetDao wordSetDao, WordSetExperienceUtils experienceUtils) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper) {
         this.wordSetDao = wordSetDao;
         this.experienceUtils = experienceUtils;
+        this.wordSetMapper = wordSetMapper;
     }
 
     @Override
@@ -55,5 +69,56 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public int getCustomWordSetsStartsSince() {
         return CUSTOM_WORD_SETS_STARTS_SINCE;
+    }
+
+    @Override
+    public WordSet createNewCustomWordSet(List<WordTranslation> translations) {
+        Integer newId = getNewWordSetId();
+        int totalTop = countTotalTop(translations);
+        List<Word2Tokens> word2Tokens = getWord2Tokens(translations, newId);
+
+        WordSet wordSet = new WordSet();
+        wordSet.setId(newId);
+        wordSet.setTop(totalTop);
+        wordSet.setWords(word2Tokens);
+        wordSet.setTopicId("43");
+
+        WordSetMapping mapping = wordSetMapper.toMapping(wordSet);
+        wordSetDao.createNewOrUpdate(mapping);
+        return wordSetMapper.toDto(mapping);
+    }
+
+    @NonNull
+    private Integer getNewWordSetId() {
+        Integer lastId = wordSetDao.getTheLastCustomWordSetsId();
+        Integer newId;
+        if (lastId == null || lastId < CUSTOM_WORD_SETS_STARTS_SINCE) {
+            newId = CUSTOM_WORD_SETS_STARTS_SINCE;
+        } else {
+            newId = lastId + 1;
+        }
+        return newId;
+    }
+
+    @NonNull
+    private List<Word2Tokens> getWord2Tokens(List<WordTranslation> translations, Integer newId) {
+        LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
+        for (WordTranslation translation : translations) {
+            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens(), newId));
+        }
+        return word2Tokens;
+    }
+
+    private int countTotalTop(List<WordTranslation> translations) {
+        int totalTop = 0;
+        for (WordTranslation translation : translations) {
+            if (translation.getTop() == null) {
+                totalTop += DEFAULT_TOP_SUM;
+            } else {
+                totalTop += translation.getTop();
+            }
+        }
+        totalTop /= translations.size();
+        return totalTop;
     }
 }

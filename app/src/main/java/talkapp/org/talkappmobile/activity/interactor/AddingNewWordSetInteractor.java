@@ -7,6 +7,7 @@ import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordTranslation;
 import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.WordSetService;
 import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import java.util.LinkedList;
@@ -18,12 +19,15 @@ import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class AddingNewWordSetInteractor {
-    private static final int DEFAULT_TOP_SUM = 20000;
     private static final int WORDS_NUMBER = 6;
+    @NonNull
     private final DataServer server;
+    @NonNull
+    private final WordSetService wordSetService;
 
-    public AddingNewWordSetInteractor(DataServer server) {
+    public AddingNewWordSetInteractor(@NonNull DataServer server, @NonNull WordSetService wordSetService) {
         this.server = server;
+        this.wordSetService = wordSetService;
     }
 
     public void submit(List<String> words, OnAddingNewWordSetPresenterListener listener) {
@@ -44,41 +48,8 @@ public class AddingNewWordSetInteractor {
             return;
         }
 
-        int totalTop = countTotalTop(translations);
-        LinkedList<Word2Tokens> word2Tokens = getWord2Tokens(translations);
-        WordSet wordSet = server.saveNewCustomWordSet(makeWordSetDto(totalTop, word2Tokens));
+        WordSet wordSet = wordSetService.createNewCustomWordSet(translations);
         listener.onSubmitSuccessfully(wordSet);
-    }
-
-    @NonNull
-    private WordSet makeWordSetDto(int totalTop, LinkedList<Word2Tokens> word2Tokens) {
-        WordSet set = new WordSet();
-        set.setTop(totalTop);
-        set.setWords(word2Tokens);
-        set.setTopicId("43");
-        return set;
-    }
-
-    @NonNull
-    private LinkedList<Word2Tokens> getWord2Tokens(List<WordTranslation> translations) {
-        LinkedList<Word2Tokens> word2Tokens = new LinkedList<>();
-        for (WordTranslation translation : translations) {
-            word2Tokens.add(new Word2Tokens(translation.getWord(), translation.getTokens(), 0));
-        }
-        return word2Tokens;
-    }
-
-    private int countTotalTop(List<WordTranslation> translations) {
-        int totalTop = 0;
-        for (WordTranslation translation : translations) {
-            if (translation.getTop() == null) {
-                totalTop += DEFAULT_TOP_SUM;
-            } else {
-                totalTop += translation.getTop();
-            }
-        }
-        totalTop /= translations.size();
-        return totalTop;
     }
 
     private List<WordTranslation> findAllTranslations(List<String> words, OnAddingNewWordSetPresenterListener listener) {

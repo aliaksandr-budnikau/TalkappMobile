@@ -22,11 +22,14 @@ import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordSetMapping;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.DataServer;
+import org.talkappmobile.service.WordSetExperienceUtils;
+import org.talkappmobile.service.WordSetService;
 import org.talkappmobile.service.impl.BackendServerFactoryBean;
 import org.talkappmobile.service.impl.LocalDataServiceImpl;
 import org.talkappmobile.service.impl.LoggerBean;
 import org.talkappmobile.service.impl.RequestExecutor;
 import org.talkappmobile.service.impl.ServiceFactoryBean;
+import org.talkappmobile.service.impl.WordSetServiceImpl;
 import org.talkappmobile.service.mapper.WordSetMapper;
 
 import talkapp.org.talkappmobile.BuildConfig;
@@ -43,7 +46,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.talkappmobile.service.impl.LocalDataServiceImpl.CUSTOM_WORDSETS_STARTS_SINCE_ID;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
@@ -52,6 +54,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
     private AddingNewWordSetFragmentView view;
     private WordSetDaoImpl wordSetDao;
     private WordSetMapper mapper;
+    private WordSetService wordSetService;
 
     @Before
     public void setUp() throws Exception {
@@ -61,7 +64,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), sentenceDao, mock(WordTranslationDao.class), mapper, new LoggerBean());
-
+        wordSetService = new WordSetServiceImpl(wordSetDao, mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -71,7 +74,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(server);
+        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(server, wordSetService);
         view = mock(AddingNewWordSetFragmentView.class);
         presenter = new AddingNewWordSetPresenter(view, interactor);
     }
@@ -236,9 +239,9 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(4964), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(wordSetDao.findById(CUSTOM_WORDSETS_STARTS_SINCE_ID));
+        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -264,7 +267,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(4964), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
     }
 
     @Test
@@ -295,7 +298,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
 
         assertEquals(new Integer(1656), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
         reset(view);
 
 
@@ -320,12 +323,12 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
 
         assertEquals(new Integer(10088), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID + 1, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince() + 1, wordSet.getId());
         reset(view);
 
 
         // already saved first set
-        wordSet = mapper.toDto(wordSetDao.findById(CUSTOM_WORDSETS_STARTS_SINCE_ID));
+        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -335,12 +338,12 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
 
         assertEquals(new Integer(1656), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
         reset(view);
 
 
         // already saved second set
-        wordSet = mapper.toDto(wordSetDao.findById(CUSTOM_WORDSETS_STARTS_SINCE_ID + 1));
+        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince() + 1));
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
 
@@ -348,7 +351,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
 
         assertEquals(new Integer(10088), wordSet.getTop());
-        assertEquals(CUSTOM_WORDSETS_STARTS_SINCE_ID + 1, wordSet.getId());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince() + 1, wordSet.getId());
         reset(view);
     }
 

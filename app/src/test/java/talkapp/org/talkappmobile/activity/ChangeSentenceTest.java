@@ -30,10 +30,6 @@ import org.talkappmobile.dao.impl.ExpAuditDaoImpl;
 import org.talkappmobile.dao.impl.SentenceDaoImpl;
 import org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import org.talkappmobile.dao.impl.WordSetDaoImpl;
-import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
-import talkapp.org.talkappmobile.events.NewSentenceEM;
-import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
-import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
 import org.talkappmobile.mappings.ExpAuditMapping;
 import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordRepetitionProgressMapping;
@@ -58,6 +54,7 @@ import org.talkappmobile.service.impl.UserExpServiceImpl;
 import org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import org.talkappmobile.service.impl.WordSetServiceImpl;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -68,6 +65,10 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
+import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
+import talkapp.org.talkappmobile.events.NewSentenceEM;
+import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
+import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
@@ -121,7 +122,7 @@ public class ChangeSentenceTest {
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
+        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);

@@ -9,6 +9,7 @@ import org.talkappmobile.service.impl.RefereeServiceImplTest;
 import org.talkappmobile.service.impl.SentenceServiceImplTest;
 import org.talkappmobile.service.impl.TextUtilsImplTest;
 import org.talkappmobile.service.impl.WordRepetitionProgressServiceImplTest;
+import org.talkappmobile.service.impl.WordSetServiceImplTest;
 
 @Suite.SuiteClasses({
         RefereeServiceImplTest.class,
@@ -17,6 +18,7 @@ import org.talkappmobile.service.impl.WordRepetitionProgressServiceImplTest;
         EqualityScorerBeanTest.class,
         TextUtilsImplTest.class,
         WordRepetitionProgressServiceImplTest.class,
+        WordSetServiceImplTest.class,
         DataServerImplTest.class
 })
 @RunWith(Suite.class)

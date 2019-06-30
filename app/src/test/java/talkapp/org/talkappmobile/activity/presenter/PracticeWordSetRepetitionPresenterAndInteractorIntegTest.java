@@ -53,6 +53,7 @@ import org.talkappmobile.service.impl.UserExpServiceImpl;
 import org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import org.talkappmobile.service.impl.WordSetServiceImpl;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -113,7 +114,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         userExpService = new UserExpServiceImpl(expAuditDao);
         exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
+        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(mapper));
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
         interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, userExpService, experienceUtils, new RandomWordsCombinatorBean(), context, new AudioStuffFactoryBean());

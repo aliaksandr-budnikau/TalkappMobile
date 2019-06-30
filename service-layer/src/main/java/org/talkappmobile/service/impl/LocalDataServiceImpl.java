@@ -28,7 +28,6 @@ import java.util.Map;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
-    public static final int CUSTOM_WORDSETS_STARTS_SINCE_ID = 1000000;
     private final WordSetDao wordSetDao;
     private final TopicDao topicDao;
     private final SentenceDao sentenceDao;
@@ -180,19 +179,6 @@ public class LocalDataServiceImpl implements LocalDataService {
             mappings.add(sentenceMapper.toMapping(sentence, word, wordsNumber));
         }
         sentenceDao.save(mappings);
-    }
-
-    @Override
-    public WordSet saveNewWordSet(WordSet wordSet) {
-        WordSetMapping mapping = wordSetMapper.toMapping(wordSet);
-        Integer lastId = wordSetDao.getTheLastCustomWordSetsId();
-        if (lastId == null || lastId < CUSTOM_WORDSETS_STARTS_SINCE_ID) {
-            mapping.setId(String.valueOf(CUSTOM_WORDSETS_STARTS_SINCE_ID));
-        } else {
-            mapping.setId(String.valueOf(lastId + 1));
-        }
-        wordSetDao.createNewOrUpdate(mapping);
-        return wordSetMapper.toDto(mapping);
     }
 
     private TopicMapping toMapping(Topic topic) {

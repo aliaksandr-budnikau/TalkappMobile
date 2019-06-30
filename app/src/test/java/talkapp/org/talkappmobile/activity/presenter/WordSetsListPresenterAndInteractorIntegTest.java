@@ -34,6 +34,7 @@ import org.talkappmobile.service.impl.ServiceFactoryBean;
 import org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import org.talkappmobile.service.impl.WordSetServiceImpl;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -70,11 +71,12 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
         WordRepetitionProgressDao exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
         wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
-        WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, mock(SentenceDao.class), new ObjectMapper());
+        ObjectMapper mapper = new ObjectMapper();
+        WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(mapper));
 
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

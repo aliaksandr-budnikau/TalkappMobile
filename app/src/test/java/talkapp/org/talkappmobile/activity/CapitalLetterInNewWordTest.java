@@ -34,6 +34,7 @@ import org.talkappmobile.mappings.ExpAuditMapping;
 import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import org.talkappmobile.mappings.WordSetMapping;
+import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.DataServer;
@@ -53,6 +54,7 @@ import org.talkappmobile.service.impl.UserExpServiceImpl;
 import org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import org.talkappmobile.service.impl.WordSetServiceImpl;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -61,8 +63,13 @@ import java.util.List;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -72,7 +79,7 @@ import static org.mockito.Mockito.when;
 public class CapitalLetterInNewWordTest {
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
-    private WordSetService experienceService;
+    private WordSetService wordSetService;
     private WordSetExperienceUtilsImpl experienceUtils;
     private PresenterFactory presenterFactory;
     private WordSet wordSet;
@@ -91,17 +98,20 @@ public class CapitalLetterInNewWordTest {
     private TextView word10;
     private TextView word11;
     private TextView word12;
+    private WordSetDao wordSetDao;
+    private WordSetMapper wordSetMapper;
 
     @Before
     public void setup() throws SQLException {
         DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
         SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
-        WordSetDao wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+        wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
         ExpAuditDao expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
         WordRepetitionProgressDao exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
 
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
+        wordSetMapper = new WordSetMapper(mapper);
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), sentenceDao, mock(WordTranslationDao.class), mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -116,8 +126,8 @@ public class CapitalLetterInNewWordTest {
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils);
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
+        wordSetService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(mapper));
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
@@ -133,13 +143,10 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
         server.findAllWordSets();
-        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", "consent", "preamble",
-                "conquer", "adore", "deplete", "cease", "ratification");
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         Whitebox.setInternalState(practiceWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
-        Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         Whitebox.setInternalState(practiceWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
@@ -194,7 +201,6 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(RecyclerView.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSet", wordSet);
     }
 
     private WordSet createWordSet(int id, String... words) {
@@ -222,6 +228,8 @@ public class CapitalLetterInNewWordTest {
     @Test
     public void testCapitalLetterInNewWord() {
         addingNewWordSetFragment.init();
+        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", "consent", "preamble",
+                "conquer", "adore", "deplete", "cease", "ratification");
         List<Word2Tokens> words = wordSet.getWords();
         when(word1.getText()).thenReturn(words.get(0).getWord());
         when(word2.getText()).thenReturn(words.get(1).getWord());
@@ -241,8 +249,26 @@ public class CapitalLetterInNewWordTest {
         } catch (NullPointerException e) {
         }
 
+        wordSet = wordSetMapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
+
+        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSet", wordSet);
         practiceWordSetVocabularyFragment.init();
 
+        Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         practiceWordSetFragment.init();
+
+        WordSet wordSet = Whitebox.getInternalState(practiceWordSetFragment, "wordSet");
+
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
+        for (Word2Tokens word : wordSet.getWords()) {
+            assertEquals(wordSet.getId(), word.getSourceWordSetId().intValue());
+        }
+
+        PracticeWordSetPresenter presenter = Whitebox.getInternalState(practiceWordSetFragment, "presenter");
+        Sentence currentSentence = presenter.getCurrentSentence();
+
+        assertNotNull(currentSentence);
+        assertFalse(isEmpty(currentSentence.getText()));
+        assertFalse(isEmpty(currentSentence.getId()));
     }
 }

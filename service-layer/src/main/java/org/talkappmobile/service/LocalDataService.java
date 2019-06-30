@@ -31,6 +31,4 @@ public interface LocalDataService {
     void saveSentences(Map<String, List<Sentence>> body, int wordsNumber);
 
     void saveSentences(String word, List<Sentence> body, int wordsNumber);
-
-    WordSet saveNewWordSet(WordSet wordSet);
 }

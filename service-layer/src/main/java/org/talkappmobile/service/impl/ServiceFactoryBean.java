@@ -34,6 +34,7 @@ import org.talkappmobile.service.UserExpService;
 import org.talkappmobile.service.WordRepetitionProgressService;
 import org.talkappmobile.service.WordSetExperienceUtils;
 import org.talkappmobile.service.WordSetService;
+import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 
@@ -55,6 +56,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordRepetitionProgressServiceImpl practiceWordSetExerciseService;
     private WordSetServiceImpl wordSetExperienceService;
     private UserExpService userExpService;
+    private WordSetMapper wordSetMapper;
     private LocalDataService localDataService;
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
@@ -64,7 +66,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils(), getWordSetMapper());
         return wordSetExperienceService;
     }
 
@@ -89,6 +91,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         userExpService = new UserExpServiceImpl(provideExpAuditDao());
         return userExpService;
+    }
+
+    @Override
+    public WordSetMapper getWordSetMapper() {
+        if (wordSetMapper != null) {
+            return wordSetMapper;
+        }
+        wordSetMapper = new WordSetMapper(MAPPER);
+        return wordSetMapper;
     }
 
     @Override

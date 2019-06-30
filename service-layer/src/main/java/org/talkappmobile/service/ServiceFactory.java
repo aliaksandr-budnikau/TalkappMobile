@@ -1,5 +1,7 @@
 package org.talkappmobile.service;
 
+import org.talkappmobile.service.mapper.WordSetMapper;
+
 public interface ServiceFactory {
     WordSetService getWordSetExperienceRepository();
 
@@ -8,4 +10,6 @@ public interface ServiceFactory {
     UserExpService getUserExpService();
 
     LocalDataService getLocalDataService();
+
+    WordSetMapper getWordSetMapper();
 }

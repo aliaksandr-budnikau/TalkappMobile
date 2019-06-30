@@ -2,6 +2,9 @@ package org.talkappmobile.service;
 
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.model.WordSetProgressStatus;
+import org.talkappmobile.model.WordTranslation;
+
+import java.util.List;
 
 public interface WordSetService {
 
@@ -14,4 +17,6 @@ public interface WordSetService {
     void remove(WordSet wordSet);
 
     int getCustomWordSetsStartsSince();
+
+    WordSet createNewCustomWordSet(List<WordTranslation> translations);
 }

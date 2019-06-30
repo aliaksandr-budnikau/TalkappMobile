@@ -38,11 +38,6 @@ public class DataServerImpl implements DataServer {
     }
 
     @Override
-    public WordSet saveNewCustomWordSet(WordSet wordSet) {
-        return localDataService.saveNewWordSet(wordSet);
-    }
-
-    @Override
     public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
         Call<Map<String, List<Sentence>>> call = gitHubRestClient.findSentencesByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
