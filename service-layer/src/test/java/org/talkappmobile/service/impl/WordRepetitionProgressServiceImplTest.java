@@ -24,8 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import static java.util.Arrays.asList;
 import static java.util.Calendar.HOUR;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,10 +40,12 @@ public class WordRepetitionProgressServiceImplTest {
     @Mock
     private WordRepetitionProgressDao exerciseDao;
     private WordRepetitionProgressServiceImpl service;
+    private ObjectMapper mapper;
 
     @Before
     public void setup() {
-        service = new WordRepetitionProgressServiceImpl(exerciseDao, null, null, new ObjectMapper());
+        mapper = new ObjectMapper();
+        service = new WordRepetitionProgressServiceImpl(exerciseDao, null, null, mapper);
     }
 
     @Test
@@ -257,5 +261,17 @@ public class WordRepetitionProgressServiceImplTest {
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
         assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+    }
+
+    @Test
+    public void findWordSetOfDifficultWords_failedAllTheTime() throws JsonProcessingException {
+        WordRepetitionProgressMapping word1 = new WordRepetitionProgressMapping();
+        word1.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+        WordRepetitionProgressMapping word2 = new WordRepetitionProgressMapping();
+        word2.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+
+        when(exerciseDao.findAll()).thenReturn(asList(word1, word2));
+        List<WordSet> sets = service.findWordSetOfDifficultWords();
+        assertTrue(sets.isEmpty());
     }
 }

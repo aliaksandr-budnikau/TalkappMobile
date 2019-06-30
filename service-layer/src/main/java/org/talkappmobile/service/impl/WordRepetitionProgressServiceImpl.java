@@ -338,11 +338,13 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<WordRepetitionProgressMapping> words = exerciseDao.findAll();
         sortByForgettingAndRepetitionCounters(words);
         LinkedList<WordSet> wordSets = new LinkedList<>();
+        WordSet last = null;
         for (WordRepetitionProgressMapping word : words) {
-            WordSet last = wordSets.getLast();
             if (last == null || last.getWords().size() == wordSetSize) {
-                wordSets.add(new WordSet());
-                last = wordSets.getLast();
+                if (last != null) {
+                    wordSets.add(last);
+                }
+                last = new WordSet();
                 last.setWords(new LinkedList<Word2Tokens>());
                 last.getWords().add(getWord2Tokens(word));
             } else {
@@ -356,8 +358,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         sort(words, new Comparator<WordRepetitionProgressMapping>() {
             @Override
             public int compare(WordRepetitionProgressMapping o1, WordRepetitionProgressMapping o2) {
-                float o1Result = o1.getForgettingCounter() / o1.getRepetitionCounter();
-                float o2Result = o2.getForgettingCounter() / o2.getRepetitionCounter();
+                float o1Result = o1.getRepetitionCounter() == 0 ? 0 : o1.getForgettingCounter() / o1.getRepetitionCounter();
+                float o2Result = o2.getRepetitionCounter() == 0 ? 0 : o2.getForgettingCounter() / o2.getRepetitionCounter();
                 if (o1Result > o2Result) {
                     return 1;
                 } else if (o1Result < o2Result) {
