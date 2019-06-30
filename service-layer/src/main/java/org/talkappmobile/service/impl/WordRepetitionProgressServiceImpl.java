@@ -338,18 +338,18 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<WordRepetitionProgressMapping> words = exerciseDao.findAll();
         sortByForgettingAndRepetitionCounters(words);
         LinkedList<WordSet> wordSets = new LinkedList<>();
-        WordSet last = null;
+        WordSet current = new WordSet();
+        current.setWords(new LinkedList<Word2Tokens>());
         for (WordRepetitionProgressMapping word : words) {
-            if (last == null || last.getWords().size() == wordSetSize) {
-                if (last != null) {
-                    wordSets.add(last);
-                }
-                last = new WordSet();
-                last.setWords(new LinkedList<Word2Tokens>());
-                last.getWords().add(getWord2Tokens(word));
-            } else {
-                last.getWords().add(getWord2Tokens(word));
+            if (current.getWords().size() == wordSetSize) {
+                wordSets.add(current);
+                current = new WordSet();
+                current.setWords(new LinkedList<Word2Tokens>());
             }
+            current.getWords().add(getWord2Tokens(word));
+        }
+        if (current.getWords().size() == wordSetSize) {
+            wordSets.add(current);
         }
         return wordSets;
     }

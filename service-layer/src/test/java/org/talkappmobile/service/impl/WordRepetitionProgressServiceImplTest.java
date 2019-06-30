@@ -274,4 +274,19 @@ public class WordRepetitionProgressServiceImplTest {
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertTrue(sets.isEmpty());
     }
+
+    @Test
+    public void findWordSetOfDifficultWords_12WordsWillNotBeDisplayed() throws JsonProcessingException {
+        List<WordRepetitionProgressMapping> list = new LinkedList<>();
+        for (int i = 0; i < 12; i++) {
+            WordRepetitionProgressMapping word = new WordRepetitionProgressMapping();
+            word.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+            list.add(word);
+        }
+
+        when(exerciseDao.findAll()).thenReturn(list);
+        List<WordSet> sets = service.findWordSetOfDifficultWords();
+        assertEquals(1, sets.size());
+        assertEquals(12, sets.get(0).getWords().size());
+    }
 }
