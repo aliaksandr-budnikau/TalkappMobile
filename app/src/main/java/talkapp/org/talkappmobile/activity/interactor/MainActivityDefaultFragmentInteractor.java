@@ -62,7 +62,7 @@ public class MainActivityDefaultFragmentInteractor {
     private void findRepetitionOfDifficultWordSetTasks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
         final List<WordSet> wordSets = exerciseService.findWordSetOfDifficultWords();
         String title = "Extra Repetition";
-        String description = "Extra repetition for words with most mistakes. " + "\\n" + repitionDescription;
+        String description = "Extra repetition for words with most mistakes. " + repitionDescription;
         if (wordSets.isEmpty()) {
             return;
         }
