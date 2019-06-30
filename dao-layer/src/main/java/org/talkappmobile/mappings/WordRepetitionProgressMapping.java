@@ -22,6 +22,7 @@ public class WordRepetitionProgressMapping {
     public static final String CURRENT_FN = "current";
     public static final String WORD_REPETITION_PROGRESS_TABLE = "WordRepetitionProgress";
     public static final String UPDATED_DATE_FN = "updatedDate";
+    public static final String FORGETTING_COUNTER_FN = "forgettingCounter";
     @DatabaseField(generatedId = true, columnName = ID_FN)
     private int id;
 
@@ -46,7 +47,7 @@ public class WordRepetitionProgressMapping {
     @DatabaseField(canBeNull = false, columnName = REPETITION_COUNTER_FN)
     private int repetitionCounter;
 
-    @DatabaseField(canBeNull = false, columnName = "forgettingCounter")
+    @DatabaseField(canBeNull = false, columnName = FORGETTING_COUNTER_FN)
     private int forgettingCounter;
 
     public WordRepetitionProgressMapping() {

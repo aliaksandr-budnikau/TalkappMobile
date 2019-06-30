@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.talkappmobile.model.DifficultWordSetRepetitionTask;
 import org.talkappmobile.model.NewWordSetTask;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Task;
@@ -19,6 +20,9 @@ import static org.talkappmobile.model.RepetitionClass.LEARNED;
 public class MainActivityDefaultFragmentInteractor {
 
     private final WordRepetitionProgressService exerciseService;
+    private final String repitionDescription = "The experience that you'll get depends on " +
+            "number of repetitions you did. Than more you repeat any single word " +
+            "than more you gain experience.";
 
     public MainActivityDefaultFragmentInteractor(WordRepetitionProgressService exerciseService) {
         this.exerciseService = exerciseService;
@@ -45,11 +49,29 @@ public class MainActivityDefaultFragmentInteractor {
         LinkedList<Task> tasks = new LinkedList<>();
 
         int repetitionTasks = findRepetitionTasks(tasks, listener);
-        if (repetitionTasks < 3) {
+        if (tasks.size() < 3) {
             findStudyTaks(tasks, listener);
+        }
+        if (tasks.size() < 3) {
+            findRepetitionOfDifficultWordSetTasks(tasks, listener);
         }
 
         listener.onFoundTasks(tasks);
+    }
+
+    private void findRepetitionOfDifficultWordSetTasks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
+        final List<WordSet> wordSets = exerciseService.findWordSetOfDifficultWords();
+        String title = "Extra Repetition";
+        String description = "Extra repetition for words with most mistakes. " + "\\n" + repitionDescription;
+        if (wordSets.isEmpty()) {
+            return;
+        }
+        tasks.add(new DifficultWordSetRepetitionTask(title, description) {
+            @Override
+            public void start() {
+                listener.onDifficultWordSetRepetitionTaskClicked(wordSets);
+            }
+        });
     }
 
     private int findStudyTaks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
@@ -77,10 +99,7 @@ public class MainActivityDefaultFragmentInteractor {
                 if (set.getRepetitionClass().equals(clazz) && set.getWords().size() == exerciseService.getMaxWordSetSize()) {
                     int counter = countSetsOfThisClass(sets, clazz);
                     String title = format("Sets for repetition %s", counter);
-                    String description = "The experience that you'll get depends on " +
-                            "number of repetitions you did. Than more you repeat any single word " +
-                            "than more you gain experience.";
-                    result.add(new WordSetRepetitionTask(title, description, clazz) {
+                    result.add(new WordSetRepetitionTask(title, repitionDescription, clazz) {
                         @Override
                         public void start() {
                             listener.onWordSetRepetitionTaskClick(clazz);

@@ -24,6 +24,7 @@ import org.talkappmobile.service.mapper.SentenceMapper;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,6 +38,7 @@ import java.util.TreeMap;
 import static java.lang.Math.log;
 import static java.lang.Math.max;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
 import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static org.talkappmobile.model.WordSetProgressStatus.next;
@@ -177,12 +179,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
         LinkedList<Word2Tokens> result = new LinkedList<>();
         for (WordRepetitionProgressMapping exercise : exercises) {
-            try {
-                Word2Tokens word = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
-                result.add(word);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            result.add(getWord2Tokens(exercise));
         }
         return result;
     }
@@ -216,12 +213,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     private NavigableMap<Integer, List<Word2Tokens>> getSortedTreeByRepetitionCount(List<WordRepetitionProgressMapping> exercises) {
         NavigableMap<Integer, List<Word2Tokens>> tree = new TreeMap<>();
         for (WordRepetitionProgressMapping exercise : exercises) {
-            Word2Tokens word2Tokens;
-            try {
-                word2Tokens = mapper.readValue(exercise.getWordJSON(), Word2Tokens.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            Word2Tokens word2Tokens = getWord2Tokens(exercise);
             if (tree.get(exercise.getRepetitionCounter()) == null) {
                 tree.put(exercise.getRepetitionCounter(), new LinkedList<Word2Tokens>());
             }
@@ -283,10 +275,12 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         if (isNotThereCurrentExercise(current)) {
             return null;
         }
-        WordRepetitionProgressMapping mapping = current.get(0);
+        return getWord2Tokens(current.get(0));
+    }
+
+    private Word2Tokens getWord2Tokens(WordRepetitionProgressMapping mapping) {
         try {
-            Word2Tokens word2Tokens = mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
-            return word2Tokens;
+            return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -337,6 +331,41 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         exercise.setForgettingCounter(counter);
         exerciseDao.createNewOrUpdate(exercise);
         return counter;
+    }
+
+    @Override
+    public List<WordSet> findWordSetOfDifficultWords() {
+        List<WordRepetitionProgressMapping> words = exerciseDao.findAll();
+        sortByForgettingAndRepetitionCounters(words);
+        LinkedList<WordSet> wordSets = new LinkedList<>();
+        for (WordRepetitionProgressMapping word : words) {
+            WordSet last = wordSets.getLast();
+            if (last == null || last.getWords().size() == wordSetSize) {
+                wordSets.add(new WordSet());
+                last = wordSets.getLast();
+                last.setWords(new LinkedList<Word2Tokens>());
+                last.getWords().add(getWord2Tokens(word));
+            } else {
+                last.getWords().add(getWord2Tokens(word));
+            }
+        }
+        return wordSets;
+    }
+
+    private void sortByForgettingAndRepetitionCounters(List<WordRepetitionProgressMapping> words) {
+        sort(words, new Comparator<WordRepetitionProgressMapping>() {
+            @Override
+            public int compare(WordRepetitionProgressMapping o1, WordRepetitionProgressMapping o2) {
+                float o1Result = o1.getForgettingCounter() / o1.getRepetitionCounter();
+                float o2Result = o2.getForgettingCounter() / o2.getRepetitionCounter();
+                if (o1Result > o2Result) {
+                    return 1;
+                } else if (o1Result < o2Result) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 
     private WordRepetitionProgressMapping getWordRepetitionProgressMapping(Word2Tokens word, Sentence sentence) {

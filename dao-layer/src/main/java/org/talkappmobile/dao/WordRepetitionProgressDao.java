@@ -1,9 +1,9 @@
 package org.talkappmobile.dao;
 
+import org.talkappmobile.mappings.WordRepetitionProgressMapping;
+
 import java.util.Date;
 import java.util.List;
-
-import org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
 public interface WordRepetitionProgressDao {
 
@@ -22,4 +22,6 @@ public interface WordRepetitionProgressDao {
     List<WordRepetitionProgressMapping> findWordSetsSortByUpdatedDateAndByStatus(long limit, Date olderThenInHours, String status);
 
     List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, String status);
+
+    List<WordRepetitionProgressMapping> findAll();
 }

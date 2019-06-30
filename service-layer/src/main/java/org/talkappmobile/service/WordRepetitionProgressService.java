@@ -37,4 +37,6 @@ public interface WordRepetitionProgressService {
     int markAsRepeated(Word2Tokens word, Sentence sentence);
 
     int markAsForgottenAgain(Word2Tokens word, Sentence sentence);
+
+    List<WordSet> findWordSetOfDifficultWords();
 }

@@ -2,8 +2,10 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Task;
+import org.talkappmobile.model.WordSet;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
@@ -41,6 +43,11 @@ public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefau
     @Override
     public void onWordSetRepetitionTaskClick(RepetitionClass clazz) {
         view.onWordSetRepetitionTaskClick(clazz);
+    }
+
+    @Override
+    public void onDifficultWordSetRepetitionTaskClicked(List<WordSet> wordSets) {
+        view.onDifficultWordSetRepetitionTaskClicked(wordSets);
     }
 
     public void findTasks() {

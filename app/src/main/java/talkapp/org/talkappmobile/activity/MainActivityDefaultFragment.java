@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Task;
+import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.ServiceFactory;
 import org.talkappmobile.service.impl.ServiceFactoryBean;
 
@@ -102,6 +104,14 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @Override
     public void onWordSetRepetitionTaskClick(RepetitionClass clazz) {
         openWordSetsListFragment(true, clazz);
+    }
+
+    @Override
+    public void onDifficultWordSetRepetitionTaskClicked(List<WordSet> wordSets) {
+        Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
+        intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSets.get(0));
+        intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, true);
+        startActivity(intent);
     }
 
     private void openWordSetsListFragment(boolean repetitionMode, RepetitionClass clazz1) {
