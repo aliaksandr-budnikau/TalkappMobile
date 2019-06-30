@@ -134,15 +134,4 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
-    @Override
-    public List<WordRepetitionProgressMapping> findAll() {
-        try {
-            return this.query(
-                    queryBuilder().prepare()
-            );
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
 }

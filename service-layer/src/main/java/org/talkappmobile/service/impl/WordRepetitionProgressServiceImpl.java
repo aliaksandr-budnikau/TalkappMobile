@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -335,7 +336,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
     @Override
     public List<WordSet> findWordSetOfDifficultWords() {
-        List<WordRepetitionProgressMapping> words = exerciseDao.findAll();
+        List<WordRepetitionProgressMapping> words = exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(Integer.MAX_VALUE, new Date(), FINISHED.name());
         sortByForgettingAndRepetitionCounters(words);
         LinkedList<WordSet> wordSets = new LinkedList<>();
         WordSet current = new WordSet();

@@ -22,6 +22,4 @@ public interface WordRepetitionProgressDao {
     List<WordRepetitionProgressMapping> findWordSetsSortByUpdatedDateAndByStatus(long limit, Date olderThenInHours, String status);
 
     List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, String status);
-
-    List<WordRepetitionProgressMapping> findAll();
 }
