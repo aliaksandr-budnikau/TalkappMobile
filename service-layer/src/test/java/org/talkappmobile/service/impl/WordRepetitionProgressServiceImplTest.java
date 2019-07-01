@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -272,7 +272,7 @@ public class WordRepetitionProgressServiceImplTest {
         WordRepetitionProgressMapping word2 = new WordRepetitionProgressMapping();
         word2.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
 
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyInt(), any(Date.class), anyString())).thenReturn(asList(word1, word2));
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(asList(word1, word2));
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertTrue(sets.isEmpty());
     }
@@ -286,7 +286,7 @@ public class WordRepetitionProgressServiceImplTest {
             list.add(word);
         }
 
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyInt(), any(Date.class), anyString())).thenReturn(list);
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(list);
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertEquals(1, sets.size());
         assertEquals(12, sets.get(0).getWords().size());
