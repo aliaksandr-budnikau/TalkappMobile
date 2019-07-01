@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 
 import talkapp.org.talkappmobile.activity.CapitalLetterInNewWordTest;
 import talkapp.org.talkappmobile.activity.ChangeSentenceTest;
+import talkapp.org.talkappmobile.activity.WordSetsListFragmentTest;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetRepetitionPresenterAndInteractorIntegTest;
@@ -20,6 +21,7 @@ import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterAndInte
         AddingNewWordSetPresenterAndInteractorIntegTest.class,
         TopicsFragmentPresenterAndInteractorIntegTest.class,
         CapitalLetterInNewWordTest.class,
+        WordSetsListFragmentTest.class,
         ChangeSentenceTest.class
 })
 @RunWith(Suite.class)

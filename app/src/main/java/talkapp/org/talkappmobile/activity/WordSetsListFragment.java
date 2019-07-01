@@ -21,6 +21,8 @@ import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
@@ -41,6 +43,7 @@ import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsList
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
+import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
 import talkapp.org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
@@ -134,7 +137,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Override
     public void onWordSetNotFinished(Topic topic, WordSet wordSet) {
-        startWordSetActivity(topic, wordSet);
+        eventBus.post(new OpenWordSetForStudyingEM(topic, wordSet, repetitionMode));
     }
 
     @Override
@@ -171,14 +174,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
                         dialog.dismiss();
                     }
                 }).show();
-    }
-
-    private void startWordSetActivity(Topic topic, WordSet wordSet) {
-        Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
-        intent.putExtra(PracticeWordSetActivity.TOPIC_MAPPING, topic);
-        intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
-        intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, repetitionMode);
-        startActivity(intent);
     }
 
     @Override
@@ -292,5 +287,14 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @Override
     public void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize) {
         Toast.makeText(getActivity(), "The set is too small " + actualSize + "/" + maxWordSetSize + " for repetition", Toast.LENGTH_LONG).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OpenWordSetForStudyingEM event) {
+        Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
+        intent.putExtra(PracticeWordSetActivity.TOPIC_MAPPING, event.getTopic());
+        intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, event.getWordSet());
+        intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, event.isRepetitionMode());
+        startActivity(intent);
     }
 }

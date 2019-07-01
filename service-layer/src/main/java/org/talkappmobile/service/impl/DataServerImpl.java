@@ -98,8 +98,19 @@ public class DataServerImpl implements DataServer {
         for (List<WordSet> wordSets : body.values()) {
             result.addAll(wordSets);
         }
+        initWordSetIdsOfWord2Tokens(result);
         localDataService.saveWordSets(result);
         return localDataService.findAllWordSets();
+    }
+
+    private void initWordSetIdsOfWord2Tokens(LinkedList<WordSet> wordSets) {
+        for (WordSet wordSet : wordSets) {
+            LinkedList<Word2Tokens> newWords = new LinkedList<>();
+            for (Word2Tokens word : wordSet.getWords()) {
+                newWords.add(new Word2Tokens(word.getWord(), word.getTokens(), wordSet.getId()));
+            }
+            wordSet.setWords(newWords);
+        }
     }
 
     @Override
