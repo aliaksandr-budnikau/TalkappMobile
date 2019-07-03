@@ -1,19 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "talkapp.org.talkappmobile"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 7
+        targetSdkVersion 28
+        versionCode 9
         versionName "1.4.0"
-        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions {
-            enabled false
-        }
     }
     buildTypes {
         release {
@@ -43,27 +39,27 @@ android {
 }
 
 dependencies {
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
-    compile project(':model-module')
-    compile(project(':service-layer')) /*{
+    testImplementation 'junit:junit:4.12'
+    implementation project(':model-module')
+    implementation(project(':service-layer')) /*{
         exclude module: 'dao-layer'
     }*/
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'com.android.support:design:26.+'
-    compile 'com.j256.ormlite:ormlite-android:5.1'
-    compile 'org.apache.commons:commons-collections4:4.0'
-    compile 'org.androidannotations:androidannotations-api:4.5.2'
-    compile 'com.tmtron:green-annotations-api:1.0.2'
-    compile 'org.greenrobot:eventbus:3.0.0'
-    testCompile project(':dao-layer')
-    testCompile 'org.mockito:mockito-core:2.21.0'
-    testCompile 'org.powermock:powermock-reflect:1.6.1'
-    testCompile 'org.robolectric:robolectric:3.5'
-    annotationProcessor 'org.androidannotations:androidannotations:4.5.2'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.j256.ormlite:ormlite-android:5.1'
+    implementation 'org.apache.commons:commons-collections4:4.0'
+    implementation 'org.androidannotations:androidannotations-api:4.6.0'
+    implementation 'com.tmtron:green-annotations-api:1.0.2'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    testImplementation project(':dao-layer')
+    testImplementation 'org.mockito:mockito-core:2.21.0'
+    testImplementation 'org.powermock:powermock-reflect:1.6.1'
+    testImplementation 'org.robolectric:robolectric:3.5'
+    annotationProcessor 'org.androidannotations:androidannotations:4.6.0'
     annotationProcessor 'com.tmtron:green-annotations:1.0.2'
 }
