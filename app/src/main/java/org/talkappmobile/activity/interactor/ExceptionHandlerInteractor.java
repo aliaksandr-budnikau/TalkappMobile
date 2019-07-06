@@ -1,0 +1,28 @@
+package org.talkappmobile.activity.interactor;
+
+import org.talkappmobile.service.Logger;
+
+import org.talkappmobile.activity.listener.ExceptionHandlerListner;
+
+public class ExceptionHandlerInteractor {
+    private static final String TAG = ExceptionHandlerInteractor.class.getSimpleName();
+
+    private final Logger logger;
+
+    public ExceptionHandlerInteractor(Logger logger) {
+        this.logger = logger;
+    }
+
+    public void handleInternetConnectionLostException(ExceptionHandlerListner listner) {
+        listner.onInternetConnectionLost();
+    }
+
+    public void handleUncaughtException(ExceptionHandlerListner listner, Throwable e) {
+        logger.e(TAG, e, e.getMessage());
+        listner.onUncaughtException(e);
+    }
+
+    public void handleLocalCacheIsEmptyException(ExceptionHandlerListner listner) {
+        listner.onLocalCacheIsEmpty();
+    }
+}

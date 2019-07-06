@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
     defaultConfig {
-        applicationId "talkapp.org.talkappmobile"
+        applicationId "org.talkappmobile"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 9
@@ -42,11 +42,11 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation 'junit:junit:4.12'
-    implementation project(':model-module')
-    implementation(project(':service-layer')) /*{
-        exclude module: 'dao-layer'
-    }*/
+    api 'com.squareup.retrofit2:retrofit:2.3.0'
+    api 'com.squareup.retrofit2:converter-jackson:2.3.0'
+    api 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    api 'com.j256.ormlite:ormlite-android:5.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'org.apache.commons:commons-lang3:3.5'
@@ -56,7 +56,8 @@ dependencies {
     implementation 'org.androidannotations:androidannotations-api:4.6.0'
     implementation 'com.tmtron:green-annotations-api:1.0.2'
     implementation 'org.greenrobot:eventbus:3.0.0'
-    testImplementation project(':dao-layer')
+    implementation 'com.google.guava:guava:20.0'
+    testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.powermock:powermock-reflect:1.6.1'
     testImplementation 'org.robolectric:robolectric:3.5'

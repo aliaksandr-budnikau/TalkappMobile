@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <talkapp.org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_ xmlns:android="http://schemas.android.com/apk/res/android"
+            <org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_ xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/originalTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:layout_marginTop="10pt"
                 android:background="@drawable/shape_rectangle">
 
-                <talkapp.org.talkappmobile.activity.custom.OriginalTextTextView_
+                <org.talkappmobile.activity.custom.OriginalTextTextView_
                     android:id="@+id/originalText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                     android:textColor="@color/color.text.origin"
                     android:textSize="14pt" />
 
-                <talkapp.org.talkappmobile.activity.custom.RightAnswerTextView_
+                <org.talkappmobile.activity.custom.RightAnswerTextView_
                     android:id="@+id/rightAnswer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                     android:textColor="@color/color.text.answer"
                     android:textSize="9pt" />
 
-                <talkapp.org.talkappmobile.activity.custom.PronounceRightAnswerButton_
+                <org.talkappmobile.activity.custom.PronounceRightAnswerButton_
                     android:id="@+id/pronounceRightAnswerButton"
 
                     android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:textColor="@color/color.text.answer"
 
                     android:textSize="5pt" />
-            </talkapp.org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_>
+            </org.talkappmobile.activity.custom.WordSetsOriginalTextLayout_>
 
             <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/answerTextLayout"
