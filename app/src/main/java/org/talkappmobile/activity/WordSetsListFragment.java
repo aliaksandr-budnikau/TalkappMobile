@@ -23,16 +23,6 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.talkappmobile.model.RepetitionClass;
-import org.talkappmobile.model.Topic;
-import org.talkappmobile.model.WordSet;
-import org.talkappmobile.service.BackendServerFactory;
-import org.talkappmobile.service.ServiceFactory;
-import org.talkappmobile.service.impl.BackendServerFactoryBean;
-import org.talkappmobile.service.impl.ServiceFactoryBean;
-
-import java.util.List;
-
 import org.talkappmobile.R;
 import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -44,6 +34,7 @@ import org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor
 import org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import org.talkappmobile.activity.view.WordSetsListView;
 import org.talkappmobile.events.OpenWordSetForStudyingEM;
+import org.talkappmobile.events.ParentScreenOutdatedEM;
 import org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
 import org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
 import org.talkappmobile.events.WordSetsNewFilterAppliedEM;
@@ -52,6 +43,15 @@ import org.talkappmobile.events.WordSetsRemoveClickedEM;
 import org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
 import org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
 import org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
+import org.talkappmobile.model.RepetitionClass;
+import org.talkappmobile.model.Topic;
+import org.talkappmobile.model.WordSet;
+import org.talkappmobile.service.BackendServerFactory;
+import org.talkappmobile.service.ServiceFactory;
+import org.talkappmobile.service.impl.BackendServerFactoryBean;
+import org.talkappmobile.service.impl.ServiceFactoryBean;
+
+import java.util.List;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static org.talkappmobile.model.RepetitionClass.LEARNED;
@@ -187,16 +187,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
                 @Override
                 public void onTabChanged(String tabId) {
-                    RepetitionClass selectedClass = RepetitionClass.valueOf(tabId);
-                    if (RepetitionClass.NEW == selectedClass) {
-                        eventBus.post(new WordSetsNewRepFilterAppliedEM());
-                    } else if (SEEN == selectedClass) {
-                        eventBus.post(new WordSetsSeenRepFilterAppliedEM());
-                    } else if (REPEATED == selectedClass) {
-                        eventBus.post(new WordSetsRepeatedRepFilterAppliedEM());
-                    } else if (LEARNED == selectedClass) {
-                        eventBus.post(new WordSetsLearnedRepFilterAppliedEM());
-                    }
+                    pickRepetitionFilter(RepetitionClass.valueOf(tabId));
                 }
             });
             tabHost.setup();
@@ -229,13 +220,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
                 @Override
                 public void onTabChanged(String tabId) {
-                    if (NEW.equals(tabId)) {
-                        eventBus.post(new WordSetsNewFilterAppliedEM());
-                    } else if (STARTED.equals(tabId)) {
-                        eventBus.post(new WordSetsStartedFilterAppliedEM());
-                    } else if (FINISHED.equals(tabId)) {
-                        eventBus.post(new WordSetsFinishedFilterAppliedEM());
-                    }
+                    pickStudingFilter(tabId);
                 }
             });
             tabHost.setup();
@@ -256,6 +241,28 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             spec.setContent(R.id.wordSetsListView);
             spec.setIndicator("Finished");
             tabHost.addTab(spec);
+        }
+    }
+
+    private void pickStudingFilter(String tabId) {
+        if (NEW.equals(tabId)) {
+            eventBus.post(new WordSetsNewFilterAppliedEM());
+        } else if (STARTED.equals(tabId)) {
+            eventBus.post(new WordSetsStartedFilterAppliedEM());
+        } else if (FINISHED.equals(tabId)) {
+            eventBus.post(new WordSetsFinishedFilterAppliedEM());
+        }
+    }
+
+    private void pickRepetitionFilter(RepetitionClass selectedClass) {
+        if (RepetitionClass.NEW == selectedClass) {
+            eventBus.post(new WordSetsNewRepFilterAppliedEM());
+        } else if (SEEN == selectedClass) {
+            eventBus.post(new WordSetsSeenRepFilterAppliedEM());
+        } else if (REPEATED == selectedClass) {
+            eventBus.post(new WordSetsRepeatedRepFilterAppliedEM());
+        } else if (LEARNED == selectedClass) {
+            eventBus.post(new WordSetsLearnedRepFilterAppliedEM());
         }
     }
 
@@ -289,6 +296,19 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         Toast.makeText(getActivity(), "The set is too small " + actualSize + "/" + maxWordSetSize + " for repetition", Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass) {
+        wordSetsListView.addAll(wordSets);
+        wordSetsListView.refreshModel();
+        if (repetitionClass == null) {
+            pickStudingFilter(NEW);
+        } else {
+            pickRepetitionFilter(repetitionClass);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OpenWordSetForStudyingEM event) {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
@@ -296,5 +316,10 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, event.getWordSet());
         intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, event.isRepetitionMode());
         startActivity(intent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(ParentScreenOutdatedEM event) {
+        presenter.refresh();
     }
 }

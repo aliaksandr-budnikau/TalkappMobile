@@ -26,4 +26,6 @@ public interface WordSetsListView {
     void onWordSetNotRemoved();
 
     void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize);
+
+    void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass);
 }

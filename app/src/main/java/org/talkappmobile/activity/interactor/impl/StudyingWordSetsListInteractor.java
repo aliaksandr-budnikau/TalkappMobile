@@ -1,5 +1,9 @@
 package org.talkappmobile.activity.interactor.impl;
 
+import android.support.annotation.NonNull;
+
+import org.talkappmobile.activity.interactor.WordSetsListInteractor;
+import org.talkappmobile.activity.listener.OnWordSetsListListener;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.DataServer;
@@ -9,9 +13,6 @@ import org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.talkappmobile.activity.interactor.WordSetsListInteractor;
-import org.talkappmobile.activity.listener.OnWordSetsListListener;
 
 import static org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -29,6 +30,12 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
 
     @Override
     public void initializeWordSets(Topic topic, OnWordSetsListListener listener) {
+        List<WordSet> wordSets = getWordSets(topic);
+        listener.onWordSetsInitialized(wordSets, null);
+    }
+
+    @NonNull
+    private List<WordSet> getWordSets(Topic topic) {
         List<WordSet> wordSets;
         if (topic == null) {
             wordSets = server.findAllWordSets();
@@ -41,7 +48,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
             }
         }
         Collections.sort(wordSets, new WordSetComparator());
-        listener.onWordSetsInitialized(wordSets, null);
+        return wordSets;
     }
 
     private void initLocalCache() {
@@ -80,5 +87,11 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     @Override
     public void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
         listener.onItemLongClick(wordSet, clickedItemNumber);
+    }
+
+    @Override
+    public void refreshWordSets(Topic topic, OnWordSetsListListener listener) {
+        List<WordSet> wordSets = getWordSets(topic);
+        listener.onWordSetsFetched(wordSets, null);
     }
 }

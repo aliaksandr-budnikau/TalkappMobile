@@ -2,15 +2,14 @@ package org.talkappmobile.activity.interactor.impl;
 
 import android.support.annotation.NonNull;
 
+import org.talkappmobile.activity.interactor.WordSetsListInteractor;
+import org.talkappmobile.activity.listener.OnWordSetsListListener;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 import org.talkappmobile.service.WordRepetitionProgressService;
 
 import java.util.List;
-
-import org.talkappmobile.activity.interactor.WordSetsListInteractor;
-import org.talkappmobile.activity.listener.OnWordSetsListListener;
 
 public class RepetitionWordSetsListInteractor implements WordSetsListInteractor {
     @NonNull
@@ -25,8 +24,12 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
 
     @Override
     public void initializeWordSets(Topic topic, OnWordSetsListListener listener) {
-        List<WordSet> wordSets = exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2);
+        List<WordSet> wordSets = getFinishedWordSetsSortByUpdatedDate();
         listener.onWordSetsInitialized(wordSets, repetitionClass);
+    }
+
+    private List<WordSet> getFinishedWordSetsSortByUpdatedDate() {
+        return exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2);
     }
 
     @Override
@@ -49,5 +52,11 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
 
     @Override
     public void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener) {
+    }
+
+    @Override
+    public void refreshWordSets(Topic topic, OnWordSetsListListener listener) {
+        List<WordSet> wordSets = getFinishedWordSetsSortByUpdatedDate();
+        listener.onWordSetsFetched(wordSets, repetitionClass);
     }
 }

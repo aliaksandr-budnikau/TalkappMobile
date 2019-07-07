@@ -1,14 +1,13 @@
 package org.talkappmobile.activity.presenter;
 
+import org.talkappmobile.activity.interactor.WordSetsListInteractor;
+import org.talkappmobile.activity.listener.OnWordSetsListListener;
+import org.talkappmobile.activity.view.WordSetsListView;
 import org.talkappmobile.model.RepetitionClass;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 
 import java.util.List;
-
-import org.talkappmobile.activity.interactor.WordSetsListInteractor;
-import org.talkappmobile.activity.listener.OnWordSetsListListener;
-import org.talkappmobile.activity.view.WordSetsListView;
 
 public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;
@@ -82,7 +81,21 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetTooSmallForRepetition(maxWordSetSize, actualSize);
     }
 
+    @Override
+    public void onWordSetsFetched(List<WordSet> wordSets, RepetitionClass repetitionClass) {
+        view.onWordSetsRefreshed(wordSets, repetitionClass);
+    }
+
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
+    }
+
+    public void refresh() {
+        try {
+            view.onInitializeBeginning();
+            interactor.refreshWordSets(topic, this);
+        } finally {
+            view.onInitializeEnd();
+        }
     }
 }

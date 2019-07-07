@@ -6,14 +6,17 @@ import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import com.tmtron.greenannotations.EventBusGreenRobot;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.ViewById;
-
+import org.greenrobot.eventbus.EventBus;
 import org.talkappmobile.R;
 import org.talkappmobile.activity.adapter.PracticeWordSetPagerAdapter;
+import org.talkappmobile.events.ParentScreenOutdatedEM;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 
@@ -25,6 +28,9 @@ public class PracticeWordSetActivity extends BaseActivity {
     public static final String TOPIC_MAPPING = "topic";
     public static final String WORD_SET_MAPPING = "wordSet";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
+
+    @EventBusGreenRobot
+    EventBus eventBus;
 
     @ViewById(R.id.container)
     ViewPager viewPager;
@@ -64,10 +70,15 @@ public class PracticeWordSetActivity extends BaseActivity {
 
     private void finishActivity() {
         if (!repetitionMode) {
-            PracticeWordSetActivity.this.finish();
+            finishCurrentActivity();
         } else {
             openDialog();
         }
+    }
+
+    private void finishCurrentActivity() {
+        eventBus.post(new ParentScreenOutdatedEM());
+        PracticeWordSetActivity.this.finish();
     }
 
     private void openDialog() {
@@ -76,7 +87,7 @@ public class PracticeWordSetActivity extends BaseActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        PracticeWordSetActivity.this.finish();
+                        finishCurrentActivity();
                     }
                 })
                 .setNegativeButton(android.R.string.no, null).show();

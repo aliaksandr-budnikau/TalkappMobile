@@ -24,4 +24,6 @@ public interface OnWordSetsListListener {
     void onItemLongClick(WordSet wordSet, int clickedItemNumber);
 
     void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize);
+
+    void onWordSetsFetched(List<WordSet> wordSets, RepetitionClass repetitionClass);
 }

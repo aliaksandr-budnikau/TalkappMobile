@@ -14,4 +14,6 @@ public interface WordSetsListInteractor {
     void deleteWordSetClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 
     void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
+
+    void refreshWordSets(Topic topic, OnWordSetsListListener listener);
 }
