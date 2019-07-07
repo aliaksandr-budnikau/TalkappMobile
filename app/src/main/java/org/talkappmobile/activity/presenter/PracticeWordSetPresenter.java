@@ -2,14 +2,14 @@ package org.talkappmobile.activity.presenter;
 
 import android.net.Uri;
 
-import java.util.List;
-
 import org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.SentenceContentScore;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
+
+import java.util.List;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     private final PracticeWordSetInteractor interactor;
@@ -150,10 +150,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
         } finally {
             viewStrategy.onNextButtonFinish();
         }
-    }
-
-    public void finishActivity() {
-        viewStrategy.onFinishActivity();
     }
 
     public Sentence getCurrentSentence() {

@@ -33,10 +33,6 @@ public interface PracticeWordSetView {
 
     void showCongratulationMessage();
 
-    void closeActivity();
-
-    void openAnotherActivity();
-
     void setEnablePronounceRightAnswerButton(boolean value);
 
     void setEnableVoiceRecButton(boolean value);

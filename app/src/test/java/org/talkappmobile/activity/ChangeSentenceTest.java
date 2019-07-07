@@ -40,6 +40,7 @@ import org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import org.talkappmobile.events.NewSentenceEM;
 import org.talkappmobile.events.SentenceWasPickedForChangeEM;
 import org.talkappmobile.events.SentencesWereFoundForChangeEM;
+import org.talkappmobile.events.WordSetPracticeFinishedEM;
 import org.talkappmobile.mappings.ExpAuditMapping;
 import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordRepetitionProgressMapping;
@@ -75,6 +76,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -532,6 +534,12 @@ public class ChangeSentenceTest {
         practiceWordSetFragment.onCheckAnswerButtonClick();
         reset(eventBus);
         practiceWordSetFragment.onNextButtonClick();
+        reset(eventBus);
+
+        practiceWordSetFragment.onCloseButtonClick();
+
+        WordSetPracticeFinishedEM wordSetPracticeFinishedEM = getEM(WordSetPracticeFinishedEM.class, eventBus);
+        assertNotNull(wordSetPracticeFinishedEM);
     }
 
     @NonNull

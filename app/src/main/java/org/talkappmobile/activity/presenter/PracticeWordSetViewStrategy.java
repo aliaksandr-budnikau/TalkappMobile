@@ -1,5 +1,6 @@
 package org.talkappmobile.activity.presenter;
 
+import org.talkappmobile.activity.view.PracticeWordSetView;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
@@ -7,8 +8,6 @@ import org.talkappmobile.service.TextUtils;
 import org.talkappmobile.service.WordSetExperienceUtils;
 
 import java.util.List;
-
-import org.talkappmobile.activity.view.PracticeWordSetView;
 
 public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
@@ -54,11 +53,6 @@ public class PracticeWordSetViewStrategy {
         view.showCongratulationMessage();
         view.showCloseButton();
         view.hideNextButton();
-    }
-
-    public void onFinishActivity() {
-        view.closeActivity();
-        view.openAnotherActivity();
     }
 
     public void onRightAnswer(Sentence sentence) {

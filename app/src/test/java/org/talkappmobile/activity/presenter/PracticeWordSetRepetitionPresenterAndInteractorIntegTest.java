@@ -15,6 +15,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.talkappmobile.BuildConfig;
+import org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
+import org.talkappmobile.activity.view.PracticeWordSetView;
 import org.talkappmobile.dao.DatabaseHelper;
 import org.talkappmobile.dao.ExpAuditDao;
 import org.talkappmobile.dao.SentenceDao;
@@ -61,9 +63,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-
-import org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
-import org.talkappmobile.activity.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -292,15 +291,9 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showCongratulationMessage();
         verify(view).hideNextButton();
         verify(view).showCloseButton();
-        verify(view, times(0)).closeActivity();
-        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
-
-        presenter.finishActivity();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
     }
 
     @Test
@@ -612,8 +605,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view, times(0)).showCongratulationMessage();
-        verify(view, times(0)).closeActivity();
-        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);

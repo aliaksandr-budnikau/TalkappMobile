@@ -14,9 +14,12 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.talkappmobile.R;
 import org.talkappmobile.activity.adapter.PracticeWordSetPagerAdapter;
 import org.talkappmobile.events.ParentScreenOutdatedEM;
+import org.talkappmobile.events.WordSetPracticeFinishedEM;
 import org.talkappmobile.model.Topic;
 import org.talkappmobile.model.WordSet;
 
@@ -57,15 +60,18 @@ public class PracticeWordSetActivity extends BaseActivity {
         finishActivity();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(WordSetPracticeFinishedEM event) {
+        finishActivity();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finishActivity();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finishActivity();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void finishActivity() {

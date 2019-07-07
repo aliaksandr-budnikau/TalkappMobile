@@ -14,6 +14,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.talkappmobile.BuildConfig;
+import org.talkappmobile.activity.PresenterFactory;
+import org.talkappmobile.activity.view.PracticeWordSetView;
 import org.talkappmobile.dao.DatabaseHelper;
 import org.talkappmobile.dao.ExpAuditDao;
 import org.talkappmobile.dao.SentenceDao;
@@ -54,15 +56,11 @@ import org.talkappmobile.service.mapper.WordSetMapper;
 
 import java.sql.SQLException;
 
-import org.talkappmobile.activity.PresenterFactory;
-import org.talkappmobile.activity.view.PracticeWordSetView;
-
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -409,15 +407,9 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showCongratulationMessage();
         verify(view).hideNextButton();
         verify(view).showCloseButton();
-        verify(view, times(0)).closeActivity();
-        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
-
-        presenter.finishActivity();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
     }
 
     @Test
@@ -763,15 +755,9 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).showCongratulationMessage();
         verify(view).hideNextButton();
         verify(view).showCloseButton();
-        verify(view, times(0)).closeActivity();
-        verify(view, times(0)).openAnotherActivity();
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
-
-        presenter.finishActivity();
-        verify(view).closeActivity();
-        verify(view).openAnotherActivity();
     }
 
     @Test

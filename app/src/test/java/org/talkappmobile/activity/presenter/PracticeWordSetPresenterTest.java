@@ -7,13 +7,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 
 import java.util.HashMap;
-
-import org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -24,7 +23,7 @@ public class PracticeWordSetPresenterTest {
     @Mock
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
-    private PracticeWordSetFirstCycleViewStrategy viewStrategy;
+    private PracticeWordSetViewStrategy viewStrategy;
     private PracticeWordSetPresenter presenter;
 
     @Before

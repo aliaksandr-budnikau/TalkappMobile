@@ -27,6 +27,11 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.talkappmobile.R;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import org.talkappmobile.activity.view.PracticeWordSetView;
 import org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import org.talkappmobile.events.AnswerPronunciationStartedEM;
 import org.talkappmobile.events.AnswerPronunciationStoppedEM;
@@ -40,17 +45,12 @@ import org.talkappmobile.events.RightAnswerUntouchedEM;
 import org.talkappmobile.events.ScoreSentenceOptionPickedEM;
 import org.talkappmobile.events.SentenceWasPickedForChangeEM;
 import org.talkappmobile.events.SentencesWereFoundForChangeEM;
+import org.talkappmobile.events.WordSetPracticeFinishedEM;
 import org.talkappmobile.model.Sentence;
 import org.talkappmobile.model.Word2Tokens;
 import org.talkappmobile.model.WordSet;
 
 import java.util.List;
-
-import org.talkappmobile.R;
-import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
-import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import org.talkappmobile.activity.view.PracticeWordSetView;
 
 import static android.app.Activity.RESULT_OK;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -158,7 +158,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Click(R.id.closeButton)
     @Background
     public void onCloseButtonClick() {
-        presenter.finishActivity();
+        eventBus.post(new WordSetPracticeFinishedEM());
     }
 
     @Click(R.id.playButton)
@@ -299,19 +299,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @UiThread
     public void showCongratulationMessage() {
         Toast.makeText(getContext(), "Congratulations! You finished!", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    @UiThread
-    public void closeActivity() {
-        getActivity().finish();
-    }
-
-    @Override
-    @UiThread
-    public void openAnotherActivity() {
-        Intent intent = new Intent(getContext(), MainActivity_.class);
-        startActivity(intent);
     }
 
     @Override
