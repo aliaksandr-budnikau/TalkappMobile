@@ -12,15 +12,14 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.talkappmobile.model.WordSet;
-
-import java.util.List;
-
 import org.talkappmobile.R;
 import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
+import org.talkappmobile.model.WordSet;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -129,6 +128,22 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @UiThread
     public void hidePleaseWaitProgressBar() {
         waitingForProgressBarManager.hideProgressBar();
+    }
+
+    @Override
+    public void resetWords() {
+        word1.setText("");
+        word2.setText("");
+        word3.setText("");
+        word4.setText("");
+        word5.setText("");
+        word6.setText("");
+        word7.setText("");
+        word8.setText("");
+        word9.setText("");
+        word10.setText("");
+        word11.setText("");
+        word12.setText("");
     }
 
     @Override

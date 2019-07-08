@@ -20,6 +20,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.talkappmobile.BuildConfig;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import org.talkappmobile.dao.DatabaseHelper;
 import org.talkappmobile.dao.ExpAuditDao;
 import org.talkappmobile.dao.SentenceDao;
@@ -61,10 +64,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
-import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.junit.Assert.assertEquals;
@@ -72,6 +71,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -248,6 +248,19 @@ public class CapitalLetterInNewWordTest {
             addingNewWordSetFragment.onButtonSubmitClick();
         } catch (NullPointerException e) {
         }
+
+        verify(word1).setText("");
+        verify(word2).setText("");
+        verify(word3).setText("");
+        verify(word4).setText("");
+        verify(word5).setText("");
+        verify(word6).setText("");
+        verify(word7).setText("");
+        verify(word8).setText("");
+        verify(word9).setText("");
+        verify(word10).setText("");
+        verify(word11).setText("");
+        verify(word12).setText("");
 
         wordSet = wordSetMapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
 
