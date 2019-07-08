@@ -17,6 +17,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.talkappmobile.BuildConfig;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
+import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import org.talkappmobile.activity.custom.WordSetsListListView;
 import org.talkappmobile.dao.DatabaseHelper;
 import org.talkappmobile.dao.SentenceDao;
 import org.talkappmobile.dao.TopicDao;
@@ -26,6 +29,9 @@ import org.talkappmobile.dao.WordTranslationDao;
 import org.talkappmobile.dao.impl.SentenceDaoImpl;
 import org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import org.talkappmobile.dao.impl.WordSetDaoImpl;
+import org.talkappmobile.events.OpenWordSetForStudyingEM;
+import org.talkappmobile.events.ParentScreenOutdatedEM;
+import org.talkappmobile.events.WordSetsNewFilterAppliedEM;
 import org.talkappmobile.mappings.SentenceMapping;
 import org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import org.talkappmobile.mappings.WordSetMapping;
@@ -44,24 +50,22 @@ import org.talkappmobile.service.mapper.WordSetMapper;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.talkappmobile.activity.custom.WaitingForProgressBarManager;
-import org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import org.talkappmobile.activity.custom.WordSetsListListView;
-import org.talkappmobile.events.OpenWordSetForStudyingEM;
-
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
-public class WordSetsListFragmentTest {
+public class WordSetsListFragmentTest extends BaseTest {
 
     private WordSetsListFragment wordSetsListFragment;
     private WordRepetitionProgressServiceImpl repetitionProgressService;
@@ -115,11 +119,11 @@ public class WordSetsListFragmentTest {
     }
 
     @Test
-    public void testOpeningOfPreparedWordSet() {
+    public void testOpeningAndClosingOfPreparedWordSet() {
         Whitebox.setInternalState(wordSetsListFragment, "repetitionMode", false);
 
         wordSetsListFragment.init();
-        ArgumentCaptor<List<WordSet>> captorWords = ArgumentCaptor.forClass(List.class);
+        ArgumentCaptor<List<WordSet>> captorWords = forClass(List.class);
         verify(wordSetsListView).addAll(captorWords.capture());
         List<WordSet> wordSetList = captorWords.getValue();
 
@@ -127,9 +131,7 @@ public class WordSetsListFragmentTest {
         when(wordSetsListView.getWordSet(position)).thenReturn(wordSetList.get(position));
         wordSetsListFragment.onItemClick(position);
 
-        ArgumentCaptor<OpenWordSetForStudyingEM> captor = ArgumentCaptor.forClass(OpenWordSetForStudyingEM.class);
-        verify(eventBus).post(captor.capture());
-        OpenWordSetForStudyingEM em = captor.getValue();
+        OpenWordSetForStudyingEM em = getEM(OpenWordSetForStudyingEM.class, eventBus);
 
         WordSet wordSet = em.getWordSet();
         List<Word2Tokens> words = wordSet.getWords();
@@ -142,6 +144,24 @@ public class WordSetsListFragmentTest {
         for (WordSet set : allWordSets) {
             checkWord2Tokens(set, set.getWords());
         }
+
+        reset(wordSetsListView);
+        /*
+          closing
+         */
+        wordSetsListFragment.onMessageEvent(new ParentScreenOutdatedEM());
+
+        ArgumentCaptor<List<WordSet>> captor = forClass(List.class);
+        verify(wordSetsListView).addAll(captor.capture());
+        List<WordSet> wordSetListForRefresh = captor.getValue();
+        assertNotEquals(0, wordSetListForRefresh.size() % 100);
+        verify(wordSetsListView).refreshModel();
+
+        for (WordSet set : wordSetListForRefresh) {
+            checkWord2Tokens(set, set.getWords());
+        }
+
+        verify(eventBus).post(any(WordSetsNewFilterAppliedEM.class));
     }
 
     @After

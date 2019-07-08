@@ -21,9 +21,18 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     public void initialize() {
+        wrapWithTryFinally(new Runnable() {
+            @Override
+            public void run() {
+                interactor.initializeWordSets(topic, WordSetsListPresenter.this);
+            }
+        });
+    }
+
+    private void wrapWithTryFinally(Runnable runnable) {
         try {
             view.onInitializeBeginning();
-            interactor.initializeWordSets(topic, this);
+            runnable.run();
         } finally {
             view.onInitializeEnd();
         }
@@ -91,11 +100,11 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
     }
 
     public void refresh() {
-        try {
-            view.onInitializeBeginning();
-            interactor.refreshWordSets(topic, this);
-        } finally {
-            view.onInitializeEnd();
-        }
+        wrapWithTryFinally(new Runnable() {
+            @Override
+            public void run() {
+                interactor.refreshWordSets(topic, WordSetsListPresenter.this);
+            }
+        });
     }
 }

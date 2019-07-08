@@ -15,7 +15,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -81,13 +80,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
-public class ChangeSentenceTest {
+public class ChangeSentenceTest extends BaseTest {
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSetService experienceService;
@@ -552,16 +549,5 @@ public class ChangeSentenceTest {
         originalTextTextViewPresenter.setModel(displayedSentence);
         originalTextTextViewPresenter.unlock();
         originalTextTextViewPresenter.refresh();
-    }
-
-    private <T> T getEM(Class<T> clazz, EventBus eventBus, int times) {
-        ArgumentCaptor<T> captor = ArgumentCaptor.forClass(clazz);
-        verify(eventBus, times(times)).post(captor.capture());
-        reset(eventBus);
-        return captor.getValue();
-    }
-
-    private <T> T getEM(Class<T> clazz, EventBus eventBus) {
-        return getEM(clazz, eventBus, 1);
     }
 }
