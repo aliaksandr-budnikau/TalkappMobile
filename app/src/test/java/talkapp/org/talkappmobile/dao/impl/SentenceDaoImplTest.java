@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static talkapp.org.talkappmobile.mappings.SentenceMapping.SENTENCE_TABLE;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl.local")
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl.local")
 public class SentenceDaoImplTest {
 
     private DatabaseHelper databaseHelper;

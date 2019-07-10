@@ -34,7 +34,7 @@ import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "org.talkappmobile.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class WordRepetitionProgressServiceImplIntegTest {
 
     private WordRepetitionProgressServiceImpl service;

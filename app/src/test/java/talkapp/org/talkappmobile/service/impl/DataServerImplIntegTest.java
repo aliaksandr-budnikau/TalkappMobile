@@ -49,7 +49,7 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = {M}, packageName = "org.talkappmobile.dao.impl")
+@Config(constants = BuildConfig.class, sdk = {M}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class DataServerImplIntegTest {
     private TopicDao topicDao;
     private SentenceDao sentenceDao;
