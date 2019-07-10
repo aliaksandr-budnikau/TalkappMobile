@@ -131,7 +131,7 @@ public class WordSetsListFragmentTest extends BaseTest {
         when(wordSetsListView.getWordSet(position)).thenReturn(wordSetList.get(position));
         wordSetsListFragment.onItemClick(position);
 
-        OpenWordSetForStudyingEM em = getEM(OpenWordSetForStudyingEM.class, eventBus);
+        OpenWordSetForStudyingEM em = getEM(OpenWordSetForStudyingEM.class, eventBus, 1);
 
         WordSet wordSet = em.getWordSet();
         List<Word2Tokens> words = wordSet.getWords();
