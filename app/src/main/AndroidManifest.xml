@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.talkappmobile">
+    package="talkapp.org.talkappmobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
-        android:name="org.talkappmobile.app.TalkappMobileApplication"
+        android:name="talkapp.org.talkappmobile.app.TalkappMobileApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,17 +15,17 @@
         android:supportsRtl="true">
         <!-- android:theme="@style/AppTheme"> -->
         <activity
-            android:name="org.talkappmobile.activity.PracticeWordSetActivity_"
+            android:name="talkapp.org.talkappmobile.activity.PracticeWordSetActivity_"
             android:label="Используй слова"
-            android:parentActivityName="org.talkappmobile.activity.MainActivity_"
+            android:parentActivityName="talkapp.org.talkappmobile.activity.MainActivity_"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.talkappmobile.activity.MainActivity_" />
+                android:value="talkapp.org.talkappmobile.activity.MainActivity_" />
         </activity>
 
         <activity
-            android:name="org.talkappmobile.activity.MainActivity_"
+            android:name="talkapp.org.talkappmobile.activity.MainActivity_"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.talkappmobile.activity.CrashActivity_"
+            android:name="talkapp.org.talkappmobile.activity.CrashActivity_"
             android:label="@string/title_crash_main"
             android:theme="@style/Theme.AppCompat" />
     </application>
