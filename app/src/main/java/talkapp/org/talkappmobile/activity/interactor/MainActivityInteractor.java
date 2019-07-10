@@ -29,7 +29,7 @@ public class MainActivityInteractor {
         PackageManager manager = context.getPackageManager();
         PackageInfo info;
         try {
-            info = manager.getPackageInfo("org.talkappmobile", 0);
+            info = manager.getPackageInfo("talkapp.org.talkappmobile", 0);
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
