@@ -27,6 +27,9 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -45,12 +48,11 @@ import talkapp.org.talkappmobile.events.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.events.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
+import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.events.WordSetPracticeFinishedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -393,6 +395,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @IgnoreWhen(VIEW_DESTROYED)
     public void onUpdateUserExp(double expScore) {
         Toast.makeText(getContext(), "+" + expScore + " EXP", Toast.LENGTH_LONG).show();
+        eventBus.post(new UserExpUpdatedEM(expScore));
     }
 
     @Override

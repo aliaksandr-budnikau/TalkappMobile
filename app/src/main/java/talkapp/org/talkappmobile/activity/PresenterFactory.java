@@ -4,6 +4,22 @@ import android.content.Context;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+
+import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
+import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
+import talkapp.org.talkappmobile.activity.view.MainActivityView;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
@@ -24,19 +40,6 @@ import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
-
-import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {
@@ -77,5 +80,10 @@ public class PresenterFactory {
     public PracticeWordSetVocabularyPresenter create(WordSet wordSet, PracticeWordSetVocabularyView view) {
         PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get());
         return new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
+    }
+
+    public MainActivityPresenter create(MainActivityView view, Context context) {
+        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), serviceFactory.getUserExpService(), context);
+        return new MainActivityPresenter(view, interactor);
     }
 }

@@ -13,31 +13,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.tmtron.greenannotations.EventBusGreenRobot;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
+import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
+import talkapp.org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
+    @Bean
+    PresenterFactory presenterFactory;
 
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
@@ -45,6 +44,9 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     DrawerLayout drawer;
     @ViewById(R.id.nav_view)
     NavigationView navigationView;
+
+    @EventBusGreenRobot
+    EventBus eventBus;
 
     private MainActivityPresenter presenter;
 
@@ -57,8 +59,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), serviceFactory.getUserExpService(), getApplicationContext());
-        initPresenter(interactor);
+        initPresenter();
 
         final FragmentManager fragmentManager = getFragmentManager();
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -100,10 +101,15 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     }
 
     @Background
-    public void initPresenter(MainActivityInteractor interactor) {
-        presenter = new MainActivityPresenter(this, interactor);
+    public void initPresenter() {
+        presenter = presenterFactory.create(this, getApplicationContext());
         presenter.checkServerAvailability();
         presenter.initAppVersion();
+        presenter.initYourExp();
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(UserExpUpdatedEM event) {
         presenter.initYourExp();
     }
 

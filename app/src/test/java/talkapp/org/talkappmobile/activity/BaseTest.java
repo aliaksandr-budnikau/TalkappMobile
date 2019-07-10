@@ -4,6 +4,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.mockito.ArgumentCaptor;
 import org.mockito.verification.VerificationMode;
 
+import java.util.List;
+
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
@@ -24,6 +26,12 @@ class BaseTest {
         ArgumentCaptor<T> captor = forClass(clazz);
         verify(eventBus, mode).post(captor.capture());
         reset(eventBus);
-        return captor.getValue();
+        List<T> allValues = captor.getAllValues();
+        for (T arg : allValues) {
+            if (arg.getClass().equals(clazz)) {
+                return arg;
+            }
+        }
+        return null;
     }
 }
