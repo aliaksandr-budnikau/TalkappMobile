@@ -16,6 +16,7 @@ import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.adapter.PracticeWordSetPagerAdapter;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
@@ -62,7 +63,7 @@ public class PracticeWordSetActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(WordSetPracticeFinishedEM event) {
-        finishActivity();
+        finishCurrentActivity();
     }
 
     @Override
