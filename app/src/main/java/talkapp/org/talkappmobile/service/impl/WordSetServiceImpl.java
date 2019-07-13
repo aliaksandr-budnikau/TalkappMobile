@@ -2,12 +2,15 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
@@ -124,5 +127,21 @@ public class WordSetServiceImpl implements WordSetService {
         }
         totalTop /= translations.size();
         return totalTop;
+    }
+
+    @Override
+    @NonNull
+    public NewWordSetDraft getNewWordSetDraft() {
+        NewWordSetDraftMapping mapping = newWordSetDraftDao.getNewWordSetDraftById(1);
+        if (mapping == null) {
+            return new NewWordSetDraft(Collections.<String>emptyList());
+        }
+        return wordSetMapper.toDto(mapping);
+    }
+
+    @Override
+    public void save(@NonNull NewWordSetDraft draft) {
+        NewWordSetDraftMapping mapping = wordSetMapper.toMapping(draft);
+        newWordSetDraftDao.createNewOrUpdate(mapping);
     }
 }

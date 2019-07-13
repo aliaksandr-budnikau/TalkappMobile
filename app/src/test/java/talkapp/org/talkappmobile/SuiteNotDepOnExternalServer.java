@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;
 import talkapp.org.talkappmobile.component.impl.SpeakerBeanTest;
+import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentControllerIntegTest;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImplTest;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImplTest;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImplTest;
@@ -57,6 +58,7 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         WordSetDaoImplTest.class,
         SentenceDaoImplTest.class,
         RequestExecutorTest.class,
+        AddingNewWordSetFragmentControllerIntegTest.class
 })
 @RunWith(Suite.class)
 public class SuiteNotDepOnExternalServer {

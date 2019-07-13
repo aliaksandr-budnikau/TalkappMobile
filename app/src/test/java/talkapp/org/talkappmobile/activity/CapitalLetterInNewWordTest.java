@@ -141,9 +141,11 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         Whitebox.setInternalState(practiceWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetPractiseForm", mock(View.class));
         Whitebox.setInternalState(practiceWordSetFragment, "spellingGrammarErrorsListView", mock(LinearLayout.class));
-        Whitebox.setInternalState(practiceWordSetFragment, "eventBus", mock(EventBus.class));
+        Whitebox.setInternalState(practiceWordSetFragment, "eventBus", getEventBus());
 
         addingNewWordSetFragment = new AddingNewWordSetFragment();
+        Whitebox.setInternalState(addingNewWordSetFragment, "eventBus", getEventBus());
+        Whitebox.setInternalState(addingNewWordSetFragment, "serviceFactory", getServiceFactoryBean());
         Whitebox.setInternalState(addingNewWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
         Whitebox.setInternalState(addingNewWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));

@@ -5,30 +5,46 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tmtron.greenannotations.EventBusGreenRobot;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
+import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
+import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentReadyEM;
+import talkapp.org.talkappmobile.events.NewWordSetDraftChangedEM;
+import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static java.util.Arrays.asList;
+import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
-public class AddingNewWordSetFragment extends Fragment implements AddingNewWordSetFragmentView {
+public class AddingNewWordSetFragment extends Fragment implements AddingNewWordSetFragmentView, View.OnFocusChangeListener {
     @Bean
     PresenterFactory presenterFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
     @ViewById(R.id.word1)
     TextView word1;
     @ViewById(R.id.word2)
@@ -58,24 +74,50 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @ViewById(R.id.mainForm)
     View mainForm;
 
+    @EventBusGreenRobot
+    EventBus eventBus;
+
     private List<TextView> allTextViews;
 
     private AddingNewWordSetPresenter presenter;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
+    private AddingNewWordSetFragmentController controller;
 
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
         allTextViews = asList(word1, word2, word3, word4, word5, word6, word7, word8, word9, word10, word11, word12);
 
+        for (TextView textView : allTextViews) {
+            textView.setOnFocusChangeListener(this);
+        }
         presenter = presenterFactory.create(this);
+        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
+        eventBus.post(new AddingNewWordSetFragmentReadyEM());
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(AddingNewWordSetFragmentReadyEM event) {
+        controller.handle(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSetDraftLoadedEM event) {
+        List<String> words = event.getNewWordSetDraft().getWords();
+        for (int i = 0; i < words.size(); i++) {
+            allTextViews.get(i).setText(words.get(i));
+        }
     }
 
     @Click(R.id.buttonSubmit)
     @Background
     public void onButtonSubmitClick() {
-        presenter.submit(asList(
+        presenter.submit(getWords());
+    }
+
+    private List<String> getWords() {
+        return asList(
                 word1.getText().toString(),
                 word2.getText().toString(),
                 word3.getText().toString(),
@@ -88,7 +130,7 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
                 word10.getText().toString(),
                 word11.getText().toString(),
                 word12.getText().toString()
-        ));
+        );
     }
 
     @Override
@@ -165,5 +207,28 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSet);
         intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, false);
         startActivity(intent);
+    }
+
+    @Override
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onFocusChange(View view, boolean b) {
+        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+    }
+
+    @Override
+    public void onPause() {
+        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+        super.onDestroyView();
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(NewWordSetDraftChangedEM event) {
+        controller.handle(event);
     }
 }

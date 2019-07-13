@@ -1,10 +1,11 @@
 package talkapp.org.talkappmobile.service;
 
+import java.util.List;
+
+import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
-
-import java.util.List;
 
 public interface WordSetService {
 
@@ -19,4 +20,8 @@ public interface WordSetService {
     int getCustomWordSetsStartsSince();
 
     WordSet createNewCustomWordSet(List<WordTranslation> translations);
+
+    NewWordSetDraft getNewWordSetDraft();
+
+    void save(NewWordSetDraft draft);
 }

@@ -3,14 +3,19 @@ package talkapp.org.talkappmobile.service.mapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.join;
 
 public class WordSetMapper {
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
@@ -53,5 +58,17 @@ public class WordSetMapper {
 
         wordSet.setWords(words);
         return wordSet;
+    }
+
+    public NewWordSetDraft toDto(NewWordSetDraftMapping mapping) {
+        String[] words = mapping.getWords().split(",");
+        return new NewWordSetDraft(asList(words));
+    }
+
+    public NewWordSetDraftMapping toMapping(NewWordSetDraft draft) {
+        NewWordSetDraftMapping mapping = new NewWordSetDraftMapping();
+        mapping.setId(1);
+        mapping.setWords(join(draft.getWords(), ","));
+        return mapping;
     }
 }
