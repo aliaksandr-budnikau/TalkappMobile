@@ -14,8 +14,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
+import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
+import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
+import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
+import talkapp.org.talkappmobile.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -27,11 +36,14 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class BaseTest {
+public abstract class BaseTest {
 
     private DatabaseHelper databaseHelper;
     private WordSetDao wordSetDao;
     private EventBus eventBus;
+    private SentenceDao sentenceDao;
+    private ExpAuditDao expAuditDao;
+    private WordRepetitionProgressDao wordRepetitionProgressDao;
 
     protected <T> T getEM(Class<T> clazz, EventBus eventBus, int times) {
         return getValue(clazz, eventBus, times(times));
@@ -86,6 +98,27 @@ public class BaseTest {
             wordSetDao = new WordSetDaoImpl(getDatabaseHelper().getConnectionSource(), WordSetMapping.class);
         }
         return wordSetDao;
+    }
+
+    protected SentenceDao getSentenceDao() throws SQLException {
+        if (sentenceDao == null) {
+            sentenceDao = new SentenceDaoImpl(getDatabaseHelper().getConnectionSource(), SentenceMapping.class);
+        }
+        return sentenceDao;
+    }
+
+    protected ExpAuditDao getExpAuditDao() throws SQLException {
+        if (expAuditDao == null) {
+            expAuditDao = new ExpAuditDaoImpl(getDatabaseHelper().getConnectionSource(), ExpAuditMapping.class);
+        }
+        return expAuditDao;
+    }
+
+    protected WordRepetitionProgressDao getWordRepetitionProgressDao() throws SQLException {
+        if (wordRepetitionProgressDao == null) {
+            wordRepetitionProgressDao = new WordRepetitionProgressDaoImpl(getDatabaseHelper().getConnectionSource(), WordRepetitionProgressMapping.class);
+        }
+        return wordRepetitionProgressDao;
     }
 
     protected EventBus getEventBus() {

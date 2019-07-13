@@ -10,19 +10,15 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import java.sql.SQLException;
+
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
-import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
@@ -51,19 +47,15 @@ import static org.mockito.Mockito.when;
 public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private AddingNewWordSetPresenter presenter;
     private AddingNewWordSetFragmentView view;
-    private WordSetDaoImpl wordSetDao;
     private WordSetMapper mapper;
     private WordSetService wordSetService;
 
     @Before
     public void setUp() throws Exception {
-        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
-        wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), sentenceDao, mock(WordTranslationDao.class), mapper, new LoggerBean());
-        wordSetService = new WordSetServiceImpl(wordSetDao, mock(WordSetExperienceUtils.class), this.mapper);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, new LoggerBean());
+        wordSetService = new WordSetServiceImpl(getWordSetDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -178,7 +170,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
     }
 
     @Test
-    public void submit_allSentencesWereFound() {
+    public void submit_allSentencesWereFound() throws SQLException {
         String word0 = "house";
         String word1 = "fox";
         String word2 = "door";
@@ -241,7 +233,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(new Integer(4964), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -271,7 +263,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
     }
 
     @Test
-    public void submit_fewWordSetsWereSaved() {
+    public void submit_fewWordSetsWereSaved() throws SQLException {
         // new first set
         String word0 = "house";
         String word1 = "fox";
@@ -330,7 +322,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
 
         // already saved first set
-        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -345,7 +337,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
 
         // already saved second set
-        wordSet = mapper.toDto(wordSetDao.findById(wordSetService.getCustomWordSetsStartsSince() + 1));
+        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince() + 1));
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
 

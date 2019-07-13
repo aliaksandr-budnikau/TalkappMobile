@@ -7,13 +7,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.LinkedList;
+
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-
-import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;

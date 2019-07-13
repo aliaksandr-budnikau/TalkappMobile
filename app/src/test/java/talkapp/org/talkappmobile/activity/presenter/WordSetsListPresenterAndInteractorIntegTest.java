@@ -10,18 +10,17 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import java.sql.SQLException;
+import java.util.List;
+
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
-import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
@@ -36,12 +35,6 @@ import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
-import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -63,20 +56,16 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     private WordSetsListView view;
     private StudyingWordSetsListInteractor studyingWordSetsInteractor;
     private WordSetExperienceUtilsImpl experienceUtils;
-    private WordSetDao wordSetDao;
 
     @Before
     public void setup() throws SQLException {
         view = mock(WordSetsListView.class);
-        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        WordRepetitionProgressDao exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
-        wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
         ObjectMapper mapper = new ObjectMapper();
-        WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, mock(SentenceDao.class), mapper);
+        WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(getWordRepetitionProgressDao(), getWordSetDao(), mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        WordSetServiceImpl experienceService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(mapper));
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(getWordSetDao(), experienceUtils, new WordSetMapper(mapper));
 
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -94,7 +83,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     }
 
     @Test
-    public void test_withoutTopic() {
+    public void test_withoutTopic() throws SQLException {
         WordSetsListPresenter presenter = new WordSetsListPresenter(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
@@ -113,7 +102,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         wordSetMapping.setTopicId("34");
         wordSetMapping.setWords("34");
         wordSets.get(0).setStatus(FINISHED);
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        getWordSetDao().createNewOrUpdate(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         verify(view, times(0)).onWordSetNotFinished(null, wordSets.get(0));
@@ -130,7 +119,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     }
 
     @Test
-    public void test_withTopic() {
+    public void test_withTopic() throws SQLException {
         Topic topic = new Topic();
         topic.setId(1);
         WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, studyingWordSetsInteractor);
@@ -151,7 +140,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         wordSetMapping.setTopicId("34");
         wordSetMapping.setWords("34");
         wordSets.get(0).setStatus(FINISHED);
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        getWordSetDao().createNewOrUpdate(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         verify(view, times(0)).onWordSetNotFinished(topic, wordSets.get(0));

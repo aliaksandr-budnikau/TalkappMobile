@@ -16,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.Date;
@@ -24,19 +23,10 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
-import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
-import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -63,15 +53,9 @@ public class MainActivityTest extends BaseTest {
     private PackageInfo packageInfo;
     private TextView applicationVersion;
     private TextView userExp;
-    private ExpAuditDao expAuditDao;
 
     @Before
     public void setup() throws SQLException {
-        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
-        SentenceDao sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
-        WordSetDao wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
-
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         packageManager = mock(PackageManager.class);
@@ -93,8 +77,8 @@ public class MainActivityTest extends BaseTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(expAuditDao));
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), sentenceDao, mock(WordTranslationDao.class), mapper, logger);
+        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(getExpAuditDao()));
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
         PresenterFactory presenterFactory = new PresenterFactory();
@@ -117,7 +101,7 @@ public class MainActivityTest extends BaseTest {
     }
 
     @Test
-    public void test() throws PackageManager.NameNotFoundException {
+    public void test() throws PackageManager.NameNotFoundException, SQLException {
         packageInfo = new PackageInfo();
         packageInfo.versionName = "1.3";
         when(packageManager.getPackageInfo(anyString(), anyInt())).thenReturn(packageInfo);
@@ -126,12 +110,12 @@ public class MainActivityTest extends BaseTest {
         mapping.setExpScore(10);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        expAuditDao.save(mapping);
+        getExpAuditDao().save(mapping);
         mapping = new ExpAuditMapping();
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        expAuditDao.save(mapping);
+        getExpAuditDao().save(mapping);
 
         mainActivity.initPresenter();
         verify(applicationVersion).setText("v" + packageInfo.versionName);
@@ -142,7 +126,7 @@ public class MainActivityTest extends BaseTest {
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        expAuditDao.save(mapping);
+        getExpAuditDao().save(mapping);
 
         mainActivity.onMessageEvent(new UserExpUpdatedEM(3));
         verify(userExp).setText("EXP " + 110.0);
