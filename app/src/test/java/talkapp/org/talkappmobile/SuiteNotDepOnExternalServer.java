@@ -24,6 +24,7 @@ import talkapp.org.talkappmobile.service.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBeanTest;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImplTest;
+import talkapp.org.talkappmobile.service.impl.RequestExecutorTest;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImplTest;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplTest;
@@ -55,6 +56,7 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         WordRepetitionProgressDaoImplTest.class,
         WordSetDaoImplTest.class,
         SentenceDaoImplTest.class,
+        RequestExecutorTest.class,
 })
 @RunWith(Suite.class)
 public class SuiteNotDepOnExternalServer {
