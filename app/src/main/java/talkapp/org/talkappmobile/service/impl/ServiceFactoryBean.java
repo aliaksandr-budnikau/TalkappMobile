@@ -13,18 +13,21 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
+import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.TopicDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
+import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
@@ -61,13 +64,14 @@ public class ServiceFactoryBean implements ServiceFactory {
     private LocalDataService localDataService;
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
+    private NewWordSetDraftDao newWordSetDraftDao;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideExperienceUtils(), getWordSetMapper());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideNewWordSetDraftDao(), provideExperienceUtils(), getWordSetMapper());
         return wordSetExperienceService;
     }
 
@@ -163,6 +167,18 @@ public class ServiceFactoryBean implements ServiceFactory {
         try {
             sentenceDao = new SentenceDaoImpl(databaseHelper().getConnectionSource(), SentenceMapping.class);
             return sentenceDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private NewWordSetDraftDao provideNewWordSetDraftDao() {
+        if (newWordSetDraftDao != null) {
+            return newWordSetDraftDao;
+        }
+        try {
+            newWordSetDraftDao = new NewWordSetDraftDaoImpl(databaseHelper().getConnectionSource(), NewWordSetDraftMapping.class);
+            return newWordSetDraftDao;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

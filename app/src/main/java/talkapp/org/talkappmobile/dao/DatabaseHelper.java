@@ -7,23 +7,27 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.sql.SQLException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
+import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Collections.singletonList;
+import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.ID_FN;
+import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.NEW_WORD_SET_DRAFT_MAPPING_TABLE;
+import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.WORDS_FN;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 38;
+    private static final int DATABASE_VERSION = 39;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
 
     public DatabaseHelper(Context context) {
@@ -31,11 +35,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         changes.put(37, singletonList(
                 "ALTER TABLE WordRepetitionProgress ADD forgettingCounter INTEGER DEFAULT 0 NOT NULL;"
         ));
+        changes.put(39, singletonList(
+                "CREATE TABLE " + NEW_WORD_SET_DRAFT_MAPPING_TABLE + " (" + ID_FN + " INTEGER NOT NULL PRIMARY KEY, " + WORDS_FN + " VARCHAR NOT NULL);"
+        ));
     }
 
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
+            TableUtils.createTable(connectionSource, NewWordSetDraftMapping.class);
             TableUtils.createTable(connectionSource, WordRepetitionProgressMapping.class);
             TableUtils.createTable(connectionSource, WordSetMapping.class);
             TableUtils.createTable(connectionSource, ExpAuditMapping.class);

@@ -15,14 +15,17 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
+import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
+import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
@@ -39,6 +42,7 @@ import static org.mockito.Mockito.verify;
 public abstract class BaseTest {
 
     private DatabaseHelper databaseHelper;
+    private NewWordSetDraftDao newWordSetDraftDao;
     private WordSetDao wordSetDao;
     private EventBus eventBus;
     private SentenceDao sentenceDao;
@@ -83,6 +87,7 @@ public abstract class BaseTest {
         Whitebox.setInternalState(serviceFactoryBean, "logger", new LoggerBean());
         Whitebox.setInternalState(serviceFactoryBean, "context", mock(Context.class));
         Whitebox.setInternalState(serviceFactoryBean, "wordSetDao", getWordSetDao());
+        Whitebox.setInternalState(serviceFactoryBean, "newWordSetDraftDao", getNewWordSetDraftDao());
         return serviceFactoryBean;
     }
 
@@ -91,6 +96,13 @@ public abstract class BaseTest {
             databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
         }
         return databaseHelper;
+    }
+
+    protected NewWordSetDraftDao getNewWordSetDraftDao() throws SQLException {
+        if (newWordSetDraftDao == null) {
+            newWordSetDraftDao = new NewWordSetDraftDaoImpl(getDatabaseHelper().getConnectionSource(), NewWordSetDraftMapping.class);
+        }
+        return newWordSetDraftDao;
     }
 
     protected WordSetDao getWordSetDao() throws SQLException {

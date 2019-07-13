@@ -2,6 +2,10 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -12,9 +16,6 @@ import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
@@ -23,12 +24,15 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final WordSetDao wordSetDao;
     @NonNull
+    private final NewWordSetDraftDao newWordSetDraftDao;
+    @NonNull
     private final WordSetExperienceUtils experienceUtils;
     @NonNull
     private final WordSetMapper wordSetMapper;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper) {
         this.wordSetDao = wordSetDao;
+        this.newWordSetDraftDao = newWordSetDraftDao;
         this.experienceUtils = experienceUtils;
         this.wordSetMapper = wordSetMapper;
     }

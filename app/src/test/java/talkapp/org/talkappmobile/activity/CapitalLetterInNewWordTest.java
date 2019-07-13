@@ -106,7 +106,7 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        wordSetService = new WordSetServiceImpl(getWordSetDao(), experienceUtils, new WordSetMapper(mapper));
+        wordSetService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);

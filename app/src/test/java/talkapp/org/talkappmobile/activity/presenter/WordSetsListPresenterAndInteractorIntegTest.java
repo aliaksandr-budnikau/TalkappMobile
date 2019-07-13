@@ -63,7 +63,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         ObjectMapper mapper = new ObjectMapper();
         WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(getWordRepetitionProgressDao(), getWordSetDao(), mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        WordSetServiceImpl experienceService = new WordSetServiceImpl(getWordSetDao(), experienceUtils, new WordSetMapper(mapper));
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
 
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
 

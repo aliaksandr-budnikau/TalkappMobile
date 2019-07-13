@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.LinkedList;
 
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -25,12 +26,14 @@ public class WordSetServiceImplTest {
     @Mock
     private WordSetDao wordSetDao;
     @Mock
+    private NewWordSetDraftDao newWordSetDraftDao;
+    @Mock
     private WordSetExperienceUtils experienceUtils;
     private WordSetServiceImpl wordSetService;
 
     @Before
     public void setUp() throws Exception {
-        wordSetService = new WordSetServiceImpl(wordSetDao, experienceUtils, new WordSetMapper(new ObjectMapper()));
+        wordSetService = new WordSetServiceImpl(wordSetDao, newWordSetDraftDao, experienceUtils, new WordSetMapper(new ObjectMapper()));
     }
 
     @Test

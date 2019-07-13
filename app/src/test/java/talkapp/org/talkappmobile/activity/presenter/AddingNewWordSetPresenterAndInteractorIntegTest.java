@@ -55,7 +55,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, new LoggerBean());
-        wordSetService = new WordSetServiceImpl(getWordSetDao(), mock(WordSetExperienceUtils.class), this.mapper);
+        wordSetService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
