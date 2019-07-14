@@ -204,6 +204,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(view, times(1)).submitSuccessfully(wordSetCaptor.capture());
         verify(view, times(1)).resetWords();
+        verify(view, times(1)).resetDraft();
 
         WordSet wordSet = wordSetCaptor.getValue();
         assertEquals(word0, wordSet.getWords().get(0).getWord());
@@ -279,6 +280,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markSentencesWereNotFound(anyInt());
 
         verify(view, times(1)).resetWords();
+        verify(view, times(1)).resetDraft();
         ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(view, times(1)).submitSuccessfully(wordSetCaptor.capture());
         WordSet wordSet = wordSetCaptor.getValue();
@@ -307,6 +309,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(2)).markSentencesWereFound(anyInt());
         verify(view, times(0)).markSentencesWereNotFound(anyInt());
         verify(view, times(1)).resetWords();
+        verify(view, times(1)).resetDraft();
         wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(view, times(1)).submitSuccessfully(wordSetCaptor.capture());
         wordSet = wordSetCaptor.getValue();

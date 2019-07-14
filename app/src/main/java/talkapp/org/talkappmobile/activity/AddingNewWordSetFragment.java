@@ -27,9 +27,9 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
-import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftChangedEM;
+import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
+import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -94,11 +94,11 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         }
         presenter = presenterFactory.create(this);
         controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
-        eventBus.post(new AddingNewWordSetFragmentReadyEM());
+        eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(AddingNewWordSetFragmentReadyEM event) {
+    public void onMessageEvent(AddingNewWordSetFragmentGotReadyEM event) {
         controller.handle(event);
     }
 
@@ -189,6 +189,11 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     }
 
     @Override
+    public void resetDraft() {
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
+    }
+
+    @Override
     @UiThread
     public void markWordIsDuplicate(int wordIndex) {
         TextView textView = allTextViews.get(wordIndex);
@@ -212,23 +217,23 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @Override
     @IgnoreWhen(VIEW_DESTROYED)
     public void onFocusChange(View view, boolean b) {
-        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
     }
 
     @Override
     public void onPause() {
-        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
         super.onPause();
     }
 
     @Override
     public void onDestroyView() {
-        eventBus.post(new NewWordSetDraftChangedEM(getWords()));
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
         super.onDestroyView();
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(NewWordSetDraftChangedEM event) {
+    public void onMessageEvent(NewWordSetDraftWasChangedEM event) {
         controller.handle(event);
     }
 }

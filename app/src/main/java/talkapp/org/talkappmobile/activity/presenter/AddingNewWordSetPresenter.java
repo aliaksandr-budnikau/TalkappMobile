@@ -1,11 +1,11 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
 
 public class AddingNewWordSetPresenter implements OnAddingNewWordSetPresenterListener {
     private final AddingNewWordSetFragmentView view;
@@ -38,6 +38,7 @@ public class AddingNewWordSetPresenter implements OnAddingNewWordSetPresenterLis
     @Override
     public void onSubmitSuccessfully(WordSet wordSet) {
         view.resetWords();
+        view.resetDraft();
         view.submitSuccessfully(wordSet);
     }
 

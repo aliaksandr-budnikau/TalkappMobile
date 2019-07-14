@@ -21,4 +21,6 @@ public interface AddingNewWordSetFragmentView {
     void hidePleaseWaitProgressBar();
 
     void resetWords();
+
+    void resetDraft();
 }

@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-public class NewWordSetDraftChangedEM {
+public class NewWordSetDraftWasChangedEM {
     private final List<String> words;
 
-    public NewWordSetDraftChangedEM(@NonNull List<String> words) {
+    public NewWordSetDraftWasChangedEM(@NonNull List<String> words) {
         this.words = words;
     }
 

@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.EventBus;
 
-import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftChangedEM;
+import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
+import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -22,12 +22,12 @@ public class AddingNewWordSetFragmentController {
     }
 
 
-    public void handle(AddingNewWordSetFragmentReadyEM event) {
+    public void handle(AddingNewWordSetFragmentGotReadyEM event) {
         NewWordSetDraft newWordSetDraft = wordSetService.getNewWordSetDraft();
         eventBus.post(new NewWordSetDraftLoadedEM(newWordSetDraft));
     }
 
-    public void handle(NewWordSetDraftChangedEM event) {
+    public void handle(NewWordSetDraftWasChangedEM event) {
         wordSetService.save(new NewWordSetDraft(event.getWords()));
     }
 }

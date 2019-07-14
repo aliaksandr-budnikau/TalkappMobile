@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class WordSetMapper {
+    public static final String SEPARATOR = ",";
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
     private final ObjectMapper mapper;
 
@@ -66,9 +68,15 @@ public class WordSetMapper {
     }
 
     public NewWordSetDraftMapping toMapping(NewWordSetDraft draft) {
+        List<String> words = new ArrayList<>(draft.getWords());
+        for (int i = 0; i < words.size(); i++) {
+            String fixedWord = words.get(i).replaceAll(SEPARATOR, " ");
+            String result = fixedWord.length() > 31 ? fixedWord.substring(0, 31) : fixedWord;
+            words.set(i, result);
+        }
         NewWordSetDraftMapping mapping = new NewWordSetDraftMapping();
         mapping.setId(1);
-        mapping.setWords(join(draft.getWords(), ","));
+        mapping.setWords(join(draft.getWords(), SEPARATOR));
         return mapping;
     }
 }

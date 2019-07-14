@@ -16,9 +16,9 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.BaseTest;
-import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftChangedEM;
+import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
+import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.service.WordSetService;
 
@@ -49,7 +49,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftIsEmpty() {
         // when
-        controller.handle(new AddingNewWordSetFragmentReadyEM());
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
@@ -65,7 +65,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         wordSetService.save(new NewWordSetDraft(Collections.<String>emptyList()));
 
         // when
-        controller.handle(new AddingNewWordSetFragmentReadyEM());
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
@@ -83,7 +83,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         wordSetService.save(new NewWordSetDraft(singletonList(house)));
 
         // when
-        controller.handle(new AddingNewWordSetFragmentReadyEM());
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
@@ -102,8 +102,8 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         }
 
         // when
-        controller.handle(new NewWordSetDraftChangedEM(words));
-        controller.handle(new AddingNewWordSetFragmentReadyEM());
+        controller.handle(new NewWordSetDraftWasChangedEM(words));
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
@@ -122,15 +122,66 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         }
 
         // when
-        controller.handle(new NewWordSetDraftChangedEM(words));
-        controller.handle(new AddingNewWordSetFragmentReadyEM());
+        controller.handle(new NewWordSetDraftWasChangedEM(words));
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+    }
+
+    @Test
+    public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith11EmptyWords() {
+        LinkedList<String> words = new LinkedList<>();
+        for (int i = 0; i < 12; i++) {
+            if (i == 5) {
+                words.add("fsdfs");
+            } else {
+                words.add("");
+            }
+        }
+
+        // when
+        controller.handle(new NewWordSetDraftWasChangedEM(words));
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
+
+        // then
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        assertNotNull(newWordSetDraftLoadedEM);
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(6, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(words.subList(0, 6), newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+    }
+
+    @Test
+    public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith10HasCommasAnd1Word() {
+        LinkedList<String> words = new LinkedList<>();
+        for (int i = 0; i < 12; i++) {
+            if (i == 5 || i == 8) {
+                words.add(",");
+            } else {
+                if (i == 2) {
+                    words.add("sdffs");
+                } else {
+                    words.add("");
+                }
+            }
+        }
+
+        // when
+        controller.handle(new NewWordSetDraftWasChangedEM(words));
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
+
+        // then
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        assertNotNull(newWordSetDraftLoadedEM);
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(3, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(words.subList(0, 3), newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
     }
 }
