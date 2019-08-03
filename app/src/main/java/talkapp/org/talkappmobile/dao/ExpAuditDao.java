@@ -11,4 +11,6 @@ public interface ExpAuditDao {
     void save(ExpAuditMapping mapping);
 
     ExpAuditMapping findByDateAndActivityType(Date today, String type);
+
+    List<ExpAuditMapping> findAllByType(String type);
 }

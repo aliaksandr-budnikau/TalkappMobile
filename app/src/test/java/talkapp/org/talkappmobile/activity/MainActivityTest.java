@@ -33,6 +33,7 @@ import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
+import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -77,7 +78,7 @@ public class MainActivityTest extends BaseTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(getExpAuditDao()));
+        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(getExpAuditDao(), mock(ExpAuditMapper.class)));
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 

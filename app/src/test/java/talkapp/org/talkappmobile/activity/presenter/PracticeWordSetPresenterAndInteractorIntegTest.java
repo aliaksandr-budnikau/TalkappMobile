@@ -41,6 +41,7 @@ import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -78,7 +79,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
-        userExpService = new UserExpServiceImpl(getExpAuditDao());
+        userExpService = new UserExpServiceImpl(getExpAuditDao(), mock(ExpAuditMapper.class));
         when(mockServiceFactoryBean.getUserExpService()).thenReturn(userExpService);
 
         exerciseService = new WordRepetitionProgressServiceImpl(getWordRepetitionProgressDao(), getWordSetDao(), getSentenceDao(), mapper);
