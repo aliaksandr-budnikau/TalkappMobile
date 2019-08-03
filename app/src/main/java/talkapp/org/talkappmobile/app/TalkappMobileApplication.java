@@ -1,11 +1,11 @@
 package talkapp.org.talkappmobile.app;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 /**
  * @author Budnikau Aliaksandr
  */
-public class TalkappMobileApplication extends Application {
+public class TalkappMobileApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();

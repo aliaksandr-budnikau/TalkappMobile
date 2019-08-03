@@ -18,6 +18,7 @@
     </string>
     <string name="title_activity_main"><b><font size="20">T<strike><font color="red">o</font></strike>llmuch</font></b></string>
     <string name="title_crash_main">Crash page</string>
+    <string name="title_activity_statistic">Statistic</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

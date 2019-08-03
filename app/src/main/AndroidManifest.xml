@@ -38,6 +38,12 @@
             android:name="talkapp.org.talkappmobile.activity.CrashActivity_"
             android:label="@string/title_crash_main"
             android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name="talkapp.org.talkappmobile.activity.StatisticActivity_"
+            android:label="@string/title_activity_statistic"
+            android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>
