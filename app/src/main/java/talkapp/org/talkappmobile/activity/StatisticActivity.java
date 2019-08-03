@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -17,20 +18,31 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.controller.StatisticActivityController;
+import talkapp.org.talkappmobile.events.ExpAuditLoadedEM;
+import talkapp.org.talkappmobile.events.StatisticActivityCreatedEM;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EActivity(R.layout.activity_statistic)
 public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
 
     @EventBusGreenRobot
     EventBus eventBus;
+
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
 
     @ViewById(R.id.barChart)
     BarChart barChart;
@@ -42,6 +54,8 @@ public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSe
     TextView tvX;
     @ViewById(R.id.tvYMax)
     TextView tvY;
+
+    private StatisticActivityController controller;
 
     @AfterViews
     public void init() {
@@ -81,8 +95,20 @@ public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSe
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         barChart.getAxisRight().setEnabled(false);
+
+        controller = new StatisticActivityController(eventBus, serviceFactory);
+        eventBus.post(new StatisticActivityCreatedEM());
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(StatisticActivityCreatedEM event) {
+        controller.handle(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ExpAuditLoadedEM event) {
+        Toast.makeText(getApplicationContext(), "Loaded " + event.getExpAudits().size(), Toast.LENGTH_LONG).show();
+    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
