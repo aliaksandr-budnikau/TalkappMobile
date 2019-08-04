@@ -28,6 +28,7 @@ import talkapp.org.talkappmobile.service.impl.RefereeServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.RequestExecutorTest;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImplTest;
+import talkapp.org.talkappmobile.service.impl.UserExpServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
 
@@ -58,6 +59,7 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         WordSetDaoImplTest.class,
         SentenceDaoImplTest.class,
         RequestExecutorTest.class,
+        UserExpServiceImplTest.class,
         AddingNewWordSetFragmentControllerIntegTest.class
 })
 @RunWith(Suite.class)

@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 
 public class UserExpServiceImpl implements UserExpService {
+    public static final int AMOUNT = 10;
     private final ExpAuditDao expAuditDao;
     private final ExpAuditMapper expAuditMapper;
 
@@ -49,12 +51,80 @@ public class UserExpServiceImpl implements UserExpService {
 
     @Override
     public List<ExpAudit> findAllByTypeOrderedByDate(ExpActivityType type) {
-        List<ExpAudit> result = new LinkedList<>();
+        LinkedList<ExpAudit> result = new LinkedList<>();
         List<ExpAuditMapping> mappings = expAuditDao.findAllByType(type.name());
+
+        if (mappings.isEmpty()) {
+            return getListOfLast10Days(type);
+        }
+
+        Calendar calendar = getCalendarWithoutTime();
+        calendar.setTime(mappings.get(0).getDate());
+
         for (ExpAuditMapping mapping : mappings) {
-            ExpAudit expAudit = expAuditMapper.toDto(mapping);
-            result.add(expAudit);
+            ExpAudit expAudit;
+            if (calendar.getTime().equals(mapping.getDate())) {
+                expAudit = expAuditMapper.toDto(mapping);
+                result.add(expAudit);
+                calendar.add(Calendar.DATE, 1);
+            } else {
+                do {
+                    expAudit = getLazyExpAudit(type, calendar);
+                    result.add(expAudit);
+                    calendar.add(Calendar.DATE, 1);
+                } while (!calendar.getTime().equals(mapping.getDate()));
+                expAudit = expAuditMapper.toDto(mapping);
+                result.add(expAudit);
+                calendar.add(Calendar.DATE, 1);
+            }
+        }
+
+        calendar = getCalendarWithoutTime();
+        Date today = calendar.getTime();
+
+        if (result.getLast().getDate().equals(today)) {
+            return result;
+        }
+
+        calendar.setTime(result.getLast().getDate());
+
+        while (!calendar.getTime().equals(today)) {
+            calendar.add(Calendar.DATE, 1);
+            result.add(new ExpAudit(calendar.getTime(), 0, type));
+        }
+
+        return result;
+    }
+
+    @NonNull
+    private Calendar getCalendarWithoutTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
+    }
+
+    @NonNull
+    private List<ExpAudit> getListOfLast10Days(ExpActivityType type) {
+        List<ExpAudit> result = new LinkedList<>();
+        Calendar calendar = getCalendarWithoutTime();
+        calendar.add(Calendar.DATE, -AMOUNT);
+        for (int i = 1; i <= AMOUNT; i++) {
+            calendar.add(Calendar.DATE, 1);
+            result.add(new ExpAudit(calendar.getTime(), 0, type));
         }
         return result;
+    }
+
+    private ExpAudit getLazyExpAudit(ExpActivityType type, Calendar calendar) {
+        ExpAudit expAudit;
+        ExpAuditMapping lazyDay = new ExpAuditMapping();
+        lazyDay.setActivityType(type.name());
+        lazyDay.setDate(calendar.getTime());
+        lazyDay.setExpScore(0);
+        expAudit = expAuditMapper.toDto(lazyDay);
+        return expAudit;
     }
 }
