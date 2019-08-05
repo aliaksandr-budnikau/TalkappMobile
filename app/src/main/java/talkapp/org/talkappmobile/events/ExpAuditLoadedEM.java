@@ -7,13 +7,13 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.ExpAudit;
 
 public class ExpAuditLoadedEM {
-    private final List<ExpAudit> expAudits;
+    private final List<ExpAudit> wordSetPracticeExp;
 
-    public ExpAuditLoadedEM(@NonNull List<ExpAudit> expAudits) {
-        this.expAudits = expAudits;
+    public ExpAuditLoadedEM(@NonNull List<ExpAudit> wordSetPracticeExp) {
+        this.wordSetPracticeExp = wordSetPracticeExp;
     }
 
-    public List<ExpAudit> getExpAudits() {
-        return expAudits;
+    public List<ExpAudit> getWordSetPracticeExp() {
+        return wordSetPracticeExp;
     }
 }

@@ -2,9 +2,6 @@ package talkapp.org.talkappmobile.activity;
 
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.SeekBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -13,8 +10,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
@@ -25,18 +22,28 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.controller.StatisticActivityController;
 import talkapp.org.talkappmobile.events.ExpAuditLoadedEM;
 import talkapp.org.talkappmobile.events.StatisticActivityCreatedEM;
+import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
+import static com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP;
+import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
+
 @EActivity(R.layout.activity_statistic)
-public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
+public class StatisticActivity extends AppCompatActivity {
+
+    private final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -46,16 +53,9 @@ public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @ViewById(R.id.barChart)
     BarChart barChart;
-    @ViewById(R.id.seekBarX)
-    SeekBar seekBarX;
-    @ViewById(R.id.seekBarY)
-    SeekBar seekBarY;
-    @ViewById(R.id.tvXMax)
-    TextView tvX;
-    @ViewById(R.id.tvYMax)
-    TextView tvY;
 
     private StatisticActivityController controller;
+    private ArrayList<Date> dates;
 
     @AfterViews
     public void init() {
@@ -69,32 +69,52 @@ public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSe
         barChart.setDrawGridBackground(false);
 
         Legend l = barChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
-        l.setDrawInside(true);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
         l.setYOffset(0f);
-        l.setXOffset(10f);
+        l.setXOffset(0f);
         l.setYEntrySpace(0f);
         l.setTextSize(8f);
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setGranularity(1f);
-        xAxis.setCenterAxisLabels(true);
-        xAxis.setValueFormatter(new ValueFormatter() {
+        xAxis.setCenterAxisLabels(false);
+        xAxis.setDrawGridLines(true);
+        xAxis.setPosition(TOP);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter() {
+
             @Override
-            public String getFormattedValue(float value) {
-                return String.valueOf((int) value);
+            public String getFormattedValue(float index) {
+                Date date;
+                if (dates.size() <= index) {
+                    date = new Date();
+                } else if (index < 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(dates.get(0));
+                    calendar.add(Calendar.DATE, (int) index);
+                    date = calendar.getTime();
+                } else {
+                    date = dates.get((int) index);
+                }
+                return DATE_FORMAT.format(date);
             }
         });
+        xAxis.setAxisMinimum(-1f); // this replaces setStartAtZero(true)
 
         YAxis leftAxis = barChart.getAxisLeft();
-        leftAxis.setValueFormatter(new LargeValueFormatter());
         leftAxis.setDrawGridLines(false);
-        leftAxis.setSpaceTop(35f);
+        leftAxis.setEnabled(true);
+        leftAxis.setDrawLabels(false);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
-        barChart.getAxisRight().setEnabled(false);
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setEnabled(true);
+        rightAxis.setDrawLabels(false);
+        rightAxis.setAxisMinimum(0f);
 
         controller = new StatisticActivityController(eventBus, serviceFactory);
         eventBus.post(new StatisticActivityCreatedEM());
@@ -107,87 +127,21 @@ public class StatisticActivity extends AppCompatActivity implements SeekBar.OnSe
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ExpAuditLoadedEM event) {
-        Toast.makeText(getApplicationContext(), "Loaded " + event.getExpAudits().size(), Toast.LENGTH_LONG).show();
-    }
+        ArrayList<BarEntry> wordSetPracticeValues = new ArrayList<>();
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-        float groupSpace = 0.08f;
-        float barSpace = 0.03f; // x4 DataSet
-        float barWidth = 0.2f; // x4 DataSet
-        // (0.2 + 0.03) * 4 + 0.08 = 1.00 -> interval per "group"
-
-        int groupCount = seekBarX.getProgress() + 1;
-        int startYear = 1980;
-        int endYear = startYear + groupCount;
-
-        tvX.setText(String.format(Locale.ENGLISH, "%d-%d", startYear, endYear));
-        tvY.setText(String.valueOf(seekBarY.getProgress()));
-
-        ArrayList<BarEntry> values1 = new ArrayList<>();
-        ArrayList<BarEntry> values2 = new ArrayList<>();
-        ArrayList<BarEntry> values3 = new ArrayList<>();
-        ArrayList<BarEntry> values4 = new ArrayList<>();
-
-        float randomMultiplier = seekBarY.getProgress() * 100000f;
-
-        for (int i = startYear; i < endYear; i++) {
-            values1.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-            values2.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-            values3.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
-            values4.add(new BarEntry(i, (float) (Math.random() * randomMultiplier)));
+        List<ExpAudit> wordSetPracticeExp = event.getWordSetPracticeExp();
+        dates = new ArrayList<>(wordSetPracticeExp.size());
+        for (ExpAudit expAudit : wordSetPracticeExp) {
+            wordSetPracticeValues.add(new BarEntry(dates.size(), (float) expAudit.getExpScore()));
+            dates.add(expAudit.getDate());
         }
 
-        BarDataSet set1, set2, set3, set4;
+        BarDataSet set = new BarDataSet(wordSetPracticeValues, WORD_SET_PRACTICE.name());
+        set.setColor(Color.rgb(104, 241, 175));
 
-        if (barChart.getData() != null && barChart.getData().getDataSetCount() > 0) {
+        BarData data = new BarData(set);
+        data.setValueFormatter(new LargeValueFormatter());
 
-            set1 = (BarDataSet) barChart.getData().getDataSetByIndex(0);
-            set2 = (BarDataSet) barChart.getData().getDataSetByIndex(1);
-            set3 = (BarDataSet) barChart.getData().getDataSetByIndex(2);
-            set4 = (BarDataSet) barChart.getData().getDataSetByIndex(3);
-            set1.setValues(values1);
-            set2.setValues(values2);
-            set3.setValues(values3);
-            set4.setValues(values4);
-            barChart.getData().notifyDataChanged();
-            barChart.notifyDataSetChanged();
-
-        } else {
-            // create 4 DataSets
-            set1 = new BarDataSet(values1, "Company A");
-            set1.setColor(Color.rgb(104, 241, 175));
-            set2 = new BarDataSet(values2, "Company B");
-            set2.setColor(Color.rgb(164, 228, 251));
-            set3 = new BarDataSet(values3, "Company C");
-            set3.setColor(Color.rgb(242, 247, 158));
-            set4 = new BarDataSet(values4, "Company D");
-            set4.setColor(Color.rgb(255, 102, 0));
-
-            BarData data = new BarData(set1, set2, set3, set4);
-            data.setValueFormatter(new LargeValueFormatter());
-
-            barChart.setData(data);
-        }
-
-        // specify the width each bar should have
-        barChart.getBarData().setBarWidth(barWidth);
-
-        // restrict the x-axis range
-        barChart.getXAxis().setAxisMinimum(startYear);
-
-        // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-        barChart.getXAxis().setAxisMaximum(startYear + barChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-        barChart.groupBars(startYear, groupSpace, barSpace);
-        barChart.invalidate();
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+        barChart.setData(data);
     }
 }
