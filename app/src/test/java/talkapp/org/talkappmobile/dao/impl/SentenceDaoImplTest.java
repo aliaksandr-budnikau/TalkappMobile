@@ -73,4 +73,32 @@ public class SentenceDaoImplTest {
         Map<String, List<SentenceMapping>> sentences = Whitebox.getInternalState(sentenceDao, "sentences");
         assertEquals(2, sentences.get("genre_6").size());
     }
+
+    @Test
+    public void save_losingOfAlternativesForExpressions() {
+        //setup
+        LinkedList<SentenceMapping> mappings = new LinkedList<>();
+        SentenceMapping map1 = new SentenceMapping();
+        map1.setId("dddd#look for#6");
+        map1.setText("dddd#look for#6");
+        map1.setTranslations("dddd#look for#6");
+        map1.setTokens("dddd#look for#6");
+        mappings.add(map1);
+        SentenceMapping map2 = new SentenceMapping();
+        map2.setId("ssss#look for#6");
+        map2.setText("dddd#look for#6");
+        map2.setTranslations("dddd#look for#6");
+        map2.setTokens("dddd#look for#6");
+        mappings.add(map2);
+
+        // when
+        sentenceDao.save(mappings);
+        sentenceDao.save(mappings);
+
+        // then
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery(format("SELECT * FROM %s;", SENTENCE_TABLE), new String[]{});
+        assertEquals(2, cursor.getCount());
+        Map<String, List<SentenceMapping>> sentences = Whitebox.getInternalState(sentenceDao, "sentences");
+        assertEquals(2, sentences.get("look for_6").size());
+    }
 }

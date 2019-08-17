@@ -8,6 +8,7 @@ import talkapp.org.talkappmobile.activity.ChangeSentenceTest;
 import talkapp.org.talkappmobile.activity.MainActivityTest;
 import talkapp.org.talkappmobile.activity.WordSetsListFragmentTest;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterAndInteractorIntegTest;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorForExpressionsIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetRepetitionPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenterAndInteractorIntegTest;
@@ -21,6 +22,7 @@ import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplI
         PracticeWordSetRepetitionPresenterAndInteractorIntegTest.class,
         PracticeWordSetVocabularyPresenterAndInteractorIntegTest.class,
         PracticeWordSetPresenterAndInteractorIntegTest.class,
+        PracticeWordSetPresenterAndInteractorForExpressionsIntegTest.class,
         AddingNewWordSetPresenterAndInteractorIntegTest.class,
         TopicsFragmentPresenterAndInteractorIntegTest.class,
         CapitalLetterInNewWordTest.class,
