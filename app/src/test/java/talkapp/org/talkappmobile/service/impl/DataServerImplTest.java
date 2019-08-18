@@ -12,6 +12,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
@@ -25,15 +34,7 @@ import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Response;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -67,6 +68,8 @@ public class DataServerImplTest {
     private Logger logger;
     @Mock
     private RequestExecutor requestExecutor;
+    @Mock
+    private WordTranslationService wordTranslationService;
     private LocalDataService localDataService;
     private DataServerImpl server;
     private ObjectMapper mapper = new ObjectMapper();
@@ -86,7 +89,7 @@ public class DataServerImplTest {
             }
         };
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, requestExecutor);
+        server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, wordTranslationService, requestExecutor);
     }
 
     @Test

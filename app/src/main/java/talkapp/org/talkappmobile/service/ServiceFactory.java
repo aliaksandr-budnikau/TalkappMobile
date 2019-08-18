@@ -12,6 +12,8 @@ public interface ServiceFactory {
 
     LocalDataService getLocalDataService();
 
+    WordTranslationService getWordTranslationService();
+
     WordSetMapper getWordSetMapper();
 
     ExpAuditMapper getExpAuditMapper();

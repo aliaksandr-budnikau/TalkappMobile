@@ -2,6 +2,11 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -11,24 +16,21 @@ import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
 public class DataServerImpl implements DataServer {
     private final SentenceRestClient sentenceRestClient;
 
     private final LocalDataService localDataService;
+    private final WordTranslationService wordTranslationService;
     private final RequestExecutor requestExecutor;
     private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, LocalDataService localDataService, RequestExecutor requestExecutor) {
+    public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, LocalDataService localDataService, WordTranslationService wordTranslationService, RequestExecutor requestExecutor) {
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
         this.localDataService = localDataService;
+        this.wordTranslationService = wordTranslationService;
         this.requestExecutor = requestExecutor;
     }
 
@@ -142,7 +144,7 @@ public class DataServerImpl implements DataServer {
         if (body.isEmpty()) {
             return new LinkedList<>();
         } else {
-            localDataService.saveWordTranslations(body, words, language);
+            wordTranslationService.saveWordTranslations(body);
         }
         return body;
     }

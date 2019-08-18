@@ -40,6 +40,7 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -64,6 +65,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordSetMapper wordSetMapper;
     private ExpAuditMapper expAuditMapper;
     private LocalDataService localDataService;
+    private WordTranslationService wordTranslationService;
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
     private NewWordSetDraftDao newWordSetDraftDao;
@@ -98,6 +100,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         userExpService = new UserExpServiceImpl(provideExpAuditDao(), getExpAuditMapper());
         return userExpService;
+    }
+
+    @Override
+    public WordTranslationService getWordTranslationService() {
+        if (wordTranslationService != null) {
+            return wordTranslationService;
+        }
+        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao());
+        return wordTranslationService;
     }
 
     @Override

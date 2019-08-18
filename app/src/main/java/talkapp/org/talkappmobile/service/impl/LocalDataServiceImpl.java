@@ -2,6 +2,12 @@ package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -19,12 +25,6 @@ import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
@@ -132,15 +132,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public void saveWordTranslations(final List<WordTranslation> wordTranslations, final List<String> words, String language) {
-        List<WordTranslationMapping> mappings = new LinkedList<>();
-        for (WordTranslation wordTranslation : wordTranslations) {
-            mappings.add(toMapping(wordTranslation));
-        }
-        wordTranslationDao.save(mappings);
-    }
-
-    @Override
     public List<String> findWordsOfWordSetById(int wordSetId) {
         String wordSetIdString = String.valueOf(wordSetId);
         for (WordSetMapping mapping : wordSetDao.findAll()) {
@@ -193,15 +184,6 @@ public class LocalDataServiceImpl implements LocalDataService {
         topic.setId(mapping.getId());
         topic.setName(mapping.getName());
         return topic;
-    }
-
-    private WordTranslationMapping toMapping(WordTranslation translation) {
-        WordTranslationMapping mapping = new WordTranslationMapping();
-        mapping.setWord(translation.getWord() + "_" + translation.getLanguage());
-        mapping.setTranslation(translation.getTranslation());
-        mapping.setLanguage(translation.getLanguage());
-        mapping.setTop(translation.getTop());
-        return mapping;
     }
 
     private WordTranslation toDto(WordTranslationMapping mapping) {

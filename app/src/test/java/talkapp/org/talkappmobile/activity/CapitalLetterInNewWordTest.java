@@ -49,6 +49,7 @@ import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -93,7 +94,8 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         wordSetMapper = new WordSetMapper(mapper);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), wordTranslationDao, mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -109,6 +111,8 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
+
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(wordTranslationDao));
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());

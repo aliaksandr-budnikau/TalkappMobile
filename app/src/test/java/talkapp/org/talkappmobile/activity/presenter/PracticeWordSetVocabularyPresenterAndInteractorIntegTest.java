@@ -9,6 +9,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
+
+import java.util.HashSet;
+import java.util.List;
+
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -22,12 +28,7 @@ import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-
-import java.util.HashSet;
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -52,6 +53,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(mock(WordTranslationDao.class)));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();

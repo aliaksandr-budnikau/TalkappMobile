@@ -4,12 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.Logger;
-import talkapp.org.talkappmobile.service.SentenceRestClient;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +11,12 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import talkapp.org.talkappmobile.service.BackendServerFactory;
+import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.Logger;
+import talkapp.org.talkappmobile.service.SentenceRestClient;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class BackendServerFactoryBean implements BackendServerFactory {
@@ -43,7 +43,8 @@ public class BackendServerFactoryBean implements BackendServerFactory {
         backendServer = new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
-                serviceFactory.getLocalDataService(), requestExecutor
+                serviceFactory.getLocalDataService(),
+                serviceFactory.getWordTranslationService(), requestExecutor
         );
         return backendServer;
     }
