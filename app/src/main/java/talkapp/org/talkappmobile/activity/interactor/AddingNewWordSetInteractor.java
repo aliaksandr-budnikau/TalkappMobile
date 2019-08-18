@@ -2,11 +2,18 @@ package talkapp.org.talkappmobile.activity.interactor;
 
 import android.support.annotation.NonNull;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetPresenterListener;
+import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
+import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
+import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
+import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.model.NewWordWithTranslation;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
@@ -33,23 +40,26 @@ public class AddingNewWordSetInteractor {
     private final WordSetService wordSetService;
     @NonNull
     private final WordTranslationService wordTranslationService;
+    @NonNull
+    private final EventBus eventBus;
 
-    public AddingNewWordSetInteractor(@NonNull DataServer server, @NonNull WordSetService wordSetService, @NonNull WordTranslationService wordTranslationService) {
+    public AddingNewWordSetInteractor(@NonNull DataServer server, @NonNull WordSetService wordSetService, @NonNull WordTranslationService wordTranslationService, @NonNull EventBus eventBus) {
         this.server = server;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
+        this.eventBus = eventBus;
     }
 
-    public void submit(List<String> words, OnAddingNewWordSetPresenterListener listener) {
+    public void submit(List<String> words) {
         List<NewWordWithTranslation> normalizedWords = normalizeAll(words);
-        if (isAnyEmpty(normalizedWords, listener)) {
+        if (isAnyEmpty(normalizedWords)) {
             return;
         }
-        if (hasDuplicates(normalizedWords, listener)) {
+        if (hasDuplicates(normalizedWords)) {
             return;
         }
 
-        if (anyHasNoSentences(normalizedWords, listener)) {
+        if (anyHasNoSentences(normalizedWords)) {
             return;
         }
 
@@ -59,7 +69,7 @@ public class AddingNewWordSetInteractor {
             if (isEmpty(normalizedWord.getTranslation())) {
                 result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedWord.getWord());
                 if (result == null) {
-                    listener.onTranslationWasNotFound(normalizedWords.indexOf(normalizedWord));
+                    eventBus.post(new NewWordTranslationWasNotFoundEM(normalizedWords.indexOf(normalizedWord)));
                     continue;
                 }
             } else {
@@ -77,22 +87,22 @@ public class AddingNewWordSetInteractor {
         }
 
         WordSet wordSet = wordSetService.createNewCustomWordSet(translations);
-        listener.onSubmitSuccessfully(wordSet);
+        eventBus.post(new NewWordSuccessfullySubmittedEM(wordSet));
     }
 
-    private boolean hasDuplicates(List<NewWordWithTranslation> words, OnAddingNewWordSetPresenterListener listener) {
+    private boolean hasDuplicates(List<NewWordWithTranslation> words) {
         boolean hasDuplicates = false;
         for (int i = 0; i < words.size(); i++) {
             NewWordWithTranslation word = words.get(i);
             if (words.subList(0, i).contains(word)) {
                 hasDuplicates = true;
-                listener.onWordIsDuplicate(i);
+                eventBus.post(new NewWordIsDuplicateEM(i));
             }
         }
         return hasDuplicates;
     }
 
-    private boolean anyHasNoSentences(List<NewWordWithTranslation> words, OnAddingNewWordSetPresenterListener listener) {
+    private boolean anyHasNoSentences(List<NewWordWithTranslation> words) {
         boolean anyHasNoSentences = false;
         for (int i = 0; i < words.size(); i++) {
             NewWordWithTranslation wordWithTranslation = words.get(i);
@@ -123,20 +133,20 @@ public class AddingNewWordSetInteractor {
             }
             if (sentences.isEmpty()) {
                 anyHasNoSentences = true;
-                listener.onSentencesWereNotFound(i);
+                eventBus.post(new NewWordSentencesWereNotFoundEM(i));
             } else {
-                listener.onSentencesWereFound(i);
+                eventBus.post(new NewWordSentencesWereFoundEM(i));
             }
         }
         return anyHasNoSentences;
     }
 
-    private boolean isAnyEmpty(List<NewWordWithTranslation> words, OnAddingNewWordSetPresenterListener listener) {
+    private boolean isAnyEmpty(List<NewWordWithTranslation> words) {
         boolean anyEmpty = false;
         for (int i = 0; i < words.size(); i++) {
             if (isEmpty(words.get(i).getWord())) {
                 anyEmpty = true;
-                listener.onWordIsEmpty(i);
+                eventBus.post(new NewWordIsEmptyEM(i));
             }
         }
         return anyEmpty;

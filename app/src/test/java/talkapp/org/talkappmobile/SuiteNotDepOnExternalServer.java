@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import talkapp.org.talkappmobile.activity.AddingNewWordSetFragmentTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenterTest;
@@ -59,6 +60,7 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         WordSetDaoImplTest.class,
         SentenceDaoImplTest.class,
         RequestExecutorTest.class,
+        AddingNewWordSetFragmentTest.class,
         UserExpServiceImplTest.class,
         AddingNewWordSetFragmentControllerIntegTest.class
 })

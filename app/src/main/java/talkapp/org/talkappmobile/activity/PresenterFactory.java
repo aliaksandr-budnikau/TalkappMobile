@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.greenrobot.eventbus.EventBus;
 
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
@@ -72,8 +73,8 @@ public class PresenterFactory {
         return new PracticeWordSetPresenter(interactor, viewStrategy);
     }
 
-    public AddingNewWordSetPresenter create(AddingNewWordSetFragmentView view) {
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService());
+    public AddingNewWordSetPresenter create(AddingNewWordSetFragmentView view, EventBus eventBus) {
+        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), eventBus);
         return new AddingNewWordSetPresenter(view, interactor);
     }
 

@@ -28,8 +28,14 @@ import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
+import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
+import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
+import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
+import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -92,7 +98,7 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         for (TextView textView : allTextViews) {
             textView.setOnFocusChangeListener(this);
         }
-        presenter = presenterFactory.create(this);
+        presenter = presenterFactory.create(this, eventBus);
         controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
         eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
     }
@@ -108,6 +114,56 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         for (int i = 0; i < words.size(); i++) {
             allTextViews.get(i).setText(words.get(i));
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
+        TextView textView = allTextViews.get(event.getWordIndex());
+        textView.setError("No translation!");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordIsEmptyEM event) {
+        TextView textView = allTextViews.get(event.getWordIndex());
+        textView.setError("Empty!");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordIsDuplicateEM event) {
+        TextView textView = allTextViews.get(event.getWordIndex());
+        textView.setError("Duplicate!");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
+        TextView textView = allTextViews.get(event.getWordIndex());
+        textView.setError("No sentences");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
+        TextView textView = allTextViews.get(event.getWordIndex());
+        textView.setError(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSuccessfullySubmittedEM event) {
+        word1.setText("");
+        word2.setText("");
+        word3.setText("");
+        word4.setText("");
+        word5.setText("");
+        word6.setText("");
+        word7.setText("");
+        word8.setText("");
+        word9.setText("");
+        word10.setText("");
+        word11.setText("");
+        word12.setText("");
+
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
+
+        startWordSetActivity(event.getWordSet());
     }
 
     @Click(R.id.buttonSubmit)
@@ -135,33 +191,6 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
 
     @Override
     @UiThread
-    public void markSentencesWereNotFound(int wordIndex) {
-        TextView textView = allTextViews.get(wordIndex);
-        textView.setError("No sentences");
-    }
-
-    @Override
-    @UiThread
-    public void markSentencesWereFound(int wordIndex) {
-        TextView textView = allTextViews.get(wordIndex);
-        textView.setError(null);
-    }
-
-    @Override
-    @UiThread
-    public void submitSuccessfully(WordSet wordSet) {
-        startWordSetActivity(wordSet);
-    }
-
-    @Override
-    @UiThread
-    public void markWordIsEmpty(int wordIndex) {
-        TextView textView = allTextViews.get(wordIndex);
-        textView.setError("Empty!");
-    }
-
-    @Override
-    @UiThread
     public void showPleaseWaitProgressBar() {
         waitingForProgressBarManager.showProgressBar();
     }
@@ -170,41 +199,6 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @UiThread
     public void hidePleaseWaitProgressBar() {
         waitingForProgressBarManager.hideProgressBar();
-    }
-
-    @Override
-    public void resetWords() {
-        word1.setText("");
-        word2.setText("");
-        word3.setText("");
-        word4.setText("");
-        word5.setText("");
-        word6.setText("");
-        word7.setText("");
-        word8.setText("");
-        word9.setText("");
-        word10.setText("");
-        word11.setText("");
-        word12.setText("");
-    }
-
-    @Override
-    public void resetDraft() {
-        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
-    }
-
-    @Override
-    @UiThread
-    public void markWordIsDuplicate(int wordIndex) {
-        TextView textView = allTextViews.get(wordIndex);
-        textView.setError("Duplicate!");
-    }
-
-    @Override
-    @UiThread
-    public void markTranslationWasNotFound(int wordIndex) {
-        TextView textView = allTextViews.get(wordIndex);
-        textView.setError("No translation!");
     }
 
     private void startWordSetActivity(WordSet wordSet) {

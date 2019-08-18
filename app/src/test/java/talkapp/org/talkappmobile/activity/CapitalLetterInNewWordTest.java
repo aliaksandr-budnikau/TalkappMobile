@@ -236,19 +236,6 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         } catch (NullPointerException e) {
         }
 
-        verify(word1).setText("");
-        verify(word2).setText("");
-        verify(word3).setText("");
-        verify(word4).setText("");
-        verify(word5).setText("");
-        verify(word6).setText("");
-        verify(word7).setText("");
-        verify(word8).setText("");
-        verify(word9).setText("");
-        verify(word10).setText("");
-        verify(word11).setText("");
-        verify(word12).setText("");
-
         wordSet = wordSetMapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
 
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSet", wordSet);
