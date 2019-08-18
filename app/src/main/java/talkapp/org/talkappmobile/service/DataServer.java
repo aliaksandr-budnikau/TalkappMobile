@@ -1,12 +1,12 @@
 package talkapp.org.talkappmobile.service;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-
-import java.util.List;
 
 public interface DataServer {
 
@@ -15,6 +15,8 @@ public interface DataServer {
     void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber);
 
     void initLocalCacheOfAllSentencesForThisWord(String word, int wordsNumber);
+
+    void initLocalCacheOfAllSentencesForThisWord(String word, List<Sentence> sentences, int wordsNumber);
 
     List<Topic> findAllTopics();
 

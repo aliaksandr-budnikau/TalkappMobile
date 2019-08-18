@@ -18,6 +18,8 @@ import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
+import static java.util.Arrays.asList;
+
 public class DataServerImpl implements DataServer {
     private final SentenceRestClient sentenceRestClient;
 
@@ -65,6 +67,11 @@ public class DataServerImpl implements DataServer {
         if (body != null) {
             localDataService.saveSentences(word, body, wordsNumber);
         }
+    }
+
+    @Override
+    public void initLocalCacheOfAllSentencesForThisWord(String word, List<Sentence> sentences, int wordsNumber) {
+        localDataService.saveSentences(word, sentences, wordsNumber);
     }
 
     @Override
@@ -151,13 +158,31 @@ public class DataServerImpl implements DataServer {
 
     @NonNull
     private List<WordTranslation> getWordTranslations(String language, List<String> words) {
-        List<WordTranslation> body;
-        body = new LinkedList<>();
+        List<WordTranslation> result;
+        result = new LinkedList<>();
         for (String word : words) {
             Call<WordTranslation> callSingleWord = gitHubRestClient.findWordTranslationByWordAndByLanguageAndByLetter(word, String.valueOf(word.charAt(0)), language);
-            body.add(requestExecutor.execute(callSingleWord).body());
+            WordTranslation body = null;
+            try {
+                body = requestExecutor.execute(callSingleWord).body();
+            } catch (InternetConnectionLostException e) {
+                result.addAll(getFromLocalDataStorage(language, word));
+            }
+            if (body == null) {
+                result.addAll(getFromLocalDataStorage(language, word));
+            } else {
+                result.add(body);
+            }
         }
-        return body;
+        return result;
+    }
+
+    private List<WordTranslation> getFromLocalDataStorage(String language, String word) {
+        List<WordTranslation> localTranslations = localDataService.findWordTranslationsByWordsAndByLanguage(asList(word), language);
+        if (localTranslations.isEmpty()) {
+            throw new RuntimeException("It's a bug. Word " + word + " doesn't have translation in the local database.");
+        }
+        return localTranslations;
     }
 
     @Override

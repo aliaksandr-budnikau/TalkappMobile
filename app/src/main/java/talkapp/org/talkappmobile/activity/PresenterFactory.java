@@ -73,7 +73,7 @@ public class PresenterFactory {
     }
 
     public AddingNewWordSetPresenter create(AddingNewWordSetFragmentView view) {
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository());
+        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService());
         return new AddingNewWordSetPresenter(view, interactor);
     }
 

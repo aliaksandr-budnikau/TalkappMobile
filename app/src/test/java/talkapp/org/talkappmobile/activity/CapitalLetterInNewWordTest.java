@@ -94,7 +94,7 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         wordSetMapper = new WordSetMapper(mapper);
-        WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
+        WordTranslationDao wordTranslationDao = getWordTranslationDao();
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), wordTranslationDao, mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -215,7 +215,7 @@ public class CapitalLetterInNewWordTest extends BaseTest {
     @Test
     public void testCapitalLetterInNewWord() throws SQLException {
         addingNewWordSetFragment.init();
-        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", "consent", "preamble",
+        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", "look for|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
         List<Word2Tokens> words = wordSet.getWords();
         when(word1.getText()).thenReturn(words.get(0).getWord());

@@ -19,16 +19,19 @@ import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
+import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
@@ -46,6 +49,7 @@ public abstract class BaseTest {
     private WordSetDao wordSetDao;
     private EventBus eventBus;
     private SentenceDao sentenceDao;
+    private WordTranslationDao wordTranslationDao;
     private ExpAuditDao expAuditDao;
     private WordRepetitionProgressDao wordRepetitionProgressDao;
 
@@ -117,6 +121,13 @@ public abstract class BaseTest {
             sentenceDao = new SentenceDaoImpl(getDatabaseHelper().getConnectionSource(), SentenceMapping.class);
         }
         return sentenceDao;
+    }
+
+    protected WordTranslationDao getWordTranslationDao() throws SQLException {
+        if (wordTranslationDao == null) {
+            wordTranslationDao = new WordTranslationDaoImpl(getDatabaseHelper().getConnectionSource(), WordTranslationMapping.class);
+        }
+        return wordTranslationDao;
     }
 
     protected ExpAuditDao getExpAuditDao() throws SQLException {

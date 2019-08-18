@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -54,7 +55,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, new LoggerBean());
+        WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
         wordSetService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -65,7 +67,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(server, wordSetService);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao);
+        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(server, wordSetService, wordTranslationService);
         view = mock(AddingNewWordSetFragmentView.class);
         presenter = new AddingNewWordSetPresenter(view, interactor);
     }
@@ -383,6 +386,100 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         verify(view, times(0)).markTranslationWasNotFound(anyInt());
         verify(view).markWordIsDuplicate(2);
         verify(view).markWordIsDuplicate(1);
+    }
+
+    @Test
+    public void submit_allSentencesWereFoundButThereFewExpressions() throws SQLException {
+        String word0 = "look for|искать";
+        String word1 = "fox";
+        String word2 = "door";
+        String word3 = "make out|разглядеть, различить, разбирать";
+        String word4 = "book";
+        String word5 = "cool";
+        String word6 = "angel";
+        String word7 = "window";
+        String word8 = "in fact|по факту, фактически, на самом деле, по сути";
+        String word9 = "pillow";
+        String word10 = "fog";
+        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "));
+
+        verify(view).markSentencesWereFound(0);
+        verify(view).markSentencesWereFound(1);
+        verify(view).markSentencesWereFound(2);
+        verify(view).markSentencesWereFound(3);
+        verify(view).markSentencesWereFound(4);
+        verify(view).markSentencesWereFound(5);
+        verify(view).markSentencesWereFound(6);
+        verify(view).markSentencesWereFound(7);
+        verify(view).markSentencesWereFound(8);
+        verify(view).markSentencesWereFound(9);
+        verify(view).markSentencesWereFound(10);
+
+        verify(view, times(0)).markWordIsEmpty(anyInt());
+        verify(view, times(11)).markSentencesWereFound(anyInt());
+        verify(view, times(0)).markSentencesWereNotFound(anyInt());
+        verify(view, times(0)).markTranslationWasNotFound(anyInt());
+
+        ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
+        verify(view, times(1)).submitSuccessfully(wordSetCaptor.capture());
+        verify(view, times(1)).resetWords();
+        verify(view, times(1)).resetDraft();
+
+        WordSet wordSet = wordSetCaptor.getValue();
+        assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());
+        assertEquals(word1, wordSet.getWords().get(1).getWord());
+        assertEquals(word2, wordSet.getWords().get(2).getWord());
+        assertEquals(word3.split("\\|")[0], wordSet.getWords().get(3).getWord());
+        assertEquals(word4, wordSet.getWords().get(4).getWord());
+        assertEquals(word5, wordSet.getWords().get(5).getWord());
+        assertEquals(word6, wordSet.getWords().get(6).getWord());
+        assertEquals(word7, wordSet.getWords().get(7).getWord());
+        assertEquals(word8.split("\\|")[0], wordSet.getWords().get(8).getWord());
+        assertEquals(word9, wordSet.getWords().get(9).getWord());
+        assertEquals(word10, wordSet.getWords().get(10).getWord());
+
+        assertEquals(null, wordSet.getWords().get(0).getTokens());
+        assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
+        assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
+        assertEquals(null, wordSet.getWords().get(3).getTokens());
+        assertEquals(wordSet.getWords().get(4).getWord(), wordSet.getWords().get(4).getTokens());
+        assertEquals(wordSet.getWords().get(5).getWord(), wordSet.getWords().get(5).getTokens());
+        assertEquals(wordSet.getWords().get(6).getWord(), wordSet.getWords().get(6).getTokens());
+        assertEquals(wordSet.getWords().get(7).getWord(), wordSet.getWords().get(7).getTokens());
+        assertEquals(null, wordSet.getWords().get(8).getTokens());
+        assertEquals(wordSet.getWords().get(9).getWord(), wordSet.getWords().get(9).getTokens());
+        assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
+
+        assertEquals(new Integer(7900), wordSet.getTop());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
+
+        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());
+        assertEquals(word1, wordSet.getWords().get(1).getWord());
+        assertEquals(word2, wordSet.getWords().get(2).getWord());
+        assertEquals(word3.split("\\|")[0], wordSet.getWords().get(3).getWord());
+        assertEquals(word4, wordSet.getWords().get(4).getWord());
+        assertEquals(word5, wordSet.getWords().get(5).getWord());
+        assertEquals(word6, wordSet.getWords().get(6).getWord());
+        assertEquals(word7, wordSet.getWords().get(7).getWord());
+        assertEquals(word8.split("\\|")[0], wordSet.getWords().get(8).getWord());
+        assertEquals(word9, wordSet.getWords().get(9).getWord());
+        assertEquals(word10, wordSet.getWords().get(10).getWord());
+
+        assertEquals(null, wordSet.getWords().get(0).getTokens());
+        assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
+        assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
+        assertEquals(null, wordSet.getWords().get(3).getTokens());
+        assertEquals(wordSet.getWords().get(4).getWord(), wordSet.getWords().get(4).getTokens());
+        assertEquals(wordSet.getWords().get(5).getWord(), wordSet.getWords().get(5).getTokens());
+        assertEquals(wordSet.getWords().get(6).getWord(), wordSet.getWords().get(6).getTokens());
+        assertEquals(wordSet.getWords().get(7).getWord(), wordSet.getWords().get(7).getTokens());
+        assertEquals(null, wordSet.getWords().get(8).getTokens());
+        assertEquals(wordSet.getWords().get(9).getWord(), wordSet.getWords().get(9).getTokens());
+        assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
+
+        assertEquals(new Integer(7900), wordSet.getTop());
+        assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
     }
 
     @After
