@@ -88,6 +88,7 @@ public class CapitalLetterInNewWordTest extends BaseTest {
     private TextView word11;
     private TextView word12;
     private WordSetMapper wordSetMapper;
+    private TextView answerTextMock;
 
     @Before
     public void setup() throws SQLException {
@@ -135,7 +136,8 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         Whitebox.setInternalState(practiceWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
-        Whitebox.setInternalState(practiceWordSetFragment, "answerText", mock(TextView.class));
+        answerTextMock = mock(TextView.class);
+        Whitebox.setInternalState(practiceWordSetFragment, "answerText", answerTextMock);
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetProgress", mock(ProgressBar.class));
         Whitebox.setInternalState(practiceWordSetFragment, "nextButton", mock(Button.class));
         Whitebox.setInternalState(practiceWordSetFragment, "checkButton", mock(Button.class));
@@ -215,7 +217,8 @@ public class CapitalLetterInNewWordTest extends BaseTest {
     @Test
     public void testCapitalLetterInNewWord() throws SQLException {
         addingNewWordSetFragment.init();
-        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", "look for|искать", "preamble",
+        String phrasalVerb = "look for";
+        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", phrasalVerb + "|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
         List<Word2Tokens> words = wordSet.getWords();
         when(word1.getText()).thenReturn(words.get(0).getWord());
@@ -257,5 +260,15 @@ public class CapitalLetterInNewWordTest extends BaseTest {
         assertNotNull(currentSentence);
         assertFalse(isEmpty(currentSentence.getText()));
         assertFalse(isEmpty(currentSentence.getId()));
+
+        while (true) {
+            String text = presenter.getCurrentSentence().getText();
+            if (text.equals(phrasalVerb)) {
+                when(answerTextMock.getText()).thenReturn(phrasalVerb.substring(0, 5));
+                practiceWordSetFragment.onCheckAnswerButtonClick();
+                break;
+            }
+            practiceWordSetFragment.onNextButtonClick();
+        }
     }
 }

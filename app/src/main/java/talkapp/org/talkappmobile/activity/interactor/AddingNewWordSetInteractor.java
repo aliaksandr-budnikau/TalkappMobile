@@ -77,6 +77,7 @@ public class AddingNewWordSetInteractor {
                 translation.setLanguage(RUSSIAN_LANGUAGE);
                 translation.setTranslation(normalizedWord.getTranslation());
                 translation.setWord(normalizedWord.getWord());
+                translation.setTokens(normalizedWord.getWord());
                 wordTranslationService.saveWordTranslations(asList(translation));
                 result = translation;
             }

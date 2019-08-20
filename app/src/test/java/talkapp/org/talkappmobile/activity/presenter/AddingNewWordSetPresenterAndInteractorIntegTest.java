@@ -450,15 +450,15 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(word9, wordSet.getWords().get(9).getWord());
         assertEquals(word10, wordSet.getWords().get(10).getWord());
 
-        assertEquals(null, wordSet.getWords().get(0).getTokens());
+        assertEquals(wordSet.getWords().get(0).getWord(), wordSet.getWords().get(0).getTokens());
         assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
-        assertEquals(null, wordSet.getWords().get(3).getTokens());
+        assertEquals(wordSet.getWords().get(3).getWord(), wordSet.getWords().get(3).getTokens());
         assertEquals(wordSet.getWords().get(4).getWord(), wordSet.getWords().get(4).getTokens());
         assertEquals(wordSet.getWords().get(5).getWord(), wordSet.getWords().get(5).getTokens());
         assertEquals(wordSet.getWords().get(6).getWord(), wordSet.getWords().get(6).getTokens());
         assertEquals(wordSet.getWords().get(7).getWord(), wordSet.getWords().get(7).getTokens());
-        assertEquals(null, wordSet.getWords().get(8).getTokens());
+        assertEquals(wordSet.getWords().get(8).getWord(), wordSet.getWords().get(8).getTokens());
         assertEquals(wordSet.getWords().get(9).getWord(), wordSet.getWords().get(9).getTokens());
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
@@ -478,15 +478,15 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(word9, wordSet.getWords().get(9).getWord());
         assertEquals(word10, wordSet.getWords().get(10).getWord());
 
-        assertEquals(null, wordSet.getWords().get(0).getTokens());
+        assertEquals(wordSet.getWords().get(0).getWord(), wordSet.getWords().get(0).getTokens());
         assertEquals(wordSet.getWords().get(1).getWord(), wordSet.getWords().get(1).getTokens());
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
-        assertEquals(null, wordSet.getWords().get(3).getTokens());
+        assertEquals(wordSet.getWords().get(3).getWord(), wordSet.getWords().get(3).getTokens());
         assertEquals(wordSet.getWords().get(4).getWord(), wordSet.getWords().get(4).getTokens());
         assertEquals(wordSet.getWords().get(5).getWord(), wordSet.getWords().get(5).getTokens());
         assertEquals(wordSet.getWords().get(6).getWord(), wordSet.getWords().get(6).getTokens());
         assertEquals(wordSet.getWords().get(7).getWord(), wordSet.getWords().get(7).getTokens());
-        assertEquals(null, wordSet.getWords().get(8).getTokens());
+        assertEquals(wordSet.getWords().get(8).getWord(), wordSet.getWords().get(8).getTokens());
         assertEquals(wordSet.getWords().get(9).getWord(), wordSet.getWords().get(9).getTokens());
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
