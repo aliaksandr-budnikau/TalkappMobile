@@ -124,7 +124,7 @@ public class AddingNewWordSetInteractor {
             } else {
                 Sentence sentence = new Sentence();
                 sentence.setId(valueOf(System.currentTimeMillis()));
-                sentence.setTokens(new LinkedList<TextToken>());
+                sentence.setTokens(getTextTokens(wordWithTranslation));
                 HashMap<String, String> translations = new HashMap<>();
                 translations.put("russian", wordWithTranslation.getTranslation());
                 sentence.setTranslations(translations);
@@ -140,6 +140,18 @@ public class AddingNewWordSetInteractor {
             }
         }
         return anyHasNoSentences;
+    }
+
+    @NonNull
+    private LinkedList<TextToken> getTextTokens(NewWordWithTranslation wordWithTranslation) {
+        LinkedList<TextToken> textTokens = new LinkedList<>();
+        TextToken textToken = new TextToken();
+        textToken.setToken(wordWithTranslation.getWord());
+        textToken.setStartOffset(0);
+        textToken.setEndOffset(wordWithTranslation.getWord().length());
+        textToken.setPosition(0);
+        textTokens.add(textToken);
+        return textTokens;
     }
 
     private boolean isAnyEmpty(List<NewWordWithTranslation> words) {
