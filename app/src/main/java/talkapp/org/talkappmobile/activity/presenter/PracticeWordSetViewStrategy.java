@@ -1,13 +1,13 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-
-import java.util.List;
 
 public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
@@ -89,9 +89,7 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onGotRecognitionResult(Sentence sentence, List<String> result) {
-        String textWithUpper = textUtils.toUpperCaseFirstLetter(result.get(0));
-        String textWithLastSymbol = textUtils.appendLastSymbol(textWithUpper, sentence.getText());
-        view.setAnswerText(textWithLastSymbol);
+        view.setAnswerText(result.get(0));
     }
 
     public void onTrainingHalfFinished() {
