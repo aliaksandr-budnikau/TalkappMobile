@@ -11,10 +11,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +18,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+
+import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;
@@ -376,6 +377,12 @@ public class WordRepetitionProgressDaoImplTest {
     @Test
     public void findByWordAndWordSetId_nothingToReturn() {
         List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("dsdsds", 4);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findByWordAndWordSetId_quotationMarkBug() {
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("{\"sourceWordSetId\":1000020,\"tokens\":\"it's actually a quite peculiar idea.\",\"word\":\"it's actually a quite peculiar idea.\"}", 4);
         assertTrue(result.isEmpty());
     }
 

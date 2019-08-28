@@ -27,7 +27,7 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
             return this.query(
                     queryBuilder()
                             .where()
-                            .eq(WordRepetitionProgressMapping.WORD_FN, word)
+                            .eq(WordRepetitionProgressMapping.WORD_FN, new SelectArg(word))
                             .and()
                             .eq(WordRepetitionProgressMapping.WORD_SET_ID_FN, wordSetId).prepare()
             );
