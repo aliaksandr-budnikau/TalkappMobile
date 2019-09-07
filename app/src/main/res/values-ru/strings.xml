@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">TalkappMobile</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up_short">Sign up</string>
+    <string name="error_email_busy">Already exists</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">Password or email is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_main"><b><font size="20">T<strike><font color="red">o</font></strike>llmuch</font></b></string>
+    <string name="title_crash_main">Crash page</string>
+    <string name="title_activity_statistic">Statistic</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_scoring">Scoring</string>
+    <string name="score_sentence_dialog_title">Score the sentence</string>
+    <string name="sentences_for_change_dialog_title">Sentences for asking</string>
+    <string name="another_sentence_option">Get another sentence</string>
+    <string name="poor_sentence_option">Poor or short</string>
+    <string name="corrupted_sentence_option">Corrupted or weird</string>
+    <string name="insult_sentence_option">Insult or rude</string>
+    <string name="error_invalid_unchecking_all">impossible to uncheck all</string>
+
+    <string name="word_set_task_repetitions_title">Повторить %s набор(ов)</string>
+    <string name="word_set_task_repetitions_description">Опыт, который вы получите, зависит от количества повторений, которые вы сделали. Чем больше вы повторяете какое-то одно слово, тем больше вы приобретаете опыт.</string>
+
+    <string name="word_set_task_learning_title">Изучение новых слов / фраз</string>
+    <string name="word_set_task_learning_description">Начните учить новые слова.</string>
+
+    <string name="word_set_task_extra_repetitions_title">Повторить дополнительно</string>
+    <string name="word_set_task_extra_repetitions_description">Дополнительное повторение не запоминающихся слов.</string>
+
+    <string name="menu_exercises_learn_words_option_add_new_word_set">Добавить новые слова / фразы</string>
+    <string name="menu_exercises_learn_words_option_open_custom_word_sets">Открыть добавленые слова / фразы</string>
+    <string name="menu_exercises_learn_words_option_open_word_sets">Открыть все слова / фразы</string>
+    <string name="menu_exercises_learn_words_option_open_word_sets_by_topics">Открыть все слова / фразы по темам</string>
+
+    <string name="adding_new_word_set_fragment_button_save">Сохранить</string>
+    <string name="adding_new_word_set_fragment_warning_translation_not_found">Нет перевода!</string>
+    <string name="adding_new_word_set_fragment_warning_empty_field">Не может быть пустым!</string>
+    <string name="adding_new_word_set_fragment_warning_duplicate_field">Дубликат в наборе!</string>
+    <string name="adding_new_word_set_fragment_warning_sentences_not_found">Нет предложений!</string>
+
+
+    <string name="word_sets_list_fragment_tab_new_label">НОВЫЕ</string>
+    <string name="word_sets_list_fragment_tab_started_label">НАЧАТЫЕ</string>
+    <string name="word_sets_list_fragment_tab_finished_label">ЗАКОНЧЕННЫЕ</string>
+
+    <string name="word_sets_list_fragment_tab_rep_new_label">НОВЫЕ</string>
+    <string name="word_sets_list_fragment_tab_rep_learned_label">ВЫУЧЕННЫЕ</string>
+
+    <string name="menu_exercises">Упражнения</string>
+    <string name="menu_exercises_learn_words">Выучить</string>
+    <string name="menu_exercises_repetitions">Повторить</string>
+</resources>

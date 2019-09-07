@@ -17,12 +17,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.Task;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import java.util.List;
 
@@ -34,6 +30,11 @@ import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragment
 import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
+import talkapp.org.talkappmobile.model.RepetitionClass;
+import talkapp.org.talkappmobile.model.Task;
+import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static java.lang.String.format;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -57,6 +58,18 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     View progressBarView;
     @ViewById(R.id.wordSetVocabularyView)
     RecyclerView wordSetVocabularyView;
+    @StringRes(R.string.word_set_task_repetitions_title)
+    String wordSetsRepetitionTitle;
+    @StringRes(R.string.word_set_task_repetitions_description)
+    String wordSetsRepetitionDescription;
+    @StringRes(R.string.word_set_task_learning_title)
+    String wordSetsLearningTitle;
+    @StringRes(R.string.word_set_task_learning_description)
+    String wordSetsLearningDescription;
+    @StringRes(R.string.word_set_task_extra_repetitions_title)
+    String wordSetsExtraRepetitionTitle;
+    @StringRes(R.string.word_set_task_extra_repetitions_description)
+    String wordSetsExtraRepetitionDescription;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
@@ -65,8 +78,11 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-
-        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository());
+        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository(),
+                wordSetsRepetitionTitle, wordSetsRepetitionDescription,
+                wordSetsLearningTitle, wordSetsLearningDescription,
+                wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription
+        );
         presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
         presenter.init();
         findTasks();
@@ -79,7 +95,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     @Override
     public void onWordsForRepetitionCounted(int counter) {
-        wordsForRepetitionTextView.setText(format("Sets for repetition %s", counter));
+        wordsForRepetitionTextView.setText(format(wordSetsRepetitionTitle, counter));
     }
 
     @Click(R.id.wordsForRepetitionTextView)

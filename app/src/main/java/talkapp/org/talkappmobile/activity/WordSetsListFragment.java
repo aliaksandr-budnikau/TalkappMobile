@@ -20,9 +20,13 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
+
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -50,8 +54,6 @@ import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-
-import java.util.List;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
@@ -82,6 +84,17 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     View progressBarView;
     @ViewById(R.id.tabHost)
     TabHost tabHost;
+
+    @StringRes(R.string.word_sets_list_fragment_tab_new_label)
+    String tabNewLabel;
+    @StringRes(R.string.word_sets_list_fragment_tab_started_label)
+    String tabStartedLabel;
+    @StringRes(R.string.word_sets_list_fragment_tab_finished_label)
+    String tabFinishedLabel;
+    @StringRes(R.string.word_sets_list_fragment_tab_rep_new_label)
+    String tabRepNewLabel;
+    @StringRes(R.string.word_sets_list_fragment_tab_rep_learned_label)
+    String tabRepLearnedLabel;
 
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
@@ -194,7 +207,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             //Tab 1
             TabHost.TabSpec spec = tabHost.newTabSpec(RepetitionClass.NEW.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("New");
+            spec.setIndicator(tabRepNewLabel);
             tabHost.addTab(spec);
 
             //Tab 2
@@ -212,7 +225,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             //Tab 4
             spec = tabHost.newTabSpec(LEARNED.name());
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("Learned");
+            spec.setIndicator(tabRepLearnedLabel);
             tabHost.addTab(spec);
 
             tabHost.setCurrentTabByTag(selectedClass.name());
@@ -227,19 +240,19 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             //Tab 1
             TabHost.TabSpec spec = tabHost.newTabSpec(NEW);
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("New");
+            spec.setIndicator(tabNewLabel);
             tabHost.addTab(spec);
 
             //Tab 2
             spec = tabHost.newTabSpec(STARTED);
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("Started");
+            spec.setIndicator(tabStartedLabel);
             tabHost.addTab(spec);
 
             //Tab 3
             spec = tabHost.newTabSpec(FINISHED);
             spec.setContent(R.id.wordSetsListView);
-            spec.setIndicator("Finished");
+            spec.setIndicator(tabFinishedLabel);
             tabHost.addTab(spec);
         }
     }

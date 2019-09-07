@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Content">
+    <item android:title="@string/menu_exercises">
         <menu>
             <item
                 android:id="@+id/word_set_practise"
-                android:title="Learn words" />
+                android:title="@string/menu_exercises_learn_words" />
             <item
                 android:id="@+id/default_fragment"
-                android:title="Tasks" />
+                android:title="@string/menu_exercises_repetitions" />
         </menu>
     </item>
 

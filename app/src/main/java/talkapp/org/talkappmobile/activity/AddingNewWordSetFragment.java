@@ -15,6 +15,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -83,6 +84,15 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @EventBusGreenRobot
     EventBus eventBus;
 
+    @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
+    String warningTranslationNotFound;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
+    String warningEmptyField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_duplicate_field)
+    String warningDuplicateField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
+    String warningSentencesNotFound;
+
     private List<TextView> allTextViews;
 
     private AddingNewWordSetPresenter presenter;
@@ -119,25 +129,25 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
         TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError("No translation!");
+        textView.setError(warningTranslationNotFound);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordIsEmptyEM event) {
         TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError("Empty!");
+        textView.setError(warningEmptyField);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordIsDuplicateEM event) {
         TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError("Duplicate!");
+        textView.setError(warningDuplicateField);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
         TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError("No sentences");
+        textView.setError(warningSentencesNotFound);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

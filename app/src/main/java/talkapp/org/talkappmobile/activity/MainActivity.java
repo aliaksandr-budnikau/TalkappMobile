@@ -23,6 +23,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -46,6 +47,14 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     DrawerLayout drawer;
     @ViewById(R.id.nav_view)
     NavigationView navigationView;
+    @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set)
+    String optionAddNewWordSet;
+    @StringRes(R.string.menu_exercises_learn_words_option_open_custom_word_sets)
+    String optionOpenCustomWordSets;
+    @StringRes(R.string.menu_exercises_learn_words_option_open_word_sets)
+    String optionOpenWordSet;
+    @StringRes(R.string.menu_exercises_learn_words_option_open_word_sets_by_topics)
+    String optionOpenWordSetsByTopics;
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -84,7 +93,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 } else if (id == R.id.word_set_practise) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder
-                            .setItems((new String[]{"Add your own set", "Only your sets", "All sets", "Sets by topics"}), new DialogInterface.OnClickListener() {
+                            .setItems((new String[]{optionAddNewWordSet, optionOpenCustomWordSets, optionOpenWordSet, optionOpenWordSetsByTopics}), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
                                         fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
