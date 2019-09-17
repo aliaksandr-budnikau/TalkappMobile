@@ -18,10 +18,11 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Date;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
@@ -46,7 +47,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
-public class MainActivityTest extends BaseTest {
+public class MainActivityTest {
 
     private MainActivity mainActivity;
     private EventBus eventBus;
@@ -54,9 +55,11 @@ public class MainActivityTest extends BaseTest {
     private PackageInfo packageInfo;
     private TextView applicationVersion;
     private TextView userExp;
+    private DaoHelper daoHelper;
 
     @Before
     public void setup() throws SQLException {
+        daoHelper = new DaoHelper();
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         packageManager = mock(PackageManager.class);
@@ -78,8 +81,8 @@ public class MainActivityTest extends BaseTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(getExpAuditDao(), mock(ExpAuditMapper.class)));
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class)));
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
         PresenterFactory presenterFactory = new PresenterFactory();
@@ -98,7 +101,7 @@ public class MainActivityTest extends BaseTest {
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test
@@ -111,12 +114,12 @@ public class MainActivityTest extends BaseTest {
         mapping.setExpScore(10);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        getExpAuditDao().save(mapping);
+        daoHelper.getExpAuditDao().save(mapping);
         mapping = new ExpAuditMapping();
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        getExpAuditDao().save(mapping);
+        daoHelper.getExpAuditDao().save(mapping);
 
         mainActivity.initPresenter();
         verify(applicationVersion).setText("v" + packageInfo.versionName);
@@ -127,7 +130,7 @@ public class MainActivityTest extends BaseTest {
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
         mapping.setActivityType("TYPE");
-        getExpAuditDao().save(mapping);
+        daoHelper.getExpAuditDao().save(mapping);
 
         mainActivity.onMessageEvent(new UserExpUpdatedEM(3));
         verify(userExp).setText("EXP " + 110.0);

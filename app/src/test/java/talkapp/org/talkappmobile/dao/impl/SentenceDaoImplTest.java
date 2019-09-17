@@ -4,12 +4,12 @@ import android.database.Cursor;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -36,16 +37,18 @@ public class SentenceDaoImplTest {
 
     private DatabaseHelper databaseHelper;
     private SentenceDao sentenceDao;
+    private DaoHelper daoHelper;
 
     @Before
     public void setup() throws SQLException {
-        databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
+        daoHelper = new DaoHelper();
+        databaseHelper = daoHelper.getDatabaseHelper();
+        sentenceDao = daoHelper.getSentenceDao();
     }
 
-    @Before
+    @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test

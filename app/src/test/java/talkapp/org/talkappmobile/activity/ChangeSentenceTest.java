@@ -24,11 +24,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
+import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -73,7 +80,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
-public class ChangeSentenceTest extends BaseTest {
+public class ChangeSentenceTest {
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSetService experienceService;
@@ -82,26 +89,40 @@ public class ChangeSentenceTest extends BaseTest {
     private PracticeWordSetFragment practiceWordSetFragment;
     private OriginalTextTextViewPresenter originalTextTextViewPresenter;
     private TextView answerTextMock;
+    private WordSetDao wordSetDaoMock;
+    private SentenceDao sentenceDaoMock;
+    private WordRepetitionProgressDao wordRepetitionProgressDaoMock;
+    private NewWordSetDraftDao newWordSetDraftDaoMock;
+    private ExpAuditDao expAuditDaoMock;
+    private DaoHelper daoHelper;
+    private TestHelper testHelper;
 
     @Before
     public void setup() throws SQLException {
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        testHelper = new TestHelper();
+        daoHelper = new DaoHelper();
+        wordSetDaoMock = daoHelper.getWordSetDao();
+        sentenceDaoMock = daoHelper.getSentenceDao();
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDaoMock, mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
-        userExpService = new UserExpServiceImpl(getExpAuditDao(), mock(ExpAuditMapper.class));
+        expAuditDaoMock = daoHelper.getExpAuditDao();
+        userExpService = new UserExpServiceImpl(expAuditDaoMock, mock(ExpAuditMapper.class));
         when(mockServiceFactoryBean.getUserExpService()).thenReturn(userExpService);
 
-        exerciseService = new WordRepetitionProgressServiceImpl(getWordRepetitionProgressDao(), getWordSetDao(), getSentenceDao(), mapper);
+        wordRepetitionProgressDaoMock = daoHelper.getWordRepetitionProgressDao();
+        exerciseService = new WordRepetitionProgressServiceImpl(wordRepetitionProgressDaoMock, daoHelper.getWordSetDao(), sentenceDaoMock, mapper);
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
+        newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -139,7 +160,7 @@ public class ChangeSentenceTest extends BaseTest {
         Whitebox.setInternalState(practiceWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetPractiseForm", mock(View.class));
         Whitebox.setInternalState(practiceWordSetFragment, "spellingGrammarErrorsListView", mock(LinearLayout.class));
-        EventBus eventBus = mock(EventBus.class);
+        EventBus eventBus = testHelper.getEventBusMock();
         Whitebox.setInternalState(practiceWordSetFragment, "eventBus", eventBus);
 
         originalTextTextViewPresenter = new OriginalTextTextViewPresenter(mock(OriginalTextTextViewView.class));
@@ -164,7 +185,7 @@ public class ChangeSentenceTest extends BaseTest {
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test
@@ -174,14 +195,14 @@ public class ChangeSentenceTest extends BaseTest {
         practiceWordSetFragment.init();
 
         // Test of showing a dialog where all sentences are checked in the beginning
-        NewSentenceEM newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        NewSentenceEM newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         Sentence displayedSentence = newSentenceEM.getSentence();
         Word2Tokens displayedWord = newSentenceEM.getWord();
 
         displayNewSentence(displayedSentence);
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        SentencesWereFoundForChangeEM sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        SentencesWereFoundForChangeEM sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), displayedWord);
 
@@ -196,7 +217,7 @@ public class ChangeSentenceTest extends BaseTest {
         SentenceWasPickedForChangeEM wasPickedForChangeEM = new SentenceWasPickedForChangeEM(pickedSentences, displayedWord);
         for (int i = 0; i < 10; i++) {
             practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
-            newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+            newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
             assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
             assertNotEquals(displayedSentence, newSentenceEM.getSentence());
             displayedSentence = newSentenceEM.getSentence();
@@ -207,7 +228,7 @@ public class ChangeSentenceTest extends BaseTest {
         // Test of showing the dialog where only previously changed sentences are checked
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), displayedWord);
 
         assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
@@ -218,13 +239,13 @@ public class ChangeSentenceTest extends BaseTest {
         }
 
         practiceWordSetFragment.onNextButtonClick();
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
 
@@ -235,7 +256,7 @@ public class ChangeSentenceTest extends BaseTest {
         when(answerTextMock.getText()).thenReturn(displayedSentence.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        UserExpUpdatedEM expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        UserExpUpdatedEM expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -245,14 +266,14 @@ public class ChangeSentenceTest extends BaseTest {
         //
 
         // Test of showing a dialog on the second cycle. Only previously changed sentences are checked
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         displayNewSentence(displayedSentence);
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), displayedWord);
 
@@ -263,13 +284,13 @@ public class ChangeSentenceTest extends BaseTest {
         // Test of picking all sentences on the second cycle
         practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(sentencesWereFoundForChangeEM.getSentences(), displayedWord));
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         assertEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
         reset(eventBus);
@@ -279,7 +300,7 @@ public class ChangeSentenceTest extends BaseTest {
         wasPickedForChangeEM = new SentenceWasPickedForChangeEM(pickedSentences, displayedWord);
         for (int i = 0; i < 10; i++) {
             practiceWordSetFragment.onMessageEvent(wasPickedForChangeEM);
-            newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+            newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
             assertTrue(pickedSentences.contains(newSentenceEM.getSentence()));
             assertNotEquals(displayedSentence, newSentenceEM.getSentence());
             displayedSentence = newSentenceEM.getSentence();
@@ -290,7 +311,7 @@ public class ChangeSentenceTest extends BaseTest {
         // Test of showing the dialog where only previously changed sentences are checked
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), displayedWord);
 
         assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
@@ -301,20 +322,20 @@ public class ChangeSentenceTest extends BaseTest {
         }
 
         practiceWordSetFragment.onNextButtonClick();
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         assertNotEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
 
         when(answerTextMock.getText()).thenReturn(displayedSentence.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -330,14 +351,14 @@ public class ChangeSentenceTest extends BaseTest {
         practiceWordSetFragment.init();
 
         // Test of showing a dialog in the repetition mode. Only previously changed sentences (2) are checked
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 2);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 2);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         displayNewSentence(displayedSentence);
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         originalTextTextViewPresenter.prepareSentencesForPicking(sentencesWereFoundForChangeEM.getSentences(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences(), displayedWord);
 
@@ -348,13 +369,13 @@ public class ChangeSentenceTest extends BaseTest {
         // Test of picking all sentences in the repetition mode
         practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(sentencesWereFoundForChangeEM.getSentences(), displayedWord));
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentence = newSentenceEM.getSentence();
         displayedWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWord));
 
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
 
         assertEquals(sentencesWereFoundForChangeEM.getSentences().size(), sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
         assertEquals(16, sentencesWereFoundForChangeEM.getSentences().size());
@@ -365,7 +386,7 @@ public class ChangeSentenceTest extends BaseTest {
         //
         // TEST OF SENTENCES CYCLICAL MOVEMENT FIRST STAGE
         //
-        getWordRepetitionProgressDao().cleanByWordSetId(-1);
+        daoHelper.getWordRepetitionProgressDao().cleanByWordSetId(-1);
         reset(eventBus);
 
         wordSet = createWordSet(-1, "birth", "anniversary");
@@ -373,12 +394,12 @@ public class ChangeSentenceTest extends BaseTest {
         Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         practiceWordSetFragment.init();
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         Sentence displayedSentenceForFirstWord = newSentenceEM.getSentence();
         Word2Tokens displayedWordForFirstWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         List<Sentence> allSentencesForFirstWord = sentencesWereFoundForChangeEM.getSentences();
         List<Sentence> alreadyPickedSentencesForFirstWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
         assertEquals(allSentencesForFirstWord.size(), alreadyPickedSentencesForFirstWord.size());
@@ -386,18 +407,18 @@ public class ChangeSentenceTest extends BaseTest {
         alreadyPickedSentencesForFirstWord = newArrayList(allSentencesForFirstWord.get(0), allSentencesForFirstWord.get(2), allSentencesForFirstWord.get(6));
         practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForFirstWord, displayedWordForFirstWord));
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentenceForFirstWord = newSentenceEM.getSentence();
         displayedWordForFirstWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         alreadyPickedSentencesForFirstWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
 
         when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -405,12 +426,12 @@ public class ChangeSentenceTest extends BaseTest {
 
         // finished the first word for the first cycle
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         Sentence displayedSentenceForSecondWord = newSentenceEM.getSentence();
         Word2Tokens displayedWordForSecondWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         List<Sentence> allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
         List<Sentence> alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
         assertEquals(allSentencesForSecondWord.size(), alreadyPickedSentencesForSecondWord.size());
@@ -418,18 +439,18 @@ public class ChangeSentenceTest extends BaseTest {
         alreadyPickedSentencesForSecondWord = newArrayList(allSentencesForSecondWord.get(0), allSentencesForSecondWord.get(6));
         practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForSecondWord, displayedWordForSecondWord));
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentenceForSecondWord = newSentenceEM.getSentence();
         displayedWordForSecondWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
 
         when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -437,7 +458,7 @@ public class ChangeSentenceTest extends BaseTest {
 
         // finished the second word for the first cycle
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         assertEquals(displayedSentenceForFirstWord, newSentenceEM.getSentence());
         assertEquals(displayedWordForFirstWord, newSentenceEM.getWord());
 
@@ -446,7 +467,7 @@ public class ChangeSentenceTest extends BaseTest {
         //
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForFirstWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         assertEquals(allSentencesForFirstWord, sentencesWereFoundForChangeEM.getSentences());
 
         assertEquals(alreadyPickedSentencesForFirstWord, sentencesWereFoundForChangeEM.getAlreadyPickedSentences());
@@ -456,7 +477,7 @@ public class ChangeSentenceTest extends BaseTest {
         when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -464,12 +485,12 @@ public class ChangeSentenceTest extends BaseTest {
 
         // finished the first word for the second cycle
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         assertEquals(displayedSentenceForSecondWord, newSentenceEM.getSentence());
         assertEquals(displayedWordForSecondWord, newSentenceEM.getWord());
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         assertEquals(allSentencesForSecondWord, sentencesWereFoundForChangeEM.getSentences());
 
         assertEquals(alreadyPickedSentencesForSecondWord, sentencesWereFoundForChangeEM.getAlreadyPickedSentences());
@@ -477,26 +498,26 @@ public class ChangeSentenceTest extends BaseTest {
         assertEquals(2, sentencesWereFoundForChangeEM.getAlreadyPickedSentences().size());
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
         alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
 
         alreadyPickedSentencesForSecondWord = newArrayList(allSentencesForSecondWord.get(0), allSentencesForSecondWord.get(2), allSentencesForSecondWord.get(6));
         practiceWordSetFragment.onMessageEvent(new SentenceWasPickedForChangeEM(alreadyPickedSentencesForSecondWord, displayedWordForSecondWord));
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         displayedSentenceForSecondWord = newSentenceEM.getSentence();
         displayedWordForSecondWord = newSentenceEM.getWord();
 
         practiceWordSetFragment.onMessageEvent(new ChangeSentenceOptionPickedEM(displayedWordForSecondWord));
-        sentencesWereFoundForChangeEM = getEM(SentencesWereFoundForChangeEM.class, eventBus, 1);
+        sentencesWereFoundForChangeEM = testHelper.getEM(SentencesWereFoundForChangeEM.class, 1);
         allSentencesForSecondWord = sentencesWereFoundForChangeEM.getSentences();
         alreadyPickedSentencesForSecondWord = sentencesWereFoundForChangeEM.getAlreadyPickedSentences();
 
         when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -512,10 +533,10 @@ public class ChangeSentenceTest extends BaseTest {
         practiceWordSetFragment.init();
 
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 2);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 2);
         while (!displayedWordForFirstWord.equals(newSentenceEM.getWord())) {
             practiceWordSetFragment.onNextButtonClick();
-            newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+            newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         }
         assertNotEquals(displayedSentenceForFirstWord, newSentenceEM.getSentence());
         assertEquals(alreadyPickedSentencesForFirstWord.get(1), newSentenceEM.getSentence());
@@ -524,13 +545,13 @@ public class ChangeSentenceTest extends BaseTest {
         when(answerTextMock.getText()).thenReturn(displayedSentenceForFirstWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
         practiceWordSetFragment.onNextButtonClick();
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus, 1);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class, 1);
         assertNotEquals(displayedSentenceForSecondWord, newSentenceEM.getSentence());
         assertEquals(alreadyPickedSentencesForSecondWord.get(1), newSentenceEM.getSentence());
 
@@ -538,7 +559,7 @@ public class ChangeSentenceTest extends BaseTest {
         when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(1, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
@@ -547,7 +568,7 @@ public class ChangeSentenceTest extends BaseTest {
 
         practiceWordSetFragment.onCloseButtonClick();
 
-        WordSetPracticeFinishedEM wordSetPracticeFinishedEM = getEM(WordSetPracticeFinishedEM.class, eventBus, 1);
+        WordSetPracticeFinishedEM wordSetPracticeFinishedEM = testHelper.getEM(WordSetPracticeFinishedEM.class, 1);
         assertNotNull(wordSetPracticeFinishedEM);
 
         //
@@ -559,23 +580,23 @@ public class ChangeSentenceTest extends BaseTest {
         reset(eventBus);
         practiceWordSetFragment.init();
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class);
         displayedSentenceForSecondWord = newSentenceEM.getSentence();
         when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(2, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);
         practiceWordSetFragment.onNextButtonClick();
 
-        newSentenceEM = getEM(NewSentenceEM.class, eventBus);
+        newSentenceEM = testHelper.getEM(NewSentenceEM.class);
         displayedSentenceForSecondWord = newSentenceEM.getSentence();
         when(answerTextMock.getText()).thenReturn(displayedSentenceForSecondWord.getText());
         reset(eventBus);
         practiceWordSetFragment.onCheckAnswerButtonClick();
-        expUpdatedEM = getEM(UserExpUpdatedEM.class, eventBus);
+        expUpdatedEM = testHelper.getEM(UserExpUpdatedEM.class);
         assertNotNull(expUpdatedEM);
         assertEquals(2, expUpdatedEM.getNewExpScore(), 0);
         reset(eventBus);

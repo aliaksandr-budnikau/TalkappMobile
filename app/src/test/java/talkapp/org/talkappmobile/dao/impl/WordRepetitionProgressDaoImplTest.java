@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
@@ -50,16 +50,18 @@ public class WordRepetitionProgressDaoImplTest {
 
     private DatabaseHelper databaseHelper;
     private WordRepetitionProgressDao exerciseDao;
+    private DaoHelper daoHelper;
 
     @Before
     public void setUp() throws Exception {
-        databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
+        daoHelper = new DaoHelper();
+        databaseHelper = daoHelper.getDatabaseHelper();
+        exerciseDao = daoHelper.getWordRepetitionProgressDao();
     }
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test

@@ -8,22 +8,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.BuildConfig;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -40,14 +39,14 @@ public class WordRepetitionProgressServiceImplIntegTest {
     private WordRepetitionProgressServiceImpl service;
     private WordRepetitionProgressDao exerciseDao;
     private ObjectMapper mapper;
+    private DaoHelper daoHelper;
 
     @Before
     public void setUp() throws Exception {
-
-        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+        daoHelper = new DaoHelper();
         SentenceDao sentenceDao = mock(SentenceDao.class);
         WordSetDao wordSetDao = mock(WordSetDao.class);
-        exerciseDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
+        exerciseDao = daoHelper.getWordRepetitionProgressDao();
         mapper = new ObjectMapper();
         service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
 
@@ -71,7 +70,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test

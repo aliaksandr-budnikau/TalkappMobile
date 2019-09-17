@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,6 +10,8 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
@@ -61,6 +62,7 @@ public class DataServerImplIntegTest {
     private DataServer server;
     private ObjectMapper mapper = new ObjectMapper();
     private WordSetDao wordSetDao;
+    private DaoHelper daoHelper;
 
     @Before
     public void init() throws SQLException {
@@ -71,8 +73,8 @@ public class DataServerImplIntegTest {
         requestExecutor = mock(RequestExecutor.class);
         logger = mock(Logger.class);
 
-        DatabaseHelper databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+        daoHelper = new DaoHelper();
+        wordSetDao = daoHelper.getWordSetDao();
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
@@ -86,7 +88,7 @@ public class DataServerImplIntegTest {
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test

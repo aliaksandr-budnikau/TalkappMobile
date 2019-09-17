@@ -4,18 +4,20 @@ import android.database.Cursor;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 
 import java.sql.SQLException;
+
+import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;
@@ -36,18 +38,20 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class WordSetDaoImplTest {
 
-    private DatabaseHelper databaseHelper;
     private WordSetDao experienceDao;
+    private DaoHelper daoHelper;
+    private DatabaseHelper databaseHelper;
 
     @Before
     public void setup() throws SQLException {
-        databaseHelper = OpenHelperManager.getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-        experienceDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+        daoHelper = new DaoHelper();
+        databaseHelper = daoHelper.getDatabaseHelper();
+        experienceDao = daoHelper.getWordSetDao();
     }
 
-    @Before
+    @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test

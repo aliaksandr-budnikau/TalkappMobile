@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -17,6 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.dao.TopicDao;
@@ -58,14 +58,16 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
     private WordSetMapper mapper;
     private WordSetService wordSetService;
     private EventBus eventBus;
+    private DaoHelper daoHelper;
 
     @Before
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
+        daoHelper = new DaoHelper();
         WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(getWordSetDao(), mock(TopicDao.class), getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
-        wordSetService = new WordSetServiceImpl(getWordSetDao(), getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
+        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -244,7 +246,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(new Integer(4964), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -332,7 +334,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
 
         // already saved first set
-        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -347,7 +349,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
 
         // already saved second set
-        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince() + 1));
+        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince() + 1));
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
 
@@ -465,7 +467,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         assertEquals(new Integer(7900), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
         assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -496,6 +498,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 }

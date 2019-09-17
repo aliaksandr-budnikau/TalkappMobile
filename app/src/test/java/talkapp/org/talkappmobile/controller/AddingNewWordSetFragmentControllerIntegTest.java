@@ -15,7 +15,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.activity.BaseTest;
+import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.ServiceHelper;
+import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
@@ -30,20 +32,26 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
-public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
+public class AddingNewWordSetFragmentControllerIntegTest {
 
     private EventBus eventBus;
     private AddingNewWordSetFragmentController controller;
+    private TestHelper testHelper;
+    private DaoHelper daoHelper;
+    private ServiceHelper serviceHelper;
 
     @Before
     public void setUp() throws Exception {
-        eventBus = getEventBus();
-        controller = new AddingNewWordSetFragmentController(eventBus, getServiceFactoryBean());
+        testHelper = new TestHelper();
+        eventBus = testHelper.getEventBusMock();
+        daoHelper = new DaoHelper();
+        serviceHelper = new ServiceHelper(daoHelper);
+        controller = new AddingNewWordSetFragmentController(eventBus, serviceHelper.getServiceFactoryBean());
     }
 
     @After
     public void tearDown() {
-        OpenHelperManager.releaseHelper();
+        daoHelper.releaseHelper();
     }
 
     @Test
@@ -52,7 +60,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -61,14 +69,14 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
-        WordSetService wordSetService = getServiceFactoryBean().getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
         wordSetService.save(new NewWordSetDraft(Collections.<String>emptyList()));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -79,14 +87,14 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith1Word() throws SQLException {
         String house = "house";
 
-        WordSetService wordSetService = getServiceFactoryBean().getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
         wordSetService.save(new NewWordSetDraft(singletonList(house)));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -106,7 +114,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -126,7 +134,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -149,7 +157,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
@@ -177,7 +185,7 @@ public class AddingNewWordSetFragmentControllerIntegTest extends BaseTest {
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
 
         // then
-        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = getEM(NewWordSetDraftLoadedEM.class);
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
