@@ -8,12 +8,10 @@ import android.widget.TextView;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.IgnoreWhen;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
@@ -25,9 +23,8 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
+import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
 import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
@@ -38,20 +35,22 @@ import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static java.util.Arrays.asList;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
-public class AddingNewWordSetFragment extends Fragment implements AddingNewWordSetFragmentView, View.OnFocusChangeListener {
-    @Bean
-    PresenterFactory presenterFactory;
+public class AddingNewWordSetFragment extends Fragment implements View.OnFocusChangeListener {
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
     @ViewById(R.id.word1)
     TextView word1;
     @ViewById(R.id.word2)
@@ -95,8 +94,6 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
 
     private List<TextView> allTextViews;
 
-    private AddingNewWordSetPresenter presenter;
-
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private AddingNewWordSetFragmentController controller;
 
@@ -108,8 +105,7 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
         for (TextView textView : allTextViews) {
             textView.setOnFocusChangeListener(this);
         }
-        presenter = presenterFactory.create(this, eventBus);
-        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
+        controller = new AddingNewWordSetFragmentController(eventBus, backendServerFactory.get(), serviceFactory);
         eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
     }
 
@@ -177,9 +173,13 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
     }
 
     @Click(R.id.buttonSubmit)
-    @Background
     public void onButtonSubmitClick() {
-        presenter.submit(getWords());
+        try {
+            waitingForProgressBarManager.showProgressBar();
+            eventBus.post(new AddNewWordSetButtonSubmitClickedEM(getWords()));
+        } finally {
+            waitingForProgressBarManager.hideProgressBar();
+        }
     }
 
     private List<String> getWords() {
@@ -197,18 +197,6 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
                 word11.getText().toString(),
                 word12.getText().toString()
         );
-    }
-
-    @Override
-    @UiThread
-    public void showPleaseWaitProgressBar() {
-        waitingForProgressBarManager.showProgressBar();
-    }
-
-    @Override
-    @UiThread
-    public void hidePleaseWaitProgressBar() {
-        waitingForProgressBarManager.hideProgressBar();
     }
 
     private void startWordSetActivity(WordSet wordSet) {
@@ -238,6 +226,11 @@ public class AddingNewWordSetFragment extends Fragment implements AddingNewWordS
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(NewWordSetDraftWasChangedEM event) {
+        controller.handle(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(AddNewWordSetButtonSubmitClickedEM event) {
         controller.handle(event);
     }
 }

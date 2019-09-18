@@ -17,10 +17,13 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
-import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
+import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
 import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
@@ -52,12 +55,14 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
-public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
-    private AddingNewWordSetPresenter presenter;
-    private AddingNewWordSetFragmentView view;
+public class AddingNewWordSetPresenterAndInteractorIntegTest {
     private WordSetMapper mapper;
     private WordSetService wordSetService;
     private EventBus eventBus;
+    private AddingNewWordSetFragmentController controller;
+    private WordSetDao wordSetDaoMock;
+    private SentenceDao sentenceDaoMock;
+    private NewWordSetDraftDao newWordSetDraftDaoMock;
     private DaoHelper daoHelper;
 
     @Before
@@ -65,28 +70,32 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
         daoHelper = new DaoHelper();
+        wordSetDaoMock = daoHelper.getWordSetDao();
+        sentenceDaoMock = daoHelper.getSentenceDao();
         WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
+        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
+        newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao);
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao);
         eventBus = mock(EventBus.class);
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(server, wordSetService, wordTranslationService, eventBus);
-        view = mock(AddingNewWordSetFragmentView.class);
-        presenter = new AddingNewWordSetPresenter(view, interactor);
+        controller = new AddingNewWordSetFragmentController(eventBus, server, mockServiceFactoryBean);
     }
 
     @Test
     public void submit_empty12() {
-        presenter.submit(asList("", "", "", "", "", "", "", "", "", "", "", ""));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("", "", "", "", "", "", "", "", "", "", "", "")));
 
         verify(eventBus).post(new NewWordIsEmptyEM(0));
         verify(eventBus).post(new NewWordIsEmptyEM(1));
@@ -110,7 +119,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
     @Test
     public void submit_spaces12() {
-        presenter.submit(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " ")));
 
         verify(eventBus).post(new NewWordIsEmptyEM(0));
         verify(eventBus).post(new NewWordIsEmptyEM(1));
@@ -134,7 +143,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
     @Test
     public void submit_noSentencesForAnyWord() {
-        presenter.submit(asList("  sdfds ", "  dsfss", " fdf3  ", "fdsfa3  ", "  dsfdf ", "   sdfsf ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232"));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  sdfds ", "  dsfss", " fdf3  ", "fdsfa3  ", "  dsfdf ", "   sdfsf ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232")));
 
         verify(eventBus).post(new NewWordSentencesWereNotFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereNotFoundEM(1));
@@ -158,7 +167,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
     @Test
     public void submit_noSentencesForFewWord() {
-        presenter.submit(asList("  house ", "  dsfss", " door  ", "fdsfa3  ", "  dsfdf ", "   cool ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232"));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  house ", "  dsfss", " door  ", "fdsfa3  ", "  dsfdf ", "   cool ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232")));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
@@ -196,7 +205,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word8 = "fork";
         String word9 = "pillow";
         String word10 = "fog";
-        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ")));
 
         verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
@@ -282,7 +291,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word1 = "fox";
         String word2 = "door";
 
-        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
 
         verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
@@ -304,7 +313,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
         assertEquals(new Integer(1656), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
-        reset(view);
         reset(eventBus);
 
 
@@ -312,7 +320,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word3 = "earthly";
         String word4 = "book";
 
-        presenter.submit(asList("  " + word3 + " ", "  " + word4));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word3 + " ", "  " + word4)));
 
         verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
@@ -330,8 +338,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
         assertEquals(new Integer(10088), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince() + 1, wordSet.getId());
-        reset(view);
-
 
         // already saved first set
         wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
@@ -345,8 +351,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
         assertEquals(new Integer(1656), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
-        reset(view);
-
 
         // already saved second set
         wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince() + 1));
@@ -358,7 +362,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
 
         assertEquals(new Integer(10088), wordSet.getTop());
         assertEquals(wordSetService.getCustomWordSetsStartsSince() + 1, wordSet.getId());
-        reset(view);
     }
 
     private <T> T getClass(ArgumentCaptor<T> wordSetCaptor, Class<T> clazz) {
@@ -377,7 +380,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word1 = "fox";
         String word2 = "house";
 
-        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
@@ -393,7 +396,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word1 = "house";
         String word2 = "house";
 
-        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
@@ -417,7 +420,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest extends PresenterAn
         String word8 = "in fact|по факту, фактически, на самом деле, по сути";
         String word9 = "pillow";
         String word10 = "fog";
-        presenter.submit(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ")));
 
         verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
         verify(eventBus).post(new NewWordSentencesWereFoundEM(1));

@@ -4,20 +4,16 @@ import android.content.Context;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
-import org.greenrobot.eventbus.EventBus;
 
-import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetFragmentView;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
@@ -71,11 +67,6 @@ public class PresenterFactory {
             interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, wordsCombinator, context, audioStuffFactory);
         }
         return new PracticeWordSetPresenter(interactor, viewStrategy);
-    }
-
-    public AddingNewWordSetPresenter create(AddingNewWordSetFragmentView view, EventBus eventBus) {
-        AddingNewWordSetInteractor interactor = new AddingNewWordSetInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), eventBus);
-        return new AddingNewWordSetPresenter(view, interactor);
     }
 
     public PracticeWordSetVocabularyPresenter create(WordSet wordSet, PracticeWordSetVocabularyView view) {

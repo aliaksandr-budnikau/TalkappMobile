@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -29,12 +30,13 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class AddingNewWordSetFragmentControllerIntegTest {
 
-    private EventBus eventBus;
+    private EventBus eventBusMock;
     private AddingNewWordSetFragmentController controller;
     private TestHelper testHelper;
     private DaoHelper daoHelper;
@@ -43,10 +45,10 @@ public class AddingNewWordSetFragmentControllerIntegTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        eventBus = testHelper.getEventBusMock();
+        eventBusMock = testHelper.getEventBusMock();
         daoHelper = new DaoHelper();
         serviceHelper = new ServiceHelper(daoHelper);
-        controller = new AddingNewWordSetFragmentController(eventBus, serviceHelper.getServiceFactoryBean());
+        controller = new AddingNewWordSetFragmentController(eventBusMock, mock(DataServer.class), serviceHelper.getServiceFactoryBean());
     }
 
     @After
