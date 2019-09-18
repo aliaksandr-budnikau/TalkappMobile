@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.controller;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Before;
@@ -82,7 +80,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(1, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
     }
 
     @Test
@@ -125,6 +123,26 @@ public class AddingNewWordSetFragmentControllerIntegTest {
     }
 
     @Test
+    public void testHandleAddingNewWordSetFragmentReadyEM_WhenWeHaveCommasBug() {
+        LinkedList<String> words = new LinkedList<>();
+        words.add("Well, how is on duty today.| Хорошо, кто дежурный.");
+        words.add("Well, how is on duty today.| Хорошо, кто дежурный.");
+
+
+        // when
+        controller.handle(new NewWordSetDraftWasChangedEM(words));
+        controller.handle(new AddingNewWordSetFragmentGotReadyEM());
+
+        // then
+        NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
+        assertNotNull(newWordSetDraftLoadedEM);
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(2, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+    }
+
+    @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith12EmptyWords() {
         LinkedList<String> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
@@ -140,7 +158,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
     }
 
     @Test
@@ -163,8 +181,8 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(6, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words.subList(0, 6), newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
     }
 
     @Test
@@ -191,7 +209,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(3, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words.subList(0, 3), newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
     }
 }

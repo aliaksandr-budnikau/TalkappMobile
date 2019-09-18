@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.service.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
@@ -15,17 +16,16 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.join;
-
 public class WordSetMapper {
-    public static final String SEPARATOR = ",";
+    public static final int MAX_LENGTH_OF_ONE_ROW = 250;
     public final CollectionType LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE;
+    public final CollectionType LINKED_LIST_OF_STRINGS_JAVA_TYPE;
     private final ObjectMapper mapper;
 
     public WordSetMapper(ObjectMapper mapper) {
         this.mapper = mapper;
         LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
+        LINKED_LIST_OF_STRINGS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, String.class);
     }
 
     public WordSetMapping toMapping(WordSet wordSet) {
@@ -63,20 +63,29 @@ public class WordSetMapper {
     }
 
     public NewWordSetDraft toDto(NewWordSetDraftMapping mapping) {
-        String[] words = mapping.getWords().split(",");
-        return new NewWordSetDraft(asList(words));
+        List<String> words;
+        try {
+            words = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_STRINGS_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return new NewWordSetDraft(words);
     }
 
     public NewWordSetDraftMapping toMapping(NewWordSetDraft draft) {
         List<String> words = new ArrayList<>(draft.getWords());
         for (int i = 0; i < words.size(); i++) {
-            String fixedWord = words.get(i).replaceAll(SEPARATOR, " ");
-            String result = fixedWord.length() > 31 ? fixedWord.substring(0, 31) : fixedWord;
+            String word = words.get(i);
+            String result = word.length() > MAX_LENGTH_OF_ONE_ROW ? word.substring(0, MAX_LENGTH_OF_ONE_ROW) : word;
             words.set(i, result);
         }
         NewWordSetDraftMapping mapping = new NewWordSetDraftMapping();
         mapping.setId(1);
-        mapping.setWords(join(draft.getWords(), SEPARATOR));
+        try {
+            mapping.setWords(mapper.writeValueAsString(words));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return mapping;
     }
 }
