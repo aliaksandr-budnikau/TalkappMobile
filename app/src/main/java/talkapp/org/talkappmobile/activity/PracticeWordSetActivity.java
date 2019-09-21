@@ -1,6 +1,8 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.content.DialogInterface;
+import android.support.annotation.Nullable;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
@@ -13,6 +15,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,6 +41,8 @@ public class PracticeWordSetActivity extends BaseActivity {
 
     @ViewById(R.id.container)
     ViewPager viewPager;
+    @ViewById(R.id.pagerTabStrip)
+    PagerTabStrip pagerTabStrip;
 
     @Extra(TOPIC_MAPPING)
     Topic topic;
@@ -46,12 +51,28 @@ public class PracticeWordSetActivity extends BaseActivity {
     @Extra(REPETITION_MODE_MAPPING)
     boolean repetitionMode;
 
+    @StringRes(R.string.activity_practice_word_set_tab_title_vocabulary)
+    String vocabularyTabTitle;
+    @StringRes(R.string.activity_practice_word_set_tab_title_practice)
+    String practiceTabTitle;
+
     @AfterViews
     public void init() {
         if (topic != null) {
             setTitle(topic.getName());
         }
-        PracticeWordSetPagerAdapter sectionsPagerAdapter = new PracticeWordSetPagerAdapter(getSupportFragmentManager(), wordSet, repetitionMode);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.colorPrimaryLighter);
+        PracticeWordSetPagerAdapter sectionsPagerAdapter = new PracticeWordSetPagerAdapter(getSupportFragmentManager(), wordSet, repetitionMode) {
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                if (position == 0) {
+                    return vocabularyTabTitle;
+                } else {
+                    return practiceTabTitle;
+                }
+            }
+        };
 
         viewPager.setAdapter(sectionsPagerAdapter);
     }

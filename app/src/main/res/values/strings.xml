@@ -63,4 +63,7 @@
     <string name="menu_exercises">Exercises</string>
     <string name="menu_exercises_learn_words">Learn</string>
     <string name="menu_exercises_repetitions">Repeat</string>
+
+    <string name="activity_practice_word_set_tab_title_vocabulary">VOCABULARY</string>
+    <string name="activity_practice_word_set_tab_title_practice">PRACTICE</string>
 </resources>

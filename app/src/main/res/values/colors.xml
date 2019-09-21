@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FF32A4F6</color>
     <color name="colorPrimaryDark">#FF32A4F6</color>
     <color name="colorPrimaryLight">#FF3DAEFF</color>
+    <color name="colorPrimaryLighter">#2F3DAEFF</color>
     <color name="colorEmptyBackground">#ececec</color>
     <color name="colorPanelBackground">#ffffff</color>
     <color name="color.word_set_vocabulary_item.word">#272e35</color>
