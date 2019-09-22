@@ -4,37 +4,25 @@ import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
+import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordWithTranslation;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
-import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class AddingNewWordSetFragmentController {
@@ -72,27 +60,16 @@ public class AddingNewWordSetFragmentController {
             return;
         }
 
-        if (anyHasNoSentences(normalizedWords)) {
-            return;
-        }
-
         List<WordTranslation> translations = new LinkedList<>();
         for (NewWordWithTranslation normalizedWord : normalizedWords) {
             WordTranslation result;
             if (isEmpty(normalizedWord.getTranslation())) {
                 result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedWord.getWord());
                 if (result == null) {
-                    eventBus.post(new NewWordTranslationWasNotFoundEM(normalizedWords.indexOf(normalizedWord)));
                     continue;
                 }
             } else {
-                WordTranslation translation = new WordTranslation();
-                translation.setLanguage(RUSSIAN_LANGUAGE);
-                translation.setTranslation(normalizedWord.getTranslation());
-                translation.setWord(normalizedWord.getWord());
-                translation.setTokens(normalizedWord.getWord());
-                wordTranslationService.saveWordTranslations(asList(translation));
-                result = translation;
+                result = wordTranslationService.findByWordAndLanguage(normalizedWord.getWord(), RUSSIAN_LANGUAGE);
             }
             translations.add(result);
         }
@@ -116,63 +93,12 @@ public class AddingNewWordSetFragmentController {
         return hasDuplicates;
     }
 
-    private boolean anyHasNoSentences(List<NewWordWithTranslation> words) {
-        boolean anyHasNoSentences = false;
-        for (int i = 0; i < words.size(); i++) {
-            NewWordWithTranslation wordWithTranslation = words.get(i);
-            String word = wordWithTranslation.getWord();
-            Word2Tokens tokens = new Word2Tokens(word, word, 0);
-            List<Sentence> sentences;
-            if (isEmpty(wordWithTranslation.getTranslation())) {
-                try {
-                    sentences = server.findSentencesByWords(tokens, WORDS_NUMBER, 0);
-                } catch (LocalCacheIsEmptyException e) {
-                    server.initLocalCacheOfAllSentencesForThisWord(word, WORDS_NUMBER);
-                    try {
-                        sentences = server.findSentencesByWords(tokens, WORDS_NUMBER, 0);
-                    } catch (LocalCacheIsEmptyException ne) {
-                        sentences = emptyList();
-                    }
-                }
-            } else {
-                Sentence sentence = new Sentence();
-                sentence.setId(valueOf(System.currentTimeMillis()));
-                sentence.setTokens(getTextTokens(wordWithTranslation));
-                HashMap<String, String> translations = new HashMap<>();
-                translations.put("russian", wordWithTranslation.getTranslation());
-                sentence.setTranslations(translations);
-                sentence.setText(wordWithTranslation.getWord());
-                sentences = singletonList(sentence);
-                server.initLocalCacheOfAllSentencesForThisWord(word, sentences, WORDS_NUMBER);
-            }
-            if (sentences.isEmpty()) {
-                anyHasNoSentences = true;
-                eventBus.post(new NewWordSentencesWereNotFoundEM(i));
-            } else {
-                eventBus.post(new NewWordSentencesWereFoundEM(i));
-            }
-        }
-        return anyHasNoSentences;
-    }
-
-    @NonNull
-    private LinkedList<TextToken> getTextTokens(NewWordWithTranslation wordWithTranslation) {
-        LinkedList<TextToken> textTokens = new LinkedList<>();
-        TextToken textToken = new TextToken();
-        textToken.setToken(wordWithTranslation.getWord());
-        textToken.setStartOffset(0);
-        textToken.setEndOffset(wordWithTranslation.getWord().length());
-        textToken.setPosition(0);
-        textTokens.add(textToken);
-        return textTokens;
-    }
-
     private boolean isAnyEmpty(List<NewWordWithTranslation> words) {
         boolean anyEmpty = false;
         for (int i = 0; i < words.size(); i++) {
             if (isEmpty(words.get(i).getWord())) {
                 anyEmpty = true;
-                eventBus.post(new NewWordIsEmptyEM(i));
+                eventBus.post(new SomeWordIsEmptyEM());
             }
         }
         return anyEmpty;
@@ -184,8 +110,8 @@ public class AddingNewWordSetFragmentController {
             String[] wordAndTranslation = input.split("\\|");
             String word, translation;
             if (wordAndTranslation.length == 2) {
-                word = wordAndTranslation[0].trim().toLowerCase();
-                translation = wordAndTranslation[1].trim().toLowerCase();
+                word = wordAndTranslation[0].trim();
+                translation = wordAndTranslation[1].trim();
             } else if (wordAndTranslation.length == 1) {
                 word = wordAndTranslation[0].trim().toLowerCase();
                 translation = null;

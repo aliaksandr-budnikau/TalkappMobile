@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -27,13 +28,10 @@ import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
+import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -83,14 +81,10 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     @EventBusGreenRobot
     EventBus eventBus;
 
-    @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
-    String warningTranslationNotFound;
-    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
-    String warningEmptyField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_fields)
+    String warningEmptyFields;
     @StringRes(R.string.adding_new_word_set_fragment_warning_duplicate_field)
     String warningDuplicateField;
-    @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
-    String warningSentencesNotFound;
 
     private List<TextView> allTextViews;
 
@@ -123,33 +117,14 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
-        TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError(warningTranslationNotFound);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordIsEmptyEM event) {
-        TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError(warningEmptyField);
+    public void onMessageEvent(SomeWordIsEmptyEM event) {
+        Toast.makeText(getActivity(), warningEmptyFields, Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordIsDuplicateEM event) {
         TextView textView = allTextViews.get(event.getWordIndex());
         textView.setError(warningDuplicateField);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
-        TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError(warningSentencesNotFound);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
-        TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError(null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

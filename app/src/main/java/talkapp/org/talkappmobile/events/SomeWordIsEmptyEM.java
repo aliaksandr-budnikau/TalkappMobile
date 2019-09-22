@@ -1,4 +1,4 @@
 package talkapp.org.talkappmobile.events;
 
-public class NewWordIsEmptyEM {
+public class SomeWordIsEmptyEM {
 }

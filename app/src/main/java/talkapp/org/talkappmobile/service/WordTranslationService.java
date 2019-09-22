@@ -6,4 +6,6 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface WordTranslationService {
     void saveWordTranslations(final List<WordTranslation> wordTranslations);
+
+    WordTranslation findByWordAndLanguage(String word, String language);
 }

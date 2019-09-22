@@ -50,6 +50,7 @@
     <string name="adding_new_word_set_fragment_button_save">Сохранить</string>
     <string name="adding_new_word_set_fragment_warning_translation_not_found">Нет перевода!</string>
     <string name="adding_new_word_set_fragment_warning_empty_field">Не может быть пустым!</string>
+    <string name="adding_new_word_set_fragment_warning_empty_fields">Не может быть пустых полей!</string>
     <string name="adding_new_word_set_fragment_warning_duplicate_field">Дубликат в наборе!</string>
     <string name="adding_new_word_set_fragment_warning_sentences_not_found">Нет предложений!</string>
 

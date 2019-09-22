@@ -50,6 +50,7 @@
     <string name="adding_new_word_set_fragment_button_save">Save</string>
     <string name="adding_new_word_set_fragment_warning_translation_not_found">No translation!</string>
     <string name="adding_new_word_set_fragment_warning_empty_field">Cannot be empty!</string>
+    <string name="adding_new_word_set_fragment_warning_empty_fields">Empty fields are not allowed!</string>
     <string name="adding_new_word_set_fragment_warning_duplicate_field">Duplicate field!</string>
     <string name="adding_new_word_set_fragment_warning_sentences_not_found">No sentences!</string>
 

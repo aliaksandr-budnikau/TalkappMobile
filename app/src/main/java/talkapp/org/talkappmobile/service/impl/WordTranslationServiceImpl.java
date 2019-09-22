@@ -24,6 +24,24 @@ public class WordTranslationServiceImpl implements WordTranslationService {
         wordTranslationDao.save(mappings);
     }
 
+    @Override
+    public WordTranslation findByWordAndLanguage(String word, String language) {
+        WordTranslationMapping translationMapping = wordTranslationDao.findByWordAndByLanguage(word, language);
+        if (translationMapping == null) {
+            return null;
+        }
+        return toDto(translationMapping);
+    }
+
+    private WordTranslation toDto(WordTranslationMapping mapping) {
+        WordTranslation dto = new WordTranslation();
+        dto.setWord(mapping.getWord());
+        dto.setTranslation(mapping.getTranslation());
+        dto.setLanguage(mapping.getLanguage());
+        dto.setTop(mapping.getTop());
+        return dto;
+    }
+
     private WordTranslationMapping toMapping(WordTranslation translation) {
         WordTranslationMapping mapping = new WordTranslationMapping();
         mapping.setWord(translation.getWord() + "_" + translation.getLanguage());
