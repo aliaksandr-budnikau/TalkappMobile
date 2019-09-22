@@ -8,7 +8,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -29,6 +28,7 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -38,9 +38,11 @@ import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -61,9 +63,11 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.text.TextUtils.isEmpty;
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -72,6 +76,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -109,12 +114,15 @@ public class CapitalLetterInNewWordTest {
     private ServiceFactoryBean serviceFactoryBeanMock;
     private DaoHelper daoHelper;
     private ServiceHelper serviceHelper;
+    private WordTranslationMapper wordTranslationMapper;
+    private PhraseTranslationInputTextViewController dialogInputTextViewController;
 
     @Before
     public void setup() throws SQLException {
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         wordSetMapper = new WordSetMapper(mapper);
+        wordTranslationMapper = new WordTranslationMapper(mapper);
         daoHelper = new DaoHelper();
         serviceHelper = new ServiceHelper(daoHelper);
         wordTranslationDaoMock = daoHelper.getWordTranslationDao();
@@ -135,16 +143,20 @@ public class CapitalLetterInNewWordTest {
         exerciseService = new WordRepetitionProgressServiceImpl(wordRepetitionProgressDaoMock, wordSetDaoMock, sentenceDaoMock, mapper);
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
+
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
         wordSetService = new WordSetServiceImpl(wordSetDaoMock, newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(wordTranslationDaoMock));
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(wordTranslationDaoMock, wordTranslationMapper));
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+
+        dialogInputTextViewController = new PhraseTranslationInputTextViewController(eventBusMock, server, mockServiceFactoryBean);
+
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
         Whitebox.setInternalState(presenterFactory, "serviceFactory", mockServiceFactoryBean);
@@ -263,6 +275,21 @@ public class CapitalLetterInNewWordTest {
         when(word10.getText()).thenReturn(words.get(9).getWord());
         when(word11.getText()).thenReturn(words.get(10).getWord());
         when(word12.getText()).thenReturn(words.get(11).getWord());
+
+        for (Word2Tokens word : words) {
+            String[] split = word.getWord().split("\\|");
+            if (split.length != 2) {
+                dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(split[0].trim(), null));
+                continue;
+            }
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
+            wordTranslation.setTranslation(split[1].trim());
+            wordTranslation.setWord(split[0].trim());
+            wordTranslation.setTokens(split[0].trim());
+            wordTranslationDaoMock.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
+            dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(split[0].trim(), split[1].trim()));
+        }
 
         reset(eventBusMock);
         try {

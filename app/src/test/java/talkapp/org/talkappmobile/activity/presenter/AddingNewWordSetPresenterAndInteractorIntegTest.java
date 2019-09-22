@@ -18,10 +18,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
-import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
@@ -30,7 +27,9 @@ import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
+import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -42,6 +41,7 @@ import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -52,6 +52,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -60,29 +61,26 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     private WordSetService wordSetService;
     private EventBus eventBus;
     private AddingNewWordSetFragmentController controller;
-    private WordSetDao wordSetDaoMock;
-    private SentenceDao sentenceDaoMock;
-    private NewWordSetDraftDao newWordSetDraftDaoMock;
     private DaoHelper daoHelper;
+    private WordTranslationDao wordTranslationDao;
+    private WordTranslationMapper wordTranslationMapper;
 
     @Before
     public void setUp() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
+        this.wordTranslationMapper = new WordTranslationMapper(mapper);
         daoHelper = new DaoHelper();
-        wordSetDaoMock = daoHelper.getWordSetDao();
-        sentenceDaoMock = daoHelper.getSentenceDao();
-        WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
+        wordTranslationDao = daoHelper.getWordTranslationDao();
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
-        newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mock(WordSetExperienceUtils.class), this.mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao, wordTranslationMapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -97,18 +95,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     public void submit_empty12() {
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("", "", "", "", "", "", "", "", "", "", "", "")));
 
-        verify(eventBus).post(new NewWordIsEmptyEM(0));
-        verify(eventBus).post(new NewWordIsEmptyEM(1));
-        verify(eventBus).post(new NewWordIsEmptyEM(2));
-        verify(eventBus).post(new NewWordIsEmptyEM(3));
-        verify(eventBus).post(new NewWordIsEmptyEM(4));
-        verify(eventBus).post(new NewWordIsEmptyEM(5));
-        verify(eventBus).post(new NewWordIsEmptyEM(6));
-        verify(eventBus).post(new NewWordIsEmptyEM(7));
-        verify(eventBus).post(new NewWordIsEmptyEM(8));
-        verify(eventBus).post(new NewWordIsEmptyEM(9));
-        verify(eventBus).post(new NewWordIsEmptyEM(10));
-        verify(eventBus).post(new NewWordIsEmptyEM(11));
+        verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
@@ -121,72 +108,10 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     public void submit_spaces12() {
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " ")));
 
-        verify(eventBus).post(new NewWordIsEmptyEM(0));
-        verify(eventBus).post(new NewWordIsEmptyEM(1));
-        verify(eventBus).post(new NewWordIsEmptyEM(2));
-        verify(eventBus).post(new NewWordIsEmptyEM(3));
-        verify(eventBus).post(new NewWordIsEmptyEM(4));
-        verify(eventBus).post(new NewWordIsEmptyEM(5));
-        verify(eventBus).post(new NewWordIsEmptyEM(6));
-        verify(eventBus).post(new NewWordIsEmptyEM(7));
-        verify(eventBus).post(new NewWordIsEmptyEM(8));
-        verify(eventBus).post(new NewWordIsEmptyEM(9));
-        verify(eventBus).post(new NewWordIsEmptyEM(10));
-        verify(eventBus).post(new NewWordIsEmptyEM(11));
+        verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-    }
-
-    @Test
-    public void submit_noSentencesForAnyWord() {
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  sdfds ", "  dsfss", " fdf3  ", "fdsfa3  ", "  dsfdf ", "   sdfsf ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232")));
-
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(1));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(2));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(3));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(4));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(5));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(6));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(7));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(8));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(9));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(10));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(11));
-
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-    }
-
-    @Test
-    public void submit_noSentencesForFewWord() {
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  house ", "  dsfss", " door  ", "fdsfa3  ", "  dsfdf ", "   cool ", " sfsd4s   ", "  sfdfs  ", " fsdf2  ", "  fsdfs  ", "  fsdf ", " 232")));
-
-        verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(1));
-        verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM(2));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(2));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(3));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(4));
-        verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM(5));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(5));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(6));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(7));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(8));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(9));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(10));
-        verify(eventBus).post(new NewWordSentencesWereNotFoundEM(11));
-
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(3)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -207,25 +132,25 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word10 = "fog";
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ")));
 
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(2));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(3));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(4));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(5));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(6));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(7));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(8));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(9));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(10));
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(11)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(12)).post(wordSetCaptor.capture());
+        verify(eventBus, times(1)).post(wordSetCaptor.capture());
 
         WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word0, wordSet.getWords().get(0).getWord());
@@ -293,15 +218,13 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
 
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(2));
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(3)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(4)).post(wordSetCaptor.capture());
+        verify(eventBus, times(1)).post(wordSetCaptor.capture());
         WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
@@ -322,13 +245,12 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word3 + " ", "  " + word4)));
 
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(2)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(3)).post(wordSetCaptor.capture());
+        verify(eventBus, times(1)).post(wordSetCaptor.capture());
         wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
@@ -420,27 +342,30 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word8 = "in fact|по факту, фактически, на самом деле, по сути";
         String word9 = "pillow";
         String word10 = "fog";
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ")));
+        List<String> words = asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ");
+        for (String word : words) {
+            String[] split = word.split("\\|");
+            if (split.length != 2) {
+                continue;
+            }
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
+            wordTranslation.setTranslation(split[1].trim());
+            wordTranslation.setWord(split[0].trim());
+            wordTranslation.setTokens(split[0].trim());
+            wordTranslationDao.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
+        }
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));
 
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(0));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(1));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(2));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(3));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(4));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(5));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(6));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(7));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(8));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(9));
-        verify(eventBus).post(new NewWordSentencesWereFoundEM(10));
+        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(11)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(12)).post(wordSetCaptor.capture());
+        verify(eventBus, times(1)).post(wordSetCaptor.capture());
 
         WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());

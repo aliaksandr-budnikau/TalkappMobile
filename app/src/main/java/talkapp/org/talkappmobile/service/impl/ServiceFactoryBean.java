@@ -43,6 +43,7 @@ import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {
@@ -64,6 +65,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private UserExpService userExpService;
     private WordSetMapper wordSetMapper;
     private ExpAuditMapper expAuditMapper;
+    private WordTranslationMapper wordTranslationMapper;
     private LocalDataService localDataService;
     private WordTranslationService wordTranslationService;
     private ExpAuditDao expAuditDao;
@@ -107,7 +109,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordTranslationService != null) {
             return wordTranslationService;
         }
-        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao());
+        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao(), getWordTranslationMapper());
         return wordTranslationService;
     }
 
@@ -118,6 +120,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         wordSetMapper = new WordSetMapper(MAPPER);
         return wordSetMapper;
+    }
+
+    @Override
+    public WordTranslationMapper getWordTranslationMapper() {
+        if (wordTranslationMapper != null) {
+            return wordTranslationMapper;
+        }
+        wordTranslationMapper = new WordTranslationMapper(MAPPER);
+        return wordTranslationMapper;
     }
 
     @Override

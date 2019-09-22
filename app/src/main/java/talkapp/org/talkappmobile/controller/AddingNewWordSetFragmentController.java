@@ -94,14 +94,13 @@ public class AddingNewWordSetFragmentController {
     }
 
     private boolean isAnyEmpty(List<NewWordWithTranslation> words) {
-        boolean anyEmpty = false;
         for (int i = 0; i < words.size(); i++) {
             if (isEmpty(words.get(i).getWord())) {
-                anyEmpty = true;
                 eventBus.post(new SomeWordIsEmptyEM());
+                return true;
             }
         }
-        return anyEmpty;
+        return false;
     }
 
     private List<NewWordWithTranslation> normalizeAll(List<String> inputs) {

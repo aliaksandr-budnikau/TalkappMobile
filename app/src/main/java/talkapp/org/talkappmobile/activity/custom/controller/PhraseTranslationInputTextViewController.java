@@ -32,7 +32,7 @@ import static java.util.Collections.singletonList;
 
 public class PhraseTranslationInputTextViewController {
     private static final int WORDS_NUMBER = 6;
-    private static final String RUSSIAN_LANGUAGE = "russian";
+    public static final String RUSSIAN_LANGUAGE = "russian";
     private final EventBus eventBus;
     private final DataServer server;
     private final WordTranslationService wordTranslationService;

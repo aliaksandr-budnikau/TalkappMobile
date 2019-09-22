@@ -7,19 +7,22 @@ import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordTranslationService;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 public class WordTranslationServiceImpl implements WordTranslationService {
     private final WordTranslationDao wordTranslationDao;
+    private final WordTranslationMapper mapper;
 
-    public WordTranslationServiceImpl(WordTranslationDao wordTranslationDao) {
+    public WordTranslationServiceImpl(WordTranslationDao wordTranslationDao, WordTranslationMapper mapper) {
         this.wordTranslationDao = wordTranslationDao;
+        this.mapper = mapper;
     }
 
     @Override
     public void saveWordTranslations(List<WordTranslation> wordTranslations) {
         List<WordTranslationMapping> mappings = new LinkedList<>();
         for (WordTranslation wordTranslation : wordTranslations) {
-            mappings.add(toMapping(wordTranslation));
+            mappings.add(mapper.toMapping(wordTranslation));
         }
         wordTranslationDao.save(mappings);
     }
@@ -30,24 +33,6 @@ public class WordTranslationServiceImpl implements WordTranslationService {
         if (translationMapping == null) {
             return null;
         }
-        return toDto(translationMapping);
-    }
-
-    private WordTranslation toDto(WordTranslationMapping mapping) {
-        WordTranslation dto = new WordTranslation();
-        dto.setWord(mapping.getWord());
-        dto.setTranslation(mapping.getTranslation());
-        dto.setLanguage(mapping.getLanguage());
-        dto.setTop(mapping.getTop());
-        return dto;
-    }
-
-    private WordTranslationMapping toMapping(WordTranslation translation) {
-        WordTranslationMapping mapping = new WordTranslationMapping();
-        mapping.setWord(translation.getWord() + "_" + translation.getLanguage());
-        mapping.setTranslation(translation.getTranslation());
-        mapping.setLanguage(translation.getLanguage());
-        mapping.setTop(translation.getTop());
-        return mapping;
+        return mapper.toDto(translationMapping);
     }
 }
