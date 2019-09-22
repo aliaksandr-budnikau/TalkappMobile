@@ -67,4 +67,12 @@
 
     <string name="activity_practice_word_set_tab_title_vocabulary">СЛОВАРЬ</string>
     <string name="activity_practice_word_set_tab_title_practice">ПРАКТИКА</string>
+
+    <string name="phrase_translation_input_text_view_popup_title">Добавьте фразу с переводом</string>
+    <string name="phrase_translation_input_text_view_popup_phrase_label">Фраза обязательна</string>
+    <string name="phrase_translation_input_text_view_popup_translation_label">Перевод необязателен</string>
+    <string name="phrase_translation_input_text_view_popup_phrase_hint">Фраза на английском</string>
+    <string name="phrase_translation_input_text_view_popup_translation_hint">Перевод</string>
+    <string name="phrase_translation_input_text_view_popup_button_ok">Ok</string>
+    <string name="phrase_translation_input_text_view_popup_button_cancel">Отмена</string>
 </resources>
