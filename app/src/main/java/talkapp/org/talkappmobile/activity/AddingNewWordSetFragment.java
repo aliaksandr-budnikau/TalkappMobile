@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
@@ -19,11 +18,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
@@ -32,13 +33,14 @@ import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
+import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
-import static java.util.Arrays.asList;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
@@ -49,30 +51,8 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     ServiceFactory serviceFactory;
     @Bean(BackendServerFactoryBean.class)
     BackendServerFactory backendServerFactory;
-    @ViewById(R.id.word1)
-    TextView word1;
-    @ViewById(R.id.word2)
-    TextView word2;
-    @ViewById(R.id.word3)
-    TextView word3;
-    @ViewById(R.id.word4)
-    TextView word4;
-    @ViewById(R.id.word5)
-    TextView word5;
-    @ViewById(R.id.word6)
-    TextView word6;
-    @ViewById(R.id.word7)
-    TextView word7;
-    @ViewById(R.id.word8)
-    TextView word8;
-    @ViewById(R.id.word9)
-    TextView word9;
-    @ViewById(R.id.word10)
-    TextView word10;
-    @ViewById(R.id.word11)
-    TextView word11;
-    @ViewById(R.id.word12)
-    TextView word12;
+    @ViewById(R.id.wordSetVocabularyView)
+    WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
     View pleaseWaitProgressBar;
     @ViewById(R.id.mainForm)
@@ -86,18 +66,16 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     @StringRes(R.string.adding_new_word_set_fragment_warning_duplicate_field)
     String warningDuplicateField;
 
-    private List<TextView> allTextViews;
-
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private AddingNewWordSetFragmentController controller;
 
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
-        allTextViews = asList(word1, word2, word3, word4, word5, word6, word7, word8, word9, word10, word11, word12);
 
-        for (TextView textView : allTextViews) {
-            textView.setOnFocusChangeListener(this);
+        for (int i = 0; i < 12; i++) {
+            /*View child = wordSetVocabularyView.getChildAt(i);
+            child.setOnFocusChangeListener(this);*/
         }
         controller = new AddingNewWordSetFragmentController(eventBus, backendServerFactory.get(), serviceFactory);
         eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
@@ -111,9 +89,21 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordSetDraftLoadedEM event) {
         List<String> words = event.getNewWordSetDraft().getWords();
+        WordTranslation[] wordTranslations = new WordTranslation[words.size()];
         for (int i = 0; i < words.size(); i++) {
-            allTextViews.get(i).setText(words.get(i));
+            String[] split = words.get(i).split("\\|");
+            if (split.length != 2) {
+                WordTranslation translation = new WordTranslation();
+                translation.setWord(split[0]);
+                wordTranslations[i] = translation;
+            } else {
+                WordTranslation translation = new WordTranslation();
+                translation.setWord(split[0]);
+                translation.setTranslation(split[1]);
+                wordTranslations[i] = translation;
+            }
         }
+        eventBus.post(new WordSetVocabularyLoadedEM(wordTranslations));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -123,25 +113,19 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordIsDuplicateEM event) {
-        TextView textView = allTextViews.get(event.getWordIndex());
-        textView.setError(warningDuplicateField);
+        Toast.makeText(getActivity(), warningDuplicateField, Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordSuccessfullySubmittedEM event) {
-        word1.setText("");
-        word2.setText("");
-        word3.setText("");
-        word4.setText("");
-        word5.setText("");
-        word6.setText("");
-        word7.setText("");
-        word8.setText("");
-        word9.setText("");
-        word10.setText("");
-        word11.setText("");
-        word12.setText("");
-
+        LinkedList<WordTranslation> emptyTranslations = new LinkedList<>();
+        for (int i = 0; i < 12; i++) {
+            WordTranslation translation = new WordTranslation();
+            translation.setWord("Word # " + (i + 1));
+            emptyTranslations.add(translation);
+        }
+        WordTranslation[] translations = emptyTranslations.toArray(new WordTranslation[0]);
+        eventBus.post(new WordSetVocabularyLoadedEM(translations));
         eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
 
         startWordSetActivity(event.getWordSet());
@@ -158,20 +142,12 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     }
 
     private List<String> getWords() {
-        return asList(
-                word1.getText().toString(),
-                word2.getText().toString(),
-                word3.getText().toString(),
-                word4.getText().toString(),
-                word5.getText().toString(),
-                word6.getText().toString(),
-                word7.getText().toString(),
-                word8.getText().toString(),
-                word9.getText().toString(),
-                word10.getText().toString(),
-                word11.getText().toString(),
-                word12.getText().toString()
-        );
+        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
+        LinkedList<String> words = new LinkedList<>();
+        for (WordTranslation wordTranslation : vocabulary) {
+            words.add(wordTranslation.getWord() + "|" + wordTranslation.getTranslation());
+        }
+        return words;
     }
 
     private void startWordSetActivity(WordSet wordSet) {

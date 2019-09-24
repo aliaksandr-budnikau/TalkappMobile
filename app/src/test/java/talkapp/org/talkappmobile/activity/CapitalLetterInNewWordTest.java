@@ -28,6 +28,7 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController;
 import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
@@ -91,18 +92,6 @@ public class CapitalLetterInNewWordTest {
     private PracticeWordSetFragment practiceWordSetFragment;
     private AddingNewWordSetFragment addingNewWordSetFragment;
     private PracticeWordSetVocabularyFragment practiceWordSetVocabularyFragment;
-    private TextView word1;
-    private TextView word2;
-    private TextView word3;
-    private TextView word4;
-    private TextView word5;
-    private TextView word6;
-    private TextView word7;
-    private TextView word8;
-    private TextView word9;
-    private TextView word10;
-    private TextView word11;
-    private TextView word12;
     private WordSetMapper wordSetMapper;
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
@@ -118,6 +107,7 @@ public class CapitalLetterInNewWordTest {
     private ServiceHelper serviceHelper;
     private WordTranslationMapper wordTranslationMapper;
     private PhraseTranslationInputTextViewController dialogInputTextViewController;
+    private WordSetVocabularyView wordSetVocabularyView;
 
     @Before
     public void setup() throws SQLException {
@@ -201,30 +191,8 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(addingNewWordSetFragment, "backendServerFactory", backendServerFactoryMock);
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "mainForm", mock(View.class));
-        word1 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word1", word1);
-        word2 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word2", word2);
-        word3 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word3", word3);
-        word4 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word4", word4);
-        word5 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word5", word5);
-        word6 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word6", word6);
-        word7 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word7", word7);
-        word8 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word8", word8);
-        word9 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word9", word9);
-        word10 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word10", word10);
-        word11 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word11", word11);
-        word12 = mock(TextView.class);
-        Whitebox.setInternalState(addingNewWordSetFragment, "word12", word12);
+        wordSetVocabularyView = mock(WordSetVocabularyView.class);
+        Whitebox.setInternalState(addingNewWordSetFragment, "wordSetVocabularyView", wordSetVocabularyView);
 
 
         practiceWordSetVocabularyFragment = new PracticeWordSetVocabularyFragment();
@@ -265,18 +233,20 @@ public class CapitalLetterInNewWordTest {
         wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", phrasalVerb + "|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
         List<Word2Tokens> words = wordSet.getWords();
-        when(word1.getText()).thenReturn(words.get(0).getWord());
-        when(word2.getText()).thenReturn(words.get(1).getWord());
-        when(word3.getText()).thenReturn(words.get(2).getWord());
-        when(word4.getText()).thenReturn(words.get(3).getWord());
-        when(word5.getText()).thenReturn(words.get(4).getWord());
-        when(word6.getText()).thenReturn(words.get(5).getWord());
-        when(word7.getText()).thenReturn(words.get(6).getWord());
-        when(word8.getText()).thenReturn(words.get(7).getWord());
-        when(word9.getText()).thenReturn(words.get(8).getWord());
-        when(word10.getText()).thenReturn(words.get(9).getWord());
-        when(word11.getText()).thenReturn(words.get(10).getWord());
-        when(word12.getText()).thenReturn(words.get(11).getWord());
+        List<WordTranslation> translations = new LinkedList<>();
+        for (Word2Tokens word : words) {
+            WordTranslation translation = new WordTranslation();
+            String[] split = word.getWord().split("\\|");
+            if (split.length == 1) {
+                translation.setWord(split[0]);
+                translation.setTranslation("");
+            } else {
+                translation.setWord(split[0]);
+                translation.setTranslation(split[1]);
+            }
+            translations.add(translation);
+        }
+        when(wordSetVocabularyView.getVocabulary()).thenReturn(translations);
 
         for (Word2Tokens word : words) {
             String[] split = word.getWord().split("\\|");

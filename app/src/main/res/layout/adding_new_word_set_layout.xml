@@ -27,130 +27,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word1"
+            <talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView_
+                android:id="@+id/wordSetVocabularyView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="15"
-                android:hint="Word # 1"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word1"
-                android:ems="15"
-                android:hint="Word # 2"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word2"
-                android:ems="15"
-                android:hint="Word # 3"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word3"
-                android:ems="15"
-                android:hint="Word # 4"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word4"
-                android:ems="15"
-                android:hint="Word # 5"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word5"
-                android:ems="15"
-                android:hint="Word # 6"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word6"
-                android:ems="15"
-                android:hint="Word # 7"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word7"
-                android:ems="15"
-                android:hint="Word # 8"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word8"
-                android:ems="15"
-                android:hint="Word # 9"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word9"
-                android:ems="15"
-                android:hint="Word # 10"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word10"
-                android:ems="15"
-                android:hint="Word # 11"
-                android:inputType="text"
-                android:textSize="23sp" />
-
-            <talkapp.org.talkappmobile.activity.custom.PhraseTranslationInputTextView_
-                android:id="@+id/word12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/word11"
-                android:ems="15"
-                android:hint="Word # 12"
-                android:inputType="text"
-                android:textSize="23sp" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/buttonSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/word12"
+                android:layout_below="@id/wordSetVocabularyView"
                 android:text="@string/adding_new_word_set_fragment_button_save" />
         </RelativeLayout>
     </ScrollView>

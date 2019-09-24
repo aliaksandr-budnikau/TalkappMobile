@@ -25,9 +25,15 @@ public class TestHelper {
     }
 
     private <T> T getValue(Class<T> clazz, EventBus eventBus, VerificationMode mode) {
+        return getValue(clazz, eventBus, mode, true);
+    }
+
+    private <T> T getValue(Class<T> clazz, EventBus eventBus, VerificationMode mode, boolean doReset) {
         ArgumentCaptor<T> captor = forClass(clazz);
         verify(eventBus, mode).post(captor.capture());
-        reset(eventBus);
+        if (doReset) {
+            reset(eventBus);
+        }
         List<T> allValues = captor.getAllValues();
         for (T arg : allValues) {
             if (arg.getClass().equals(clazz)) {
@@ -43,5 +49,9 @@ public class TestHelper {
 
     public <T> T getEM(Class<T> clazz, int times) {
         return getValue(clazz, eventBus, times(times));
+    }
+
+    public <T> T getEM(Class<T> clazz, boolean doReset) {
+        return getValue(clazz, eventBus, atLeastOnce(), doReset);
     }
 }

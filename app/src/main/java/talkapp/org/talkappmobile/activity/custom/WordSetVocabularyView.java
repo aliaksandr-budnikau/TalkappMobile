@@ -20,6 +20,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -78,6 +81,10 @@ public class WordSetVocabularyView extends RecyclerView {
         this.getAdapter().notifyDataSetChanged();
     }
 
+    public List<WordTranslation> getVocabulary() {
+        return ((VocabularyAdapter) this.getAdapter()).getTranslations();
+    }
+
     private static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
         private final WordTranslationExpandable[] translations;
 
@@ -102,6 +109,14 @@ public class WordSetVocabularyView extends RecyclerView {
         @Override
         public int getItemCount() {
             return translations.length;
+        }
+
+        public List<WordTranslation> getTranslations() {
+            LinkedList<WordTranslation> wordTranslations = new LinkedList<>();
+            for (WordTranslationExpandable translation : translations) {
+                wordTranslations.add(translation.getTranslation());
+            }
+            return wordTranslations;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
