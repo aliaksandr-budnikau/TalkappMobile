@@ -1,10 +1,13 @@
 package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -39,11 +43,39 @@ public class WordSetVocabularyView extends RecyclerView {
         setLayoutManager(layoutManager);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
         addItemDecoration(itemDecor);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull ViewHolder viewHolder, @NonNull ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull ViewHolder viewHolder, int swipeDir) {
+                VocabularyAdapter.ViewHolder holder = (VocabularyAdapter.ViewHolder) viewHolder;
+                if (swipeDir == ItemTouchHelper.RIGHT) {
+                    holder.getView().pronounceTranslation();
+                } else if (swipeDir == ItemTouchHelper.LEFT) {
+                    holder.getView().openEditDialog();
+                }
+                getAdapter().notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX / 4, dY, actionState, isCurrentlyActive);
+            }
+        }).attachToRecyclerView(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(WordSetVocabularyLoadedEM event) {
         this.setAdapter(new VocabularyAdapter(event.getTranslations()));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
+        this.getAdapter().notifyDataSetChanged();
     }
 
     private static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
@@ -92,6 +124,10 @@ public class WordSetVocabularyView extends RecyclerView {
                         notifyItemChanged(position);
                     }
                 });
+            }
+
+            public WordSetVocabularyItemView getView() {
+                return view;
             }
         }
     }

@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController;
+import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
 import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
@@ -37,7 +38,7 @@ import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EView
-public class PhraseTranslationInputTextView extends android.support.v7.widget.AppCompatTextView implements View.OnClickListener {
+public class PhraseTranslationInputTextView extends android.support.v7.widget.AppCompatTextView implements View.OnClickListener, WordSetVocabularyItemViewLocalEventBus {
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -79,7 +80,7 @@ public class PhraseTranslationInputTextView extends android.support.v7.widget.Ap
     @AfterInject
     public void init() {
         setOnClickListener(this);
-        controller = new PhraseTranslationInputTextViewController(eventBus, backendServerFactory.get(), serviceFactory);
+        controller = new PhraseTranslationInputTextViewController(eventBus, backendServerFactory.get(), serviceFactory, this);
     }
 
     @Override

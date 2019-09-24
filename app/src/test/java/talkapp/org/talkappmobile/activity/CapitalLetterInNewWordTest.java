@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController;
+import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -105,6 +106,7 @@ public class CapitalLetterInNewWordTest {
     private WordSetMapper wordSetMapper;
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
+    private WordSetVocabularyItemViewLocalEventBus localEventBusMock = mock(WordSetVocabularyItemViewLocalEventBus.class);
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
     private NewWordSetDraftDao newWordSetDraftDaoMock;
@@ -155,7 +157,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        dialogInputTextViewController = new PhraseTranslationInputTextViewController(eventBusMock, server, mockServiceFactoryBean);
+        dialogInputTextViewController = new PhraseTranslationInputTextViewController(eventBusMock, server, mockServiceFactoryBean, localEventBusMock);
 
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);

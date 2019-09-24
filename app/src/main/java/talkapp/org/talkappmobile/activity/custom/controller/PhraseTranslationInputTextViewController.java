@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
 import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
@@ -31,16 +32,19 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class PhraseTranslationInputTextViewController {
-    private static final int WORDS_NUMBER = 6;
     public static final String RUSSIAN_LANGUAGE = "russian";
+    private static final int WORDS_NUMBER = 6;
     private final EventBus eventBus;
     private final DataServer server;
     private final WordTranslationService wordTranslationService;
+    private final WordSetVocabularyItemViewLocalEventBus localEventBus;
 
-    public PhraseTranslationInputTextViewController(@NonNull EventBus eventBus, @NonNull DataServer server, @NonNull ServiceFactory factory) {
+    public PhraseTranslationInputTextViewController(@NonNull EventBus eventBus, @NonNull DataServer server,
+                                                    @NonNull ServiceFactory factory, @NonNull WordSetVocabularyItemViewLocalEventBus localEventBus) {
         this.eventBus = eventBus;
         this.server = server;
         this.wordTranslationService = factory.getWordTranslationService();
+        this.localEventBus = localEventBus;
     }
 
     public void handle(PhraseTranslationInputPopupOkClickedEM event) {
@@ -60,7 +64,7 @@ public class PhraseTranslationInputTextViewController {
         if (StringUtils.isEmpty(normalizedPhrase.getTranslation())) {
             result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedPhrase.getWord());
             if (result == null) {
-                eventBus.post(new NewWordTranslationWasNotFoundEM());
+                localEventBus.onMessageEvent(new NewWordTranslationWasNotFoundEM());
                 return;
             }
         } else {
@@ -71,7 +75,7 @@ public class PhraseTranslationInputTextViewController {
             wordTranslation.setTokens(normalizedPhrase.getWord());
             wordTranslationService.saveWordTranslations(asList(wordTranslation));
         }
-        eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM());
+        localEventBus.onMessageEvent(new PhraseTranslationInputWasValidatedSuccessfullyEM());
     }
 
     private NewWordWithTranslation normalizeAll(String phrase, String translation) {
@@ -83,7 +87,7 @@ public class PhraseTranslationInputTextViewController {
 
     private boolean isEmpty(NewWordWithTranslation phrase) {
         if (StringUtils.isEmpty(phrase.getWord())) {
-            eventBus.post(new NewWordIsEmptyEM());
+            localEventBus.onMessageEvent(new NewWordIsEmptyEM());
             return true;
         }
         return false;
@@ -118,9 +122,9 @@ public class PhraseTranslationInputTextViewController {
         }
         if (sentences.isEmpty()) {
             anyHasNoSentences = true;
-            eventBus.post(new NewWordSentencesWereNotFoundEM());
+            localEventBus.onMessageEvent(new NewWordSentencesWereNotFoundEM());
         } else {
-            eventBus.post(new NewWordSentencesWereFoundEM());
+            localEventBus.onMessageEvent(new NewWordSentencesWereFoundEM());
         }
         return anyHasNoSentences;
     }

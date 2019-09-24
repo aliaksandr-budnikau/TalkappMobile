@@ -16,6 +16,7 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
@@ -28,6 +29,7 @@ import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -60,6 +62,7 @@ public class PhraseTranslationInputTextViewControllerTest {
     private NewWordSetDraftDao newWordSetDraftDaoMock;
     private DaoHelper daoHelper;
     private WordTranslationMapper wordTranslationMapper;
+    private WordSetVocabularyItemViewLocalEventBus localEventBusMock = mock(WordSetVocabularyItemViewLocalEventBus.class);
 
     @Before
     public void setUp() throws Exception {
@@ -87,33 +90,33 @@ public class PhraseTranslationInputTextViewControllerTest {
         DataServer server = factory.get();
 
         eventBus = mock(EventBus.class);
-        controller = new PhraseTranslationInputTextViewController(eventBus, server, mockServiceFactoryBean);
+        controller = new PhraseTranslationInputTextViewController(eventBus, server, mockServiceFactoryBean, localEventBusMock);
     }
 
     @Test
     public void submit_noSentencesForAnyWord() {
         controller.handle(new PhraseTranslationInputPopupOkClickedEM("  sdfds ", null));
 
-        verify(eventBus).post(any(NewWordSentencesWereNotFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordIsEmptyEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @Test
     public void submit_noSentencesForFewWord() {
         controller.handle(new PhraseTranslationInputPopupOkClickedEM("  house ", null));
 
-        verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
+        verify(localEventBusMock, times(0)).onMessageEvent(new NewWordSentencesWereNotFoundEM());
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordIsEmptyEM.class));
+        verify(localEventBusMock, times(1)).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @Test
@@ -121,15 +124,15 @@ public class PhraseTranslationInputTextViewControllerTest {
         String word0 = "house";
         controller.handle(new PhraseTranslationInputPopupOkClickedEM("  " + word0 + " ", null));
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordIsEmptyEM.class));
+        verify(localEventBusMock, times(1)).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordTranslationWasNotFoundEM.class));
 
-        ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(2)).post(wordSetCaptor.capture());
+        ArgumentCaptor<PhraseTranslationInputWasValidatedSuccessfullyEM> wordSetCaptor = ArgumentCaptor.forClass(PhraseTranslationInputWasValidatedSuccessfullyEM.class);
+        verify(localEventBusMock, times(1)).onMessageEvent(wordSetCaptor.capture());
     }
 
 
@@ -139,12 +142,12 @@ public class PhraseTranslationInputTextViewControllerTest {
         String translation = "разглядеть, различить, разбирать";
         controller.handle(new PhraseTranslationInputPopupOkClickedEM("  " + word + " ", "  " + translation + " "));
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordIsEmptyEM.class));
+        verify(localEventBusMock, times(1)).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
+        verify(localEventBusMock, times(0)).onMessageEvent(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @After
