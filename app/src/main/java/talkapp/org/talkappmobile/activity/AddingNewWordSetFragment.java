@@ -32,6 +32,7 @@ import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -183,5 +184,10 @@ public class AddingNewWordSetFragment extends Fragment implements View.OnFocusCh
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(AddNewWordSetButtonSubmitClickedEM event) {
         controller.handle(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
+        eventBus.post(new NewWordSetDraftWasChangedEM(getWords()));
     }
 }
