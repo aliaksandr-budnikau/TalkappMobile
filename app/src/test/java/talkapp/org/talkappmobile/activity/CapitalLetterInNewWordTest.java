@@ -29,8 +29,7 @@ import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController;
-import talkapp.org.talkappmobile.activity.custom.event.WordSetVocabularyItemViewLocalEventBus;
+import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -78,7 +77,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -95,7 +94,6 @@ public class CapitalLetterInNewWordTest {
     private WordSetMapper wordSetMapper;
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
-    private WordSetVocabularyItemViewLocalEventBus localEventBusMock = mock(WordSetVocabularyItemViewLocalEventBus.class);
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
     private NewWordSetDraftDao newWordSetDraftDaoMock;
@@ -106,7 +104,7 @@ public class CapitalLetterInNewWordTest {
     private DaoHelper daoHelper;
     private ServiceHelper serviceHelper;
     private WordTranslationMapper wordTranslationMapper;
-    private PhraseTranslationInputTextViewController dialogInputTextViewController;
+    private WordSetVocabularyViewController dialogInputTextViewController;
     private WordSetVocabularyView wordSetVocabularyView;
 
     @Before
@@ -147,7 +145,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        dialogInputTextViewController = new PhraseTranslationInputTextViewController(eventBusMock, server, mockServiceFactoryBean, localEventBusMock);
+        dialogInputTextViewController = new WordSetVocabularyViewController(eventBusMock, server, mockServiceFactoryBean);
 
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
@@ -251,7 +249,7 @@ public class CapitalLetterInNewWordTest {
         for (Word2Tokens word : words) {
             String[] split = word.getWord().split("\\|");
             if (split.length != 2) {
-                dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(split[0].trim(), null));
+                dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(1, split[0].trim(), null));
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
@@ -260,7 +258,7 @@ public class CapitalLetterInNewWordTest {
             wordTranslation.setWord(split[0].trim());
             wordTranslation.setTokens(split[0].trim());
             wordTranslationDaoMock.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
-            dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(split[0].trim(), split[1].trim()));
+            dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(1, split[0].trim(), split[1].trim()));
         }
 
         reset(eventBusMock);

@@ -15,9 +15,7 @@ import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,15 +33,15 @@ public class AddingNewWordSetFragmentTest {
         addingNewWordSetFragment.onMessageEvent(new NewWordSuccessfullySubmittedEM(new WordSet()));
 
         WordSetVocabularyLoadedEM vocabularyLoadedEM = testHelper.getEM(WordSetVocabularyLoadedEM.class, false);
-        WordTranslation[] translations = vocabularyLoadedEM.getTranslations();
+        List<WordTranslation> translations = vocabularyLoadedEM.getTranslations();
         for (WordTranslation translation : translations) {
-            assertTrue(translation.getWord().startsWith("Word # "));
+            assertNull(translation.getWord());
             assertNull(translation.getTranslation());
         }
         NewWordSetDraftWasChangedEM draftWasChangedEM = testHelper.getEM(NewWordSetDraftWasChangedEM.class);
-        List<String> words = draftWasChangedEM.getWords();
-        for (String word : words) {
-            assertEquals("", word);
+        List<WordTranslation> words = draftWasChangedEM.getWordTranslations();
+        for (WordTranslation word : words) {
+            assertNull(word);
         }
     }
 }

@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-
         android:background="@color/colorPanelBackground"
+        android:paddingLeft="10dp"
+
+        android:paddingRight="10dp"
         android:textColor="@color/color.word_set_vocabulary_item.word"
         android:textSize="13pt" />
 
@@ -20,11 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:layout_below="@id/word"
+        android:background="@color/colorPanelBackground"
+        android:hint="@string/phrase_translation_input_word_text_view_hint"
+
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:layout_below="@id/word"
-
-        android:background="@color/colorPanelBackground"
         android:textColor="@color/color.word_set_vocabulary_item.translation"
         android:textSize="7pt" />
 

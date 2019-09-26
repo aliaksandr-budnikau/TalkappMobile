@@ -20,6 +20,7 @@ import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 
@@ -63,14 +64,14 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertTrue(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().isEmpty());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertTrue(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().isEmpty());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
         WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
-        wordSetService.save(new NewWordSetDraft(Collections.<String>emptyList()));
+        wordSetService.save(new NewWordSetDraft(Collections.<WordTranslation>emptyList()));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
@@ -79,16 +80,17 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith1Word() throws SQLException {
-        String house = "house";
+        WordTranslation wordTranslation = new WordTranslation();
+        wordTranslation.setWord("house");
 
         WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
-        wordSetService.save(new NewWordSetDraft(singletonList(house)));
+        wordSetService.save(new NewWordSetDraft(singletonList(wordTranslation)));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
@@ -97,16 +99,19 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(1, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(house, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().get(0));
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(1, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(wordTranslation, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().get(0));
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith12Words() {
-        LinkedList<String> words = new LinkedList<>();
+
+        LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
-            words.add("house" + i);
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setWord("house" + i);
+            words.add(wordTranslation);
         }
 
         // when
@@ -117,16 +122,20 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_WhenWeHaveCommasBug() {
-        LinkedList<String> words = new LinkedList<>();
-        words.add("Well, how is on duty today.| Хорошо, кто дежурный.");
-        words.add("Well, how is on duty today.| Хорошо, кто дежурный.");
+        LinkedList<WordTranslation> words = new LinkedList<>();
+        WordTranslation wordTranslation1 = new WordTranslation();
+        wordTranslation1.setWord("Well, how is on duty today.| Хорошо, кто дежурный.");
+        words.add(wordTranslation1);
+        WordTranslation wordTranslation2 = new WordTranslation();
+        wordTranslation2.setWord("Well, how is on duty today.| Хорошо, кто дежурный.");
+        words.add(wordTranslation2);
 
 
         // when
@@ -137,16 +146,18 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(2, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(2, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith12EmptyWords() {
-        LinkedList<String> words = new LinkedList<>();
+        LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
-            words.add("");
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setWord("");
+            words.add(wordTranslation);
         }
 
         // when
@@ -157,19 +168,21 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith11EmptyWords() {
-        LinkedList<String> words = new LinkedList<>();
+        LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
+            WordTranslation wordTranslation = new WordTranslation();
             if (i == 5) {
-                words.add("fsdfs");
+                wordTranslation.setWord("fsdfs");
             } else {
-                words.add("");
+                wordTranslation.setWord("");
             }
+            words.add(wordTranslation);
         }
 
         // when
@@ -180,24 +193,26 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith10HasCommasAnd1Word() {
-        LinkedList<String> words = new LinkedList<>();
+        LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
+            WordTranslation wordTranslation = new WordTranslation();
             if (i == 5 || i == 8) {
-                words.add(",");
+                wordTranslation.setWord(",");
             } else {
                 if (i == 2) {
-                    words.add("sdffs");
+                    wordTranslation.setWord("sdffs");
                 } else {
-                    words.add("");
+                    wordTranslation.setWord("");
                 }
             }
+            words.add(wordTranslation);
         }
 
         // when
@@ -208,8 +223,8 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         NewWordSetDraftLoadedEM newWordSetDraftLoadedEM = testHelper.getEM(NewWordSetDraftLoadedEM.class);
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
-        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
-        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords().size());
-        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWords());
+        assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
     }
 }

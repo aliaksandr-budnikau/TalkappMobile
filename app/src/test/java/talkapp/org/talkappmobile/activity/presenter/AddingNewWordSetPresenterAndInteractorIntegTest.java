@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -13,6 +15,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
@@ -52,7 +55,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewController.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -93,7 +96,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
     @Test
     public void submit_empty12() {
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("", "", "", "", "", "", "", "", "", "", "", "")));
+        LinkedList<WordTranslation> wordTranslations = getWordTranslations(asList("", "", "", "", "", "", "", "", "", "", "", ""), false);
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(wordTranslations));
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
@@ -104,9 +108,41 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
+    @NonNull
+    private LinkedList<WordTranslation> getWordTranslations(List<String> strings, boolean setTranslation) {
+        LinkedList<WordTranslation> wordTranslations = new LinkedList<>();
+        for (String string : strings) {
+            WordTranslation input = new WordTranslation();
+            input.setWord(string);
+            if (setTranslation) {
+                input.setTranslation(string);
+            }
+            wordTranslations.add(input);
+        }
+        return wordTranslations;
+    }
+
+    @NonNull
+    private LinkedList<WordTranslation> getWordTranslations(List<String> strings) {
+        LinkedList<WordTranslation> wordTranslations = new LinkedList<>();
+        for (String string : strings) {
+            WordTranslation input = new WordTranslation();
+            String[] split = string.split("\\|");
+            if (split.length == 2) {
+                input.setWord(split[0]);
+                input.setTranslation(split[1]);
+            } else {
+                input.setWord(split[0]);
+            }
+            wordTranslations.add(input);
+        }
+        return wordTranslations;
+    }
+
     @Test
     public void submit_spaces12() {
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " ")));
+        LinkedList<WordTranslation> wordTranslations = getWordTranslations(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " "), false);
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(wordTranslations));
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
@@ -130,7 +166,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word8 = "fork";
         String word9 = "pillow";
         String word10 = "fog";
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ")));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false)));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
@@ -216,7 +252,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word1 = "fox";
         String word2 = "door";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
@@ -243,7 +279,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word3 = "earthly";
         String word4 = "book";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word3 + " ", "  " + word4)));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false)));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
@@ -302,7 +338,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word1 = "fox";
         String word2 = "house";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
@@ -318,7 +354,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word1 = "house";
         String word2 = "house";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ")));
+        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
@@ -342,17 +378,16 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word8 = "in fact|по факту, фактически, на самом деле, по сути";
         String word9 = "pillow";
         String word10 = "fog";
-        List<String> words = asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " ");
-        for (String word : words) {
-            String[] split = word.split("\\|");
-            if (split.length != 2) {
+        List<WordTranslation> words = getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "));
+        for (WordTranslation word : words) {
+            if (word.getTranslation() == null) {
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
             wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
-            wordTranslation.setTranslation(split[1].trim());
-            wordTranslation.setWord(split[0].trim());
-            wordTranslation.setTokens(split[0].trim());
+            wordTranslation.setTranslation(word.getTranslation().trim());
+            wordTranslation.setWord(word.getWord().trim());
+            wordTranslation.setTokens(word.getWord().trim());
             wordTranslationDao.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
         }
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));

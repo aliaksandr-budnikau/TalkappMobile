@@ -134,7 +134,7 @@ public class WordSetServiceImpl implements WordSetService {
     public NewWordSetDraft getNewWordSetDraft() {
         NewWordSetDraftMapping mapping = newWordSetDraftDao.getNewWordSetDraftById(1);
         if (mapping == null) {
-            return new NewWordSetDraft(Collections.<String>emptyList());
+            return new NewWordSetDraft(Collections.<WordTranslation>emptyList());
         }
         return wordSetMapper.toDto(mapping);
     }

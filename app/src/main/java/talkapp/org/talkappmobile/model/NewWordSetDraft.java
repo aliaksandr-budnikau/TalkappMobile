@@ -5,14 +5,14 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 public class NewWordSetDraft {
-    private final List<String> words;
+    private final List<WordTranslation> wordTranslations;
 
-    public NewWordSetDraft(List<String> words) {
-        this.words = words;
+    public NewWordSetDraft(List<WordTranslation> wordTranslations) {
+        this.wordTranslations = wordTranslations;
     }
 
     @NonNull
-    public List<String> getWords() {
-        return words;
+    public List<WordTranslation> getWordTranslations() {
+        return wordTranslations;
     }
 }

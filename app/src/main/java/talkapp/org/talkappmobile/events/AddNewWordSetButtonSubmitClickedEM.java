@@ -2,14 +2,16 @@ package talkapp.org.talkappmobile.events;
 
 import java.util.List;
 
-public class AddNewWordSetButtonSubmitClickedEM {
-    private final List<String> words;
+import talkapp.org.talkappmobile.model.WordTranslation;
 
-    public AddNewWordSetButtonSubmitClickedEM(List<String> words) {
-        this.words = words;
+public class AddNewWordSetButtonSubmitClickedEM {
+    private final List<WordTranslation> wordTranslations;
+
+    public AddNewWordSetButtonSubmitClickedEM(List<WordTranslation> wordTranslations) {
+        this.wordTranslations = wordTranslations;
     }
 
-    public List<String> getWords() {
-        return words;
+    public List<WordTranslation> getWordTranslations() {
+        return wordTranslations;
     }
 }

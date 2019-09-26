@@ -4,15 +4,17 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-public class NewWordSetDraftWasChangedEM {
-    private final List<String> words;
+import talkapp.org.talkappmobile.model.WordTranslation;
 
-    public NewWordSetDraftWasChangedEM(@NonNull List<String> words) {
-        this.words = words;
+public class NewWordSetDraftWasChangedEM {
+    private final List<WordTranslation> wordTranslations;
+
+    public NewWordSetDraftWasChangedEM(@NonNull List<WordTranslation> wordTranslations) {
+        this.wordTranslations = wordTranslations;
     }
 
     @NonNull
-    public List<String> getWords() {
-        return words;
+    public List<WordTranslation> getWordTranslations() {
+        return wordTranslations;
     }
 }

@@ -15,7 +15,6 @@ import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
-import talkapp.org.talkappmobile.model.NewWordWithTranslation;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -24,6 +23,7 @@ import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class AddingNewWordSetFragmentController {
 
@@ -47,12 +47,12 @@ public class AddingNewWordSetFragmentController {
     }
 
     public void handle(NewWordSetDraftWasChangedEM event) {
-        wordSetService.save(new NewWordSetDraft(event.getWords()));
+        wordSetService.save(new NewWordSetDraft(event.getWordTranslations()));
     }
 
     public void handle(AddNewWordSetButtonSubmitClickedEM event) {
-        List<String> words = event.getWords();
-        List<NewWordWithTranslation> normalizedWords = normalizeAll(words);
+        List<WordTranslation> words = event.getWordTranslations();
+        List<WordTranslation> normalizedWords = normalizeAll(words);
         if (isAnyEmpty(normalizedWords)) {
             return;
         }
@@ -61,7 +61,7 @@ public class AddingNewWordSetFragmentController {
         }
 
         List<WordTranslation> translations = new LinkedList<>();
-        for (NewWordWithTranslation normalizedWord : normalizedWords) {
+        for (WordTranslation normalizedWord : normalizedWords) {
             WordTranslation result;
             if (isEmpty(normalizedWord.getTranslation())) {
                 result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedWord.getWord());
@@ -81,10 +81,10 @@ public class AddingNewWordSetFragmentController {
         eventBus.post(new NewWordSuccessfullySubmittedEM(wordSet));
     }
 
-    private boolean hasDuplicates(List<NewWordWithTranslation> words) {
+    private boolean hasDuplicates(List<WordTranslation> words) {
         boolean hasDuplicates = false;
         for (int i = 0; i < words.size(); i++) {
-            NewWordWithTranslation word = words.get(i);
+            WordTranslation word = words.get(i);
             if (words.subList(0, i).contains(word)) {
                 hasDuplicates = true;
                 eventBus.post(new NewWordIsDuplicateEM(i));
@@ -93,7 +93,7 @@ public class AddingNewWordSetFragmentController {
         return hasDuplicates;
     }
 
-    private boolean isAnyEmpty(List<NewWordWithTranslation> words) {
+    private boolean isAnyEmpty(List<WordTranslation> words) {
         for (int i = 0; i < words.size(); i++) {
             if (isEmpty(words.get(i).getWord())) {
                 eventBus.post(new SomeWordIsEmptyEM());
@@ -103,23 +103,20 @@ public class AddingNewWordSetFragmentController {
         return false;
     }
 
-    private List<NewWordWithTranslation> normalizeAll(List<String> inputs) {
-        LinkedList<NewWordWithTranslation> words = new LinkedList<>();
-        for (String input : inputs) {
-            String[] wordAndTranslation = input.split("\\|");
-            String word, translation;
-            if (wordAndTranslation.length == 2) {
-                word = wordAndTranslation[0].trim();
-                translation = wordAndTranslation[1].trim();
-            } else if (wordAndTranslation.length == 1) {
-                word = wordAndTranslation[0].trim().toLowerCase();
-                translation = null;
+    private List<WordTranslation> normalizeAll(List<WordTranslation> inputs) {
+        for (WordTranslation input : inputs) {
+            if (isNotEmpty(input.getWord()) && isNotEmpty(input.getTranslation())) {
+                input.setTranslation(input.getTranslation().trim());
+                input.setWord(input.getWord().trim());
             } else {
-                word = input.trim().toLowerCase();
-                translation = null;
+                if (isEmpty(input.getWord())) {
+                    input.setWord(null);
+                } else {
+                    input.setWord(input.getWord().trim().toLowerCase());
+                }
+                input.setTranslation(null);
             }
-            words.add(new NewWordWithTranslation(word, translation));
         }
-        return words;
+        return inputs;
     }
 }

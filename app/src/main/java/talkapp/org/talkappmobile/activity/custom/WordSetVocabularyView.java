@@ -1,6 +1,8 @@
 package talkapp.org.talkappmobile.activity.custom;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,11 +13,17 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -23,14 +31,64 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
+import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
+import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
+import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.BackendServerFactory;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EView
 public class WordSetVocabularyView extends RecyclerView {
     @EventBusGreenRobot
     EventBus eventBus;
+
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
+    @Bean(BackendServerFactoryBean.class)
+    BackendServerFactory backendServerFactory;
+
+    @StringRes(R.string.phrase_translation_input_text_view_popup_title)
+    String popupTitle;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_label)
+    String popupPhraseLabel;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_translation_label)
+    String popupTranslationLabel;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_hint)
+    String popupPhraseHint;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_translation_hint)
+    String popupTranslationHint;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_button_ok)
+    String popupButtonOk;
+    @StringRes(R.string.phrase_translation_input_text_view_popup_button_cancel)
+    String popupButtonCancel;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
+    String warningEmptyField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
+    String warningTranslationNotFound;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
+    String warningSentencesNotFound;
+
+    private AlertDialog alertDialog;
+
+    private WordSetVocabularyViewController controller;
+    private EditText phraseBox;
+    private EditText translationBox;
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -42,6 +100,8 @@ public class WordSetVocabularyView extends RecyclerView {
 
     @AfterInject
     public void init() {
+        controller = new WordSetVocabularyViewController(eventBus, backendServerFactory.get(), serviceFactory);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(layoutManager);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
@@ -55,13 +115,14 @@ public class WordSetVocabularyView extends RecyclerView {
 
             @Override
             public void onSwiped(@NonNull ViewHolder viewHolder, int swipeDir) {
-                VocabularyAdapter.ViewHolder holder = (VocabularyAdapter.ViewHolder) viewHolder;
+                int adapterPosition = viewHolder.getAdapterPosition();
+                WordTranslation translation = getVocabulary().get(adapterPosition);
                 if (swipeDir == ItemTouchHelper.RIGHT) {
-                    holder.getView().pronounceTranslation();
+                    pronounceText(translation.getWord());
                 } else if (swipeDir == ItemTouchHelper.LEFT) {
-                    holder.getView().openEditDialog();
+                    openAlertDialog(translation, adapterPosition);
                 }
-                getAdapter().notifyDataSetChanged();
+                getAdapter().notifyItemChanged(adapterPosition);
             }
 
             @Override
@@ -73,7 +134,8 @@ public class WordSetVocabularyView extends RecyclerView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(WordSetVocabularyLoadedEM event) {
-        this.setAdapter(new VocabularyAdapter(event.getTranslations()));
+        WordTranslation[] translations = event.getTranslations().toArray(new WordTranslation[0]);
+        this.setAdapter(new VocabularyAdapter(translations));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -81,8 +143,113 @@ public class WordSetVocabularyView extends RecyclerView {
         this.getAdapter().notifyDataSetChanged();
     }
 
+    public void pronounceText(String text) {
+        try {
+            speaker.speak(text);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public void openAlertDialog(final WordTranslation wordTranslation, final int adapterPosition) {
+        Context context = this.getContext();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setTitle(popupTitle);
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final TextView messageForPhraseBox = new TextView(context);
+        messageForPhraseBox.setText(popupPhraseLabel);
+        layout.addView(messageForPhraseBox);
+
+        phraseBox = new EditText(context);
+        phraseBox.setHint(popupPhraseHint);
+        phraseBox.setText(isEmpty(wordTranslation.getWord()) ? "" : wordTranslation.getWord());
+        layout.addView(phraseBox);
+
+        final TextView messageForTranslationBox = new TextView(context);
+        messageForTranslationBox.setText(popupTranslationLabel);
+        layout.addView(messageForTranslationBox);
+
+        translationBox = new EditText(context);
+        translationBox.setHint(popupTranslationHint);
+        translationBox.setText(isEmpty(wordTranslation.getTranslation()) ? "" : wordTranslation.getTranslation());
+        layout.addView(translationBox); // Another add method
+
+        alertDialogBuilder.setView(layout); // Again this is a set method, not add
+        alertDialogBuilder.setPositiveButton(popupButtonOk, null);
+        alertDialogBuilder.setNegativeButton(popupButtonCancel, null);
+
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(adapterPosition, phraseBox.getText().toString(),
+                                translationBox.getText().toString()));
+                    }
+                });
+            }
+        });
+        alertDialog.show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
+        controller.handle(event);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordIsEmptyEM event) {
+        phraseBox.setError(warningEmptyField);
+        translationBox.setError(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
+        phraseBox.setError(null);
+        translationBox.setError(warningSentencesNotFound);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
+        phraseBox.setError(null);
+        translationBox.setError(warningTranslationNotFound);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
+        phraseBox.setError(null);
+        translationBox.setError(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
+        phraseBox.setError(null);
+        translationBox.setError(null);
+        WordTranslation translation = getVocabulary().get(event.getAdapterPosition());
+        translation.setWord(phraseBox.getText().toString());
+        translation.setTranslation(translationBox.getText().toString());
+        alertDialog.cancel();
+        alertDialog.dismiss();
+        alertDialog = null;
+        eventBus.post(new PhraseTranslationInputWasUpdatedEM());
+    }
+
     public List<WordTranslation> getVocabulary() {
         return ((VocabularyAdapter) this.getAdapter()).getTranslations();
+    }
+
+    public void resetVocabulary() {
+        List<WordTranslation> translations = ((VocabularyAdapter) this.getAdapter()).getTranslations();
+        for (WordTranslation translation : translations) {
+            translation.setWord("");
+            translation.setTranslation("");
+        }
     }
 
     private static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
@@ -129,8 +296,7 @@ public class WordSetVocabularyView extends RecyclerView {
             }
 
             void bind(final WordTranslationExpandable translation, final int position) {
-                view.setModel(translation.getTranslation());
-                view.refreshModel(translation.isExpanded());
+                view.refreshModel(translation.getTranslation(), translation.isExpanded());
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -76,4 +76,5 @@
     <string name="phrase_translation_input_text_view_popup_translation_hint">Перевод</string>
     <string name="phrase_translation_input_text_view_popup_button_ok">Ok</string>
     <string name="phrase_translation_input_text_view_popup_button_cancel">Отмена</string>
+    <string name="phrase_translation_input_word_text_view_hint">Свайпни влево, чтобы редактировать.</string>
 </resources>

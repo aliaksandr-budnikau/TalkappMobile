@@ -7,7 +7,7 @@ import talkapp.org.talkappmobile.activity.CapitalLetterInNewWordTest;
 import talkapp.org.talkappmobile.activity.ChangeSentenceTest;
 import talkapp.org.talkappmobile.activity.MainActivityTest;
 import talkapp.org.talkappmobile.activity.WordSetsListFragmentTest;
-import talkapp.org.talkappmobile.activity.custom.controller.PhraseTranslationInputTextViewControllerTest;
+import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewControllerTest;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorForExpressionsIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterAndInteractorIntegTest;
@@ -31,7 +31,7 @@ import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplI
         ChangeSentenceTest.class,
         DataServerImplIntegTest.class,
         MainActivityTest.class,
-        PhraseTranslationInputTextViewControllerTest.class,
+        WordSetVocabularyViewControllerTest.class,
         WordRepetitionProgressServiceImplIntegTest.class
 })
 @RunWith(Suite.class)

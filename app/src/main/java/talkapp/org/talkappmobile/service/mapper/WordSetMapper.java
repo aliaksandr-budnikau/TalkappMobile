@@ -15,6 +15,9 @@ import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.model.WordTranslation;
+
+import static java.util.Arrays.asList;
 
 public class WordSetMapper {
     public static final int MAX_LENGTH_OF_ONE_ROW = 250;
@@ -25,7 +28,7 @@ public class WordSetMapper {
     public WordSetMapper(ObjectMapper mapper) {
         this.mapper = mapper;
         LINKED_LIST_OF_WORD_2_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, Word2Tokens.class);
-        LINKED_LIST_OF_STRINGS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, String.class);
+        LINKED_LIST_OF_STRINGS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, WordAndTransaction.class);
     }
 
     public WordSetMapping toMapping(WordSet wordSet) {
@@ -63,29 +66,62 @@ public class WordSetMapper {
     }
 
     public NewWordSetDraft toDto(NewWordSetDraftMapping mapping) {
-        List<String> words;
+        List<WordAndTransaction> words;
         try {
             words = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_STRINGS_JAVA_TYPE);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            words = asList(new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(),
+                    new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(), new WordAndTransaction(),
+                    new WordAndTransaction(), new WordAndTransaction());
         }
-        return new NewWordSetDraft(words);
+        LinkedList<WordTranslation> result = new LinkedList<>();
+        for (WordAndTransaction word : words) {
+            WordTranslation translation = new WordTranslation();
+            translation.setWord(word.getWord());
+            translation.setTranslation(word.getTransaction());
+            result.add(translation);
+        }
+        return new NewWordSetDraft(result);
     }
 
     public NewWordSetDraftMapping toMapping(NewWordSetDraft draft) {
-        List<String> words = new ArrayList<>(draft.getWords());
-        for (int i = 0; i < words.size(); i++) {
-            String word = words.get(i);
-            String result = word.length() > MAX_LENGTH_OF_ONE_ROW ? word.substring(0, MAX_LENGTH_OF_ONE_ROW) : word;
-            words.set(i, result);
+        List<WordTranslation> wordTranslations = draft.getWordTranslations();
+        List<WordAndTransaction> result = new ArrayList<>();
+        for (int i = 0; i < wordTranslations.size(); i++) {
+            WordTranslation word = wordTranslations.get(i);
+            result.add(new WordAndTransaction(
+                    word.getWord() == null ? null : word.getWord().length() > MAX_LENGTH_OF_ONE_ROW ? word.getWord().substring(0, MAX_LENGTH_OF_ONE_ROW) : word.getWord(),
+                    word.getTranslation() == null ? null : word.getTranslation().length() > MAX_LENGTH_OF_ONE_ROW ? word.getTranslation().substring(0, MAX_LENGTH_OF_ONE_ROW) : word.getTranslation()
+            ));
         }
         NewWordSetDraftMapping mapping = new NewWordSetDraftMapping();
         mapping.setId(1);
         try {
-            mapping.setWords(mapper.writeValueAsString(words));
+            mapping.setWords(mapper.writeValueAsString(result));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         return mapping;
+    }
+
+    private static class WordAndTransaction {
+        private String word;
+        private String transaction;
+
+        public WordAndTransaction() {
+        }
+
+        public WordAndTransaction(String word, String transaction) {
+            this.word = word;
+            this.transaction = transaction;
+        }
+
+        public String getWord() {
+            return word;
+        }
+
+        public String getTransaction() {
+            return transaction;
+        }
     }
 }
