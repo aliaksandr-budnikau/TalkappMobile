@@ -11,8 +11,6 @@ import org.androidannotations.annotations.ViewById;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 @EViewGroup(R.layout.word_set_vocabulary_item)
 public class WordSetVocabularyItemView extends RelativeLayout {
     public static final int MIN_LINES = 2;
@@ -35,10 +33,8 @@ public class WordSetVocabularyItemView extends RelativeLayout {
     }
 
     public void refreshModel(WordTranslation wordTranslation, boolean expanded) {
-        if (isNotEmpty(wordTranslation.getWord())) {
-            wordTextField.setText(wordTranslation.getWord());
-            translationTextView.setText(wordTranslation.getTranslation());
-        }
+        wordTextField.setText(wordTranslation.getWord());
+        translationTextView.setText(wordTranslation.getTranslation());
         if (expanded) {
             if (translationTextView.getLineCount() != 0) {
                 translationTextView.setLines(translationTextView.getLineCount());

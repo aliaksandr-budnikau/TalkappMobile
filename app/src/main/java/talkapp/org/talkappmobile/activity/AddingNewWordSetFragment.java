@@ -126,7 +126,10 @@ public class AddingNewWordSetFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
+        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
+        if (vocabulary != null) {
+            eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
+        }
         super.onDestroyView();
     }
 

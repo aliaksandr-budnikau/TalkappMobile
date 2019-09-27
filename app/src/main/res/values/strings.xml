@@ -76,4 +76,8 @@
     <string name="phrase_translation_input_text_view_popup_button_ok">OK</string>
     <string name="phrase_translation_input_text_view_popup_button_cancel">Cancel</string>
     <string name="phrase_translation_input_word_text_view_hint">Swipe left to edit</string>
+    <string name="phrase_translation_hidden_button_say_label">SAY</string>
+    <string name="phrase_translation_hidden_button_edit_label">EDIT</string>
+    <string name="phrase_translation_hidden_button_reset_label">RESET</string>
+    <string name="phrase_translation_warning_read_only_mode">Editing is impossible</string>
 </resources>
