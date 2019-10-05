@@ -27,8 +27,10 @@ import android.widget.Toast;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,7 +64,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EView
-public class WordSetVocabularyView extends RecyclerView {
+public class WordSetVocabularyView extends RecyclerView implements WordSetVocabularyViewController.LocalEventBus {
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -126,7 +128,7 @@ public class WordSetVocabularyView extends RecyclerView {
 
     @AfterInject
     public void init() {
-        controller = new WordSetVocabularyViewController(eventBus, backendServerFactory.get(), serviceFactory);
+        controller = new WordSetVocabularyViewController(this, backendServerFactory.get(), serviceFactory);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(layoutManager);
@@ -188,7 +190,7 @@ public class WordSetVocabularyView extends RecyclerView {
                 b.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(adapterPosition, phraseBox.getText().toString(),
+                        WordSetVocabularyView.this.onMessageEvent(new PhraseTranslationInputPopupOkClickedEM(adapterPosition, phraseBox.getText().toString(),
                                 translationBox.getText().toString()));
                     }
                 });
@@ -197,36 +199,36 @@ public class WordSetVocabularyView extends RecyclerView {
         alertDialog.show();
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Background
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
         controller.handle(event);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @UiThread
     public void onMessageEvent(NewWordIsEmptyEM event) {
         phraseBox.setError(warningEmptyField);
         translationBox.setError(null);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @UiThread
     public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
         phraseBox.setError(null);
         translationBox.setError(warningSentencesNotFound);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @UiThread
     public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
         phraseBox.setError(null);
         translationBox.setError(warningTranslationNotFound);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @UiThread
     public void onMessageEvent(NewWordSentencesWereFoundEM event) {
         phraseBox.setError(null);
         translationBox.setError(null);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @UiThread
     public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
         phraseBox.setError(null);
         translationBox.setError(null);
@@ -377,7 +379,6 @@ public class WordSetVocabularyView extends RecyclerView {
                 Toast.makeText(WordSetVocabularyView.this.getContext(), warningReadOnlyMode, Toast.LENGTH_LONG).show();
             } else {
                 openAlertDialog(getVocabulary().get(position), position);
-                getAdapter().notifyItemChanged(position);
             }
         }
 

@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.custom.controller;
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -33,11 +32,11 @@ import static java.util.Collections.singletonList;
 public class WordSetVocabularyViewController {
     public static final String RUSSIAN_LANGUAGE = "russian";
     private static final int WORDS_NUMBER = 6;
-    private final EventBus eventBus;
+    private final LocalEventBus eventBus;
     private final DataServer server;
     private final WordTranslationService wordTranslationService;
 
-    public WordSetVocabularyViewController(@NonNull EventBus eventBus, @NonNull DataServer server,
+    public WordSetVocabularyViewController(@NonNull LocalEventBus eventBus, @NonNull DataServer server,
                                            @NonNull ServiceFactory factory) {
         this.eventBus = eventBus;
         this.server = server;
@@ -61,7 +60,7 @@ public class WordSetVocabularyViewController {
         if (StringUtils.isEmpty(normalizedPhrase.getTranslation())) {
             result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedPhrase.getWord());
             if (result == null) {
-                eventBus.post(new NewWordTranslationWasNotFoundEM());
+                eventBus.onMessageEvent(new NewWordTranslationWasNotFoundEM());
                 return;
             }
         } else {
@@ -72,7 +71,7 @@ public class WordSetVocabularyViewController {
             wordTranslation.setTokens(normalizedPhrase.getWord());
             wordTranslationService.saveWordTranslations(asList(wordTranslation));
         }
-        eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM(event.getAdapterPosition(), phrase, translation));
+        eventBus.onMessageEvent(new PhraseTranslationInputWasValidatedSuccessfullyEM(event.getAdapterPosition(), phrase, translation));
     }
 
     private NewWordWithTranslation normalizeAll(String phrase, String translation) {
@@ -84,7 +83,7 @@ public class WordSetVocabularyViewController {
 
     private boolean isEmpty(NewWordWithTranslation phrase) {
         if (StringUtils.isEmpty(phrase.getWord())) {
-            eventBus.post(new NewWordIsEmptyEM());
+            eventBus.onMessageEvent(new NewWordIsEmptyEM());
             return true;
         }
         return false;
@@ -119,9 +118,9 @@ public class WordSetVocabularyViewController {
         }
         if (sentences.isEmpty()) {
             anyHasNoSentences = true;
-            eventBus.post(new NewWordSentencesWereNotFoundEM());
+            eventBus.onMessageEvent(new NewWordSentencesWereNotFoundEM());
         } else {
-            eventBus.post(new NewWordSentencesWereFoundEM());
+            eventBus.onMessageEvent(new NewWordSentencesWereFoundEM());
         }
         return anyHasNoSentences;
     }
@@ -136,5 +135,18 @@ public class WordSetVocabularyViewController {
         textToken.setPosition(0);
         textTokens.add(textToken);
         return textTokens;
+    }
+
+    public interface LocalEventBus {
+
+        void onMessageEvent(NewWordSentencesWereFoundEM event);
+
+        void onMessageEvent(NewWordSentencesWereNotFoundEM event);
+
+        void onMessageEvent(NewWordIsEmptyEM event);
+
+        void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event);
+
+        void onMessageEvent(NewWordTranslationWasNotFoundEM event);
     }
 }

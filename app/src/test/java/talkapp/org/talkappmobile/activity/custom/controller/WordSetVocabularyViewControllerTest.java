@@ -51,6 +51,7 @@ public class WordSetVocabularyViewControllerTest {
     private WordSetMapper mapper;
     private WordSetService wordSetService;
     private EventBus eventBus;
+    private WordSetVocabularyViewController.LocalEventBus localEventBusMock = mock(WordSetVocabularyViewController.LocalEventBus.class);
     private WordSetVocabularyViewController controller;
     private DaoHelper daoHelper;
     private WordTranslationMapper wordTranslationMapper;
@@ -78,14 +79,14 @@ public class WordSetVocabularyViewControllerTest {
         DataServer server = factory.get();
 
         eventBus = mock(EventBus.class);
-        controller = new WordSetVocabularyViewController(eventBus, server, mockServiceFactoryBean);
+        controller = new WordSetVocabularyViewController(localEventBusMock, server, mockServiceFactoryBean);
     }
 
     @Test
     public void submit_noSentencesForAnyWord() {
         controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  sdfds ", null));
 
-        verify(eventBus).post(any(NewWordSentencesWereNotFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
@@ -101,7 +102,7 @@ public class WordSetVocabularyViewControllerTest {
         verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -112,13 +113,13 @@ public class WordSetVocabularyViewControllerTest {
         String word0 = "house";
         controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  " + word0 + " ", null));
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-        verify(eventBus, times(1)).post(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
+        verify(localEventBusMock, times(1)).onMessageEvent(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
     }
 
 
@@ -128,10 +129,10 @@ public class WordSetVocabularyViewControllerTest {
         String translation = "разглядеть, различить, разбирать";
         controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  " + word + " ", "  " + translation + " "));
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
-        verify(eventBus, times(1)).post(any(NewWordSentencesWereFoundEM.class));
+        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }

@@ -94,6 +94,7 @@ public class CapitalLetterInNewWordTest {
     private WordSetMapper wordSetMapper;
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
+    private WordSetVocabularyViewController.LocalEventBus localEventBusMock = mock(WordSetVocabularyViewController.LocalEventBus.class);
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
     private NewWordSetDraftDao newWordSetDraftDaoMock;
@@ -145,7 +146,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        dialogInputTextViewController = new WordSetVocabularyViewController(eventBusMock, server, mockServiceFactoryBean);
+        dialogInputTextViewController = new WordSetVocabularyViewController(localEventBusMock, server, mockServiceFactoryBean);
 
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
