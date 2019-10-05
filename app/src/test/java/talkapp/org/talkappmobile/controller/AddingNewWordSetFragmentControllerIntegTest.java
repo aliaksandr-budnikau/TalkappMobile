@@ -9,7 +9,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.BuildConfig;
@@ -25,10 +24,8 @@ import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
@@ -65,13 +62,17 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
-        assertTrue(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().isEmpty());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
         WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
-        wordSetService.save(new NewWordSetDraft(Collections.<WordTranslation>emptyList()));
+        LinkedList<WordTranslation> words = new LinkedList<>();
+        for (int i = 0; i < 12; i++) {
+            words.add(new WordTranslation());
+        }
+        wordSetService.save(new NewWordSetDraft(words));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
@@ -81,16 +82,21 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
-        assertEquals(0, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
     }
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsWith1Word() throws SQLException {
+        LinkedList<WordTranslation> words = new LinkedList<>();
         WordTranslation wordTranslation = new WordTranslation();
         wordTranslation.setWord("house");
+        words.add(wordTranslation);
+        for (int i = 0; i < 11; i++) {
+            words.add(new WordTranslation());
+        }
 
         WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
-        wordSetService.save(new NewWordSetDraft(singletonList(wordTranslation)));
+        wordSetService.save(new NewWordSetDraft(words));
 
         // when
         controller.handle(new AddingNewWordSetFragmentGotReadyEM());
@@ -100,7 +106,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
-        assertEquals(1, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
         assertEquals(wordTranslation, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().get(0));
     }
 
@@ -130,12 +136,11 @@ public class AddingNewWordSetFragmentControllerIntegTest {
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_WhenWeHaveCommasBug() {
         LinkedList<WordTranslation> words = new LinkedList<>();
-        WordTranslation wordTranslation1 = new WordTranslation();
-        wordTranslation1.setWord("Well, how is on duty today.| Хорошо, кто дежурный.");
-        words.add(wordTranslation1);
-        WordTranslation wordTranslation2 = new WordTranslation();
-        wordTranslation2.setWord("Well, how is on duty today.| Хорошо, кто дежурный.");
-        words.add(wordTranslation2);
+        for (int i = 0; i < 12; i++) {
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setWord("Well, how is on duty today.| Хорошо, кто дежурный.");
+            words.add(wordTranslation);
+        }
 
 
         // when
@@ -147,7 +152,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         assertNotNull(newWordSetDraftLoadedEM);
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft());
         assertNotNull(newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
-        assertEquals(2, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
+        assertEquals(12, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations().size());
         assertEquals(words, newWordSetDraftLoadedEM.getNewWordSetDraft().getWordTranslations());
     }
 

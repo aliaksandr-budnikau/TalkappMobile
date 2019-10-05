@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class WordSetServiceImpl implements WordSetService {
     private final WordSetExperienceUtils experienceUtils;
     @NonNull
     private final WordSetMapper wordSetMapper;
+    private int wordSetSize = 12;
 
     public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper) {
         this.wordSetDao = wordSetDao;
@@ -134,13 +134,18 @@ public class WordSetServiceImpl implements WordSetService {
     public NewWordSetDraft getNewWordSetDraft() {
         NewWordSetDraftMapping mapping = newWordSetDraftDao.getNewWordSetDraftById(1);
         if (mapping == null) {
-            return new NewWordSetDraft(Collections.<WordTranslation>emptyList());
+            mapping = new NewWordSetDraftMapping();
+            mapping.setWords("");
+            return wordSetMapper.toDto(mapping);
         }
         return wordSetMapper.toDto(mapping);
     }
 
     @Override
     public void save(@NonNull NewWordSetDraft draft) {
+        if (draft.getWordTranslations().size() != wordSetSize) {
+            throw new RuntimeException("draft.getWordTranslations().size() = " + draft.getWordTranslations().size());
+        }
         NewWordSetDraftMapping mapping = wordSetMapper.toMapping(draft);
         newWordSetDraftDao.createNewOrUpdate(mapping);
     }
