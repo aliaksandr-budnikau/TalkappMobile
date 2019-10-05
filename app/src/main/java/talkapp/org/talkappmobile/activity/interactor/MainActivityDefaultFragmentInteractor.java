@@ -124,7 +124,7 @@ public class MainActivityDefaultFragmentInteractor {
     private int countSetsOfThisClass(List<WordSet> sets, RepetitionClass clazz) {
         int result = 0;
         for (WordSet set : sets) {
-            if (set.getRepetitionClass() == clazz) {
+            if (set.getRepetitionClass() == clazz && set.getWords().size() == exerciseService.getMaxWordSetSize()) {
                 result++;
             }
         }
