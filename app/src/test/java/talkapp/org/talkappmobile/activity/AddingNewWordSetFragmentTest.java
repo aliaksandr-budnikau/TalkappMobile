@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -11,12 +12,12 @@ import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddingNewWordSetFragmentTest {
@@ -32,8 +33,9 @@ public class AddingNewWordSetFragmentTest {
 
         addingNewWordSetFragment.onMessageEvent(new NewWordSuccessfullySubmittedEM(new WordSet()));
 
-        WordSetVocabularyLoadedEM vocabularyLoadedEM = testHelper.getEM(WordSetVocabularyLoadedEM.class, false);
-        List<WordTranslation> translations = vocabularyLoadedEM.getTranslations();
+        ArgumentCaptor<WordSetVocabularyView.VocabularyAdapter> captor = ArgumentCaptor.forClass(WordSetVocabularyView.VocabularyAdapter.class);
+        verify(wordSetVocabularyView).setAdapter(captor.capture());
+        List<WordTranslation> translations = captor.getValue().getTranslations();
         for (WordTranslation translation : translations) {
             assertNull(translation.getWord());
             assertNull(translation.getTranslation());

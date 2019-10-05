@@ -50,7 +50,6 @@ import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
-import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -136,12 +135,6 @@ public class WordSetVocabularyView extends RecyclerView {
         SwipeController swipeController = new SwipeController(new SwipeControllerActions());
         new ItemTouchHelper(swipeController).attachToRecyclerView(this);
         setupRecyclerView(swipeController);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(WordSetVocabularyLoadedEM event) {
-        WordTranslation[] translations = event.getTranslations().toArray(new WordTranslation[0]);
-        this.setAdapter(new VocabularyAdapter(translations));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -277,16 +270,24 @@ public class WordSetVocabularyView extends RecyclerView {
         });
     }
 
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
+
     enum ButtonsState {
         GONE,
         LEFT_VISIBLE,
         RIGHT_VISIBLE
     }
 
-    private static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
+    public static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
         private final WordTranslationExpandable[] translations;
 
-        private VocabularyAdapter(WordTranslation[] translations) {
+        public VocabularyAdapter(WordTranslation[] translations) {
             this.translations = new WordTranslationExpandable[translations.length];
             for (int i = 0; i < translations.length; i++) {
                 this.translations[i] = new WordTranslationExpandable(translations[i]);
@@ -579,13 +580,5 @@ public class WordSetVocabularyView extends RecyclerView {
             float textWidth = p.measureText(text);
             c.drawText(text, button.centerX() - (textWidth / 2), button.centerY() + (textSize / 2), p);
         }
-    }
-
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
     }
 }

@@ -32,7 +32,6 @@ import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
-import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
@@ -77,8 +76,8 @@ public class AddingNewWordSetFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordSetDraftLoadedEM event) {
-        List<WordTranslation> words = event.getNewWordSetDraft().getWordTranslations();
-        eventBus.post(new WordSetVocabularyLoadedEM(words));
+        WordTranslation[] words = event.getNewWordSetDraft().getWordTranslations().toArray(new WordTranslation[0]);
+        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -95,7 +94,7 @@ public class AddingNewWordSetFragment extends Fragment {
     public void onMessageEvent(NewWordSuccessfullySubmittedEM event) {
         wordSetVocabularyView.resetVocabulary();
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
-        eventBus.post(new WordSetVocabularyLoadedEM(vocabulary));
+        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
         eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
 
         startWordSetActivity(event.getWordSet());

@@ -23,9 +23,9 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.events.WordSetVocabularyLoadedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -77,7 +77,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void setWordSetVocabularyList(final List<WordTranslation> wordTranslations) {
-        eventBus.post(new WordSetVocabularyLoadedEM(wordTranslations));
+        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(wordTranslations.toArray(new WordTranslation[0])));
     }
 
     @Override
