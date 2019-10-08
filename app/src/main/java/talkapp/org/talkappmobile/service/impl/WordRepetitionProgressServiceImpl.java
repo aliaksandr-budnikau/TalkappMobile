@@ -7,6 +7,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TimeZone;
+import java.util.TreeMap;
+
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -20,21 +35,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
-
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeMap;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;
@@ -129,9 +129,10 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void createSomeIfNecessary(Set<Word2Tokens> words) {
+    public void createSomeIfNecessary(List<Word2Tokens> words) {
         List<WordRepetitionProgressMapping> wordsEx = new LinkedList<>();
-        for (Word2Tokens word : words) {
+        for (int wordIndex = 0; wordIndex < words.size(); wordIndex++) {
+            Word2Tokens word = words.get(wordIndex);
             List<WordRepetitionProgressMapping> alreadyCreatedWord = null;
             try {
                 alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId());
@@ -148,6 +149,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 throw new RuntimeException(e.getMessage(), e);
             }
             exercise.setStatus(FIRST_CYCLE.name());
+            exercise.setWordIndex(wordIndex);
             exercise.setWordSetId(word.getSourceWordSetId());
             exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
             wordsEx.add(exercise);
@@ -314,8 +316,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public int markAsRepeated(Word2Tokens word, Sentence sentence) {
-        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word, sentence);
+    public int markAsRepeated(int wordIndex, int wordSetId, Sentence sentence) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(wordIndex, wordSetId, sentence);
         int counter = exercise.getRepetitionCounter();
         counter++;
         exercise.setRepetitionCounter(counter);
@@ -325,8 +327,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public int markAsForgottenAgain(Word2Tokens word, Sentence sentence) {
-        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word, sentence);
+    public int markAsForgottenAgain(int wordIndex, int wordSetId, Sentence sentence) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(wordIndex, wordSetId, sentence);
         int counter = exercise.getForgettingCounter();
         counter++;
         exercise.setForgettingCounter(counter);
@@ -371,17 +373,13 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         });
     }
 
-    private WordRepetitionProgressMapping getWordRepetitionProgressMapping(Word2Tokens word, Sentence sentence) {
+    private WordRepetitionProgressMapping getWordRepetitionProgressMapping(int wordIndex, int wordSetId, Sentence sentence) {
         List<WordRepetitionProgressMapping> exercises;
-        try {
-            exercises = exerciseDao.findByWordAndByWordSetIdAndByStatus(
-                    mapper.writeValueAsString(word),
-                    word.getSourceWordSetId(),
-                    FINISHED.name()
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        exercises = exerciseDao.findByWordIndexAndByWordSetIdAndByStatus(
+                wordIndex,
+                wordSetId,
+                FINISHED.name()
+        );
         return exercises.get(0);
     }
 

@@ -35,6 +35,7 @@ import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
+import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -71,6 +72,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
     private NewWordSetDraftDao newWordSetDraftDao;
+    private MigrationService migrationService;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
@@ -79,6 +81,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideNewWordSetDraftDao(), provideExperienceUtils(), getWordSetMapper());
         return wordSetExperienceService;
+    }
+
+    @Override
+    public MigrationService getMigrationService() {
+        if (migrationService != null) {
+            return migrationService;
+        }
+        migrationService = new MigrationServiceImpl(providePracticeWordSetExerciseDao(), provideWordSetDao(), MAPPER);
+        return migrationService;
     }
 
     @Override
@@ -246,6 +257,7 @@ public class ServiceFactoryBean implements ServiceFactory {
             return databaseHelper;
         }
         databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        databaseHelper.setMigrationService(getMigrationService());
         return databaseHelper;
     }
 }

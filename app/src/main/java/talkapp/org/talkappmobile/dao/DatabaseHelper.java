@@ -19,16 +19,19 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+import talkapp.org.talkappmobile.service.MigrationService;
 
 import static java.util.Collections.singletonList;
 import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.ID_FN;
 import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.NEW_WORD_SET_DRAFT_MAPPING_TABLE;
 import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.WORDS_FN;
+import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.WORD_INDEX_FN;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 39;
+    private static final int DATABASE_VERSION = 40;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
+    private MigrationService migrationService;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,6 +40,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         ));
         changes.put(39, singletonList(
                 "CREATE TABLE " + NEW_WORD_SET_DRAFT_MAPPING_TABLE + " (" + ID_FN + " INTEGER NOT NULL PRIMARY KEY, " + WORDS_FN + " VARCHAR NOT NULL);"
+        ));
+        changes.put(40, singletonList(
+                "ALTER TABLE WordRepetitionProgress ADD " + WORD_INDEX_FN + " INTEGER DEFAULT 0 NOT NULL;"
         ));
     }
 
@@ -68,6 +74,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             for (String sql : sqls) {
                 db.execSQL(sql);
             }
+            migrationService.migrate(entry.getKey());
         }
+    }
+
+    public void setMigrationService(MigrationService migrationService) {
+        this.migrationService = migrationService;
     }
 }

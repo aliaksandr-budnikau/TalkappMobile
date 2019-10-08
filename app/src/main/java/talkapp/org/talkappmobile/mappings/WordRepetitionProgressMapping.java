@@ -14,9 +14,11 @@ import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.W
 @DatabaseTable(tableName = WORD_REPETITION_PROGRESS_TABLE)
 public class WordRepetitionProgressMapping {
     public static final String ID_FN = "id";
+    @Deprecated
     public static final String WORD_FN = "word";
     public static final String SENTENCE_IDS_FN = "sentenceId";
     public static final String WORD_SET_ID_FN = "wordSetId";
+    public static final String WORD_INDEX_FN = "wordIndex";
     public static final String REPETITION_COUNTER_FN = "repetitionCounter";
     public static final String STATUS_FN = "status";
     public static final String CURRENT_FN = "current";
@@ -29,6 +31,10 @@ public class WordRepetitionProgressMapping {
     @DatabaseField(canBeNull = false, columnName = WORD_SET_ID_FN)
     private int wordSetId;
 
+    @DatabaseField(canBeNull = false, columnName = WORD_INDEX_FN)
+    private int wordIndex;
+
+    @Deprecated
     @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String wordJSON;
 
@@ -53,13 +59,14 @@ public class WordRepetitionProgressMapping {
     public WordRepetitionProgressMapping() {
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, String status, boolean current) {
-        this(id, wordSetId, wordJSON, sentenceIds, status, current, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
+    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, @Deprecated String wordJSON, String sentenceIds, String status, boolean current) {
+        this(id, wordSetId, wordIndex, wordJSON, sentenceIds, status, current, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, String wordJSON, String sentenceIds, String status, boolean current, Date updatedDate) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, @Deprecated String wordJSON, String sentenceIds, String status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
+        this.wordIndex = wordIndex;
         this.wordJSON = wordJSON;
         this.sentenceIds = sentenceIds;
         this.status = status;
@@ -75,10 +82,12 @@ public class WordRepetitionProgressMapping {
         this.id = id;
     }
 
+    @Deprecated
     public String getWordJSON() {
         return wordJSON;
     }
 
+    @Deprecated
     public void setWordJSON(String wordJSON) {
         this.wordJSON = wordJSON;
     }
@@ -129,6 +138,14 @@ public class WordRepetitionProgressMapping {
 
     public void setRepetitionCounter(int repetitionCounter) {
         this.repetitionCounter = repetitionCounter;
+    }
+
+    public int getWordIndex() {
+        return wordIndex;
+    }
+
+    public void setWordIndex(int wordIndex) {
+        this.wordIndex = wordIndex;
     }
 
     public int getForgettingCounter() {

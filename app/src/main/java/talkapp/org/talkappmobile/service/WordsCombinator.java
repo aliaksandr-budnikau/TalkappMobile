@@ -8,6 +8,7 @@ import java.util.Set;
 /**
  * @author Budnikau Aliaksandr
  */
+@Deprecated
 public interface WordsCombinator {
 
     Set<Word2Tokens> combineWords(List<Word2Tokens> words);

@@ -125,6 +125,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(age));
         exercise.setWordSetId(id);
+        exercise.setWordIndex(0);
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
 
@@ -135,6 +136,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(anniversary));
         exercise.setWordSetId(id);
+        exercise.setWordIndex(1);
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
 
@@ -145,6 +147,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordJSON(mapper.writeValueAsString(birth));
         exercise.setWordSetId(id);
+        exercise.setWordIndex(2);
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
 

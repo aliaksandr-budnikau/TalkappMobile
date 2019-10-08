@@ -16,7 +16,7 @@ public interface WordRepetitionProgressService {
 
     void cleanByWordSetId(int wordSetId);
 
-    void createSomeIfNecessary(Set<Word2Tokens> words);
+    void createSomeIfNecessary(List<Word2Tokens> words);
 
     void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord);
 
@@ -34,9 +34,9 @@ public interface WordRepetitionProgressService {
 
     void moveCurrentWordToNextState(int wordSetId);
 
-    int markAsRepeated(Word2Tokens word, Sentence sentence);
+    int markAsRepeated(int wordIndex, int wordSetId, Sentence sentence);
 
-    int markAsForgottenAgain(Word2Tokens word, Sentence sentence);
+    int markAsForgottenAgain(int wordIndex, int wordSetId, Sentence sentence);
 
     List<WordSet> findWordSetOfDifficultWords();
 }

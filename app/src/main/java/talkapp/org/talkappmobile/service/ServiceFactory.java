@@ -7,6 +7,8 @@ import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 public interface ServiceFactory {
     WordSetService getWordSetExperienceRepository();
 
+    MigrationService getMigrationService();
+
     WordRepetitionProgressService getPracticeWordSetExerciseRepository();
 
     UserExpService getUserExpService();

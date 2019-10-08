@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * @author Budnikau Aliaksandr
  */
+@Deprecated
 @EBean(scope = EBean.Scope.Singleton)
 public class RandomWordsCombinatorBean implements WordsCombinator {
 

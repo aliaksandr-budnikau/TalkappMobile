@@ -93,17 +93,18 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
+        int wordIndex = wordSet.getWords().indexOf(currentWord);
         if (answerHasBeenSeen) {
-            int counter = exerciseService.markAsForgottenAgain(currentWord, sentence);
+            int counter = exerciseService.markAsForgottenAgain(wordIndex, currentWord.getSourceWordSetId(), sentence);
             listener.onForgottenAgain(counter);
             listener.onRightAnswer(sentence);
             return false;
         }
 
         wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
-        wordSet.getWords().remove(currentWord);
+        //wordSet.getWords().remove(currentWord);
         listener.onUpdateProgress(wordSet, maxTrainingProgress);
-        int repetitionCounter = exerciseService.markAsRepeated(currentWord, sentence);
+        int repetitionCounter = exerciseService.markAsRepeated(wordIndex, currentWord.getSourceWordSetId(), sentence);
         exerciseService.shiftSentences(currentWord);
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);

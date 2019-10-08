@@ -8,12 +8,12 @@ import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
 public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionProgressMapping, Integer> implements WordRepetitionProgressDao {
 
@@ -118,18 +118,27 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByWordAndByWordSetIdAndByStatus(String word, int sourceWordSetId, String status) {
+    public List<WordRepetitionProgressMapping> findByWordIndexAndByWordSetIdAndByStatus(int wordIndex, int sourceWordSetId, String status) {
         try {
             SelectArg selectWord = new SelectArg();
             PreparedQuery<WordRepetitionProgressMapping> prepare = queryBuilder()
                     .where()
                     .eq(WordRepetitionProgressMapping.STATUS_FN, status)
                     .and()
-                    .eq(WordRepetitionProgressMapping.WORD_FN, selectWord)
+                    .eq(WordRepetitionProgressMapping.WORD_INDEX_FN, selectWord)
                     .and()
                     .eq(WordRepetitionProgressMapping.WORD_SET_ID_FN, sourceWordSetId).prepare();
-            selectWord.setValue(word);
+            selectWord.setValue(wordIndex);
             return this.query(prepare);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<WordRepetitionProgressMapping> findAll() {
+        try {
+            return this.queryForAll();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -9,6 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -22,14 +30,6 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -132,10 +132,9 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(4);
         wordSet.setWords(asList(new Word2Tokens("fdsfs", "fdsfs", wordSet.getId()), new Word2Tokens("sdfs", "sdfs", wordSet.getId())));
 
-        HashSet<Word2Tokens> words = new HashSet<>(wordSet.getWords());
+        List<Word2Tokens> words = new ArrayList<>(wordSet.getWords());
 
         // when
-        when(wordsCombinator.combineWords(wordSet.getWords())).thenReturn(words);
         interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
