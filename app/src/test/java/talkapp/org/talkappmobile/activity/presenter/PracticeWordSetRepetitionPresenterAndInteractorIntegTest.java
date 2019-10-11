@@ -26,6 +26,7 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -49,6 +50,7 @@ import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
+import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -155,6 +157,8 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
+        WordSetMapping wordSetMapping = new WordSetMapper(mapper).toMapping(wordSet);
+        daoHelper.getWordSetDao().createNewOrUpdate(wordSetMapping);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(interactor, firstCycleViewStrategy);
     }

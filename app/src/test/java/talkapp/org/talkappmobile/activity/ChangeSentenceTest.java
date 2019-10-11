@@ -8,7 +8,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -43,6 +42,7 @@ import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.events.WordSetPracticeFinishedEM;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -96,6 +96,7 @@ public class ChangeSentenceTest {
     private ExpAuditDao expAuditDaoMock;
     private DaoHelper daoHelper;
     private TestHelper testHelper;
+    private WordSetMapper wordSetMapper;
 
     @Before
     public void setup() throws SQLException {
@@ -122,7 +123,8 @@ public class ChangeSentenceTest {
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper));
+        wordSetMapper = new WordSetMapper(mapper);
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), newWordSetDraftDaoMock, experienceUtils, wordSetMapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -180,6 +182,8 @@ public class ChangeSentenceTest {
         wordSet.setWords(word2Tokens);
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
+        WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
+        wordSetDaoMock.createNewOrUpdate(wordSetMapping);
         return wordSet;
     }
 

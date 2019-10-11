@@ -7,7 +7,7 @@ import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
 public interface WordRepetitionProgressDao {
 
-    List<WordRepetitionProgressMapping> findByWordAndWordSetId(String word, int wordSetId);
+    List<WordRepetitionProgressMapping> findByWordIndexAndWordSetId(int wordIndex, int wordSetId);
 
     void createNewOrUpdate(WordRepetitionProgressMapping exercise);
 

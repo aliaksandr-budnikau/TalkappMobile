@@ -35,6 +35,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
+import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;
@@ -48,6 +49,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     public static final String SPLITER = ",";
     private final SentenceMapper sentenceMapper;
     private final SentenceDao sentenceDao;
+    private final WordSetMapper wordSetMapper;
     private WordRepetitionProgressDao exerciseDao;
     private WordSetDao wordSetDao;
     private ObjectMapper mapper;
@@ -59,16 +61,14 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         this.sentenceDao = sentenceDao;
         this.mapper = mapper;
         this.sentenceMapper = new SentenceMapper(mapper);
+        this.wordSetMapper = new WordSetMapper(mapper);
     }
 
     @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
-        List<WordRepetitionProgressMapping> exercises;
-        try {
-            exercises = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mapping);
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId());
         if (exercises.isEmpty()) {
             return emptyList();
         }
@@ -81,12 +81,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
     @Override
     public void save(Word2Tokens word, List<Sentence> sentences) {
-        WordRepetitionProgressMapping exercise;
-        try {
-            exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId()).get(0);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mapping);
+        WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         joinSentenceIds(sentences, exercise);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
         exerciseDao.createNewOrUpdate(exercise);
@@ -94,12 +91,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
     @Override
     public void shiftSentences(Word2Tokens word) {
-        WordRepetitionProgressMapping exercise;
-        try {
-            exercise = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId()).get(0);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mapping);
+        WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         List<String> ids = Lists.newArrayList(exercise.getSentenceIds().split(","));
         for (int i = 0; i < ids.size(); i++) {
             if (StringUtils.isEmpty(ids.get(i))) {
@@ -133,12 +127,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<WordRepetitionProgressMapping> wordsEx = new LinkedList<>();
         for (int wordIndex = 0; wordIndex < words.size(); wordIndex++) {
             Word2Tokens word = words.get(wordIndex);
-            List<WordRepetitionProgressMapping> alreadyCreatedWord = null;
-            try {
-                alreadyCreatedWord = exerciseDao.findByWordAndWordSetId(mapper.writeValueAsString(word), word.getSourceWordSetId());
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            List<WordRepetitionProgressMapping> alreadyCreatedWord = exerciseDao.findByWordIndexAndWordSetId(wordIndex, word.getSourceWordSetId());
             if (alreadyCreatedWord != null && !alreadyCreatedWord.isEmpty()) {
                 continue;
             }

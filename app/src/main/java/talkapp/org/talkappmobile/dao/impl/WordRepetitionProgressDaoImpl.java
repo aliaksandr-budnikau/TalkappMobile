@@ -22,12 +22,12 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     }
 
     @Override
-    public List<WordRepetitionProgressMapping> findByWordAndWordSetId(String word, int wordSetId) {
+    public List<WordRepetitionProgressMapping> findByWordIndexAndWordSetId(int wordIndex, int wordSetId) {
         try {
             return this.query(
                     queryBuilder()
                             .where()
-                            .eq(WordRepetitionProgressMapping.WORD_FN, new SelectArg(word))
+                            .eq(WordRepetitionProgressMapping.WORD_INDEX_FN, new SelectArg(wordIndex))
                             .and()
                             .eq(WordRepetitionProgressMapping.WORD_SET_ID_FN, wordSetId).prepare()
             );

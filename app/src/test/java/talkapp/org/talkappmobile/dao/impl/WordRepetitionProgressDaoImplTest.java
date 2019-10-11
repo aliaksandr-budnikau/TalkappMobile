@@ -388,13 +388,9 @@ public class WordRepetitionProgressDaoImplTest {
 
     @Test
     public void findByWordAndWordSetId_nothingToReturn() {
-        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("dsdsds", 4);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordIndexAndWordSetId(1, 4);
         assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void findByWordAndWordSetId_quotationMarkBug() {
-        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("{\"sourceWordSetId\":1000020,\"tokens\":\"it's actually a quite peculiar idea.\",\"word\":\"it's actually a quite peculiar idea.\"}", 4);
+        result = exerciseDao.findByWordIndexAndWordSetId(2, 4);
         assertTrue(result.isEmpty());
     }
 
@@ -406,7 +402,7 @@ public class WordRepetitionProgressDaoImplTest {
         insertExercise(22, 2, 4, "wordJSON4", "sentenceJSON2", FINISHED.name(), "1");
         insertExercise(3, 2, 4, "wordJSON4", "sentenceJSON22", FINISHED.name(), "1");
 
-        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("wordJSON4", 2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordIndexAndWordSetId(4, 2);
         assertEquals(2, result.size());
 
         assertEquals(22, result.get(1).getId());
@@ -435,7 +431,7 @@ public class WordRepetitionProgressDaoImplTest {
         insertExercise(22, 2, 4, "wordJSON4", "sentenceJSON2", FINISHED.name(), "0");
         insertExercise(3, 2, 5, "wordJSON42", "sentenceJSON22", FINISHED.name(), "0");
 
-        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordAndWordSetId("wordJSONsdds4", 2);
+        List<WordRepetitionProgressMapping> result = exerciseDao.findByWordIndexAndWordSetId(6, 2);
         assertEquals(0, result.size());
     }
 
