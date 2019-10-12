@@ -25,6 +25,7 @@ import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWord
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -54,6 +55,7 @@ import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -122,7 +124,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         Word2Tokens age = new Word2Tokens("age", "age", id);
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgboVdNEXFMlzHK5SR#" + age.getWord() + "#6");
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgboVdNEXFMlzHK5SR", age.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(id);
@@ -132,7 +134,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", id);
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(id);
@@ -142,7 +144,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         Word2Tokens birth = new Word2Tokens("birth", "birth", id);
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgbsUXNEXFMlzHK5V2#" + birth.getWord() + "#6");
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbsUXNEXFMlzHK5V2", birth.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(id);
@@ -159,6 +161,10 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(interactor, firstCycleViewStrategy);
         Whitebox.setInternalState(interactor, "finishedWords", new LinkedList<>());
+    }
+
+    private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {
+        return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, word, lengthInWords)));
     }
 
     @Test

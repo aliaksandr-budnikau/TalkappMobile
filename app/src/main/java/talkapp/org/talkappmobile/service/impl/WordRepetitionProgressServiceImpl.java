@@ -2,11 +2,13 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
@@ -23,6 +25,7 @@ import java.util.TreeMap;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
@@ -45,6 +48,7 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
     public static final String SPLITER = ",";
+    private final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
     private final SentenceMapper sentenceMapper;
     private final SentenceDao sentenceDao;
     private final WordSetMapper wordSetMapper;
@@ -60,6 +64,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         this.mapper = mapper;
         this.sentenceMapper = new SentenceMapper(mapper);
         this.wordSetMapper = new WordSetMapper(mapper);
+        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
             return emptyList();
         }
         WordRepetitionProgressMapping exercise = exercises.get(0);
-        if (StringUtils.isEmpty(exercise.getSentenceIds())) {
+        if (StringUtils.isEmpty(exercise.getSentenceIds()) || getSentenceIdMappings(exercise.getSentenceIds()).isEmpty()) {
             return emptyList();
         }
         return getSentence(exercise);
@@ -82,9 +87,22 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
         WordSet wordSet = wordSetMapper.toDto(mapping);
         WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
-        joinSentenceIds(sentences, exercise);
+        List<SentenceIdMapping> ids = new LinkedList<>();
+        for (Sentence sentence : sentences) {
+            String[] split = sentence.getId().split("#");
+            ids.add(new SentenceIdMapping(split[0], split[1], Integer.valueOf(split[2])));
+        }
+        setSentencesIds(exercise, ids);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
         exerciseDao.createNewOrUpdate(exercise);
+    }
+
+    private void setSentencesIds(WordRepetitionProgressMapping exercise, List<SentenceIdMapping> ids) {
+        try {
+            exercise.setSentenceIds(mapper.writeValueAsString(ids));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @Override
@@ -92,27 +110,23 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
         WordSet wordSet = wordSetMapper.toDto(mapping);
         WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
-        List<String> ids = Lists.newArrayList(exercise.getSentenceIds().split(","));
+        List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
         for (int i = 0; i < ids.size(); i++) {
-            if (StringUtils.isEmpty(ids.get(i))) {
+            if (isEmpty(ids.get(i))) {
                 ids.remove(i);
                 i--;
             } else {
-                String first = ids.remove(i);
+                SentenceIdMapping first = ids.remove(i);
                 ids.add(first);
                 break;
             }
         }
-        exercise.setSentenceIds(StringUtils.join(ids.toArray(), ","));
+        setSentencesIds(exercise, ids);
         exerciseDao.createNewOrUpdate(exercise);
     }
 
-    private void joinSentenceIds(List<Sentence> sentences, WordRepetitionProgressMapping exercise) {
-        List<String> ids = new LinkedList<>();
-        for (Sentence sentence : sentences) {
-            ids.add(sentence.getId());
-        }
-        exercise.setSentenceIds(StringUtils.join(ids.toArray(), ","));
+    private boolean isEmpty(SentenceIdMapping id) {
+        return StringUtils.isEmpty(id.getSentenceId()) || StringUtils.isEmpty(id.getWord()) || id.getLengthInWords() == 0;
     }
 
     @Override
@@ -275,7 +289,11 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private List<Sentence> getSentence(WordRepetitionProgressMapping exercise) {
-        String[] sentenceIds = exercise.getSentenceIds().split(SPLITER);
+        List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
+        String[] sentenceIds = new String[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            sentenceIds[i] = ids.get(i).toString();
+        }
         List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
         if (sentences.isEmpty()) {
             throw new RuntimeException("Sentence wasn't found");
@@ -290,6 +308,21 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         return result;
     }
+
+    private List<SentenceIdMapping> getSentenceIdMappings(WordRepetitionProgressMapping exercise) {
+        return getSentenceIdMappings(exercise.getSentenceIds());
+    }
+
+    private List<SentenceIdMapping> getSentenceIdMappings(String sentenceIds) {
+        List<SentenceIdMapping> ids;
+        try {
+            ids = mapper.readValue(sentenceIds, LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return ids;
+    }
+
 
     @Override
     public int markAsRepeated(int wordIndex, int wordSetId, Sentence sentence) {

@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.After;
@@ -18,6 +19,7 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -26,6 +28,7 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
@@ -63,7 +66,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
         for (int c = 0; c < 12; c++) {
             for (int i = 2; i <= 13; i++) {
                 WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-                exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul#" + anniversary.getWord() + "#6");
+                exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
                 exercise.setStatus(WordSetProgressStatus.FINISHED.name());
                 cal.add(Calendar.HOUR, -2 * 24 * i);
                 exercise.setUpdatedDate(cal.getTime());
@@ -72,6 +75,10 @@ public class WordRepetitionProgressServiceImplIntegTest {
                 exerciseDao.createNewOrUpdate(exercise);
             }
         }
+    }
+
+    private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {
+        return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, word, lengthInWords)));
     }
 
     @After
