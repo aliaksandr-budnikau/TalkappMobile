@@ -46,6 +46,7 @@ import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -77,6 +78,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -168,7 +170,7 @@ public class ChangeSentenceTest {
         originalTextTextViewPresenter = new OriginalTextTextViewPresenter(mock(OriginalTextTextViewView.class));
     }
 
-    private WordSet createWordSet(int id, String... words) {
+    private WordSet createWordSet(int id, WordSetProgressStatus status, String... words) {
         int trainingExperience = 0;
         WordSet wordSet = new WordSet();
         wordSet.setId(id);
@@ -182,9 +184,14 @@ public class ChangeSentenceTest {
         wordSet.setWords(word2Tokens);
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
+        wordSet.setStatus(status);
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDaoMock.createNewOrUpdate(wordSetMapping);
         return wordSet;
+    }
+
+    private WordSet createWordSet(int id, String... words) {
+        return createWordSet(id, FIRST_CYCLE, words);
     }
 
     @After
@@ -578,7 +585,7 @@ public class ChangeSentenceTest {
         //
         // REPETITION MODE SECOND TIME
         //
-        wordSet = createWordSet(-1, "birth", "anniversary");
+        wordSet = createWordSet(-1, WordSetProgressStatus.FINISHED, "birth", "anniversary");
         Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         Whitebox.setInternalState(practiceWordSetFragment, "repetitionMode", true);
         reset(eventBus);

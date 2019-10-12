@@ -7,7 +7,6 @@ import android.net.Uri;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
@@ -156,6 +155,16 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         } else {
             listener.onGotSentencesToChange(sentences, alreadyPickedSentences, currentWord);
         }
+    }
+
+    @Override
+    public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
+        Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
+        exerciseService.putOffCurrentWord(wordSetId);
+        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId);
+        Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
+        exerciseService.markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
+        return newCurrentWord;
     }
 
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {

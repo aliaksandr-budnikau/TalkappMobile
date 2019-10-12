@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
@@ -149,15 +148,11 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     @Override
     public void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord) {
         WordSetMapping exp = wordSetDao.findById(wordSetId);
+        WordSet wordSet = wordSetMapper.toDto(exp);
+        int wordIndex = wordSet.getWords().indexOf(newCurrentWord);
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
-        String newCurrentWordAsString;
-        try {
-            newCurrentWordAsString = mapper.writeValueAsString(newCurrentWord);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
         for (WordRepetitionProgressMapping exercise : exercises) {
-            if (exercise.getWordJSON().equals(newCurrentWordAsString)) {
+            if (wordIndex == exercise.getWordIndex()) {
                 exercise.setCurrent(true);
                 exerciseDao.createNewOrUpdate(exercise);
                 return;

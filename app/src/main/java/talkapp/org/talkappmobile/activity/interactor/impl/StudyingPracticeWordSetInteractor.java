@@ -2,6 +2,10 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
+import java.util.List;
+
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -14,11 +18,6 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
-
-import java.util.List;
-
-import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
-import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
@@ -129,17 +128,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         return true;
     }
-
-    @Override
-    public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
-        Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
-        exerciseService.putOffCurrentWord(wordSetId);
-        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId);
-        Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
-        exerciseService.markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
-        return newCurrentWord;
-    }
-
 
     @Override
     public Sentence getCurrentSentence() {

@@ -60,7 +60,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -162,6 +161,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         daoHelper.getWordSetDao().createNewOrUpdate(wordSetMapping);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(interactor, firstCycleViewStrategy);
+        Whitebox.setInternalState(interactor, "finishedWords", new LinkedList<>());
     }
 
     @Test
