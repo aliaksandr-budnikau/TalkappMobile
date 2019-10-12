@@ -10,10 +10,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +18,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 
 import static java.util.Arrays.asList;
 import static java.util.Calendar.HOUR;
@@ -40,13 +43,15 @@ public class WordRepetitionProgressServiceImplTest {
     public static final int COUNT = 10;
     @Mock
     private WordRepetitionProgressDao exerciseDao;
+    @Mock
+    private WordSetDao wordSetDao;
     private WordRepetitionProgressServiceImpl service;
     private ObjectMapper mapper;
 
     @Before
     public void setup() {
         mapper = new ObjectMapper();
-        service = new WordRepetitionProgressServiceImpl(exerciseDao, null, null, mapper);
+        service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, null, mapper);
     }
 
     @Test
@@ -81,16 +86,22 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value = new Word2Tokens("ddd", "sss", 3);
+        int sourceWordSetId = 3;
+        Word2Tokens value = new Word2Tokens("ddd", "sss", sourceWordSetId);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.get(0).setId(1);
+        expectedWordSets.get(0).setWordSetId(sourceWordSetId);
         expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 1;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        wordSetMapping.setWords(mapper.writeValueAsString(asList(value)));
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
@@ -145,23 +156,34 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
-        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
-        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", 3);
+        int sourceWordSetId = 3;
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", sourceWordSetId);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", sourceWordSetId);
+        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", sourceWordSetId);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setWordIndex(0);
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setWordIndex(1);
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setWordIndex(2);
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        wordSetMapping.setWords(mapper.writeValueAsString(asList(value1, value2, value3)));
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
@@ -190,24 +212,35 @@ public class WordRepetitionProgressServiceImplTest {
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
-        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
-        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", 3);
+        int sourceWordSetId = 3;
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", sourceWordSetId);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", sourceWordSetId);
+        Word2Tokens value3 = new Word2Tokens("ddd3", "sss3", sourceWordSetId);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setWordIndex(0);
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setRepetitionCounter(1);
+        expectedWordSets.getLast().setWordIndex(1);
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
+        expectedWordSets.getLast().setWordIndex(2);
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        wordSetMapping.setWords(mapper.writeValueAsString(asList(value1, value2, value3)));
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(new ArrayList<>(expectedWordSets));
         Whitebox.setInternalState(service, "mapper", mapper);
@@ -235,20 +268,28 @@ public class WordRepetitionProgressServiceImplTest {
 
         // when
         ObjectMapper mapper = new ObjectMapper();
-
-        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", 3);
-        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", 3);
+        int sourceWordSetId = 3;
+        Word2Tokens value1 = new Word2Tokens("ddd1", "sss1", sourceWordSetId);
+        Word2Tokens value2 = new Word2Tokens("ddd2", "sss2", sourceWordSetId);
 
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
+        expectedWordSets.getLast().setWordIndex(0);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.getLast().setWordSetId(sourceWordSetId);
+        expectedWordSets.getLast().setWordIndex(1);
         expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        wordSetMapping.setWords(mapper.writeValueAsString(asList(value1, value2)));
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
@@ -266,11 +307,20 @@ public class WordRepetitionProgressServiceImplTest {
 
     @Test
     public void findWordSetOfDifficultWords_failedAllTheTime() throws JsonProcessingException {
+        int sourceWordSetId = 3;
         WordRepetitionProgressMapping word1 = new WordRepetitionProgressMapping();
-        word1.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+        word1.setWordSetId(sourceWordSetId);
+        Word2Tokens value1 = new Word2Tokens(null, null, sourceWordSetId);
+        word1.setWordJSON(mapper.writeValueAsString(value1));
         WordRepetitionProgressMapping word2 = new WordRepetitionProgressMapping();
-        word2.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+        word2.setWordSetId(sourceWordSetId);
+        Word2Tokens value2 = new Word2Tokens(null, null, sourceWordSetId);
+        word2.setWordJSON(mapper.writeValueAsString(value2));
 
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        wordSetMapping.setWords(mapper.writeValueAsString(asList(value1, value2)));
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(asList(word1, word2));
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertTrue(sets.isEmpty());
@@ -279,12 +329,22 @@ public class WordRepetitionProgressServiceImplTest {
     @Test
     public void findWordSetOfDifficultWords_12WordsWillNotBeDisplayed() throws JsonProcessingException {
         List<WordRepetitionProgressMapping> list = new LinkedList<>();
+        int sourceWordSetId = 3;
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId("" + sourceWordSetId);
+        List<Object> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
             WordRepetitionProgressMapping word = new WordRepetitionProgressMapping();
-            word.setWordJSON(mapper.writeValueAsString(new Word2Tokens()));
+            word.setWordSetId(sourceWordSetId);
+            word.setWordIndex(i);
+            Word2Tokens word2Tokens = new Word2Tokens(null, null, sourceWordSetId);
+            words.add(word2Tokens);
+            word.setWordJSON(mapper.writeValueAsString(word2Tokens));
             list.add(word);
         }
+        wordSetMapping.setWords(mapper.writeValueAsString(words));
 
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(list);
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertEquals(1, sets.size());

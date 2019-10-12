@@ -60,6 +60,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -109,7 +110,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private void createPresenter(RepetitionPracticeWordSetInteractor interactor) throws JsonProcessingException, SQLException {
         int id = 0;
         int trainingExperience = 0;
-        WordSetProgressStatus status = null;
+        WordSetProgressStatus status = WordSetProgressStatus.FINISHED;
         if (wordSet != null) {
             trainingExperience = wordSet.getTrainingExperience();
             status = wordSet.getStatus();

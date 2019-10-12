@@ -271,11 +271,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private Word2Tokens getWord2Tokens(WordRepetitionProgressMapping mapping) {
-        try {
-            return mapper.readValue(mapping.getWordJSON(), Word2Tokens.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        WordSetMapping wordSetMapping = wordSetDao.findById(mapping.getWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(wordSetMapping);
+        return wordSet.getWords().get(mapping.getWordIndex());
     }
 
     @Override

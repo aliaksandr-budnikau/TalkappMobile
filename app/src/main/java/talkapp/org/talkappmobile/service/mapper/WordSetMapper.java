@@ -43,6 +43,8 @@ public class WordSetMapper {
 
         mapping.setTopicId(wordSet.getTopicId());
         mapping.setTop(wordSet.getTop());
+        mapping.setTrainingExperience(wordSet.getTrainingExperience());
+        mapping.setStatus(wordSet.getStatus().name());
         return mapping;
     }
 

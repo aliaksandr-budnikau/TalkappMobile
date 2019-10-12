@@ -20,7 +20,9 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -52,6 +54,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -67,6 +70,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private WordSetExperienceUtilsImpl experienceUtils;
     private PresenterFactory presenterFactory;
     private DaoHelper daoHelper;
+    private WordSetDao wordSetDao;
+    private WordSetMapper wordSetMapper;
 
     @Before
     public void setup() throws SQLException {
@@ -75,7 +80,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         daoHelper = new DaoHelper();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        wordSetDao = daoHelper.getWordSetDao();
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -89,7 +95,8 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
+        wordSetMapper = new WordSetMapper(mapper);
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, wordSetMapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -116,7 +123,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private void createPresenter() {
         int id = -1;
         int trainingExperience = 0;
-        WordSetProgressStatus status = null;
+        WordSetProgressStatus status = FIRST_CYCLE;
         if (wordSet != null) {
             trainingExperience = wordSet.getTrainingExperience();
             status = wordSet.getStatus();
@@ -132,6 +139,9 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
+
+        WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
+        wordSetDao.createNewOrUpdate(wordSetMapping);
         presenter = presenterFactory.create(wordSet, view, context, false);
     }
 
