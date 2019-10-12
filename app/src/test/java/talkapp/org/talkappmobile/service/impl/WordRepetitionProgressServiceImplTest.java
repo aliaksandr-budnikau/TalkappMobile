@@ -93,7 +93,6 @@ public class WordRepetitionProgressServiceImplTest {
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.get(0).setId(1);
         expectedWordSets.get(0).setWordSetId(sourceWordSetId);
-        expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 1;
@@ -109,7 +108,7 @@ public class WordRepetitionProgressServiceImplTest {
 
         // then
         assertEquals(1, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
+        assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
@@ -131,7 +130,6 @@ public class WordRepetitionProgressServiceImplTest {
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.get(0).setId(1);
-        expectedWordSets.get(0).setWordJSON(mapper.writeValueAsString(value));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 1;
@@ -164,17 +162,14 @@ public class WordRepetitionProgressServiceImplTest {
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(0);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(1);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(2);
 
@@ -191,9 +186,6 @@ public class WordRepetitionProgressServiceImplTest {
 
         // then
         assertEquals(2, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
-        assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
-        assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(1).getWords().get(0)));
         assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
@@ -220,18 +212,15 @@ public class WordRepetitionProgressServiceImplTest {
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(0);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setRepetitionCounter(1);
         expectedWordSets.getLast().setWordIndex(1);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value3));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(2);
 
@@ -248,9 +237,6 @@ public class WordRepetitionProgressServiceImplTest {
 
         // then
         assertEquals(2, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
-        assertEquals(expectedWordSets.get(2).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
-        assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(1).getWords().get(0)));
         assertEquals(1, wordSets.get(1).getWords().size());
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
@@ -276,12 +262,10 @@ public class WordRepetitionProgressServiceImplTest {
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordIndex(0);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value1));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setWordIndex(1);
-        expectedWordSets.getLast().setWordJSON(mapper.writeValueAsString(value2));
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 2;
@@ -297,8 +281,8 @@ public class WordRepetitionProgressServiceImplTest {
 
         // then
         assertEquals(1, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(0)));
-        assertEquals(expectedWordSets.get(1).getWordJSON(), mapper.writeValueAsString(wordSets.get(0).getWords().get(1)));
+        assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
+        assertEquals(expectedWordSets.get(1).getWordIndex(), 1);
 
         ArgumentCaptor<Date> captor = forClass(Date.class);
         verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
@@ -311,11 +295,9 @@ public class WordRepetitionProgressServiceImplTest {
         WordRepetitionProgressMapping word1 = new WordRepetitionProgressMapping();
         word1.setWordSetId(sourceWordSetId);
         Word2Tokens value1 = new Word2Tokens(null, null, sourceWordSetId);
-        word1.setWordJSON(mapper.writeValueAsString(value1));
         WordRepetitionProgressMapping word2 = new WordRepetitionProgressMapping();
         word2.setWordSetId(sourceWordSetId);
         Word2Tokens value2 = new Word2Tokens(null, null, sourceWordSetId);
-        word2.setWordJSON(mapper.writeValueAsString(value2));
 
         WordSetMapping wordSetMapping = new WordSetMapping();
         wordSetMapping.setId("" + sourceWordSetId);
@@ -339,7 +321,6 @@ public class WordRepetitionProgressServiceImplTest {
             word.setWordIndex(i);
             Word2Tokens word2Tokens = new Word2Tokens(null, null, sourceWordSetId);
             words.add(word2Tokens);
-            word.setWordJSON(mapper.writeValueAsString(word2Tokens));
             list.add(word);
         }
         wordSetMapping.setWords(mapper.writeValueAsString(words));

@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +28,6 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.NEW;
 import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
@@ -71,7 +69,6 @@ public class WordRepetitionProgressServiceImplIntegTest {
                 exercise.setUpdatedDate(cal.getTime());
                 exercise.setRepetitionCounter(c);
                 exercise.setWordSetId(sourceWordSetId);
-                exercise.setWordJSON(mapper.writeValueAsString(anniversary));
                 exerciseDao.createNewOrUpdate(exercise);
             }
         }

@@ -35,7 +35,7 @@ public class WordRepetitionProgressMapping {
     private int wordIndex;
 
     @Deprecated
-    @DatabaseField(canBeNull = false, columnName = WORD_FN)
+    @DatabaseField(columnName = WORD_FN)
     private String wordJSON;
 
     @DatabaseField(columnName = SENTENCE_IDS_FN)
@@ -59,15 +59,14 @@ public class WordRepetitionProgressMapping {
     public WordRepetitionProgressMapping() {
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, @Deprecated String wordJSON, String sentenceIds, String status, boolean current) {
-        this(id, wordSetId, wordIndex, wordJSON, sentenceIds, status, current, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
+    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, String sentenceIds, String status, boolean current) {
+        this(id, wordSetId, wordIndex, sentenceIds, status, current, Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
     }
 
-    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, @Deprecated String wordJSON, String sentenceIds, String status, boolean current, Date updatedDate) {
+    public WordRepetitionProgressMapping(int id, int wordSetId, int wordIndex, String sentenceIds, String status, boolean current, Date updatedDate) {
         this.id = id;
         this.wordSetId = wordSetId;
         this.wordIndex = wordIndex;
-        this.wordJSON = wordJSON;
         this.sentenceIds = sentenceIds;
         this.status = status;
         this.current = current;
@@ -85,11 +84,6 @@ public class WordRepetitionProgressMapping {
     @Deprecated
     public String getWordJSON() {
         return wordJSON;
-    }
-
-    @Deprecated
-    public void setWordJSON(String wordJSON) {
-        this.wordJSON = wordJSON;
     }
 
     public int getWordSetId() {

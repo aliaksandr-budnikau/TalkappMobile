@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 
@@ -131,11 +130,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 continue;
             }
             WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-            try {
-                exercise.setWordJSON(mapper.writeValueAsString(word));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
             exercise.setStatus(FIRST_CYCLE.name());
             exercise.setWordIndex(wordIndex);
             exercise.setWordSetId(word.getSourceWordSetId());
