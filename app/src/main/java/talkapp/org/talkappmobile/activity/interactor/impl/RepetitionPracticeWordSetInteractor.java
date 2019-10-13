@@ -32,6 +32,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private Sentence currentSentence;
     private int maxTrainingProgress;
     private List<Word2Tokens> finishedWords = new LinkedList<>();
+    private WordSet wordSet;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -63,11 +64,17 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
+        this.wordSet = wordSet;
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
         wordSet.setTrainingExperience(0);
         listener.onInitialiseExperience(wordSet);
+    }
+
+    @Override
+    public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
+        return peekRandomWordWithoutCurrentWord(wordSet.getWords(), currentWord);
     }
 
     @Override
