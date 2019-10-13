@@ -8,6 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.W
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 40;
+    private static final int DATABASE_VERSION = 44;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
     private MigrationService migrationService;
 
@@ -44,6 +45,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         changes.put(40, singletonList(
                 "ALTER TABLE WordRepetitionProgress ADD " + WORD_INDEX_FN + " INTEGER DEFAULT 0 NOT NULL;"
         ));
+        changes.put(43, Collections.<String>emptyList());
+        changes.put(44, Collections.<String>emptyList());
     }
 
     @Override
@@ -69,6 +72,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             List<String> sqls = entry.getValue();
             if (sqls == null || sqls.isEmpty()) {
+                migrationService.migrate(entry.getKey());
                 continue;
             }
             for (String sql : sqls) {

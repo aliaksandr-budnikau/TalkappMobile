@@ -88,7 +88,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (migrationService != null) {
             return migrationService;
         }
-        migrationService = new MigrationServiceImpl(providePracticeWordSetExerciseDao(), provideWordSetDao(), MAPPER);
+        migrationService = new MigrationServiceImpl(providePracticeWordSetExerciseDao(), provideWordSetDao(), provideSentenceDao(), MAPPER);
         return migrationService;
     }
 

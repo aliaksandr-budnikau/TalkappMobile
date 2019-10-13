@@ -72,6 +72,24 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
         }
     }
 
+    @Override
+    public List<SentenceMapping> findAll() {
+        try {
+            return this.queryForAll();
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public int deleteById(String id) {
+        try {
+            return super.deleteById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     private String getKey(String word, int wordsNumber) {
         return word + "_" + wordsNumber;
     }

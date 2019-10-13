@@ -10,4 +10,8 @@ public interface SentenceDao {
     List<SentenceMapping> findAllByWord(String word, int wordsNumber);
 
     List<SentenceMapping> findAllByIds(String[] ids);
+
+    List<SentenceMapping> findAll();
+
+    int deleteById(String id);
 }
