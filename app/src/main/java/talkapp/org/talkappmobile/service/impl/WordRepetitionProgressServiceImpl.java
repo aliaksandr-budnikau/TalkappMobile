@@ -47,7 +47,6 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
-    public static final String SPLITER = ",";
     private final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
     private final SentenceMapper sentenceMapper;
     private final SentenceDao sentenceDao;
@@ -292,7 +291,11 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
         String[] sentenceIds = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
-            sentenceIds[i] = ids.get(i).toString();
+            try {
+                sentenceIds[i] = mapper.writeValueAsString(ids.get(i));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException();
+            }
         }
         List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
         if (sentences.isEmpty()) {

@@ -13,6 +13,8 @@ import java.util.Map;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 
+import static talkapp.org.talkappmobile.mappings.SentenceMapping.ID_FN;
+
 public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implements SentenceDao {
 
     private Map<String, List<SentenceMapping>> sentences = new HashMap<>();
@@ -24,20 +26,11 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
     @Override
     public void save(List<SentenceMapping> mappings) {
         for (SentenceMapping mapping : mappings) {
-            String[] ids = mapping.getId().split("#");
-            String key = getKey(ids[1], Integer.valueOf(ids[2]));
-            List<SentenceMapping> list = sentences.get(key);
-            if (list == null) {
-                sentences.put(key, new LinkedList<SentenceMapping>());
-            }
             try {
                 super.createOrUpdate(mapping);
             } catch (SQLException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            List<SentenceMapping> cached = sentences.get(key);
-            cached.remove(mapping);
-            cached.add(mapping);
         }
     }
 
@@ -52,7 +45,7 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
             mappings = this.query(
                     queryBuilder()
                             .where()
-                            .like(SentenceMapping.ID_FN, new SelectArg("%#" + word + "#" + wordsNumber))
+                            .like(SentenceMapping.ID_FN, new SelectArg("%\"" + word + "\"%" + wordsNumber + "%"))
                             .prepare()
             );
         } catch (SQLException e) {
@@ -71,7 +64,7 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
             return this.query(
                     queryBuilder()
                             .where()
-                            .in(SentenceMapping.ID_FN, escapedStrings)
+                            .in(ID_FN, escapedStrings)
                             .prepare()
             );
         } catch (SQLException e) {
