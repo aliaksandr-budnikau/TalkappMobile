@@ -149,4 +149,10 @@ public class WordSetServiceImpl implements WordSetService {
         NewWordSetDraftMapping mapping = wordSetMapper.toMapping(draft);
         newWordSetDraftDao.createNewOrUpdate(mapping);
     }
+
+    @Override
+    public WordSet findById(int wordSetId) {
+        WordSetMapping mapping = wordSetDao.findById(wordSetId);
+        return wordSetMapper.toDto(mapping);
+    }
 }

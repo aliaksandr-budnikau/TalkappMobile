@@ -21,7 +21,6 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordsCombinator;
 
 import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -104,6 +103,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
+        wordSet = wordSetService.findById(wordSet.getId());
         logger.i(TAG, "initialise words sequence {}", wordSet);
         exerciseService.createSomeIfNecessary(wordSet.getWords());
         logger.i(TAG, "word sequence was initialized");
