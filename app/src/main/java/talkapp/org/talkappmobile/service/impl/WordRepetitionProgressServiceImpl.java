@@ -111,7 +111,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
         for (int i = 0; i < ids.size(); i++) {
-            if (isEmpty(ids.get(i))) {
+            if (isEmpty(ids.get(i), wordSet.getWords().get(exercise.getWordIndex()).getWord())) {
                 ids.remove(i);
                 i--;
             } else {
@@ -124,8 +124,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         exerciseDao.createNewOrUpdate(exercise);
     }
 
-    private boolean isEmpty(SentenceIdMapping id) {
-        return StringUtils.isEmpty(id.getSentenceId()) || StringUtils.isEmpty(id.getWord()) || id.getLengthInWords() == 0;
+    private boolean isEmpty(SentenceIdMapping id, String word) {
+        return StringUtils.isEmpty(id.getSentenceId()) || StringUtils.isEmpty(word) || id.getLengthInWords() == 0;
     }
 
     @Override

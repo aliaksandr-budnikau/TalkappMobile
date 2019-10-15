@@ -2,13 +2,14 @@ package talkapp.org.talkappmobile.mappings;
 
 public class SentenceIdMapping {
     private String sentenceId;
+    @Deprecated
     private String word;
     private int lengthInWords;
 
     public SentenceIdMapping() {
     }
 
-    public SentenceIdMapping(String sentenceId, String word, int lengthInWords) {
+    public SentenceIdMapping(String sentenceId, @Deprecated String word, int lengthInWords) {
         this.sentenceId = sentenceId;
         this.word = word;
         this.lengthInWords = lengthInWords;
@@ -18,6 +19,7 @@ public class SentenceIdMapping {
         return sentenceId;
     }
 
+    @Deprecated
     public String getWord() {
         return word;
     }
