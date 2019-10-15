@@ -20,6 +20,7 @@ import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 
 import static java.util.Collections.shuffle;
@@ -33,21 +34,21 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
-    private final WordsCombinator wordsCombinator;
+    private final WordSetService wordSetService;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
-                                             WordsCombinator wordsCombinator,
+                                             WordSetService wordSetService,
                                              AudioStuffFactory audioStuffFactory) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
         this.sentenceService = sentenceService;
-        this.wordsCombinator = wordsCombinator;
+        this.wordSetService = wordSetService;
         this.audioStuffFactory = audioStuffFactory;
     }
 

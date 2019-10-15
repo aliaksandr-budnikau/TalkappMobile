@@ -36,12 +36,12 @@ import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
@@ -50,6 +50,7 @@ import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
+import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -76,6 +77,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private RepetitionPracticeWordSetInteractor interactor;
     private Context context;
     private WordSetExperienceUtilsImpl experienceUtils;
+    private WordSetService wordSetService;
     private DaoHelper daoHelper;
 
     @Before
@@ -99,9 +101,10 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         userExpService = new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class));
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
+        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
         interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, exerciseService, userExpService, experienceUtils, new RandomWordsCombinatorBean(), context, new AudioStuffFactoryBean());
+                logger, exerciseService, userExpService, experienceUtils, wordSetService, context, new AudioStuffFactoryBean());
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }
 

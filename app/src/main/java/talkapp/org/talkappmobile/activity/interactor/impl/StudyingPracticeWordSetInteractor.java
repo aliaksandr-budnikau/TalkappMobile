@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordsCombinator;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
@@ -35,7 +34,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private Word2Tokens currentWord;
     private Sentence currentSentence;
 
-    public StudyingPracticeWordSetInteractor(WordsCombinator wordsCombinator,
+    public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
                                              SentenceService sentenceService,
                                              RefereeService refereeService,
                                              Logger logger,
@@ -45,7 +44,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordSetExperienceUtils experienceUtils,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordsCombinator, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.experienceService = experienceService;

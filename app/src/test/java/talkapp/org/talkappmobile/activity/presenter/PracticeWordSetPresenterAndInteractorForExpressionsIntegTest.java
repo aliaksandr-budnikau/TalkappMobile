@@ -114,7 +114,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
         Whitebox.setInternalState(presenterFactory, "experienceUtils", experienceUtils);
-        Whitebox.setInternalState(presenterFactory, "wordsCombinator", new RandomWordsCombinatorBean());
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
@@ -179,7 +178,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDao.createNewOrUpdate(wordSetMapping);
-        presenter = presenterFactory.create(wordSet, view, context, false);
+        presenter = presenterFactory.create(view, context, false);
     }
 
     @Test

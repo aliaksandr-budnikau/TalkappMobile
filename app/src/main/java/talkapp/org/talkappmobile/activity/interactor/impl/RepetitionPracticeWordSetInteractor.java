@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
@@ -41,10 +42,10 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordRepetitionProgressService exerciseService,
             UserExpService userExpService,
             WordSetExperienceUtils experienceUtils,
-            WordsCombinator wordsCombinator,
+            WordSetService wordSetService,
             Context context,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordsCombinator, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;

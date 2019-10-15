@@ -26,12 +26,10 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.WordsCombinator;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -50,21 +48,19 @@ public class PresenterFactory {
     TextUtils textUtils;
     @Bean(WordSetExperienceUtilsImpl.class)
     WordSetExperienceUtils experienceUtils;
-    @Bean(RandomWordsCombinatorBean.class)
-    WordsCombinator wordsCombinator;
     @Bean(LoggerBean.class)
     Logger logger;
     @Bean(AudioStuffFactoryBean.class)
     AudioStuffFactory audioStuffFactory;
 
-    public PracticeWordSetPresenter create(WordSet wordSet, PracticeWordSetView view, Context context, boolean repetitionMode) {
+    public PracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
         SentenceServiceImpl sentenceService = new SentenceServiceImpl(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
 
-        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(wordsCombinator, sentenceService, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
+        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(serviceFactory.getWordSetExperienceRepository(), sentenceService, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
         if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, wordsCombinator, context, audioStuffFactory);
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, serviceFactory.getWordSetExperienceRepository(), context, audioStuffFactory);
         }
         return new PracticeWordSetPresenter(interactor, viewStrategy);
     }
