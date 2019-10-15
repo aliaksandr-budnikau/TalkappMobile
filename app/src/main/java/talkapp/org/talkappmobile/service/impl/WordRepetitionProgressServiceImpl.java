@@ -89,7 +89,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         List<SentenceIdMapping> ids = new LinkedList<>();
         for (Sentence sentence : sentences) {
             String[] split = sentence.getId().split("#");
-            ids.add(new SentenceIdMapping(split[0], split[1], Integer.valueOf(split[2])));
+            ids.add(new SentenceIdMapping(split[0], Integer.valueOf(split[2])));
         }
         setSentencesIds(exercise, ids);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
@@ -288,11 +288,15 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private List<Sentence> getSentence(WordRepetitionProgressMapping exercise) {
+        WordSetMapping wordSetMapping = wordSetDao.findById(exercise.getWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(wordSetMapping);
         List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
         String[] sentenceIds = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
             try {
-                sentenceIds[i] = mapper.writeValueAsString(ids.get(i));
+                SentenceIdMapping idMapping = ids.get(i);
+                idMapping.setWord(wordSet.getWords().get(exercise.getWordIndex()).getWord());
+                sentenceIds[i] = mapper.writeValueAsString(idMapping);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException();
             }

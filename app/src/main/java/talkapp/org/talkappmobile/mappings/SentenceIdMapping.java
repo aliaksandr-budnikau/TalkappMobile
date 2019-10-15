@@ -9,6 +9,12 @@ public class SentenceIdMapping {
     public SentenceIdMapping() {
     }
 
+    public SentenceIdMapping(String sentenceId, int lengthInWords) {
+        this.sentenceId = sentenceId;
+        this.lengthInWords = lengthInWords;
+    }
+
+    @Deprecated
     public SentenceIdMapping(String sentenceId, @Deprecated String word, int lengthInWords) {
         this.sentenceId = sentenceId;
         this.word = word;
@@ -22,6 +28,11 @@ public class SentenceIdMapping {
     @Deprecated
     public String getWord() {
         return word;
+    }
+
+    @Deprecated
+    public void setWord(String word) {
+        this.word = word;
     }
 
     public int getLengthInWords() {

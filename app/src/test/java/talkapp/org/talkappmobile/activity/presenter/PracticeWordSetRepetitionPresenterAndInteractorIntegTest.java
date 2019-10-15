@@ -166,7 +166,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     }
 
     private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {
-        return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, word, lengthInWords)));
+        return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, lengthInWords)));
     }
 
     @Test
