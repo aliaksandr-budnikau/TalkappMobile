@@ -328,8 +328,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
 
     @Override
-    public int markAsRepeated(int wordIndex, int wordSetId, Sentence sentence) {
-        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(wordIndex, wordSetId, sentence);
+    public int markAsRepeated(Word2Tokens word) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word);
         int counter = exercise.getRepetitionCounter();
         counter++;
         exercise.setRepetitionCounter(counter);
@@ -339,8 +339,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public int markAsForgottenAgain(int wordIndex, int wordSetId, Sentence sentence) {
-        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(wordIndex, wordSetId, sentence);
+    public int markAsForgottenAgain(Word2Tokens word) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word);
         int counter = exercise.getForgettingCounter();
         counter++;
         exercise.setForgettingCounter(counter);
@@ -385,10 +385,14 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         });
     }
 
-    private WordRepetitionProgressMapping getWordRepetitionProgressMapping(int wordIndex, int wordSetId, Sentence sentence) {
+    private WordRepetitionProgressMapping getWordRepetitionProgressMapping(Word2Tokens word) {
+        int wordSetId = word.getSourceWordSetId();
+        WordSetMapping mapping = wordSetDao.findById(wordSetId);
+        WordSet wordDto = wordSetMapper.toDto(mapping);
+        int index = wordDto.getWords().indexOf(word);
         List<WordRepetitionProgressMapping> exercises;
         exercises = exerciseDao.findByWordIndexAndByWordSetIdAndByStatus(
-                wordIndex,
+                index,
                 wordSetId,
                 FINISHED.name()
         );

@@ -55,7 +55,9 @@ import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
+import static java.util.Collections.shuffle;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -200,6 +202,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
+        shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
@@ -236,6 +239,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence();
+        shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
@@ -272,6 +276,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         sentence = interactor.getCurrentSentence();
+        shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
         verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
@@ -284,6 +289,11 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        for (WordRepetitionProgressMapping progressMapping : daoHelper.getWordRepetitionProgressDao().findAll()) {
+            assertEquals(1, progressMapping.getRepetitionCounter());
+        }
+        assertEquals(3, daoHelper.getWordRepetitionProgressDao().findAll().size());
     }
 
     @Test

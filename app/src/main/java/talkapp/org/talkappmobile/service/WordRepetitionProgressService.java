@@ -1,11 +1,10 @@
 package talkapp.org.talkappmobile.service;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
-import java.util.Set;
 
 public interface WordRepetitionProgressService {
     List<Sentence> findByWordAndWordSetId(Word2Tokens word);
@@ -34,9 +33,9 @@ public interface WordRepetitionProgressService {
 
     void moveCurrentWordToNextState(int wordSetId);
 
-    int markAsRepeated(int wordIndex, int wordSetId, Sentence sentence);
+    int markAsRepeated(Word2Tokens word);
 
-    int markAsForgottenAgain(int wordIndex, int wordSetId, Sentence sentence);
+    int markAsForgottenAgain(Word2Tokens word);
 
     List<WordSet> findWordSetOfDifficultWords();
 }
