@@ -30,6 +30,7 @@ import static java.util.Calendar.MINUTE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.CURRENT_FN;
+import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.DUMMY_VALUE_DEPRECATED;
 import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.ID_FN;
 import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.REPETITION_COUNTER_FN;
 import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.SENTENCE_IDS_FN;
@@ -102,7 +103,7 @@ public class WordRepetitionProgressDaoImplTest {
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
-        assertEquals(null, cursor.getString(cursor.getColumnIndex(WORD_FN)));
+        assertEquals(DUMMY_VALUE_DEPRECATED, cursor.getString(cursor.getColumnIndex(WORD_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(WORD_INDEX_FN)));
         assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_IDS_FN)));
         assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
@@ -114,7 +115,7 @@ public class WordRepetitionProgressDaoImplTest {
 
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
-        assertEquals(null, cursor.getString(cursor.getColumnIndex(WORD_FN)));
+        assertEquals(DUMMY_VALUE_DEPRECATED, cursor.getString(cursor.getColumnIndex(WORD_FN)));
         assertEquals(3, cursor.getInt(cursor.getColumnIndex(WORD_INDEX_FN)));
         assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_IDS_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
@@ -244,7 +245,7 @@ public class WordRepetitionProgressDaoImplTest {
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(5, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
-        assertEquals(null, cursor.getString(cursor.getColumnIndex(WORD_FN)));
+        assertEquals(DUMMY_VALUE_DEPRECATED, cursor.getString(cursor.getColumnIndex(WORD_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(WORD_INDEX_FN)));
         assertEquals("sentenceJSON", cursor.getString(cursor.getColumnIndex(SENTENCE_IDS_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
@@ -266,7 +267,7 @@ public class WordRepetitionProgressDaoImplTest {
 
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
-        assertEquals(null, cursor.getString(cursor.getColumnIndex(WORD_FN)));
+        assertEquals(DUMMY_VALUE_DEPRECATED, cursor.getString(cursor.getColumnIndex(WORD_FN)));
         assertEquals(1, cursor.getInt(cursor.getColumnIndex(WORD_INDEX_FN)));
         assertEquals("sentenceJSON1", cursor.getString(cursor.getColumnIndex(SENTENCE_IDS_FN)));
         assertEquals(FIRST_CYCLE.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));
@@ -278,7 +279,7 @@ public class WordRepetitionProgressDaoImplTest {
 
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(ID_FN)));
         assertEquals(2, cursor.getInt(cursor.getColumnIndex(WORD_SET_ID_FN)));
-        assertEquals(null, cursor.getString(cursor.getColumnIndex(WORD_FN)));
+        assertEquals(DUMMY_VALUE_DEPRECATED, cursor.getString(cursor.getColumnIndex(WORD_FN)));
         assertEquals(3, cursor.getInt(cursor.getColumnIndex(WORD_INDEX_FN)));
         assertEquals("sentenceJSON3", cursor.getString(cursor.getColumnIndex(SENTENCE_IDS_FN)));
         assertEquals(FINISHED.name(), cursor.getString(cursor.getColumnIndex(STATUS_FN)));

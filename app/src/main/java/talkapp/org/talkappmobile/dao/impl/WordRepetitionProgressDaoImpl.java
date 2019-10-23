@@ -15,6 +15,9 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 
+import static java.util.Arrays.asList;
+import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.DUMMY_VALUE_DEPRECATED;
+
 public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionProgressMapping, Integer> implements WordRepetitionProgressDao {
 
     public WordRepetitionProgressDaoImpl(ConnectionSource connectionSource, Class<WordRepetitionProgressMapping> dataClass) throws SQLException {
@@ -39,6 +42,7 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     @Override
     public void createNewOrUpdate(WordRepetitionProgressMapping exercise) {
         try {
+            setDummyValueToNotNullableFields(asList(exercise));
             super.createOrUpdate(exercise);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -59,9 +63,18 @@ public class WordRepetitionProgressDaoImpl extends BaseDaoImpl<WordRepetitionPro
     @Override
     public int createAll(List<WordRepetitionProgressMapping> words) {
         try {
+            setDummyValueToNotNullableFields(words);
             return super.create(words);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private void setDummyValueToNotNullableFields(List<WordRepetitionProgressMapping> words) {
+        for (WordRepetitionProgressMapping word : words) {
+            if (word.getWordJSON() == null) {
+                word.setWordJSON(DUMMY_VALUE_DEPRECATED);
+            }
         }
     }
 

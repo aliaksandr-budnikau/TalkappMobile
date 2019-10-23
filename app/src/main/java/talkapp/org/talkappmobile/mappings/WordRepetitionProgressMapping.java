@@ -16,6 +16,7 @@ public class WordRepetitionProgressMapping {
     public static final String ID_FN = "id";
     @Deprecated
     public static final String WORD_FN = "word";
+    public static final String DUMMY_VALUE_DEPRECATED = "deprecated";
     public static final String SENTENCE_IDS_FN = "sentenceId";
     public static final String WORD_SET_ID_FN = "wordSetId";
     public static final String WORD_INDEX_FN = "wordIndex";
@@ -84,6 +85,11 @@ public class WordRepetitionProgressMapping {
     @Deprecated
     public String getWordJSON() {
         return wordJSON;
+    }
+
+    @Deprecated
+    public void setWordJSON(String wordJSON) {
+        this.wordJSON = wordJSON;
     }
 
     public int getWordSetId() {
