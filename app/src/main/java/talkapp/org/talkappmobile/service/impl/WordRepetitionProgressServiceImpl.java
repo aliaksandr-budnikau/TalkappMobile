@@ -311,7 +311,10 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         LinkedList<Sentence> result = new LinkedList<>();
         for (String id : sentenceIds) {
-            result.add(sentenceMapper.toDto(hashMap.get(id)));
+            SentenceMapping mapping = hashMap.get(id);
+            if (mapping != null) {
+                result.add(sentenceMapper.toDto(mapping));
+            }
         }
         return result;
     }
