@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.BuildConfig;
@@ -127,35 +128,65 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens age = new Word2Tokens("age", "age", id);
+        int ageWordSetId = id + 1;
+        Word2Tokens age = new Word2Tokens("age", "age", ageWordSetId);
+        List<Word2Tokens> ageWordSetWords = asList(age, new Word2Tokens(), new Word2Tokens());
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgboVdNEXFMlzHK5SR", age.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
-        exercise.setWordSetId(id);
-        exercise.setWordIndex(0);
+        exercise.setWordSetId(ageWordSetId);
+        exercise.setWordIndex(ageWordSetWords.indexOf(age));
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
+        WordSet ageWordSet = new WordSet();
+        ageWordSet.setId(ageWordSetId);
+        ageWordSet.setStatus(WordSetProgressStatus.FINISHED);
+        ageWordSet.setWords(new LinkedList<>(ageWordSetWords));
+        ageWordSet.setTopicId("topicId");
+        ageWordSet.setTrainingExperience(0);
+        WordSetMapping ageWordSetMapping = new WordSetMapper(mapper).toMapping(ageWordSet);
+        daoHelper.getWordSetDao().createNewOrUpdate(ageWordSetMapping);
 
-        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", id);
+        int anniversaryWordSetId = id + 2;
+        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
+        List<Word2Tokens> anniversaryWordSetWords = asList(new Word2Tokens(), anniversary, new Word2Tokens());
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
-        exercise.setWordSetId(id);
-        exercise.setWordIndex(1);
+        exercise.setWordSetId(anniversaryWordSetId);
+        exercise.setWordIndex(anniversaryWordSetWords.indexOf(anniversary));
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
+        WordSet anniversaryWordSet = new WordSet();
+        anniversaryWordSet.setId(anniversaryWordSetId);
+        anniversaryWordSet.setStatus(WordSetProgressStatus.FINISHED);
+        anniversaryWordSet.setWords(new LinkedList<>(anniversaryWordSetWords));
+        anniversaryWordSet.setTopicId("topicId");
+        anniversaryWordSet.setTrainingExperience(0);
+        WordSetMapping anniversaryWordSetMapping = new WordSetMapper(mapper).toMapping(anniversaryWordSet);
+        daoHelper.getWordSetDao().createNewOrUpdate(anniversaryWordSetMapping);
 
-        Word2Tokens birth = new Word2Tokens("birth", "birth", id);
+        int birthWordSetId = id + 3;
+        Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
+        List<Word2Tokens> birthWordSetWords = asList(new Word2Tokens(), new Word2Tokens(), birth);
         exercise = new WordRepetitionProgressMapping();
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbsUXNEXFMlzHK5V2", birth.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
-        exercise.setWordSetId(id);
-        exercise.setWordIndex(2);
+        exercise.setWordSetId(birthWordSetId);
+        exercise.setWordIndex(birthWordSetWords.indexOf(birth));
         daoHelper.getWordRepetitionProgressDao().createNewOrUpdate(exercise);
 
+        WordSet birthWordSet = new WordSet();
+        birthWordSet.setId(birthWordSetId);
+        birthWordSet.setStatus(WordSetProgressStatus.FINISHED);
+        birthWordSet.setWords(new LinkedList<>(birthWordSetWords));
+        birthWordSet.setTopicId("topicId");
+        birthWordSet.setTrainingExperience(0);
+        WordSetMapping birthWordSetMapping = new WordSetMapper(mapper).toMapping(birthWordSet);
+        daoHelper.getWordSetDao().createNewOrUpdate(birthWordSetMapping);
 
         wordSet.setWords(new LinkedList<>(asList(age, anniversary, birth)));
         wordSet.setTopicId("topicId");
