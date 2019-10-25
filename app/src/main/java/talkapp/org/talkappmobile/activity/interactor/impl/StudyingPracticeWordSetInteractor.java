@@ -31,8 +31,10 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordSetExperienceUtils experienceUtils;
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
-    private Word2Tokens currentWord;
+    private final WordSetService wordSetService;
+    private int currentWordIndex;
     private Sentence currentSentence;
+    private Integer wordSetId;
 
     public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
                                              SentenceService sentenceService,
@@ -46,6 +48,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
         this.sentenceService = sentenceService;
+        this.wordSetService = wordSetService;
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
@@ -73,7 +76,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
-        this.currentWord = word;
+        wordSetId = word.getSourceWordSetId();
+        WordSet wordSet = wordSetService.findById(wordSetId);
+        this.currentWordIndex = wordSet.getWords().indexOf(word);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
@@ -91,7 +96,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public boolean checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
-        if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
+        if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
 
@@ -116,12 +121,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
             logger.i(TAG, "training finished");
             experienceService.moveToAnotherState(wordSet.getId(), FINISHED);
-            exerciseService.shiftSentences(currentWord);
+            exerciseService.shiftSentences(getCurrentWord());
             wordSet.setStatus(FINISHED);
             listener.onTrainingFinished();
         } else {
             if (wordSet.getStatus() == SECOND_CYCLE) {
-                exerciseService.shiftSentences(currentWord);
+                exerciseService.shiftSentences(getCurrentWord());
             }
             listener.onRightAnswer(sentence);
         }
@@ -150,6 +155,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     protected Word2Tokens getCurrentWord() {
-        return currentWord;
+        WordSet wordSet = wordSetService.findById(wordSetId);
+        return wordSet.getWords().get(currentWordIndex);
     }
 }

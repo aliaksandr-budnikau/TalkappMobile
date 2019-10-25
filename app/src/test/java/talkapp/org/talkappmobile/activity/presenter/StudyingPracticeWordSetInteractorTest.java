@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -155,9 +156,16 @@ public class StudyingPracticeWordSetInteractorTest {
         int wordSetId = 3;
         Word2Tokens word = new Word2Tokens("sdfs", "sdfs", wordSetId);
 
+        WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(word));
+        wordSet.setId(wordSetId);
+
         // when
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
+        when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
         // then
@@ -173,9 +181,15 @@ public class StudyingPracticeWordSetInteractorTest {
 
         int wordSetId = 3;
         Word2Tokens word = new Word2Tokens("SDFDS", "SDFDS", wordSetId);
+        WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(word));
+        wordSet.setId(wordSetId);
 
         // when
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(Collections.<Sentence>emptyList());
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
         // then
@@ -190,6 +204,7 @@ public class StudyingPracticeWordSetInteractorTest {
         int id = 3;
 
         WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(new Word2Tokens()));
         wordSet.setId(id);
         wordSet.setTrainingExperience(4);
 
@@ -204,6 +219,9 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet.getTrainingExperience() + 1);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -237,6 +255,8 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet, 1)).thenReturn(wordSet.getTrainingExperience());
         when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
@@ -260,6 +280,7 @@ public class StudyingPracticeWordSetInteractorTest {
         int id = 3;
 
         WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(new Word2Tokens()));
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
 
@@ -273,6 +294,9 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -292,6 +316,7 @@ public class StudyingPracticeWordSetInteractorTest {
         int id = 3;
 
         WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(new Word2Tokens()));
         wordSet.setId(id);
         wordSet.setTrainingExperience(0);
 
@@ -304,7 +329,10 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
@@ -323,6 +351,7 @@ public class StudyingPracticeWordSetInteractorTest {
     public void checkAnswer_emptyAnswer() {
         // setup
         WordSet wordSet = new WordSet();
+        wordSet.setWords(asList(new Word2Tokens()));
         wordSet.setId(4);
         wordSet.setTrainingExperience(0);
 
@@ -335,6 +364,9 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("");
 
         // when
+        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
+        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
 
         // then
