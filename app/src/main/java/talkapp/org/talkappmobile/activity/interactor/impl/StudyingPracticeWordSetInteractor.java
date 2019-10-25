@@ -105,7 +105,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return false;
         }
 
-        int experience = experienceService.increaseExperience(wordSet, 1);
+        int experience = experienceService.increaseExperience(wordSetId, 1);
         wordSet.setTrainingExperience(experience);
         listener.onUpdateProgress(wordSet);
 

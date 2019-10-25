@@ -49,9 +49,10 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public int increaseExperience(WordSet wordSet, int value) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
+    public int increaseExperience(int wordSetId, int value) {
+        WordSetMapping wordSetMapping = wordSetDao.findById(wordSetId);
         int experience = wordSetMapping.getTrainingExperience() + value;
+        WordSet wordSet = wordSetMapper.toDto(wordSetMapping);
         if (experience > experienceUtils.getMaxTrainingProgress(wordSet)) {
             wordSetMapping.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
         } else {

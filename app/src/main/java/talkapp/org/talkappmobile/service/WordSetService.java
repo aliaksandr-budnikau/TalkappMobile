@@ -11,7 +11,7 @@ public interface WordSetService {
 
     void resetProgress(WordSet wordSet);
 
-    int increaseExperience(WordSet wordSet, int value);
+    int increaseExperience(int wordSetId, int value);
 
     void moveToAnotherState(int id, WordSetProgressStatus value);
 
