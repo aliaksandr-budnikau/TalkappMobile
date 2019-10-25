@@ -66,7 +66,7 @@ public class PresenterFactory {
     }
 
     public PracticeWordSetVocabularyPresenter create(WordSet wordSet, PracticeWordSetVocabularyView view) {
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get());
+        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository());
         return new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
     }
 
