@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordsCombinator;
 
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
@@ -29,11 +28,12 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private final WordSetExperienceUtils experienceUtils;
+    private final WordSetService wordSetService;
     private Word2Tokens currentWord;
     private Sentence currentSentence;
     private int maxTrainingProgress;
     private List<Word2Tokens> finishedWords = new LinkedList<>();
-    private WordSet wordSet;
+    private List<WordSource> wordsSources = new LinkedList<>();
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -51,6 +51,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.exerciseService = exerciseService;
         this.userExpService = userExpService;
         this.experienceUtils = experienceUtils;
+        this.wordSetService = wordSetService;
     }
 
     @Override
@@ -65,7 +66,10 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
-        this.wordSet = wordSet;
+        for (Word2Tokens word : wordSet.getWords()) {
+            WordSet set = wordSetService.findById(word.getSourceWordSetId());
+            wordsSources.add(new WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
+        }
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
@@ -75,7 +79,12 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
-        return peekRandomWordWithoutCurrentWord(wordSet.getWords(), currentWord);
+        LinkedList<Word2Tokens> words = new LinkedList<>();
+        for (WordSource word : wordsSources) {
+            WordSet set = wordSetService.findById(word.getWordSetId());
+            words.add(set.getWords().get(word.wordIndex));
+        }
+        return peekRandomWordWithoutCurrentWord(words, currentWord);
     }
 
     @Override
@@ -129,5 +138,23 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     protected Word2Tokens getCurrentWord() {
         return currentWord;
+    }
+
+    private static class WordSource {
+        private final int wordSetId;
+        private final int wordIndex;
+
+        public WordSource(int wordSetId, int wordIndex) {
+            this.wordSetId = wordSetId;
+            this.wordIndex = wordIndex;
+        }
+
+        public int getWordSetId() {
+            return wordSetId;
+        }
+
+        public int getWordIndex() {
+            return wordIndex;
+        }
     }
 }
