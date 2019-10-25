@@ -17,7 +17,7 @@ public interface OnPracticeWordSetListener {
 
     void onUpdateProgress(WordSet wordSet);
 
-    void onUpdateProgress(WordSet wordSet, int maxTrainingProgress);
+    void onUpdateProgress(int trainingExperience, int maxTrainingProgress);
 
     void onTrainingHalfFinished(Sentence sentence);
 

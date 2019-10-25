@@ -114,7 +114,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
         wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         finishedWords.add(currentWord);
-        listener.onUpdateProgress(wordSet, maxTrainingProgress);
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);

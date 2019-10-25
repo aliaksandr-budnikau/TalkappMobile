@@ -44,8 +44,8 @@ public class PracticeWordSetViewStrategy {
         view.setProgress(progress);
     }
 
-    public void onUpdateProgress(WordSet wordSet, int maxTrainingProgress) {
-        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
+    public void onUpdateProgress(int trainingExperience, int maxTrainingProgress) {
+        int progress = experienceUtils.getProgress(trainingExperience, maxTrainingProgress);
         view.setProgress(progress);
     }
 
