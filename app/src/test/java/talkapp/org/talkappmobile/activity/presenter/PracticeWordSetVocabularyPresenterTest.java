@@ -27,12 +27,12 @@ public class PracticeWordSetVocabularyPresenterTest {
         WordSet wordSet = new WordSet();
 
         // when
-        PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
-        presenter.initialise();
+        PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(view, interactor);
+        presenter.initialise(wordSet.getId());
 
         // then
         verify(view).onInitializeBeginning();
-        verify(interactor).initialiseVocabulary(wordSet, presenter);
+        verify(interactor).initialiseVocabulary(wordSet.getId(), presenter);
         verify(view).onInitializeEnd();
     }
 
@@ -42,13 +42,13 @@ public class PracticeWordSetVocabularyPresenterTest {
         WordSet wordSet = new WordSet();
 
         // when
-        PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(wordSet, view, interactor);
+        PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
-            presenter.initialise();
+            presenter.initialise(wordSet.getId());
         } finally {
             // then
-            verify(interactor, times(0)).initialiseVocabulary(wordSet, presenter);
+            verify(interactor, times(0)).initialiseVocabulary(wordSet.getId(), presenter);
             verify(view).onInitializeEnd();
         }
     }

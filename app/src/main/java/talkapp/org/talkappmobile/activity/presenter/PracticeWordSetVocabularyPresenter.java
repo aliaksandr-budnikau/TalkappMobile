@@ -1,31 +1,27 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
 
-    private final WordSet wordSet;
     private final PracticeWordSetVocabularyView view;
     private final PracticeWordSetVocabularyInteractor interactor;
 
-    public PracticeWordSetVocabularyPresenter(WordSet wordSet, PracticeWordSetVocabularyView view, PracticeWordSetVocabularyInteractor interactor) {
-        this.wordSet = wordSet;
+    public PracticeWordSetVocabularyPresenter(PracticeWordSetVocabularyView view, PracticeWordSetVocabularyInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
-    public void initialise() {
+    public void initialise(int wordSetId) {
         try {
             view.onInitializeBeginning();
-            interactor.initialiseVocabulary(wordSet, this);
+            interactor.initialiseVocabulary(wordSetId, this);
         } catch (LocalCacheIsEmptyException e) {
             view.onLocalCacheIsEmptyException(e);
         } finally {

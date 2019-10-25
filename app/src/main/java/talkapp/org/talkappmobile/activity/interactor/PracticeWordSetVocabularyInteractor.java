@@ -21,15 +21,15 @@ public class PracticeWordSetVocabularyInteractor {
         this.wordSetService = wordSetService;
     }
 
-    public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
-        listener.onWordSetVocabularyFound(getWordTranslations(wordSet));
+    public void initialiseVocabulary(int wordSetId, OnPracticeWordSetVocabularyListener listener) {
+        listener.onWordSetVocabularyFound(getWordTranslations(wordSetId));
     }
 
-    private List<WordTranslation> getWordTranslations(WordSet wordSet) {
-        if (wordSet.getId() == 0) {
-            return server.findWordTranslationsByWordsAndByLanguage(getWords(wordSet.getId()), "russian");
+    private List<WordTranslation> getWordTranslations(int wordSetId) {
+        if (wordSetId == 0) {
+            return server.findWordTranslationsByWordsAndByLanguage(getWords(wordSetId), "russian");
         } else {
-            return server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
+            return server.findWordTranslationsByWordSetIdAndByLanguage(wordSetId, "russian");
         }
     }
 
