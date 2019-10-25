@@ -32,7 +32,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private WordSource currentWord;
     private Sentence currentSentence;
     private int maxTrainingProgress;
-    private List<Word2Tokens> finishedWords = new LinkedList<>();
+    private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
 
     public RepetitionPracticeWordSetInteractor(
@@ -113,7 +113,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
 
         wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
-        finishedWords.add(getCurrentWord());
+        finishedWords.add(currentWord);
         listener.onUpdateProgress(wordSet, maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
@@ -132,8 +132,16 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
         LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
-        leftOver.removeAll(finishedWords);
+        for (WordSource finishedWord : finishedWords) {
+            leftOver.remove(getWord2TokensSource(finishedWord));
+        }
         return super.peekRandomWordWithoutCurrentWord(leftOver, currentWord);
+    }
+
+    private Word2Tokens getWord2TokensSource(WordSource source) {
+        int wordSetId = source.getWordSetId();
+        int wordIndex = source.getWordIndex();
+        return wordSetService.findById(wordSetId).getWords().get(wordIndex);
     }
 
     @Override
@@ -141,8 +149,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         if (currentWord == null) {
             return null;
         }
-        WordSet wordSet = wordSetService.findById(currentWord.getWordSetId());
-        return wordSet.getWords().get(currentWord.getWordIndex());
+        return getWord2TokensSource(currentWord);
     }
 
     private static class WordSource {
