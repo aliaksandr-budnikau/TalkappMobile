@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPre
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.EqualityScorer;
@@ -66,7 +65,7 @@ public class PresenterFactory {
     }
 
     public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository());
+        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(backendServerFactory.get());
         return new PracticeWordSetVocabularyPresenter(view, interactor);
     }
 

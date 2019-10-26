@@ -70,7 +70,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @Background
     public void initPresenter() {
         PracticeWordSetVocabularyPresenter presenter = presenterFactory.create(this);
-        presenter.initialise(wordSet.getId());
+        presenter.initialise(wordSet);
     }
 
     @Override

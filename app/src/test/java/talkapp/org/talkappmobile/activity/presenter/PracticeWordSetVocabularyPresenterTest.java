@@ -28,11 +28,11 @@ public class PracticeWordSetVocabularyPresenterTest {
 
         // when
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(view, interactor);
-        presenter.initialise(wordSet.getId());
+        presenter.initialise(wordSet);
 
         // then
         verify(view).onInitializeBeginning();
-        verify(interactor).initialiseVocabulary(wordSet.getId(), presenter);
+        verify(interactor).initialiseVocabulary(wordSet, presenter);
         verify(view).onInitializeEnd();
     }
 
@@ -45,10 +45,10 @@ public class PracticeWordSetVocabularyPresenterTest {
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
-            presenter.initialise(wordSet.getId());
+            presenter.initialise(wordSet);
         } finally {
             // then
-            verify(interactor, times(0)).initialiseVocabulary(wordSet.getId(), presenter);
+            verify(interactor, times(0)).initialiseVocabulary(wordSet, presenter);
             verify(view).onInitializeEnd();
         }
     }

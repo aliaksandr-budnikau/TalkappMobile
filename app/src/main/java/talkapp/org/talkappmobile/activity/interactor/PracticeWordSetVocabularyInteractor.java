@@ -10,32 +10,28 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.WordSetService;
 
 public class PracticeWordSetVocabularyInteractor {
     private final DataServer server;
-    private final WordSetService wordSetService;
 
-    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService) {
+    public PracticeWordSetVocabularyInteractor(DataServer server) {
         this.server = server;
-        this.wordSetService = wordSetService;
     }
 
-    public void initialiseVocabulary(int wordSetId, OnPracticeWordSetVocabularyListener listener) {
-        listener.onWordSetVocabularyFound(getWordTranslations(wordSetId));
+    public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
+        listener.onWordSetVocabularyFound(getWordTranslations(wordSet));
     }
 
-    private List<WordTranslation> getWordTranslations(int wordSetId) {
-        if (wordSetId == 0) {
-            return server.findWordTranslationsByWordsAndByLanguage(getWords(wordSetId), "russian");
+    private List<WordTranslation> getWordTranslations(WordSet wordSet) {
+        if (wordSet.getId() == 0) {
+            return server.findWordTranslationsByWordsAndByLanguage(getWords(wordSet), "russian");
         } else {
-            return server.findWordTranslationsByWordSetIdAndByLanguage(wordSetId, "russian");
+            return server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
         }
     }
 
     @NonNull
-    private LinkedList<String> getWords(int wordSetId) {
-        WordSet wordSet = wordSetService.findById(wordSetId);
+    private LinkedList<String> getWords(WordSet wordSet) {
         List<Word2Tokens> word2Tokens = wordSet.getWords();
         LinkedList<String> words = new LinkedList<>();
         for (Word2Tokens word2Token : word2Tokens) {

@@ -23,7 +23,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -45,8 +44,6 @@ import static org.mockito.Mockito.when;
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     @Mock
     private PracticeWordSetVocabularyView view;
-    @Mock
-    private WordSetService wordSetService;
     private PracticeWordSetVocabularyInteractor interactor;
 
     @Before
@@ -62,7 +59,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        interactor = new PracticeWordSetVocabularyInteractor(server, wordSetService);
+        interactor = new PracticeWordSetVocabularyInteractor(server);
     }
 
     @Test
@@ -77,7 +74,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
         PracticeWordSetVocabularyPresenter presenter = new PracticeWordSetVocabularyPresenter(view, interactor);
 
-        presenter.initialise(wordSet.getId());
+        presenter.initialise(wordSet);
         ArgumentCaptor<List<WordTranslation>> wordTranslationsCaptor = forClass(List.class);
         verify(view).setWordSetVocabularyList(wordTranslationsCaptor.capture());
         assertFalse(wordTranslationsCaptor.getValue().isEmpty());
