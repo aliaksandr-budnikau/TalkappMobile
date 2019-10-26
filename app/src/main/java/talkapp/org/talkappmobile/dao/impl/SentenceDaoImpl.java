@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
@@ -61,12 +62,16 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
             escapedStrings.add(new SelectArg(id));
         }
         try {
-            return this.query(
-                    queryBuilder()
-                            .where()
-                            .in(ID_FN, escapedStrings)
-                            .prepare()
-            );
+            Where<SentenceMapping, String> where = queryBuilder().where();
+            where.in(ID_FN, escapedStrings);
+            for (String id : ids) {
+                String quote = "'";
+                if (id.contains(quote)) {
+                    where.or();
+                    where.like(ID_FN, new SelectArg(id.replace(quote, "%")));
+                }
+            }
+            return this.query(where.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

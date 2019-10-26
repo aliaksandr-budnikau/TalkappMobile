@@ -129,8 +129,15 @@ public class SentenceDaoImplTest {
         map2.setTranslations("ssss#" + word2 + "#6");
         map2.setTokens("ssss#" + word2 + "#6");
 
-        sentenceDao.save(asList(map1, map2));
-        List<SentenceMapping> allByIds = sentenceDao.findAllByIds(new String[]{map1.getId(), map2.getId()});
-        assertEquals(2, allByIds.size());
+        SentenceMapping map3 = new SentenceMapping();
+        String word3 = "{\"word\":\"It's a bit of a reach.\",\"sentenceId\":\"1570312811094\",\"lengthInWords\":6}";
+        map3.setId(word3);
+        map3.setText("ssss#" + word3 + "#6");
+        map3.setTranslations("ssss#" + word3 + "#6");
+        map3.setTokens("ssss#" + word3 + "#6");
+
+        sentenceDao.save(asList(map1, map2, map3));
+        List<SentenceMapping> allByIds = sentenceDao.findAllByIds(new String[]{map1.getId(), map2.getId(), map3.getId()});
+        assertEquals(3, allByIds.size());
     }
 }
