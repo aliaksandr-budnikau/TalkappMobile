@@ -136,7 +136,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
 
     public void initialise(WordSet wordSet) {
         interactor.initialiseExperience(wordSet, this);
-        interactor.initialiseWordsSequence(wordSet.getId(), this);
+        interactor.initialiseWordsSequence(wordSet, this);
     }
 
     public void nextButtonClick(int wordSetId) {

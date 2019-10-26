@@ -136,8 +136,7 @@ public class StudyingPracticeWordSetInteractorTest {
         List<Word2Tokens> words = new ArrayList<>(wordSet.getWords());
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        interactor.initialiseWordsSequence(wordSet.getId(), listener);
+        interactor.initialiseWordsSequence(wordSet, listener);
 
         // then
         verify(exerciseService).createSomeIfNecessary(words);

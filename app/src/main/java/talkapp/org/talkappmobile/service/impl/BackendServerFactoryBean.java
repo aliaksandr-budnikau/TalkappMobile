@@ -21,7 +21,7 @@ import talkapp.org.talkappmobile.service.ServiceFactory;
 @EBean(scope = EBean.Scope.Singleton)
 public class BackendServerFactoryBean implements BackendServerFactory {
 
-    public static final int TIMEOUT = 5;
+    public static final int TIMEOUT = 50;
     public static final String SERVER_URL = "http://192.168.0.101:8080";
     public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
 
