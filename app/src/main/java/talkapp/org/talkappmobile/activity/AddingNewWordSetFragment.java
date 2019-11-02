@@ -23,6 +23,8 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
+import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
@@ -40,9 +42,11 @@ import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
-public class AddingNewWordSetFragment extends Fragment {
+public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener {
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
     @Bean(BackendServerFactoryBean.class)
@@ -78,6 +82,7 @@ public class AddingNewWordSetFragment extends Fragment {
     public void onMessageEvent(NewWordSetDraftLoadedEM event) {
         WordTranslation[] words = event.getNewWordSetDraft().getWordTranslations().toArray(new WordTranslation[0]);
         wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
+        wordSetVocabularyView.setOnItemViewInteractionListener(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -145,5 +150,19 @@ public class AddingNewWordSetFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
         eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
+    }
+
+    @Override
+    public void onSayItemButtonClicked(WordTranslation item, int position) {
+        try {
+            speaker.speak(item.getWord());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void onEditButtonClicked(WordTranslation item, int position) {
+        wordSetVocabularyView.openAlertDialog(item, position);
     }
 }

@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
@@ -26,6 +25,8 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -33,7 +34,7 @@ import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.word_translations_layout)
-public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView {
+public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, WordSetVocabularyView.OnItemViewInteractionListener {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Bean
     PresenterFactory presenterFactory;
@@ -41,9 +42,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @EventBusGreenRobot
     EventBus eventBus;
-
+    @Bean(SpeakerBean.class)
+    Speaker speaker;
     @ViewById(R.id.wordSetVocabularyView)
-    RecyclerView wordSetVocabularyView;
+    WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
 
@@ -63,7 +65,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-
+        wordSetVocabularyView.setOnItemViewInteractionListener(this);
         initPresenter();
     }
 
@@ -99,5 +101,19 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
             activity.finish();
         }
         throw e;
+    }
+
+    @Override
+    public void onSayItemButtonClicked(WordTranslation item, int position) {
+        try {
+            speaker.speak(item.getWord());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void onEditButtonClicked(WordTranslation item, int position) {
+        wordSetVocabularyView.openAlertDialog(item, position);
     }
 }

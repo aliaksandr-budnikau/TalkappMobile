@@ -198,7 +198,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(RecyclerView.class));
+        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(WordSetVocabularyView.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
     }
 

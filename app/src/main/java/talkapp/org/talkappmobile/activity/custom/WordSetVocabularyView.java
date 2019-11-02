@@ -43,8 +43,6 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
-import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
@@ -68,8 +66,6 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     @EventBusGreenRobot
     EventBus eventBus;
 
-    @Bean(SpeakerBean.class)
-    Speaker speaker;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
     @Bean(BackendServerFactoryBean.class)
@@ -110,6 +106,17 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     private EditText phraseBox;
     private EditText translationBox;
     private boolean readOnly;
+    private OnItemViewInteractionListener onItemViewInteractionListener = new OnItemViewInteractionListener() {
+        @Override
+        public void onSayItemButtonClicked(WordTranslation item, int position) {
+            // do nothing
+        }
+
+        @Override
+        public void onEditButtonClicked(WordTranslation item, int position) {
+            // do nothing
+        }
+    };
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -124,6 +131,10 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
 
     public WordSetVocabularyView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    public void setOnItemViewInteractionListener(OnItemViewInteractionListener onItemViewInteractionListener) {
+        this.onItemViewInteractionListener = onItemViewInteractionListener;
     }
 
     @AfterInject
@@ -142,14 +153,6 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
         this.getAdapter().notifyDataSetChanged();
-    }
-
-    public void pronounceText(String text) {
-        try {
-            speaker.speak(text);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     public void openAlertDialog(final WordTranslation wordTranslation, final int adapterPosition) {
@@ -286,6 +289,12 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
         RIGHT_VISIBLE
     }
 
+    public interface OnItemViewInteractionListener {
+        void onSayItemButtonClicked(WordTranslation item, int position);
+
+        void onEditButtonClicked(WordTranslation item, int position);
+    }
+
     public static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
         private final WordTranslationExpandable[] translations;
 
@@ -371,14 +380,14 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
 
     private class SwipeControllerActions {
         public void onSayButtonClicked(int position) {
-            pronounceText(getVocabulary().get(position).getWord());
+            onItemViewInteractionListener.onSayItemButtonClicked(getVocabulary().get(position), position);
         }
 
         public void onEditButtonClicked(int position) {
             if (readOnly) {
                 Toast.makeText(WordSetVocabularyView.this.getContext(), warningReadOnlyMode, Toast.LENGTH_LONG).show();
             } else {
-                openAlertDialog(getVocabulary().get(position), position);
+                onItemViewInteractionListener.onEditButtonClicked(getVocabulary().get(position), position);
             }
         }
 
