@@ -162,7 +162,12 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     }
 
     @Override
-    public void onEditButtonClicked(WordTranslation item, int position) {
+    public void onEditItemButtonClicked(WordTranslation item, int position) {
         wordSetVocabularyView.openAlertDialog(item, position);
+    }
+
+    @Override
+    public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
+
     }
 }

@@ -113,7 +113,12 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
         }
 
         @Override
-        public void onEditButtonClicked(WordTranslation item, int position) {
+        public void onEditItemButtonClicked(WordTranslation item, int position) {
+            // do nothing
+        }
+
+        @Override
+        public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
             // do nothing
         }
     };
@@ -195,6 +200,8 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
                     public void onClick(View view) {
                         WordSetVocabularyView.this.onMessageEvent(new PhraseTranslationInputPopupOkClickedEM(adapterPosition, phraseBox.getText().toString(),
                                 translationBox.getText().toString()));
+                        onItemViewInteractionListener.onSubmitChangeItemButtonClicked(phraseBox.getText().toString(),
+                                translationBox.getText().toString(), adapterPosition);
                     }
                 });
             }
@@ -292,7 +299,9 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     public interface OnItemViewInteractionListener {
         void onSayItemButtonClicked(WordTranslation item, int position);
 
-        void onEditButtonClicked(WordTranslation item, int position);
+        void onEditItemButtonClicked(WordTranslation item, int position);
+
+        void onSubmitChangeItemButtonClicked(String phrase, String translation, int position);
     }
 
     public static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
@@ -387,7 +396,7 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
             if (readOnly) {
                 Toast.makeText(WordSetVocabularyView.this.getContext(), warningReadOnlyMode, Toast.LENGTH_LONG).show();
             } else {
-                onItemViewInteractionListener.onEditButtonClicked(getVocabulary().get(position), position);
+                onItemViewInteractionListener.onEditItemButtonClicked(getVocabulary().get(position), position);
             }
         }
 
