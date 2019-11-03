@@ -1,8 +1,9 @@
-package talkapp.org.talkappmobile.activity.custom.controller;
+package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,41 +12,36 @@ import java.util.List;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.NewWordWithTranslation;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-public class WordSetVocabularyViewController {
+public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWordSetsService {
     public static final String RUSSIAN_LANGUAGE = "russian";
     private static final int WORDS_NUMBER = 6;
-    private final LocalEventBus eventBus;
     private final DataServer server;
+    private final EventBus eventBus;
     private final WordTranslationService wordTranslationService;
 
-    public WordSetVocabularyViewController(@NonNull LocalEventBus eventBus, @NonNull DataServer server,
-                                           @NonNull ServiceFactory factory) {
+    public AddingEditingNewWordSetsServiceImpl(EventBus eventBus, DataServer server, WordTranslationService wordTranslationService) {
         this.eventBus = eventBus;
         this.server = server;
-        this.wordTranslationService = factory.getWordTranslationService();
+        this.wordTranslationService = wordTranslationService;
     }
 
-    public void handle(PhraseTranslationInputPopupOkClickedEM event) {
-        String translation = event.getTranslation();
-        String phrase = event.getPhrase();
-
+    @Override
+    public void saveNewWordTranslation(String phrase, String translation, int position) {
         NewWordWithTranslation normalizedPhrase = new NewWordWithTranslation(phrase, translation);
 
         if (hasNoSentences(normalizedPhrase)) {
@@ -56,7 +52,7 @@ public class WordSetVocabularyViewController {
         if (StringUtils.isEmpty(normalizedPhrase.getTranslation())) {
             result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedPhrase.getWord());
             if (result == null) {
-                eventBus.onMessageEvent(new NewWordTranslationWasNotFoundEM());
+                eventBus.post(new NewWordTranslationWasNotFoundEM());
                 return;
             }
         } else {
@@ -67,7 +63,7 @@ public class WordSetVocabularyViewController {
             wordTranslation.setTokens(normalizedPhrase.getWord());
             wordTranslationService.saveWordTranslations(asList(wordTranslation));
         }
-        eventBus.onMessageEvent(new PhraseTranslationInputWasValidatedSuccessfullyEM(event.getAdapterPosition(), phrase, translation));
+        eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM(position, phrase, translation));
     }
 
     private boolean hasNoSentences(NewWordWithTranslation phrase) {
@@ -99,9 +95,9 @@ public class WordSetVocabularyViewController {
         }
         if (sentences.isEmpty()) {
             anyHasNoSentences = true;
-            eventBus.onMessageEvent(new NewWordSentencesWereNotFoundEM());
+            eventBus.post(new NewWordSentencesWereNotFoundEM());
         } else {
-            eventBus.onMessageEvent(new NewWordSentencesWereFoundEM());
+            eventBus.post(new NewWordSentencesWereFoundEM());
         }
         return anyHasNoSentences;
     }
@@ -116,16 +112,5 @@ public class WordSetVocabularyViewController {
         textToken.setPosition(0);
         textTokens.add(textToken);
         return textTokens;
-    }
-
-    public interface LocalEventBus {
-
-        void onMessageEvent(NewWordSentencesWereFoundEM event);
-
-        void onMessageEvent(NewWordSentencesWereNotFoundEM event);
-
-        void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event);
-
-        void onMessageEvent(NewWordTranslationWasNotFoundEM event);
     }
 }

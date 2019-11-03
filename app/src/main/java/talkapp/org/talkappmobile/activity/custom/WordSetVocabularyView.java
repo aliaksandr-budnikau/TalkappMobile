@@ -21,10 +21,8 @@ import android.widget.Toast;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,13 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -54,7 +46,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 @EView
-public class WordSetVocabularyView extends RecyclerView implements WordSetVocabularyViewController.LocalEventBus {
+public class WordSetVocabularyView extends RecyclerView {
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -69,14 +61,11 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     String hiddenButtonResetLabel;
     @StringRes(R.string.phrase_translation_hidden_button_edit_label)
     String hiddenButtonEditLabel;
-    @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
-    String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
     String warningSentencesNotFound;
     @StringRes(R.string.phrase_translation_warning_read_only_mode)
     String warningReadOnlyMode;
 
-    private WordSetVocabularyViewController controller;
     private boolean readOnly;
     private OnItemViewInteractionListener onItemViewInteractionListener = new OnItemViewInteractionListener() {
         @Override
@@ -117,8 +106,6 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
 
     @AfterInject
     public void init() {
-        controller = new WordSetVocabularyViewController(this, backendServerFactory.get(), serviceFactory);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(layoutManager);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
@@ -131,43 +118,6 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
         this.getAdapter().notifyDataSetChanged();
-    }
-
-
-    @Background
-    public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
-        controller.handle(event);
-    }
-
-    @UiThread
-    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
-        alertDialog.setPhraseBoxError(null);
-        alertDialog.setTranslationBoxError(warningSentencesNotFound);
-    }
-
-    @UiThread
-    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
-        alertDialog.setPhraseBoxError(null);
-        alertDialog.setTranslationBoxError(warningTranslationNotFound);
-    }
-
-    @UiThread
-    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
-        alertDialog.setPhraseBoxError(null);
-        alertDialog.setTranslationBoxError(null);
-    }
-
-    @UiThread
-    public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
-        alertDialog.setPhraseBoxError(null);
-        alertDialog.setTranslationBoxError(null);
-        WordTranslation translation = getVocabulary().get(event.getAdapterPosition());
-        translation.setWord(alertDialog.getPhraseBoxText());
-        translation.setTranslation(alertDialog.getTranslationBoxText());
-        alertDialog.cancel();
-        alertDialog.dismiss();
-        alertDialog = null;
-        eventBus.post(new PhraseTranslationInputWasUpdatedEM());
     }
 
     public List<WordTranslation> getVocabulary() {

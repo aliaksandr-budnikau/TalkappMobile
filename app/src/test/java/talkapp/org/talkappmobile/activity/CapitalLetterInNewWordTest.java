@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -29,7 +28,6 @@ import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -39,21 +37,21 @@ import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
@@ -77,7 +75,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -94,7 +92,6 @@ public class CapitalLetterInNewWordTest {
     private WordSetMapper wordSetMapper;
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
-    private WordSetVocabularyViewController.LocalEventBus localEventBusMock = mock(WordSetVocabularyViewController.LocalEventBus.class);
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
     private NewWordSetDraftDao newWordSetDraftDaoMock;
@@ -105,7 +102,7 @@ public class CapitalLetterInNewWordTest {
     private DaoHelper daoHelper;
     private ServiceHelper serviceHelper;
     private WordTranslationMapper wordTranslationMapper;
-    private WordSetVocabularyViewController dialogInputTextViewController;
+    private AddingEditingNewWordSetsService addingEditingNewWordSetsService;
     private WordSetVocabularyView wordSetVocabularyView;
 
     @Before
@@ -146,7 +143,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        dialogInputTextViewController = new WordSetVocabularyViewController(localEventBusMock, server, mockServiceFactoryBean);
+        addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, server, mockServiceFactoryBean.getWordTranslationService());
 
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
@@ -249,7 +246,7 @@ public class CapitalLetterInNewWordTest {
         for (Word2Tokens word : words) {
             String[] split = word.getWord().split("\\|");
             if (split.length != 2) {
-                dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(1, split[0].trim(), null));
+                addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), null, 1);
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
@@ -258,7 +255,7 @@ public class CapitalLetterInNewWordTest {
             wordTranslation.setWord(split[0].trim());
             wordTranslation.setTokens(split[0].trim());
             wordTranslationDaoMock.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
-            dialogInputTextViewController.handle(new PhraseTranslationInputPopupOkClickedEM(1, split[0].trim(), split[1].trim()));
+            addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), split[1].trim(), 1);
         }
 
         reset(eventBusMock);

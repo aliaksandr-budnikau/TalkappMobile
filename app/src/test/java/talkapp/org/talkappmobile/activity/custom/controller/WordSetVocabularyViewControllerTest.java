@@ -22,11 +22,12 @@ import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
+import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -50,8 +51,7 @@ public class WordSetVocabularyViewControllerTest {
     private WordSetMapper mapper;
     private WordSetService wordSetService;
     private EventBus eventBus;
-    private WordSetVocabularyViewController.LocalEventBus localEventBusMock = mock(WordSetVocabularyViewController.LocalEventBus.class);
-    private WordSetVocabularyViewController controller;
+    private AddingEditingNewWordSetsService service;
     private DaoHelper daoHelper;
     private WordTranslationMapper wordTranslationMapper;
 
@@ -78,14 +78,14 @@ public class WordSetVocabularyViewControllerTest {
         DataServer server = factory.get();
 
         eventBus = mock(EventBus.class);
-        controller = new WordSetVocabularyViewController(localEventBusMock, server, mockServiceFactoryBean);
+        service = new AddingEditingNewWordSetsServiceImpl(eventBus, server, wordTranslationService);
     }
 
     @Test
     public void submit_noSentencesForAnyWord() {
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  sdfds ", null));
+        service.saveNewWordTranslation("  sdfds ", null, 1);
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereNotFoundEM.class));
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
@@ -95,11 +95,11 @@ public class WordSetVocabularyViewControllerTest {
 
     @Test
     public void submit_noSentencesForFewWord() {
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "house", null));
+        service.saveNewWordTranslation("house", null, 1);
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -108,14 +108,14 @@ public class WordSetVocabularyViewControllerTest {
     @Test
     public void submit_allSentencesWereFound() throws SQLException {
         String word0 = "house";
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, word0, null));
+        service.saveNewWordTranslation(word0, null, 1);
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-        verify(localEventBusMock, times(1)).onMessageEvent(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
+        verify(eventBus, times(1)).post(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
     }
 
 
@@ -123,11 +123,11 @@ public class WordSetVocabularyViewControllerTest {
     public void submit_allSentencesWereFoundButThereFewExpressions() throws SQLException {
         String word = "make out";
         String translation = "разглядеть, различить, разбирать";
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  " + word + " ", "  " + translation + " "));
+        service.saveNewWordTranslation("  " + word + " ", "  " + translation + " ", 1);
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
 
-        verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
+        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }

@@ -54,7 +54,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")

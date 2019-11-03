@@ -30,7 +30,12 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPre
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
+import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
+import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -58,6 +63,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     WordSet wordSet;
     @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
     String warningEmptyField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
+    String warningTranslationNotFound;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
+    String warningSentencesNotFound;
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private WordSetVocabularyItemAlertDialog itemAlertDialog;
 
@@ -141,5 +150,36 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         }
 
         eventBus.post(new PhraseTranslationInputPopupOkClickedEM(position, phrase, translation));
+    }
+
+    @UiThread
+    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
+        itemAlertDialog.setPhraseBoxError(null);
+        itemAlertDialog.setTranslationBoxError(warningTranslationNotFound);
+    }
+
+    @UiThread
+    public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
+        itemAlertDialog.setPhraseBoxError(null);
+        itemAlertDialog.setTranslationBoxError(null);
+        WordTranslation translation = wordSetVocabularyView.getVocabulary().get(event.getAdapterPosition());
+        translation.setWord(itemAlertDialog.getPhraseBoxText());
+        translation.setTranslation(itemAlertDialog.getTranslationBoxText());
+        itemAlertDialog.cancel();
+        itemAlertDialog.dismiss();
+        itemAlertDialog = null;
+        eventBus.post(new PhraseTranslationInputWasUpdatedEM());
+    }
+
+    @UiThread
+    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
+        itemAlertDialog.setPhraseBoxError(null);
+        itemAlertDialog.setTranslationBoxError(warningSentencesNotFound);
+    }
+
+    @UiThread
+    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
+        itemAlertDialog.setPhraseBoxError(null);
+        itemAlertDialog.setTranslationBoxError(null);
     }
 }
