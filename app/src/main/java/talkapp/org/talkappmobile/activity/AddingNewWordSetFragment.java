@@ -165,6 +165,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
         eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
+        wordSetVocabularyView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -181,7 +182,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         itemAlertDialog = new WordSetVocabularyItemAlertDialog(getActivity());
         itemAlertDialog.setOnDialogInteractionListener(this);
         itemAlertDialog.open(item, position);
-        wordSetVocabularyView.setAlertDialog(itemAlertDialog);
     }
 
     @Override

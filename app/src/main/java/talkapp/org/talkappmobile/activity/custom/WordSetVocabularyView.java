@@ -18,15 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.tmtron.greenannotations.EventBusGreenRobot;
-
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.res.StringRes;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -34,12 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
@@ -47,14 +36,6 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 @EView
 public class WordSetVocabularyView extends RecyclerView {
-    @EventBusGreenRobot
-    EventBus eventBus;
-
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
-
     @StringRes(R.string.phrase_translation_hidden_button_say_label)
     String hiddenButtonSayLabel;
     @StringRes(R.string.phrase_translation_hidden_button_reset_label)
@@ -83,7 +64,6 @@ public class WordSetVocabularyView extends RecyclerView {
             // do nothing
         }
     };
-    private WordSetVocabularyItemAlertDialog alertDialog;
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -113,11 +93,6 @@ public class WordSetVocabularyView extends RecyclerView {
         SwipeController swipeController = new SwipeController(new SwipeControllerActions());
         new ItemTouchHelper(swipeController).attachToRecyclerView(this);
         setupRecyclerView(swipeController);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
-        this.getAdapter().notifyDataSetChanged();
     }
 
     public List<WordTranslation> getVocabulary() {
@@ -157,10 +132,6 @@ public class WordSetVocabularyView extends RecyclerView {
 
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
-    }
-
-    public void setAlertDialog(WordSetVocabularyItemAlertDialog alertDialog) {
-        this.alertDialog = alertDialog;
     }
 
     enum ButtonsState {

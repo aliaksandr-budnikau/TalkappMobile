@@ -18,6 +18,8 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -133,7 +135,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         itemAlertDialog = new WordSetVocabularyItemAlertDialog(getContext());
         itemAlertDialog.setOnDialogInteractionListener(this);
         itemAlertDialog.open(item, position);
-        wordSetVocabularyView.setAlertDialog(itemAlertDialog);
     }
 
     @Override
@@ -181,5 +182,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void onMessageEvent(NewWordSentencesWereFoundEM event) {
         itemAlertDialog.setPhraseBoxError(null);
         itemAlertDialog.setTranslationBoxError(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
+        wordSetVocabularyView.getAdapter().notifyDataSetChanged();
     }
 }
