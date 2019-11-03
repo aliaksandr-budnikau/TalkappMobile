@@ -228,7 +228,7 @@ public class CapitalLetterInNewWordTest {
     public void testCapitalLetterInNewWord() throws SQLException {
         addingNewWordSetFragment.init();
         String phrasalVerb = "look for";
-        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "Voluntary", phrasalVerb + "|искать", "preamble",
+        wordSet = createWordSet(1000000, "solemn", "grip", "wink", "adoption", "voluntary", phrasalVerb + "|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
         List<Word2Tokens> words = wordSet.getWords();
         List<WordTranslation> translations = new LinkedList<>();

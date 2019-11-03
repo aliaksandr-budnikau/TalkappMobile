@@ -15,6 +15,8 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.StringRes;
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
@@ -22,11 +24,13 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -34,7 +38,8 @@ import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.word_translations_layout)
-public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, WordSetVocabularyView.OnItemViewInteractionListener {
+public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, WordSetVocabularyView.OnItemViewInteractionListener,
+        WordSetVocabularyItemAlertDialog.OnDialogInteractionListener {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Bean
     PresenterFactory presenterFactory;
@@ -51,8 +56,10 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @FragmentArg(WORD_SET_MAPPING)
     WordSet wordSet;
-
+    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
+    String warningEmptyField;
     private WaitingForProgressBarManager waitingForProgressBarManager;
+    private WordSetVocabularyItemAlertDialog itemAlertDialog;
 
     public static PracticeWordSetVocabularyFragment newInstance(WordSet wordSet) {
         PracticeWordSetVocabularyFragment fragment = new PracticeWordSetVocabularyFragment_();
@@ -114,11 +121,25 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Override
     public void onEditItemButtonClicked(WordTranslation item, int position) {
-        wordSetVocabularyView.openAlertDialog(item, position);
+        itemAlertDialog = new WordSetVocabularyItemAlertDialog(getContext());
+        itemAlertDialog.setOnDialogInteractionListener(this);
+        itemAlertDialog.open(item, position);
+        wordSetVocabularyView.setAlertDialog(itemAlertDialog);
     }
 
     @Override
     public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
+        if (StringUtils.isEmpty(translation)) {
+            phrase = phrase.trim().toLowerCase();
+        }
+        phrase = phrase.trim();
+        translation = translation.trim();
 
+        if (StringUtils.isEmpty(phrase)) {
+            itemAlertDialog.setPhraseBoxError(warningEmptyField);
+            itemAlertDialog.setTranslationBoxError(null);
+        }
+
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(position, phrase, translation));
     }
 }

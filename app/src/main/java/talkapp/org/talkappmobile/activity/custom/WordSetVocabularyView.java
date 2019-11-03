@@ -1,9 +1,7 @@
 package talkapp.org.talkappmobile.activity.custom;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -18,10 +16,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
@@ -43,7 +37,6 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.controller.WordSetVocabularyViewController;
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
@@ -59,7 +52,6 @@ import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import static android.support.v7.widget.helper.ItemTouchHelper.ACTION_STATE_SWIPE;
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EView
 public class WordSetVocabularyView extends RecyclerView implements WordSetVocabularyViewController.LocalEventBus {
@@ -71,28 +63,12 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     @Bean(BackendServerFactoryBean.class)
     BackendServerFactory backendServerFactory;
 
-    @StringRes(R.string.phrase_translation_input_text_view_popup_title)
-    String popupTitle;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_label)
-    String popupPhraseLabel;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_translation_label)
-    String popupTranslationLabel;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_hint)
-    String popupPhraseHint;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_translation_hint)
-    String popupTranslationHint;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_button_ok)
-    String popupButtonOk;
-    @StringRes(R.string.phrase_translation_input_text_view_popup_button_cancel)
-    String popupButtonCancel;
     @StringRes(R.string.phrase_translation_hidden_button_say_label)
     String hiddenButtonSayLabel;
     @StringRes(R.string.phrase_translation_hidden_button_reset_label)
     String hiddenButtonResetLabel;
     @StringRes(R.string.phrase_translation_hidden_button_edit_label)
     String hiddenButtonEditLabel;
-    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
-    String warningEmptyField;
     @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
@@ -100,11 +76,7 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     @StringRes(R.string.phrase_translation_warning_read_only_mode)
     String warningReadOnlyMode;
 
-    private AlertDialog alertDialog;
-
     private WordSetVocabularyViewController controller;
-    private EditText phraseBox;
-    private EditText translationBox;
     private boolean readOnly;
     private OnItemViewInteractionListener onItemViewInteractionListener = new OnItemViewInteractionListener() {
         @Override
@@ -122,6 +94,7 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
             // do nothing
         }
     };
+    private WordSetVocabularyItemAlertDialog alertDialog;
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -160,54 +133,6 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
         this.getAdapter().notifyDataSetChanged();
     }
 
-    public void openAlertDialog(final WordTranslation wordTranslation, final int adapterPosition) {
-        Context context = this.getContext();
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setTitle(popupTitle);
-
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-
-        final TextView messageForPhraseBox = new TextView(context);
-        messageForPhraseBox.setText(popupPhraseLabel);
-        layout.addView(messageForPhraseBox);
-
-        phraseBox = new EditText(context);
-        phraseBox.setHint(popupPhraseHint);
-        phraseBox.setText(isEmpty(wordTranslation.getWord()) ? "" : wordTranslation.getWord());
-        layout.addView(phraseBox);
-
-        final TextView messageForTranslationBox = new TextView(context);
-        messageForTranslationBox.setText(popupTranslationLabel);
-        layout.addView(messageForTranslationBox);
-
-        translationBox = new EditText(context);
-        translationBox.setHint(popupTranslationHint);
-        translationBox.setText(isEmpty(wordTranslation.getTranslation()) ? "" : wordTranslation.getTranslation());
-        layout.addView(translationBox); // Another add method
-
-        alertDialogBuilder.setView(layout); // Again this is a set method, not add
-        alertDialogBuilder.setPositiveButton(popupButtonOk, null);
-        alertDialogBuilder.setNegativeButton(popupButtonCancel, null);
-
-        alertDialog = alertDialogBuilder.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                b.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        WordSetVocabularyView.this.onMessageEvent(new PhraseTranslationInputPopupOkClickedEM(adapterPosition, phraseBox.getText().toString(),
-                                translationBox.getText().toString()));
-                        onItemViewInteractionListener.onSubmitChangeItemButtonClicked(phraseBox.getText().toString(),
-                                translationBox.getText().toString(), adapterPosition);
-                    }
-                });
-            }
-        });
-        alertDialog.show();
-    }
 
     @Background
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
@@ -215,36 +140,30 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
     }
 
     @UiThread
-    public void onMessageEvent(NewWordIsEmptyEM event) {
-        phraseBox.setError(warningEmptyField);
-        translationBox.setError(null);
-    }
-
-    @UiThread
     public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
-        phraseBox.setError(null);
-        translationBox.setError(warningSentencesNotFound);
+        alertDialog.setPhraseBoxError(null);
+        alertDialog.setTranslationBoxError(warningSentencesNotFound);
     }
 
     @UiThread
     public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
-        phraseBox.setError(null);
-        translationBox.setError(warningTranslationNotFound);
+        alertDialog.setPhraseBoxError(null);
+        alertDialog.setTranslationBoxError(warningTranslationNotFound);
     }
 
     @UiThread
     public void onMessageEvent(NewWordSentencesWereFoundEM event) {
-        phraseBox.setError(null);
-        translationBox.setError(null);
+        alertDialog.setPhraseBoxError(null);
+        alertDialog.setTranslationBoxError(null);
     }
 
     @UiThread
     public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
-        phraseBox.setError(null);
-        translationBox.setError(null);
+        alertDialog.setPhraseBoxError(null);
+        alertDialog.setTranslationBoxError(null);
         WordTranslation translation = getVocabulary().get(event.getAdapterPosition());
-        translation.setWord(phraseBox.getText().toString());
-        translation.setTranslation(translationBox.getText().toString());
+        translation.setWord(alertDialog.getPhraseBoxText());
+        translation.setTranslation(alertDialog.getTranslationBoxText());
         alertDialog.cancel();
         alertDialog.dismiss();
         alertDialog = null;
@@ -288,6 +207,10 @@ public class WordSetVocabularyView extends RecyclerView implements WordSetVocabu
 
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    public void setAlertDialog(WordSetVocabularyItemAlertDialog alertDialog) {
+        this.alertDialog = alertDialog;
     }
 
     enum ButtonsState {

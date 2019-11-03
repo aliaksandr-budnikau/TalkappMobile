@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
@@ -47,10 +46,7 @@ public class WordSetVocabularyViewController {
         String translation = event.getTranslation();
         String phrase = event.getPhrase();
 
-        NewWordWithTranslation normalizedPhrase = normalizeAll(phrase, translation);
-        if (isEmpty(normalizedPhrase)) {
-            return;
-        }
+        NewWordWithTranslation normalizedPhrase = new NewWordWithTranslation(phrase, translation);
 
         if (hasNoSentences(normalizedPhrase)) {
             return;
@@ -72,21 +68,6 @@ public class WordSetVocabularyViewController {
             wordTranslationService.saveWordTranslations(asList(wordTranslation));
         }
         eventBus.onMessageEvent(new PhraseTranslationInputWasValidatedSuccessfullyEM(event.getAdapterPosition(), phrase, translation));
-    }
-
-    private NewWordWithTranslation normalizeAll(String phrase, String translation) {
-        if (StringUtils.isEmpty(translation)) {
-            return new NewWordWithTranslation(phrase.trim().toLowerCase(), null);
-        }
-        return new NewWordWithTranslation(phrase.trim(), translation.trim());
-    }
-
-    private boolean isEmpty(NewWordWithTranslation phrase) {
-        if (StringUtils.isEmpty(phrase.getWord())) {
-            eventBus.onMessageEvent(new NewWordIsEmptyEM());
-            return true;
-        }
-        return false;
     }
 
     private boolean hasNoSentences(NewWordWithTranslation phrase) {
@@ -142,8 +123,6 @@ public class WordSetVocabularyViewController {
         void onMessageEvent(NewWordSentencesWereFoundEM event);
 
         void onMessageEvent(NewWordSentencesWereNotFoundEM event);
-
-        void onMessageEvent(NewWordIsEmptyEM event);
 
         void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event);
 

@@ -18,7 +18,6 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
@@ -88,7 +87,6 @@ public class WordSetVocabularyViewControllerTest {
 
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereNotFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
@@ -97,11 +95,10 @@ public class WordSetVocabularyViewControllerTest {
 
     @Test
     public void submit_noSentencesForFewWord() {
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  house ", null));
+        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "house", null));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
@@ -111,11 +108,10 @@ public class WordSetVocabularyViewControllerTest {
     @Test
     public void submit_allSentencesWereFound() throws SQLException {
         String word0 = "house";
-        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, "  " + word0 + " ", null));
+        controller.handle(new PhraseTranslationInputPopupOkClickedEM(1, word0, null));
 
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -131,7 +127,6 @@ public class WordSetVocabularyViewControllerTest {
 
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(localEventBusMock).onMessageEvent(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));

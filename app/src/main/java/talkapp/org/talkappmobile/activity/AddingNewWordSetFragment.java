@@ -13,6 +13,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -22,6 +23,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
@@ -32,6 +34,7 @@ import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
+import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -42,7 +45,7 @@ import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
-public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener {
+public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener, WordSetVocabularyItemAlertDialog.OnDialogInteractionListener {
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(SpeakerBean.class)
@@ -61,10 +64,13 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     EventBus eventBus;
     @StringRes(R.string.adding_new_word_set_fragment_warning_empty_fields)
     String warningEmptyFields;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
+    String warningEmptyField;
     @StringRes(R.string.adding_new_word_set_fragment_warning_duplicate_field)
     String warningDuplicateField;
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private AddingNewWordSetFragmentController controller;
+    private WordSetVocabularyItemAlertDialog itemAlertDialog;
 
     @AfterViews
     public void init() {
@@ -163,11 +169,25 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @Override
     public void onEditItemButtonClicked(WordTranslation item, int position) {
-        wordSetVocabularyView.openAlertDialog(item, position);
+        itemAlertDialog = new WordSetVocabularyItemAlertDialog(getActivity());
+        itemAlertDialog.setOnDialogInteractionListener(this);
+        itemAlertDialog.open(item, position);
+        wordSetVocabularyView.setAlertDialog(itemAlertDialog);
     }
 
     @Override
     public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
+        if (StringUtils.isEmpty(translation)) {
+            phrase = phrase.trim().toLowerCase();
+        }
+        phrase = phrase.trim();
+        translation = translation.trim();
 
+        if (StringUtils.isEmpty(phrase)) {
+            itemAlertDialog.setPhraseBoxError(warningEmptyField);
+            itemAlertDialog.setTranslationBoxError(null);
+        }
+
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(position, phrase, translation));
     }
 }

@@ -25,7 +25,6 @@ import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordIsEmptyEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
@@ -180,7 +179,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -255,7 +253,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
 
@@ -282,7 +279,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false)));
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
@@ -342,7 +338,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
         verify(eventBus).post(new NewWordIsDuplicateEM(2));
@@ -358,7 +353,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
         verify(eventBus).post(new NewWordIsDuplicateEM(2));
@@ -394,7 +388,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
 
-        verify(eventBus, times(0)).post(any(NewWordIsEmptyEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
