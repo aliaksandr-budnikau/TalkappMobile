@@ -17,10 +17,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class WordSetVocabularyItemAlertDialog {
-    private OnDialogInteractionListener onDialogInteractionListener;
-    private final Context context;
     @StringRes(R.string.phrase_translation_input_text_view_popup_title)
     String popupTitle;
     @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_label)
@@ -35,19 +33,17 @@ public class WordSetVocabularyItemAlertDialog {
     String popupButtonOk;
     @StringRes(R.string.phrase_translation_input_text_view_popup_button_cancel)
     String popupButtonCancel;
+    private OnDialogInteractionListener onDialogInteractionListener;
     private EditText phraseBox;
     private EditText translationBox;
     private AlertDialog alertDialog;
 
-    public WordSetVocabularyItemAlertDialog(Context context) {
-        this.context = context;
-    }
 
     public void setOnDialogInteractionListener(OnDialogInteractionListener onDialogInteractionListener) {
         this.onDialogInteractionListener = onDialogInteractionListener;
     }
 
-    public void open(final WordTranslation wordTranslation, final int position) {
+    public void open(final WordTranslation wordTranslation, final int position, Context context) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle(popupTitle);
 

@@ -6,8 +6,6 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
@@ -35,7 +33,6 @@ public class AddingEditingNewWordSetsController {
                 serviceFactory.getWordTranslationService());
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
         addingEditingNewWordSetsService.saveNewWordTranslation(event.getPhrase(), event.getTranslation(), event.getAdapterPosition());
     }
