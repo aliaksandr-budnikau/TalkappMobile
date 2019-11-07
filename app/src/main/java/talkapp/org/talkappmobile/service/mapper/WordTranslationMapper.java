@@ -27,6 +27,7 @@ public class WordTranslationMapper {
 
     public WordTranslationMapping toMapping(WordTranslation translation) {
         WordTranslationMapping mapping = new WordTranslationMapping();
+        mapping.setId(translation.getId());
         mapping.setWord(translation.getWord() + DELIMITER + translation.getLanguage());
         mapping.setTranslation(translation.getTranslation());
         mapping.setLanguage(translation.getLanguage());

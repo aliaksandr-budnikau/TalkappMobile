@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.mappings;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -13,13 +12,17 @@ import java.util.Objects;
 public class WordTranslationMapping {
 
     public static final String WORD_TRANSLATION = "WordTranslation";
-    public static final String ID_FN = "word";
+    public static final String ID_FN = "id";
+    public static final String WORD_FN = "word";
     public static final String LANGUAGE_FN = "language";
     public static final String TRANSLATION_FN = "translation";
     public static final String TOP_FN = "top";
 
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
+    private String id;
+
+    @DatabaseField(canBeNull = false, columnName = WORD_FN)
     private String word;
 
     @DatabaseField(canBeNull = false, columnName = LANGUAGE_FN)
@@ -30,6 +33,14 @@ public class WordTranslationMapping {
 
     @DatabaseField(columnName = TOP_FN)
     private Integer top;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getWord() {
         return word;
@@ -75,50 +86,16 @@ public class WordTranslationMapping {
 
     @Override
     public int hashCode() {
-        return Objects.hash(word, language, translation);
+        return Objects.hash(id, word, language, translation);
     }
 
     @Override
     public String toString() {
         return "WordTranslationMapping{" +
+                "id='" + id + '\'' +
                 "word='" + word + '\'' +
                 ", language='" + language + '\'' +
                 ", translation='" + translation + '\'' +
                 '}';
-    }
-
-    public static class WordTranslationMappingKey implements Serializable {
-        private String word;
-        private String language;
-
-        public WordTranslationMappingKey() {
-        }
-
-        public WordTranslationMappingKey(String word, String language) {
-            this.word = word;
-            this.language = language;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            WordTranslationMappingKey that = (WordTranslationMappingKey) o;
-            return Objects.equals(word, that.word) &&
-                    Objects.equals(language, that.language);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(word, language);
-        }
-
-        public String getWord() {
-            return word;
-        }
-
-        public String getLanguage() {
-            return language;
-        }
     }
 }

@@ -27,6 +27,7 @@ import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
@@ -185,6 +186,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(addingNewWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
         Whitebox.setInternalState(addingNewWordSetFragment, "backendServerFactory", backendServerFactoryMock);
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
+        Whitebox.setInternalState(addingNewWordSetFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "mainForm", mock(View.class));
         wordSetVocabularyView = mock(WordSetVocabularyView.class);
         Whitebox.setInternalState(addingNewWordSetFragment, "wordSetVocabularyView", wordSetVocabularyView);
@@ -195,6 +197,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
+        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(WordSetVocabularyView.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
     }
@@ -250,6 +253,7 @@ public class CapitalLetterInNewWordTest {
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setId(word.getWord());
             wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
             wordTranslation.setTranslation(split[1].trim());
             wordTranslation.setWord(split[0].trim());

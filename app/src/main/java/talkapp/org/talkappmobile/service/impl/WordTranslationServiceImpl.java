@@ -9,6 +9,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
+import static java.lang.String.valueOf;
+
 public class WordTranslationServiceImpl implements WordTranslationService {
     private final WordTranslationDao wordTranslationDao;
     private final WordTranslationMapper mapper;
@@ -22,7 +24,9 @@ public class WordTranslationServiceImpl implements WordTranslationService {
     public void saveWordTranslations(List<WordTranslation> wordTranslations) {
         List<WordTranslationMapping> mappings = new LinkedList<>();
         for (WordTranslation wordTranslation : wordTranslations) {
-            mappings.add(mapper.toMapping(wordTranslation));
+            WordTranslationMapping e = mapper.toMapping(wordTranslation);
+            e.setId(valueOf(System.currentTimeMillis()));
+            mappings.add(e);
         }
         wordTranslationDao.save(mappings);
     }

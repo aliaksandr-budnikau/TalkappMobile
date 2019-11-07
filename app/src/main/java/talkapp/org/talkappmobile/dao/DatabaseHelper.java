@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.service.MigrationService;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.ID_FN;
 import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.NEW_WORD_SET_DRAFT_MAPPING_TABLE;
@@ -30,7 +31,7 @@ import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.W
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 44;
+    private static final int DATABASE_VERSION = 45;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
     private MigrationService migrationService;
 
@@ -47,6 +48,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         ));
         changes.put(43, Collections.<String>emptyList());
         changes.put(44, Collections.<String>emptyList());
+        changes.put(45, asList(
+                "BEGIN TRANSACTION;",
+                "CREATE TABLE WordTranslation_copy(\n" +
+                        "    id VARCHAR NOT NULL PRIMARY KEY,\n" +
+                        "    word VARCHAR NOT NULL,\n" +
+                        "    language VARCHAR NOT NULL,\n" +
+                        "    translation VARCHAR NOT NULL,\n" +
+                        "    top INTEGER\n" +
+                        ");",
+                "INSERT INTO WordTranslation_copy (id, word, language, translation, top) SELECT 'old' || abs(random() % 100000000) as id, word, language, translation, top FROM WordTranslation;",
+                "DROP TABLE WordTranslation;",
+                "ALTER TABLE WordTranslation_copy RENAME TO WordTranslation;",
+                "COMMIT;"
+        ));
     }
 
     @Override

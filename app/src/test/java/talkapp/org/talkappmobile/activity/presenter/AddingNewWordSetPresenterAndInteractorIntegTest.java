@@ -124,8 +124,10 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     @NonNull
     private LinkedList<WordTranslation> getWordTranslations(List<String> strings) {
         LinkedList<WordTranslation> wordTranslations = new LinkedList<>();
+        int id = 0;
         for (String string : strings) {
             WordTranslation input = new WordTranslation();
+            input.setId(String.valueOf(id++));
             String[] split = string.split("\\|");
             if (split.length == 2) {
                 input.setWord(split[0]);
@@ -378,6 +380,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setId(word.getId());
             wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
             wordTranslation.setTranslation(word.getTranslation().trim());
             wordTranslation.setWord(word.getWord().trim());

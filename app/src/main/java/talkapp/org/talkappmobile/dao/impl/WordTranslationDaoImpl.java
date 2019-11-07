@@ -1,15 +1,18 @@
 package talkapp.org.talkappmobile.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+
+import static talkapp.org.talkappmobile.mappings.WordTranslationMapping.WORD_FN;
 
 public class WordTranslationDaoImpl extends BaseDaoImpl<WordTranslationMapping, String> implements WordTranslationDao {
 
@@ -25,12 +28,13 @@ public class WordTranslationDaoImpl extends BaseDaoImpl<WordTranslationMapping, 
         if (cached != null) {
             return cached;
         }
-        WordTranslationMapping mapping;
+        List<WordTranslationMapping> mappings;
         try {
-            mapping = this.queryForId(getKey(word, language));
+            mappings = this.queryForEq(WORD_FN, new SelectArg(getKey(word, language)));
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        WordTranslationMapping mapping = mappings.isEmpty() ? null : mappings.get(0);
         wordTranslations.put(getKey(word, language), mapping);
         return mapping;
     }

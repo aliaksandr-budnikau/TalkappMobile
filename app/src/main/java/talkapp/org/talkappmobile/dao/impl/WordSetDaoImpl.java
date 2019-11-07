@@ -18,7 +18,6 @@ import java.util.Map;
 
 public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implements WordSetDao {
 
-    public static final int CUSTOM_WORDSETS_STARTS_SINCE = 10000;
     private Map<String, List<WordSetMapping>> wordSets = new HashMap<>();
 
     public WordSetDaoImpl(ConnectionSource connectionSource, Class<WordSetMapping> dataClass) throws SQLException {
