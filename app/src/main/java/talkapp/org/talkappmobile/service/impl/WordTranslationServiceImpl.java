@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,9 +26,11 @@ public class WordTranslationServiceImpl implements WordTranslationService {
     public void saveWordTranslations(List<WordTranslation> wordTranslations) {
         List<WordTranslationMapping> mappings = new LinkedList<>();
         for (WordTranslation wordTranslation : wordTranslations) {
-            WordTranslationMapping e = mapper.toMapping(wordTranslation);
-            e.setId(valueOf(System.currentTimeMillis()));
-            mappings.add(e);
+            WordTranslationMapping mapping = mapper.toMapping(wordTranslation);
+            if (StringUtils.isEmpty(mapping.getId())) {
+                mapping.setId(valueOf(System.currentTimeMillis()));
+            }
+            mappings.add(mapping);
         }
         wordTranslationDao.save(mappings);
     }

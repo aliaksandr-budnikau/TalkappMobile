@@ -25,6 +25,7 @@ import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 public class LocalDataServiceImpl implements LocalDataService {
     public static final String TAG = LocalDataServiceImpl.class.getSimpleName();
@@ -36,6 +37,7 @@ public class LocalDataServiceImpl implements LocalDataService {
     private final Logger logger;
     private final SentenceMapper sentenceMapper;
     private final WordSetMapper wordSetMapper;
+    private final WordTranslationMapper wordTranslationMapper;
 
     public LocalDataServiceImpl(WordSetDao wordSetDao, TopicDao topicDao, SentenceDao sentenceDao, WordTranslationDao wordTranslationDao, ObjectMapper mapper, Logger logger) {
         this.wordSetDao = wordSetDao;
@@ -46,6 +48,7 @@ public class LocalDataServiceImpl implements LocalDataService {
         this.logger = logger;
         this.sentenceMapper = new SentenceMapper(mapper);
         this.wordSetMapper = new WordSetMapper(mapper);
+        this.wordTranslationMapper = new WordTranslationMapper(mapper);
     }
 
     @Override
@@ -126,7 +129,7 @@ public class LocalDataServiceImpl implements LocalDataService {
             if (mapping == null) {
                 throw new LocalCacheIsEmptyException("Local cache is empty. You need internet connection to fill it.");
             }
-            result.add(toDto(mapping));
+            result.add(wordTranslationMapper.toDto(mapping));
         }
         return result;
     }
@@ -184,14 +187,5 @@ public class LocalDataServiceImpl implements LocalDataService {
         topic.setId(mapping.getId());
         topic.setName(mapping.getName());
         return topic;
-    }
-
-    private WordTranslation toDto(WordTranslationMapping mapping) {
-        WordTranslation translation = new WordTranslation();
-        translation.setWord(mapping.getWord().split("_")[0]);
-        translation.setTranslation(mapping.getTranslation());
-        translation.setLanguage(mapping.getLanguage());
-        translation.setTop(mapping.getTop());
-        return translation;
     }
 }

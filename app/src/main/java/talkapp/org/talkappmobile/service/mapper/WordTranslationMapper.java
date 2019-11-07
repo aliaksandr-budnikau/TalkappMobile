@@ -17,6 +17,7 @@ public class WordTranslationMapper {
     public WordTranslation toDto(WordTranslationMapping mapping) {
         WordTranslation dto = new WordTranslation();
         String word = mapping.getWord().split(DELIMITER)[0];
+        dto.setId(mapping.getId());
         dto.setWord(word);
         dto.setTranslation(mapping.getTranslation());
         dto.setLanguage(mapping.getLanguage());
