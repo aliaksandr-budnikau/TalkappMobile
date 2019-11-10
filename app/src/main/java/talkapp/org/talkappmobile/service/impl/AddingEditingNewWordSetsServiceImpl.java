@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
@@ -41,7 +40,7 @@ public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWord
     }
 
     @Override
-    public void saveNewWordTranslation(String phrase, String translation, int position) {
+    public void saveNewWordTranslation(String phrase, String translation) {
         NewWordWithTranslation normalizedPhrase = new NewWordWithTranslation(phrase, translation);
 
         if (hasNoSentences(normalizedPhrase)) {
@@ -63,7 +62,7 @@ public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWord
             wordTranslation.setTokens(normalizedPhrase.getWord());
             wordTranslationService.saveWordTranslations(asList(wordTranslation));
         }
-        eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM(position, phrase, translation));
+        eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM(phrase, translation));
     }
 
     private boolean hasNoSentences(NewWordWithTranslation phrase) {
@@ -96,8 +95,6 @@ public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWord
         if (sentences.isEmpty()) {
             anyHasNoSentences = true;
             eventBus.post(new NewWordSentencesWereNotFoundEM());
-        } else {
-            eventBus.post(new NewWordSentencesWereFoundEM());
         }
         return anyHasNoSentences;
     }

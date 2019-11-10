@@ -11,7 +11,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.apache.commons.lang3.StringUtils;
@@ -32,15 +31,12 @@ import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
-import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -111,11 +107,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordIsDuplicateEM event) {
-        Toast.makeText(getActivity(), warningDuplicateField, Toast.LENGTH_LONG).show();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NewWordSuccessfullySubmittedEM event) {
         wordSetVocabularyView.resetVocabulary();
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
@@ -167,12 +158,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         controller.handle(event);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
-        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
-        wordSetVocabularyView.getAdapter().notifyDataSetChanged();
-    }
-
     @Override
     public void onSayItemButtonClicked(WordTranslation item, int position) {
         try {
@@ -184,11 +169,13 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @Override
     public void onEditItemButtonClicked(WordTranslation item, int position) {
-        editVocabularyItemAlertDialog.open(item, position, getActivity());
+        editVocabularyItemAlertDialog.open(item.getWord(), item.getTranslation(), getActivity());
     }
 
     @Override
-    public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
+    public void onOkButtonClicked(String phrase, String translation) {
+        editVocabularyItemAlertDialog.setPhraseBoxError(null);
+        editVocabularyItemAlertDialog.setTranslationBoxError(null);
         if (StringUtils.isEmpty(translation)) {
             phrase = phrase.trim().toLowerCase();
         }
@@ -200,7 +187,13 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
         }
 
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(position, phrase, translation));
+        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
+        if (hasDuplicates(vocabulary, phrase)) {
+            editVocabularyItemAlertDialog.setPhraseBoxError(warningDuplicateField);
+            editVocabularyItemAlertDialog.setTranslationBoxError(null);
+        }
+
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(phrase, translation));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -213,12 +206,10 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
-        WordTranslation translation = wordSetVocabularyView.getVocabulary().get(event.getAdapterPosition());
-        translation.setWord(editVocabularyItemAlertDialog.getPhraseBoxText());
-        translation.setTranslation(editVocabularyItemAlertDialog.getTranslationBoxText());
+        wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
-        eventBus.post(new PhraseTranslationInputWasUpdatedEM());
+        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -227,14 +218,17 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         editVocabularyItemAlertDialog.setTranslationBoxError(warningSentencesNotFound);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(null);
-    }
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
         addingEditingNewWordSetsController.onMessageEvent(event);
+    }
+
+    private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
+        for (WordTranslation word : words) {
+            if (word.getWord().toLowerCase().equals(phrase.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

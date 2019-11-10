@@ -34,6 +34,6 @@ public class AddingEditingNewWordSetsController {
     }
 
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
-        addingEditingNewWordSetsService.saveNewWordTranslation(event.getPhrase(), event.getTranslation(), event.getAdapterPosition());
+        addingEditingNewWordSetsService.saveNewWordTranslation(event.getPhrase(), event.getTranslation());
     }
 }

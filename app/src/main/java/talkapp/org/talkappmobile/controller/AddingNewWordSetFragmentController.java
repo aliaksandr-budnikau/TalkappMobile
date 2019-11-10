@@ -9,7 +9,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
-import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
@@ -56,10 +55,6 @@ public class AddingNewWordSetFragmentController {
         if (isAnyEmpty(normalizedWords)) {
             return;
         }
-        if (hasDuplicates(normalizedWords)) {
-            return;
-        }
-
         List<WordTranslation> translations = new LinkedList<>();
         for (WordTranslation normalizedWord : normalizedWords) {
             WordTranslation result;
@@ -79,18 +74,6 @@ public class AddingNewWordSetFragmentController {
 
         WordSet wordSet = wordSetService.createNewCustomWordSet(translations);
         eventBus.post(new NewWordSuccessfullySubmittedEM(wordSet));
-    }
-
-    private boolean hasDuplicates(List<WordTranslation> words) {
-        boolean hasDuplicates = false;
-        for (int i = 0; i < words.size(); i++) {
-            WordTranslation word = words.get(i);
-            if (words.subList(0, i).contains(word)) {
-                hasDuplicates = true;
-                eventBus.post(new NewWordIsDuplicateEM(i));
-            }
-        }
-        return hasDuplicates;
     }
 
     private boolean isAnyEmpty(List<WordTranslation> words) {

@@ -33,11 +33,9 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasUpdatedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -70,6 +68,8 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     WordSet wordSet;
     @StringRes(R.string.adding_new_word_set_fragment_warning_empty_field)
     String warningEmptyField;
+    @StringRes(R.string.adding_new_word_set_fragment_warning_duplicate_field)
+    String warningDuplicateField;
     @StringRes(R.string.adding_new_word_set_fragment_warning_translation_not_found)
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
@@ -138,11 +138,13 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     @Override
     public void onEditItemButtonClicked(WordTranslation item, int position) {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
-        editVocabularyItemAlertDialog.open(item, position, getActivity());
+        editVocabularyItemAlertDialog.open(item.getWord(), item.getTranslation(), getActivity());
     }
 
     @Override
-    public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
+    public void onOkButtonClicked(String phrase, String translation) {
+        editVocabularyItemAlertDialog.setPhraseBoxError(null);
+        editVocabularyItemAlertDialog.setTranslationBoxError(null);
         if (StringUtils.isEmpty(translation)) {
             phrase = phrase.trim().toLowerCase();
         }
@@ -154,7 +156,13 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
         }
 
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(position, phrase, translation));
+        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
+        if (hasDuplicates(vocabulary, phrase)) {
+            editVocabularyItemAlertDialog.setPhraseBoxError(warningDuplicateField);
+            editVocabularyItemAlertDialog.setTranslationBoxError(null);
+        }
+
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(phrase, translation));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -167,12 +175,9 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
-        WordTranslation translation = wordSetVocabularyView.getVocabulary().get(event.getAdapterPosition());
-        translation.setWord(editVocabularyItemAlertDialog.getPhraseBoxText());
-        translation.setTranslation(editVocabularyItemAlertDialog.getTranslationBoxText());
+        wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
-        eventBus.post(new PhraseTranslationInputWasUpdatedEM());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -181,19 +186,17 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         editVocabularyItemAlertDialog.setTranslationBoxError(warningSentencesNotFound);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereFoundEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(null);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PhraseTranslationInputWasUpdatedEM event) {
-        wordSetVocabularyView.getAdapter().notifyDataSetChanged();
-    }
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
         addingEditingNewWordSetsController.onMessageEvent(event);
+    }
+
+    private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
+        for (WordTranslation word : words) {
+            if (word.getWord().toLowerCase().equals(phrase.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

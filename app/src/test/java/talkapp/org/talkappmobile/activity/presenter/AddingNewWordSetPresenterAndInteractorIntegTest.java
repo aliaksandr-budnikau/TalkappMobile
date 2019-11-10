@@ -24,8 +24,6 @@ import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
-import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
@@ -100,10 +98,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
@@ -147,10 +143,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
@@ -169,19 +163,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word10 = "fog";
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false)));
 
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
@@ -254,8 +235,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
@@ -280,8 +259,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false)));
 
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
         verify(eventBus, times(1)).post(wordSetCaptor.capture());
@@ -331,37 +308,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     }
 
     @Test
-    public void submit_wordSetWithDuplicates() {
-        String word0 = "house";
-        String word1 = "fox";
-        String word2 = "house";
-
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
-
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-        verify(eventBus).post(new NewWordIsDuplicateEM(2));
-    }
-
-    @Test
-    public void submit_allAreDuplicates() {
-        String word0 = "house";
-        String word1 = "house";
-        String word2 = "house";
-
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
-
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-        verify(eventBus).post(new NewWordIsDuplicateEM(2));
-        verify(eventBus).post(new NewWordIsDuplicateEM(1));
-    }
-
-    @Test
     public void submit_allSentencesWereFoundButThereFewExpressions() throws SQLException {
         String word0 = "look for|искать";
         String word1 = "fox";
@@ -389,9 +335,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         }
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));
 
-        verify(eventBus, times(0)).post(new NewWordSentencesWereFoundEM());
-
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 

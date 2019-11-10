@@ -13,7 +13,6 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.res.StringRes;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -43,7 +42,7 @@ public class WordSetVocabularyItemAlertDialog {
         this.onDialogInteractionListener = onDialogInteractionListener;
     }
 
-    public void open(final WordTranslation wordTranslation, final int position, Context context) {
+    public void open(final String origPhrase, final String origTranslation, Context context) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setTitle(popupTitle);
 
@@ -56,7 +55,7 @@ public class WordSetVocabularyItemAlertDialog {
 
         phraseBox = new EditText(context);
         phraseBox.setHint(popupPhraseHint);
-        phraseBox.setText(isEmpty(wordTranslation.getWord()) ? "" : wordTranslation.getWord());
+        phraseBox.setText(isEmpty(origPhrase) ? "" : origPhrase);
         layout.addView(phraseBox);
 
         final TextView messageForTranslationBox = new TextView(context);
@@ -65,7 +64,7 @@ public class WordSetVocabularyItemAlertDialog {
 
         translationBox = new EditText(context);
         translationBox.setHint(popupTranslationHint);
-        translationBox.setText(isEmpty(wordTranslation.getTranslation()) ? "" : wordTranslation.getTranslation());
+        translationBox.setText(isEmpty(origTranslation) ? "" : origTranslation);
         layout.addView(translationBox); // Another add method
 
         alertDialogBuilder.setView(layout); // Again this is a set method, not add
@@ -82,7 +81,7 @@ public class WordSetVocabularyItemAlertDialog {
                     public void onClick(View view) {
                         String phrase = phraseBox.getText().toString();
                         String translation = translationBox.getText().toString();
-                        onDialogInteractionListener.onSubmitChangeItemButtonClicked(phrase, translation, position);
+                        onDialogInteractionListener.onOkButtonClicked(phrase, translation);
                     }
                 });
             }
@@ -115,6 +114,6 @@ public class WordSetVocabularyItemAlertDialog {
     }
 
     public interface OnDialogInteractionListener {
-        void onSubmitChangeItemButtonClicked(String phrase, String translation, int position);
+        void onOkButtonClicked(String phrase, String translation);
     }
 }

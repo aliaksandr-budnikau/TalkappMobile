@@ -58,12 +58,8 @@ public class WordSetVocabularyView extends RecyclerView {
         public void onEditItemButtonClicked(WordTranslation item, int position) {
             // do nothing
         }
-
-        @Override
-        public void onSubmitChangeItemButtonClicked(String phrase, String translation, int position) {
-            // do nothing
-        }
     };
+    private int editedItemPosition = -1;
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -134,6 +130,15 @@ public class WordSetVocabularyView extends RecyclerView {
         this.readOnly = readOnly;
     }
 
+    public void submitItemChange(String phrase, String translation) {
+        if (editedItemPosition != -1) {
+            getVocabulary().get(editedItemPosition).setWord(phrase);
+            getVocabulary().get(editedItemPosition).setTranslation(translation);
+            getAdapter().notifyDataSetChanged();
+        }
+        editedItemPosition = -1;
+    }
+
     enum ButtonsState {
         GONE,
         LEFT_VISIBLE,
@@ -144,8 +149,6 @@ public class WordSetVocabularyView extends RecyclerView {
         void onSayItemButtonClicked(WordTranslation item, int position);
 
         void onEditItemButtonClicked(WordTranslation item, int position);
-
-        void onSubmitChangeItemButtonClicked(String phrase, String translation, int position);
     }
 
     public static class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.ViewHolder> {
@@ -240,7 +243,8 @@ public class WordSetVocabularyView extends RecyclerView {
             if (readOnly) {
                 Toast.makeText(WordSetVocabularyView.this.getContext(), warningReadOnlyMode, Toast.LENGTH_LONG).show();
             } else {
-                onItemViewInteractionListener.onEditItemButtonClicked(getVocabulary().get(position), position);
+                editedItemPosition = position;
+                onItemViewInteractionListener.onEditItemButtonClicked(getVocabulary().get(position), editedItemPosition);
             }
         }
 

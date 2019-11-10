@@ -249,7 +249,7 @@ public class CapitalLetterInNewWordTest {
         for (Word2Tokens word : words) {
             String[] split = word.getWord().split("\\|");
             if (split.length != 2) {
-                addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), null, 1);
+                addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), null);
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
@@ -259,7 +259,7 @@ public class CapitalLetterInNewWordTest {
             wordTranslation.setWord(split[0].trim());
             wordTranslation.setTokens(split[0].trim());
             wordTranslationDaoMock.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
-            addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), split[1].trim(), 1);
+            addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), split[1].trim());
         }
 
         reset(eventBusMock);

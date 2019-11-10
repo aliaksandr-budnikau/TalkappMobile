@@ -1,5 +1,5 @@
 package talkapp.org.talkappmobile.service;
 
 public interface AddingEditingNewWordSetsService {
-    void saveNewWordTranslation(String word, String translation, int position);
+    void saveNewWordTranslation(String word, String translation);
 }

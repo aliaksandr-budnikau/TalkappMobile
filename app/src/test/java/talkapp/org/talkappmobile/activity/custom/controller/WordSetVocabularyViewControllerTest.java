@@ -17,8 +17,6 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.events.NewWordIsDuplicateEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
@@ -83,36 +81,29 @@ public class WordSetVocabularyViewControllerTest {
 
     @Test
     public void submit_noSentencesForAnyWord() {
-        service.saveNewWordTranslation("  sdfds ", null, 1);
+        service.saveNewWordTranslation("  sdfds ", null);
 
         verify(eventBus).post(any(NewWordSentencesWereNotFoundEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @Test
     public void submit_noSentencesForFewWord() {
-        service.saveNewWordTranslation("house", null, 1);
+        service.saveNewWordTranslation("house", null);
 
         verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordIsDuplicateEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @Test
     public void submit_allSentencesWereFound() throws SQLException {
         String word0 = "house";
-        service.saveNewWordTranslation(word0, null, 1);
+        service.saveNewWordTranslation(word0, null);
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
-
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
         verify(eventBus, times(1)).post(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
@@ -123,11 +114,8 @@ public class WordSetVocabularyViewControllerTest {
     public void submit_allSentencesWereFoundButThereFewExpressions() throws SQLException {
         String word = "make out";
         String translation = "разглядеть, различить, разбирать";
-        service.saveNewWordTranslation("  " + word + " ", "  " + translation + " ", 1);
+        service.saveNewWordTranslation("  " + word + " ", "  " + translation + " ");
 
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
-
-        verify(eventBus).post(any(NewWordSentencesWereFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
