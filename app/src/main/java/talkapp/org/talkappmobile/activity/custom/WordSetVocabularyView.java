@@ -100,7 +100,7 @@ public class WordSetVocabularyView extends RecyclerView {
     }
 
     public void resetVocabulary() {
-        List<WordTranslation> translations = ((VocabularyAdapter) this.getAdapter()).getTranslations();
+        List<WordTranslation> translations = this.getVocabularyAdapter().getTranslations();
         for (WordTranslation translation : translations) {
             translation.setWord("");
             translation.setTranslation("");
@@ -108,7 +108,7 @@ public class WordSetVocabularyView extends RecyclerView {
     }
 
     public void resetVocabularyItem(int position) {
-        WordTranslation translation = ((VocabularyAdapter) this.getAdapter()).getTranslations().get(position);
+        WordTranslation translation = this.getVocabularyAdapter().getTranslations().get(position);
         translation.setWord("");
         translation.setTranslation("");
     }
@@ -137,6 +137,22 @@ public class WordSetVocabularyView extends RecyclerView {
             getAdapter().notifyDataSetChanged();
         }
         editedItemPosition = -1;
+    }
+
+    public int getEditedItemPosition() {
+        return editedItemPosition;
+    }
+
+    public WordTranslation getEditedItem() {
+        if (editedItemPosition != -1) {
+            return getVocabulary().get(editedItemPosition);
+        }
+        return null;
+    }
+
+    @Nullable
+    private VocabularyAdapter getVocabularyAdapter() {
+        return (VocabularyAdapter) super.getAdapter();
     }
 
     enum ButtonsState {
@@ -240,12 +256,8 @@ public class WordSetVocabularyView extends RecyclerView {
         }
 
         public void onEditButtonClicked(int position) {
-            if (readOnly) {
-                Toast.makeText(WordSetVocabularyView.this.getContext(), warningReadOnlyMode, Toast.LENGTH_LONG).show();
-            } else {
-                editedItemPosition = position;
-                onItemViewInteractionListener.onEditItemButtonClicked(getVocabulary().get(position), editedItemPosition);
-            }
+            editedItemPosition = position;
+            onItemViewInteractionListener.onEditItemButtonClicked(getVocabulary().get(position), editedItemPosition);
         }
 
         public void onResetButtonClicked(int position) {

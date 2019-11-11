@@ -112,6 +112,19 @@ public class WordSetServiceImpl implements WordSetService {
         return wordSetMapper.toDto(mapping);
     }
 
+    @Override
+    public void updateWord2Tokens(Word2Tokens newWord2Tokens, Word2Tokens oldWord2Tokens) {
+        WordSetMapping wordSetMapping = wordSetDao.findById(newWord2Tokens.getSourceWordSetId());
+        WordSet wordSetDto = wordSetMapper.toDto(wordSetMapping);
+
+        int position = wordSetDto.getWords().indexOf(oldWord2Tokens);
+        wordSetDto.getWords().set(position, newWord2Tokens);
+
+        wordSetMapping = wordSetMapper.toMapping(wordSetDto);
+
+        wordSetDao.createNewOrUpdate(wordSetMapping);
+    }
+
     @NonNull
     private Integer getNewWordSetId() {
         Integer lastId = wordSetDao.getTheLastCustomWordSetsId();

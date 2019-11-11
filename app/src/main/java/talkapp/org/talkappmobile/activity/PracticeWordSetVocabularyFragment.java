@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -37,6 +38,7 @@ import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
+import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -74,7 +76,13 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
     String warningSentencesNotFound;
+    @StringRes(R.string.practice_word_set_vocabulary_fragment_warning_impossible_change_custom_word_set)
+    String impossibleToChangeNotCustomWordSet;
+    @StringRes(R.string.practice_word_set_vocabulary_fragment_message_successful_update)
+    String successfulUpdateMessage;
+
     private WaitingForProgressBarManager waitingForProgressBarManager;
+    private PracticeWordSetVocabularyPresenter presenter;
 
     public static PracticeWordSetVocabularyFragment newInstance(WordSet wordSet) {
         PracticeWordSetVocabularyFragment fragment = new PracticeWordSetVocabularyFragment_();
@@ -94,7 +102,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Background
     public void initPresenter() {
-        PracticeWordSetVocabularyPresenter presenter = presenterFactory.create(this);
+        presenter = presenterFactory.create(this);
         presenter.initialise(wordSet);
     }
 
@@ -127,6 +135,21 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     }
 
     @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onUpdateNotCustomWordSet() {
+        Toast.makeText(this.getContext(), impossibleToChangeNotCustomWordSet, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    @UiThread
+    @IgnoreWhen(VIEW_DESTROYED)
+    public void onUpdateCustomWordSetFinished() {
+        Toast.makeText(this.getContext(), successfulUpdateMessage, Toast.LENGTH_LONG).show();
+        eventBus.post(new UpdateCustomWordSetFinishedEM());
+    }
+
+    @Override
     public void onSayItemButtonClicked(WordTranslation item, int position) {
         try {
             speaker.speak(item.getWord());
@@ -142,27 +165,29 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     }
 
     @Override
-    public void onOkButtonClicked(String phrase, String translation) {
+    public void onOkButtonClicked(String newPhrase, String newTranslation, String origPhrase, String origTranslation) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
-        if (StringUtils.isEmpty(translation)) {
-            phrase = phrase.trim().toLowerCase();
+        if (StringUtils.isEmpty(newTranslation)) {
+            newPhrase = newPhrase.trim().toLowerCase();
         }
-        phrase = phrase.trim();
-        translation = translation.trim();
+        newPhrase = newPhrase.trim();
+        newTranslation = newTranslation.trim();
 
-        if (StringUtils.isEmpty(phrase)) {
+        if (StringUtils.isEmpty(newPhrase)) {
             editVocabularyItemAlertDialog.setPhraseBoxError(warningEmptyField);
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
+            return;
         }
 
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
-        if (hasDuplicates(vocabulary, phrase)) {
+        if (hasDuplicates(vocabulary, newPhrase) && !newPhrase.equals(origPhrase)) {
             editVocabularyItemAlertDialog.setPhraseBoxError(warningDuplicateField);
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
+            return;
         }
 
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(phrase, translation));
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(newPhrase, newTranslation));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -175,9 +200,12 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
+        int editedItemPosition = wordSetVocabularyView.getEditedItemPosition();
+        WordTranslation editedItem = wordSetVocabularyView.getEditedItem();
         wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
+        presenter.updateCustomWordSet(editedItemPosition, editedItem);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

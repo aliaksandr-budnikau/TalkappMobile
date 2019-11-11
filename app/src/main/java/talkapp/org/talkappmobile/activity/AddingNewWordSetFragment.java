@@ -173,27 +173,29 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     }
 
     @Override
-    public void onOkButtonClicked(String phrase, String translation) {
+    public void onOkButtonClicked(String newPhrase, String newTranslation, String origPhrase, String origTranslation) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
-        if (StringUtils.isEmpty(translation)) {
-            phrase = phrase.trim().toLowerCase();
+        if (StringUtils.isEmpty(newTranslation)) {
+            newPhrase = newPhrase.trim().toLowerCase();
         }
-        phrase = phrase.trim();
-        translation = translation.trim();
+        newPhrase = newPhrase.trim();
+        newTranslation = newTranslation.trim();
 
-        if (StringUtils.isEmpty(phrase)) {
+        if (StringUtils.isEmpty(newPhrase)) {
             editVocabularyItemAlertDialog.setPhraseBoxError(warningEmptyField);
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
+            return;
         }
 
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
-        if (hasDuplicates(vocabulary, phrase)) {
+        if (hasDuplicates(vocabulary, newPhrase) && !newPhrase.equals(origPhrase)) {
             editVocabularyItemAlertDialog.setPhraseBoxError(warningDuplicateField);
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
+            return;
         }
 
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(phrase, translation));
+        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(newPhrase, newTranslation));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

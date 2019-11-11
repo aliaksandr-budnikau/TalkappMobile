@@ -13,4 +13,8 @@ public interface PracticeWordSetVocabularyView {
     void onInitializeEnd();
 
     void onLocalCacheIsEmptyException(LocalCacheIsEmptyException e);
+
+    void onUpdateNotCustomWordSet();
+
+    void onUpdateCustomWordSetFinished();
 }

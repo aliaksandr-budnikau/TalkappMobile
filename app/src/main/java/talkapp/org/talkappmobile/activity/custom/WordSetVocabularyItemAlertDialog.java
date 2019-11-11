@@ -79,9 +79,9 @@ public class WordSetVocabularyItemAlertDialog {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String phrase = phraseBox.getText().toString();
-                        String translation = translationBox.getText().toString();
-                        onDialogInteractionListener.onOkButtonClicked(phrase, translation);
+                        String newPhrase = phraseBox.getText().toString();
+                        String newTranslation = translationBox.getText().toString();
+                        onDialogInteractionListener.onOkButtonClicked(newPhrase, newTranslation, origPhrase, origTranslation);
                     }
                 });
             }
@@ -114,6 +114,6 @@ public class WordSetVocabularyItemAlertDialog {
     }
 
     public interface OnDialogInteractionListener {
-        void onOkButtonClicked(String phrase, String translation);
+        void onOkButtonClicked(String newPhrase, String newTranslation, String origPhrase, String origTranslation);
     }
 }

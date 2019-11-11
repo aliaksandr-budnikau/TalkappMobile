@@ -48,6 +48,7 @@ import talkapp.org.talkappmobile.events.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.events.ScoreSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
 import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
+import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.events.WordSetPracticeFinishedEM;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -172,6 +173,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(AnswerPronunciationStartedEM event) {
         presenter.disableButtonsDuringPronunciation();
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onMessageEvent(UpdateCustomWordSetFinishedEM event) {
+        presenter.refreshCurrentWord();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

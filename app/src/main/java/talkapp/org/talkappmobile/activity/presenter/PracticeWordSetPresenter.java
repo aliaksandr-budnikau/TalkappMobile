@@ -225,4 +225,13 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
     public void prepareOriginalTextClickEM() {
         interactor.prepareOriginalTextClickEM(this);
     }
+
+    public void refreshCurrentWord() {
+        try {
+            viewStrategy.onNextButtonStart();
+            interactor.refreshSentence(this);
+        } finally {
+            viewStrategy.onNextButtonFinish();
+        }
+    }
 }

@@ -134,6 +134,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
+    public void refreshSentence(OnPracticeWordSetListener listener) {
+        WordSet wordSet = wordSetService.findById(wordSetId);
+        Word2Tokens word = wordSet.getWords().get(currentWordIndex);
+        initialiseSentence(word, listener);
+    }
+
+    @Override
     public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
         Word2Tokens currentWord = exerciseService.getCurrentWord(wordSetId);
         exerciseService.putOffCurrentWord(wordSetId);

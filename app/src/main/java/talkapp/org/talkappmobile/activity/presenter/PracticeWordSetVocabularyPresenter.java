@@ -5,6 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -33,5 +34,24 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
     @Override
     public void onWordSetVocabularyFound(List<WordTranslation> wordTranslations) {
         view.setWordSetVocabularyList(wordTranslations);
+    }
+
+    @Override
+    public void onUpdateNotCustomWordSet() {
+        view.onUpdateNotCustomWordSet();
+    }
+
+    @Override
+    public void onUpdateCustomWordSetFinished() {
+        view.onUpdateCustomWordSetFinished();
+    }
+
+    public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation) {
+        try {
+            view.onInitializeBeginning();
+            interactor.updateCustomWordSet(editedItemPosition, wordTranslation, this);
+        } finally {
+            view.onInitializeEnd();
+        }
     }
 }

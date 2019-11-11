@@ -130,6 +130,13 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
+    public void refreshSentence(OnPracticeWordSetListener listener) {
+        WordSet wordSet = wordSetService.findById(currentWord.wordSetId);
+        Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
+        initialiseSentence(word, listener);
+    }
+
+    @Override
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
         LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
         for (WordSource finishedWord : finishedWords) {

@@ -34,4 +34,6 @@ public interface PracticeWordSetInteractor {
     void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener);
 
     void prepareOriginalTextClickEM(OnPracticeWordSetListener listener);
+
+    void refreshSentence(OnPracticeWordSetListener listener);
 }

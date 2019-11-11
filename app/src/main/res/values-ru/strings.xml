@@ -81,4 +81,7 @@
     <string name="phrase_translation_hidden_button_edit_label">Изменить</string>
     <string name="phrase_translation_hidden_button_reset_label">Сбросить</string>
     <string name="phrase_translation_warning_read_only_mode">Редактирование невозможно</string>
+
+    <string name="practice_word_set_vocabulary_fragment_warning_impossible_change_custom_word_set">Вы не можете изменить предопределенные слова</string>
+    <string name="practice_word_set_vocabulary_fragment_message_successful_update">Сохранено</string>
 </resources>

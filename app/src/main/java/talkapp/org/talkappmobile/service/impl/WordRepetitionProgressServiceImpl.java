@@ -376,6 +376,33 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         return wordSets;
     }
 
+    @Override
+    public void updateSentenceIds(Word2Tokens newWord2Token, Word2Tokens oldWord2Token) {
+        WordSetMapping mapping = wordSetDao.findById(newWord2Token.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mapping);
+        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(newWord2Token), newWord2Token.getSourceWordSetId());
+        if (exercises.isEmpty()) {
+            return;
+        }
+        WordRepetitionProgressMapping exercise = exercises.get(0);
+        int wordsNumber = 6;
+        List<SentenceMapping> sentences = sentenceDao.findAllByWord(newWord2Token.getWord(), wordsNumber);
+        LinkedList<SentenceIdMapping> sentenceIds = new LinkedList<>();
+        for (SentenceMapping sentence : sentences) {
+            try {
+                sentenceIds.add(mapper.readValue(sentence.getId(), SentenceIdMapping.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
+        try {
+            exercise.setSentenceIds(mapper.writeValueAsString(sentenceIds));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        exerciseDao.createNewOrUpdate(exercise);
+    }
+
     private void sortByForgettingAndRepetitionCounters(List<WordRepetitionProgressMapping> words) {
         sort(words, new Comparator<WordRepetitionProgressMapping>() {
             @Override

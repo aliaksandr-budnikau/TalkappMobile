@@ -56,11 +56,12 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(mock(WordTranslationDao.class), new WordTranslationMapper(new ObjectMapper())));
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(mock(WordSetService.class));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        interactor = new PracticeWordSetVocabularyInteractor(server, mock(WordSetService.class));
+        interactor = new PracticeWordSetVocabularyInteractor(server, mockServiceFactoryBean.getWordSetExperienceRepository(), mockServiceFactoryBean.getWordTranslationService(), mockServiceFactoryBean.getPracticeWordSetExerciseRepository());
     }
 
     @Test

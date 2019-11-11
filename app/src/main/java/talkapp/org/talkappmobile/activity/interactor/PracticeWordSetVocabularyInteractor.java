@@ -10,15 +10,23 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
+
+import static java.util.Arrays.asList;
 
 public class PracticeWordSetVocabularyInteractor {
     private final DataServer server;
     private final WordSetService wordSetService;
+    private final WordTranslationService wordTranslationService;
+    private final WordRepetitionProgressService wordRepetitionProgressService;
 
-    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService) {
+    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService) {
         this.server = server;
         this.wordSetService = wordSetService;
+        this.wordTranslationService = wordTranslationService;
+        this.wordRepetitionProgressService = wordRepetitionProgressService;
     }
 
     public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
@@ -43,5 +51,20 @@ public class PracticeWordSetVocabularyInteractor {
             words.add(word2Token.getWord());
         }
         return words;
+    }
+
+    public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation, OnPracticeWordSetVocabularyListener listener) {
+        WordSet wordSet = wordSetService.getCurrent();
+        Word2Tokens oldWord2Token = wordSet.getWords().get(editedItemPosition);
+        if (oldWord2Token.getSourceWordSetId() < wordSetService.getCustomWordSetsStartsSince()) {
+            listener.onUpdateNotCustomWordSet();
+            return;
+        }
+        Word2Tokens newWord2Token = new Word2Tokens(wordTranslation.getWord(), wordTranslation.getWord(), oldWord2Token.getSourceWordSetId());
+        wordSetService.updateWord2Tokens(newWord2Token, oldWord2Token);
+        wordTranslationService.saveWordTranslations(asList(wordTranslation));
+        wordRepetitionProgressService.updateSentenceIds(newWord2Token, oldWord2Token);
+
+        listener.onUpdateCustomWordSetFinished();
     }
 }

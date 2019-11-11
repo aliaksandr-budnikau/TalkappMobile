@@ -80,4 +80,7 @@
     <string name="phrase_translation_hidden_button_edit_label">EDIT</string>
     <string name="phrase_translation_hidden_button_reset_label">RESET</string>
     <string name="phrase_translation_warning_read_only_mode">Editing is impossible</string>
+
+    <string name="practice_word_set_vocabulary_fragment_warning_impossible_change_custom_word_set">You can\'t change predefined words</string>
+    <string name="practice_word_set_vocabulary_fragment_message_successful_update">Saved</string>
 </resources>
