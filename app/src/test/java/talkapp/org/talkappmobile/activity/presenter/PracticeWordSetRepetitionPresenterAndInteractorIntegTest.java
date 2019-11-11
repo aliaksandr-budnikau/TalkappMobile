@@ -102,7 +102,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         userExpService = new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class));
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper));
+        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper), mapper);
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
         interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, userExpService, experienceUtils, wordSetService, context, new AudioStuffFactoryBean());

@@ -39,7 +39,6 @@ import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
@@ -102,7 +101,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetDao = daoHelper.getWordSetDao();
         wordSetMapper = new WordSetMapper(mapper);
-        experienceService = new WordSetServiceImpl(wordSetDao, daoHelper.getNewWordSetDraftDao(), experienceUtils, wordSetMapper);
+        experienceService = new WordSetServiceImpl(wordSetDao, daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, wordSetMapper, mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);

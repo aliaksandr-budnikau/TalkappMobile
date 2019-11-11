@@ -62,7 +62,7 @@ public class PracticeWordSetVocabularyFragmentTest {
 
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
 
-        WordSetServiceImpl wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), new WordSetExperienceUtilsImpl(), new WordSetMapper(mapper));
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), new WordSetExperienceUtilsImpl(), new WordSetMapper(mapper), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         PresenterFactory presenterFactory = new PresenterFactory();

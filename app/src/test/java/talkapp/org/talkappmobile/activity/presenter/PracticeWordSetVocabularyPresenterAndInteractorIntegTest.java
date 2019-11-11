@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -59,7 +60,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
 
-        interactor = new PracticeWordSetVocabularyInteractor(server);
+        interactor = new PracticeWordSetVocabularyInteractor(server, mock(WordSetService.class));
     }
 
     @Test

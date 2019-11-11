@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +35,6 @@ import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
@@ -96,7 +94,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetMapper = new WordSetMapper(mapper);
-        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, wordSetMapper);
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, wordSetMapper, mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);

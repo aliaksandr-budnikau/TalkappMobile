@@ -11,6 +11,7 @@ import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
 
+import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -19,6 +20,7 @@ import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.dao.impl.CurrentWordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
@@ -26,6 +28,7 @@ import talkapp.org.talkappmobile.dao.impl.TopicDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
+import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -73,13 +76,14 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordSetExperienceUtils experienceUtils;
     private NewWordSetDraftDao newWordSetDraftDao;
     private MigrationService migrationService;
+    private CurrentWordSetDao currentWordSetDao;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideNewWordSetDraftDao(), provideExperienceUtils(), getWordSetMapper());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideCurrentWordSetDao(), provideNewWordSetDraftDao(), provideExperienceUtils(), getWordSetMapper(), MAPPER);
         return wordSetExperienceService;
     }
 
@@ -90,6 +94,19 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         migrationService = new MigrationServiceImpl(providePracticeWordSetExerciseDao(), provideWordSetDao(), provideSentenceDao(), MAPPER);
         return migrationService;
+    }
+
+    @Override
+    public CurrentWordSetDao provideCurrentWordSetDao() {
+        if (currentWordSetDao != null) {
+            return currentWordSetDao;
+        }
+        try {
+            currentWordSetDao = new CurrentWordSetDaoImpl(databaseHelper().getConnectionSource(), CurrentWordSetMapping.class);
+            return currentWordSetDao;
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     @Override

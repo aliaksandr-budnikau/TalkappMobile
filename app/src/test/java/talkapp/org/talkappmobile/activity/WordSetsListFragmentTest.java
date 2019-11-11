@@ -98,7 +98,7 @@ public class WordSetsListFragmentTest {
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        wordSetService = new WordSetServiceImpl(wordSetDaoMock, newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper));
+        wordSetService = new WordSetServiceImpl(wordSetDaoMock, daoHelper.getCurrentWordSetDao(), newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);

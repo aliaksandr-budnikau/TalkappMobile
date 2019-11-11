@@ -26,4 +26,8 @@ public interface WordSetService {
     void save(NewWordSetDraft draft);
 
     WordSet findById(int id);
+
+    WordSet getCurrent();
+
+    void saveCurrent(WordSet wordSet);
 }
