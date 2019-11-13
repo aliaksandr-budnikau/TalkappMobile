@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
@@ -98,7 +97,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
@@ -143,7 +141,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         verify(eventBus).post(any(SomeWordIsEmptyEM.class));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
@@ -163,7 +160,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word10 = "fog";
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false)));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
@@ -235,7 +231,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
         verify(eventBus, times(1)).post(wordSetCaptor.capture());
@@ -259,7 +254,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false)));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
         verify(eventBus, times(1)).post(wordSetCaptor.capture());
         wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
@@ -335,7 +329,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         }
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
         ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);

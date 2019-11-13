@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
@@ -83,8 +82,6 @@ public class WordSetVocabularyViewControllerTest {
     public void submit_noSentencesForAnyWord() {
         service.saveNewWordTranslation("  sdfds ", null);
 
-        verify(eventBus).post(any(NewWordSentencesWereNotFoundEM.class));
-
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
@@ -92,8 +89,6 @@ public class WordSetVocabularyViewControllerTest {
     @Test
     public void submit_noSentencesForFewWord() {
         service.saveNewWordTranslation("house", null);
-
-        verify(eventBus, times(0)).post(new NewWordSentencesWereNotFoundEM());
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -104,7 +99,6 @@ public class WordSetVocabularyViewControllerTest {
         String word0 = "house";
         service.saveNewWordTranslation(word0, null);
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
         verify(eventBus, times(1)).post(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
     }
@@ -116,7 +110,6 @@ public class WordSetVocabularyViewControllerTest {
         String translation = "разглядеть, различить, разбирать";
         service.saveNewWordTranslation("  " + word + " ", "  " + translation + " ");
 
-        verify(eventBus, times(0)).post(any(NewWordSentencesWereNotFoundEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 

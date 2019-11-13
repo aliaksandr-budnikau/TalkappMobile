@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
@@ -206,12 +205,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
         presenter.updateCustomWordSet(editedItemPosition, editedItem);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(warningSentencesNotFound);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

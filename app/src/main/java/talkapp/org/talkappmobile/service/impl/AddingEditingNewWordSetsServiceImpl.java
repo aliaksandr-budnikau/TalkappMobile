@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.NewWordWithTranslation;
@@ -94,7 +93,6 @@ public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWord
         }
         if (sentences.isEmpty()) {
             anyHasNoSentences = true;
-            eventBus.post(new NewWordSentencesWereNotFoundEM());
         }
         return anyHasNoSentences;
     }

@@ -31,7 +31,6 @@ import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSentencesWereNotFoundEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
@@ -212,12 +211,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
         eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSentencesWereNotFoundEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(warningSentencesNotFound);
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
