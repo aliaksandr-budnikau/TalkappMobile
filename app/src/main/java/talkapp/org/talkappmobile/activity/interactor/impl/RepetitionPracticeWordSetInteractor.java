@@ -100,6 +100,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
+            if (wordTranslation == null) {
+                return;
+            }
             sentences = singletonList(sentenceService.convertToSentence(wordTranslation));
         }
         setCurrentSentence(sentences.get(0));

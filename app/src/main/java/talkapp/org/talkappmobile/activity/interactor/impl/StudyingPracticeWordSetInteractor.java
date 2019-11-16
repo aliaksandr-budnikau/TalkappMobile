@@ -92,6 +92,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                 sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
             } catch (LocalCacheIsEmptyException e) {
                 WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
+                if (wordTranslation == null) {
+                    return;
+                }
                 sentences = asList(sentenceService.convertToSentence(wordTranslation));
             }
             sentenceService.orderByScore(sentences);

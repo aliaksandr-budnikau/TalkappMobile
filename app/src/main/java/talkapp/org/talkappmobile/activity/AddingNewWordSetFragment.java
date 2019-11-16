@@ -220,7 +220,8 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
         for (WordTranslation word : words) {
-            if (word.getWord().toLowerCase().equals(phrase.toLowerCase())) {
+            String wordAsString = word.getWord() == null ? "" : word.getWord();
+            if (wordAsString.toLowerCase().equals(phrase.toLowerCase())) {
                 return true;
             }
         }
