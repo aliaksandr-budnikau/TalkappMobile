@@ -317,8 +317,10 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         wordSetsListView.refreshModel();
         if (repetitionClass == null) {
             pickStudingFilter(NEW);
+            tabHost.setCurrentTabByTag(NEW);
         } else {
             pickRepetitionFilter(repetitionClass);
+            tabHost.setCurrentTabByTag(repetitionClass.name());
         }
     }
 
