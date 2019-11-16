@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Collections.shuffle;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -147,12 +148,14 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
         List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord);
-        List<Sentence> sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord);
-        if (sentences.isEmpty()) {
+        List<Sentence> sentences;
+        try {
+            sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord);
+        } catch (LocalCacheIsEmptyException e) {
             listener.onNoSentencesToChange();
-        } else {
-            listener.onGotSentencesToChange(sentences, alreadyPickedSentences, currentWord);
+            return;
         }
+        listener.onGotSentencesToChange(sentences, alreadyPickedSentences, currentWord);
     }
 
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {

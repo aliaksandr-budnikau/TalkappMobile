@@ -13,7 +13,6 @@ import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
@@ -22,6 +21,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -30,7 +30,9 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.WordsCombinator;
+import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -57,6 +59,8 @@ public class StudyingPracticeWordSetInteractorTest {
     private WordsCombinator wordsCombinator;
     @Mock
     private SentenceService sentenceService;
+    @Mock
+    private WordTranslationService wordTranslationService;
     @Mock
     private RefereeService refereeService;
     @Mock
@@ -185,17 +189,27 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setWords(asList(word));
         wordSet.setId(wordSetId);
 
+        WordTranslation translation = new WordTranslation();
+        translation.setId("russian");
+        translation.setLanguage("russian");
+        translation.setWord(word.getWord());
+        translation.setTokens(word.getTokens());
+        translation.setTranslation("fdsf");
+
         // when
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
-        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(Collections.<Sentence>emptyList());
+        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenThrow(new LocalCacheIsEmptyException(""));
+        when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
+        when(sentenceService.convertToSentence(translation)).thenReturn(selectedSentence);
+        when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
         // then
-        verify(listener, times(0)).onSentencesFound(selectedSentence, word);
-        verify(exerciseService, times(0)).save(word, singletonList(selectedSentence));
-        verify(sentenceService, times(0)).selectSentences(any(List.class));
+        verify(listener, times(1)).onSentencesFound(selectedSentence, word);
+        verify(exerciseService, times(1)).save(word, singletonList(selectedSentence));
+        verify(sentenceService, times(1)).selectSentences(any(List.class));
     }
 
     @Test

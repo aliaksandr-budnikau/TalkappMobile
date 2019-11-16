@@ -38,6 +38,7 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
@@ -52,8 +53,10 @@ import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -80,6 +83,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private WordSetExperienceUtilsImpl experienceUtils;
     private WordSetService wordSetService;
     private DaoHelper daoHelper;
+    private WordTranslationService wordTranslationService;
 
     @Before
     public void setup() throws SQLException {
@@ -103,9 +107,10 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, new WordSetMapper(mapper), mapper);
+        wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), new WordTranslationMapper(mapper));
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService);
         interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, exerciseService, userExpService, experienceUtils, wordSetService, context, new AudioStuffFactoryBean());
+                logger, exerciseService, userExpService, experienceUtils, wordSetService, wordTranslationService, context, new AudioStuffFactoryBean());
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }
 

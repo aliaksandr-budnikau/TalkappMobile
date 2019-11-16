@@ -83,7 +83,7 @@ public class WordSetVocabularyViewControllerTest {
         service.saveNewWordTranslation("  sdfds ", null);
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(eventBus, times(1)).post(any(NewWordTranslationWasNotFoundEM.class));
     }
 
     @Test

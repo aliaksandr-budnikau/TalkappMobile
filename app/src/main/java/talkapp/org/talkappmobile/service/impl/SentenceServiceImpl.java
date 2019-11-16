@@ -2,20 +2,25 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.TextToken;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.SentenceService;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+
+import static java.lang.String.valueOf;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 public class SentenceServiceImpl implements SentenceService {
@@ -99,6 +104,18 @@ public class SentenceServiceImpl implements SentenceService {
     }
 
     @Override
+    public Sentence convertToSentence(WordTranslation wordTranslation) {
+        Sentence sentence = new Sentence();
+        sentence.setId(new SentenceIdMapping(valueOf(System.currentTimeMillis()), 6).toString());
+        sentence.setTokens(getTextTokens(wordTranslation));
+        HashMap<String, String> translations = new HashMap<>();
+        translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());
+        sentence.setTranslations(translations);
+        sentence.setText(wordTranslation.getWord());
+        return sentence;
+    }
+
+    @Override
     public void orderByScore(List<Sentence> sentences) {
         Collections.sort(sentences, new Comparator<Sentence>() {
             @Override
@@ -117,5 +134,17 @@ public class SentenceServiceImpl implements SentenceService {
                 return o1.getContentScore().compareTo(o2.getContentScore());
             }
         });
+    }
+
+    @NonNull
+    private LinkedList<TextToken> getTextTokens(WordTranslation wordTranslation) {
+        LinkedList<TextToken> textTokens = new LinkedList<>();
+        TextToken textToken = new TextToken();
+        textToken.setToken(wordTranslation.getWord());
+        textToken.setStartOffset(0);
+        textToken.setEndOffset(wordTranslation.getWord().length());
+        textToken.setPosition(0);
+        textTokens.add(textToken);
+        return textTokens;
     }
 }

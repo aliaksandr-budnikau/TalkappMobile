@@ -303,7 +303,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
         if (sentences.isEmpty()) {
-            throw new RuntimeException("Sentence wasn't found");
+            return emptyList();
         }
         Map<String, SentenceMapping> hashMap = new HashMap<>();
         for (SentenceMapping sentence : sentences) {

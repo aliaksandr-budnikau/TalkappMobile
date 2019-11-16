@@ -405,6 +405,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     }
 
     @Override
+    @UiThread
     public void onNoSentencesToChange() {
         Toast.makeText(getContext(), "There is no sentence to change", Toast.LENGTH_LONG).show();
     }

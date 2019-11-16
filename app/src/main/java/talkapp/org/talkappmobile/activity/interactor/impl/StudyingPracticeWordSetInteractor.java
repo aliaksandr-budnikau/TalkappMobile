@@ -9,6 +9,7 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -17,7 +18,10 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
+import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
+import static java.util.Arrays.asList;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -32,6 +36,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private final WordSetService wordSetService;
+    private final WordTranslationService wordTranslationService;
     private int currentWordIndex;
     private Sentence currentSentence;
     private Integer wordSetId;
@@ -41,6 +46,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              RefereeService refereeService,
                                              Logger logger,
                                              WordSetService experienceService,
+                                             WordTranslationService wordTranslationService,
                                              WordRepetitionProgressService exerciseService,
                                              UserExpService userExpService,
                                              WordSetExperienceUtils experienceUtils,
@@ -49,6 +55,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
+        this.wordTranslationService = wordTranslationService;
         this.logger = logger;
         this.experienceService = experienceService;
         this.exerciseService = exerciseService;
@@ -81,9 +88,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         this.currentWordIndex = wordSet.getWords().indexOf(word);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
-            sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
-            if (sentences.isEmpty()) {
-                return;
+            try {
+                sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
+            } catch (LocalCacheIsEmptyException e) {
+                WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
+                sentences = asList(sentenceService.convertToSentence(wordTranslation));
             }
             sentenceService.orderByScore(sentences);
             List<Sentence> selectSentences = sentenceService.selectSentences(sentences);

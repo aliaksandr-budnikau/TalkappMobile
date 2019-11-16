@@ -57,9 +57,9 @@ public class PresenterFactory {
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
 
-        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(serviceFactory.getWordSetExperienceRepository(), sentenceService, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
+        PracticeWordSetInteractor interactor = new StudyingPracticeWordSetInteractor(serviceFactory.getWordSetExperienceRepository(), sentenceService, refereeService, logger, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, context, audioStuffFactory);
         if (repetitionMode) {
-            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, serviceFactory.getWordSetExperienceRepository(), context, audioStuffFactory);
+            interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), context, audioStuffFactory);
         }
         return new PracticeWordSetPresenter(interactor, viewStrategy);
     }

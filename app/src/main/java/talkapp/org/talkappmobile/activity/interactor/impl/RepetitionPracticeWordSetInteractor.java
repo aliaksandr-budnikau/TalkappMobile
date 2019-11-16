@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -18,7 +19,9 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
+import static java.util.Collections.singletonList;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
@@ -29,6 +32,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final UserExpService userExpService;
     private final WordSetExperienceUtils experienceUtils;
     private final WordSetService wordSetService;
+    private final WordTranslationService wordTranslationService;
     private WordSource currentWord;
     private Sentence currentSentence;
     private int maxTrainingProgress;
@@ -43,6 +47,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             UserExpService userExpService,
             WordSetExperienceUtils experienceUtils,
             WordSetService wordSetService,
+            WordTranslationService wordTranslationService,
             Context context,
             AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
@@ -52,6 +57,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.userExpService = userExpService;
         this.experienceUtils = experienceUtils;
         this.wordSetService = wordSetService;
+        this.wordTranslationService = wordTranslationService;
     }
 
     @Override
@@ -93,7 +99,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.currentWord = new WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word));
         List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
-            return;
+            WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
+            sentences = singletonList(sentenceService.convertToSentence(wordTranslation));
         }
         setCurrentSentence(sentences.get(0));
         listener.onSentencesFound(getCurrentSentence(), word);
