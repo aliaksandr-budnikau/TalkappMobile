@@ -1,8 +1,10 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,6 +27,7 @@ import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +40,7 @@ import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 
-import static com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP;
+import static com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
 import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.DAILY;
@@ -48,7 +51,6 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 @EActivity(R.layout.activity_statistic)
 public class StatisticActivity extends AppCompatActivity implements StatisticActivityView {
 
-    private final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
     @Bean
     PresenterFactory presenterFactory;
 
@@ -69,6 +71,8 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
     String tabMonthlyLabel;
     @StringRes(R.string.activity_statistic_tab_total_label)
     String tabTotalLabel;
+    @StringRes(R.string.activity_statistic_tab_not_active_warn)
+    String tabNotActiveWarn;
 
     private StatisticActivityPresenter presenter;
     private ArrayList<Date> dates;
@@ -76,12 +80,7 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
     @AfterViews
     public void init() {
         presenter = presenterFactory.create(this);
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-                pickStatistic(Tab.valueOf(tabId));
-            }
-        });
+        formBarChart();
         tabHost.setup();
         //Tab 1
         TabHost.TabSpec spec = tabHost.newTabSpec(Tab.TODAY.name());
@@ -107,7 +106,18 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         spec.setIndicator(tabTotalLabel);
         tabHost.addTab(spec);
 
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                pickStatistic(Tab.valueOf(tabId));
+            }
+        });
+
         tabHost.setCurrentTabByTag(DAILY.name());
+        pickStatistic(DAILY);
+    }
+
+    private void formBarChart() {
         barChart.getDescription().setEnabled(false);
 
         // scaling can now only be done on x- and y-axis separately
@@ -130,33 +140,16 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         XAxis xAxis = barChart.getXAxis();
         xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(false);
-        xAxis.setDrawGridLines(true);
-        xAxis.setPosition(TOP);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(BOTTOM);
         xAxis.setDrawAxisLine(true);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter() {
-
-            @Override
-            public String getFormattedValue(float index) {
-                Date date;
-                if (dates.size() <= index) {
-                    date = new Date();
-                } else if (index < 0) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(dates.get(0));
-                    calendar.add(Calendar.DATE, (int) index);
-                    date = calendar.getTime();
-                } else {
-                    date = dates.get((int) index);
-                }
-                return DATE_FORMAT.format(date);
-            }
-        });
+        xAxis.setValueFormatter(new StatIndexAxisValueFormatter());
         xAxis.setAxisMinimum(-1f); // this replaces setStartAtZero(true)
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setEnabled(true);
-        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawLabels(true);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 
         YAxis rightAxis = barChart.getAxisRight();
@@ -164,19 +157,26 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         rightAxis.setEnabled(true);
         rightAxis.setDrawLabels(false);
         rightAxis.setAxisMinimum(0f);
-
-        loadDailyStat();
-    }
-
-    @Background
-    public void loadDailyStat() {
-        Calendar calendar = Calendar.getInstance();
-        presenter.loadDailyStat(WORD_SET_PRACTICE, calendar.get(YEAR), calendar.get(MONTH));
     }
 
     @Override
+    @UiThread
     public void setMonthlyStat(List<ExpAuditMonthly> stat) {
+        ArrayList<BarEntry> wordSetPracticeValues = new ArrayList<>();
 
+        ArrayList<Integer> months = new ArrayList<>(stat.size());
+        for (ExpAuditMonthly auditMonthly : stat) {
+            wordSetPracticeValues.add(new BarEntry(months.size(), (float) auditMonthly.getExpScore()));
+            months.add(auditMonthly.getMonth());
+        }
+
+        BarDataSet set = new BarDataSet(wordSetPracticeValues, WORD_SET_PRACTICE.name());
+        set.setColor(Color.rgb(104, 241, 175));
+
+        BarData data = new BarData(set);
+        data.setValueFormatter(new StatLargeValueFormatter());
+
+        updateBarChart(data);
     }
 
     @Background
@@ -186,7 +186,14 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
             presenter.loadDailyStat(WORD_SET_PRACTICE, calendar.get(YEAR), calendar.get(MONTH));
         } else if (tab == MONTHLY) {
             presenter.loadMonthlyStat(WORD_SET_PRACTICE, calendar.get(YEAR));
+        } else {
+            showNotActiveTabWarn();
         }
+    }
+
+    @UiThread
+    public void showNotActiveTabWarn() {
+        Toast.makeText(this.getApplicationContext(), tabNotActiveWarn, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -204,12 +211,68 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         set.setColor(Color.rgb(104, 241, 175));
 
         BarData data = new BarData(set);
-        data.setValueFormatter(new LargeValueFormatter());
+        data.setValueFormatter(new StatLargeValueFormatter());
 
+        updateBarChart(data);
+    }
+
+    private void updateBarChart(BarData data) {
         barChart.setData(data);
+        barChart.invalidate();
+        barChart.setFitBars(true);
+        barChart.fitScreen();
     }
 
     enum Tab {
         TODAY, DAILY, MONTHLY, TOTAL
+    }
+
+    private static class StatLargeValueFormatter extends LargeValueFormatter {
+        @Override
+        public String getFormattedValue(float value) {
+            if (value == 0) {
+                return "";
+            }
+            return super.getFormattedValue(value);
+        }
+    }
+
+    private class StatIndexAxisValueFormatter extends IndexAxisValueFormatter {
+
+        @SuppressLint("SimpleDateFormat")
+        private final DateFormat DATE_FORMAT = new SimpleDateFormat("dd");
+
+        @Override
+        public String getFormattedValue(float index) {
+            Tab currentTab = Tab.valueOf(tabHost.getCurrentTabTag());
+            if (currentTab == DAILY) {
+                Date date;
+                if (dates.size() <= index) {
+                    date = new Date();
+                } else if (index < 0) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(dates.get(0));
+                    calendar.add(Calendar.DATE, (int) index);
+                    date = calendar.getTime();
+                } else {
+                    date = dates.get((int) index);
+                }
+                return DATE_FORMAT.format(date);
+            }
+            if (currentTab == MONTHLY) {
+                return getMonthForInt((int) index);
+            }
+            return "";
+        }
+
+        private String getMonthForInt(int num) {
+            String month = "";
+            DateFormatSymbols dfs = new DateFormatSymbols();
+            String[] months = dfs.getMonths();
+            if (num >= 0 && num <= 11) {
+                month = months[num];
+            }
+            return month;
+        }
     }
 }

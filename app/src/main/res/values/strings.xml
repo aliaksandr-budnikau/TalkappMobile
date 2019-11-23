@@ -71,6 +71,7 @@
     <string name="activity_statistic_tab_daily_label">DAILY</string>
     <string name="activity_statistic_tab_monthly_label">MONTHLY</string>
     <string name="activity_statistic_tab_total_label">TOTAL</string>
+    <string name="activity_statistic_tab_not_active_warn">Doesn\'t work yet</string>
 
     <string name="phrase_translation_input_text_view_popup_title">Add phrase with translation</string>
     <string name="phrase_translation_input_text_view_popup_phrase_label">The phrase is required</string>
