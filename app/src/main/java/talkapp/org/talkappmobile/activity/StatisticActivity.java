@@ -33,8 +33,11 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
 import talkapp.org.talkappmobile.model.ExpAudit;
+import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 
 import static com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @EActivity(R.layout.activity_statistic)
@@ -113,21 +116,27 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         rightAxis.setAxisMinimum(0f);
 
         presenter = presenterFactory.create(this);
-        loadStat();
+        loadDailyStat();
     }
 
     @Background
-    public void loadStat() {
-        presenter.loadStat();
+    public void loadDailyStat() {
+        Calendar calendar = Calendar.getInstance();
+        presenter.loadDailyStat(WORD_SET_PRACTICE, calendar.get(YEAR), calendar.get(MONTH));
+    }
+
+    @Override
+    public void setMonthlyStat(List<ExpAuditMonthly> stat) {
+
     }
 
     @Override
     @UiThread
-    public void setStat(List<ExpAudit> wordSetPracticeExp) {
+    public void setDailyStat(List<ExpAudit> stat) {
         ArrayList<BarEntry> wordSetPracticeValues = new ArrayList<>();
 
-        dates = new ArrayList<>(wordSetPracticeExp.size());
-        for (ExpAudit expAudit : wordSetPracticeExp) {
+        dates = new ArrayList<>(stat.size());
+        for (ExpAudit expAudit : stat) {
             wordSetPracticeValues.add(new BarEntry(dates.size(), (float) expAudit.getExpScore()));
             dates.add(expAudit.getDate());
         }

@@ -5,7 +5,9 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.interactor.StatisticActivityInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnStatisticActivityListener;
 import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
+import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
+import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 
 public class StatisticActivityPresenter implements OnStatisticActivityListener {
 
@@ -18,11 +20,16 @@ public class StatisticActivityPresenter implements OnStatisticActivityListener {
     }
 
     @Override
-    public void onExpAuditLoadedEM(List<ExpAudit> allByType) {
-        view.setStat(allByType);
+    public void onMonthlyStatLoaded(List<ExpAuditMonthly> stat) {
+        view.setMonthlyStat(stat);
     }
 
-    public void loadStat() {
-        interactor.loadStat(this);
+    @Override
+    public void onDailyStatLoaded(List<ExpAudit> stat) {
+        view.setDailyStat(stat);
+    }
+
+    public void loadDailyStat(final ExpActivityType type, final int year, final int month) {
+        interactor.loadDailyStat(type, year, month, this);
     }
 }
