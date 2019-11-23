@@ -15,12 +15,12 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,31 +30,27 @@ import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.controller.StatisticActivityController;
-import talkapp.org.talkappmobile.events.ExpAuditLoadedEM;
-import talkapp.org.talkappmobile.events.StatisticActivityCreatedEM;
+import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
+import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static com.github.mikephil.charting.components.XAxis.XAxisPosition.TOP;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @EActivity(R.layout.activity_statistic)
-public class StatisticActivity extends AppCompatActivity {
+public class StatisticActivity extends AppCompatActivity implements StatisticActivityView {
 
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("dd MMM yy");
+    @Bean
+    PresenterFactory presenterFactory;
 
     @EventBusGreenRobot
     EventBus eventBus;
 
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
-
     @ViewById(R.id.barChart)
     BarChart barChart;
 
-    private StatisticActivityController controller;
+    private StatisticActivityPresenter presenter;
     private ArrayList<Date> dates;
 
     @AfterViews
@@ -116,20 +112,20 @@ public class StatisticActivity extends AppCompatActivity {
         rightAxis.setDrawLabels(false);
         rightAxis.setAxisMinimum(0f);
 
-        controller = new StatisticActivityController(eventBus, serviceFactory);
-        eventBus.post(new StatisticActivityCreatedEM());
+        presenter = presenterFactory.create(this);
+        loadStat();
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(StatisticActivityCreatedEM event) {
-        controller.handle(event);
+    @Background
+    public void loadStat() {
+        presenter.loadStat();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ExpAuditLoadedEM event) {
+    @Override
+    @UiThread
+    public void setStat(List<ExpAudit> wordSetPracticeExp) {
         ArrayList<BarEntry> wordSetPracticeValues = new ArrayList<>();
 
-        List<ExpAudit> wordSetPracticeExp = event.getWordSetPracticeExp();
         dates = new ArrayList<>(wordSetPracticeExp.size());
         for (ExpAudit expAudit : wordSetPracticeExp) {
             wordSetPracticeValues.add(new BarEntry(dates.size(), (float) expAudit.getExpScore()));

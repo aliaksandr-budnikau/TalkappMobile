@@ -8,15 +8,18 @@ import org.androidannotations.annotations.EBean;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
+import talkapp.org.talkappmobile.activity.interactor.StatisticActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
+import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
+import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.EqualityScorer;
@@ -72,5 +75,10 @@ public class PresenterFactory {
     public MainActivityPresenter create(MainActivityView view, Context context) {
         MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), serviceFactory.getUserExpService(), context);
         return new MainActivityPresenter(view, interactor);
+    }
+
+    public StatisticActivityPresenter create(StatisticActivityView view) {
+        StatisticActivityInteractor interactor = new StatisticActivityInteractor(serviceFactory.getUserExpService());
+        return new StatisticActivityPresenter(view, interactor);
     }
 }
