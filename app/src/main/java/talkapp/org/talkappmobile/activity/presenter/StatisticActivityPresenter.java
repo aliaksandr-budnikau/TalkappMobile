@@ -32,4 +32,8 @@ public class StatisticActivityPresenter implements OnStatisticActivityListener {
     public void loadDailyStat(final ExpActivityType type, final int year, final int month) {
         interactor.loadDailyStat(type, year, month, this);
     }
+
+    public void loadMonthlyStat(final ExpActivityType type, final int year) {
+        interactor.loadMonthlyStat(type, year, this);
+    }
 }

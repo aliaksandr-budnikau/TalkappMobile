@@ -68,6 +68,10 @@
 
     <string name="activity_practice_word_set_tab_title_vocabulary">СЛОВАРЬ</string>
     <string name="activity_practice_word_set_tab_title_practice">ПРАКТИКА</string>
+    <string name="activity_statistic_tab_today_label">СЕГОДНЯ</string>
+    <string name="activity_statistic_tab_daily_label">ДНИ</string>
+    <string name="activity_statistic_tab_monthly_label">МЕСЯЦЫ</string>
+    <string name="activity_statistic_tab_total_label">ВСЕГО</string>
 
     <string name="phrase_translation_input_text_view_popup_title">Добавьте фразу с переводом</string>
     <string name="phrase_translation_input_text_view_popup_phrase_label">Фраза обязательна</string>

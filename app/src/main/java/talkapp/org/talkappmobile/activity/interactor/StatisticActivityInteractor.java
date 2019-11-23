@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -52,9 +51,9 @@ public class StatisticActivityInteractor {
         Calendar calendar = Calendar.getInstance();
 
         int initialCapacity = calendar.get(Calendar.MONTH) + 1;
-        ArrayList<ExpAuditMonthly> result = new ArrayList<>(initialCapacity);
+        ExpAuditMonthly[] result = new ExpAuditMonthly[initialCapacity];
         for (int i = 0; i < initialCapacity; i++) {
-            result.set(i, new ExpAuditMonthly(i, year, 0, type));
+            result[i] = new ExpAuditMonthly(i, year, 0, type);
         }
 
         for (ExpAudit expAudit : userExpService.findAllByTypeOrderedByDate(type)) {
@@ -64,9 +63,9 @@ public class StatisticActivityInteractor {
             }
 
             int month = calendar.get(Calendar.MONTH);
-            result.set(month, addToMonth(result.get(month), expAudit));
+            result[month] = addToMonth(result[month], expAudit);
         }
-        return result;
+        return Arrays.asList(result);
     }
 
     private ExpAuditMonthly addToMonth(ExpAuditMonthly month, ExpAudit expAudit) {
