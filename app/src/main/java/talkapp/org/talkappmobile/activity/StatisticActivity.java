@@ -45,6 +45,7 @@ import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
 import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.DAILY;
 import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.MONTHLY;
+import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.TODAY;
 import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.TOTAL;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
@@ -76,6 +77,8 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
 
     private StatisticActivityPresenter presenter;
     private ArrayList<Date> dates;
+    @Deprecated
+    private volatile Tab oldTab = DAILY;
 
     @AfterViews
     public void init() {
@@ -184,8 +187,10 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         Calendar calendar = Calendar.getInstance();
         if (tab == DAILY) {
             presenter.loadDailyStat(WORD_SET_PRACTICE, calendar.get(YEAR), calendar.get(MONTH));
+            oldTab = tab;
         } else if (tab == MONTHLY) {
             presenter.loadMonthlyStat(WORD_SET_PRACTICE, calendar.get(YEAR));
+            oldTab = tab;
         } else {
             showNotActiveTabWarn();
         }
@@ -245,6 +250,10 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
         @Override
         public String getFormattedValue(float index) {
             Tab currentTab = Tab.valueOf(tabHost.getCurrentTabTag());
+            if (currentTab == TODAY || currentTab == TOTAL) {
+                currentTab = oldTab;
+            }
+
             if (currentTab == DAILY) {
                 Date date;
                 if (dates.size() <= index) {
