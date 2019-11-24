@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.interactor;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnStatisticActivityListener;
@@ -44,7 +45,25 @@ public class StatisticActivityInteractor {
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             result[dayOfMonth - 1] = expAudit;
         }
-        return Arrays.asList(result);
+
+        LinkedList<ExpAudit> resultAsList = new LinkedList<>();
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -(initialCapacity - 1));
+        for (ExpAudit expAudit : result) {
+            try {
+                if (expAudit == null) {
+                    if (resultAsList.isEmpty()) {
+                        continue;
+                    }
+                    resultAsList.add(new ExpAudit(calendar.getTime(), 0, type));
+                } else {
+                    resultAsList.add(expAudit);
+                }
+            } finally {
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }
+        return resultAsList;
     }
 
     private List<ExpAuditMonthly> findAllByTypeAndByYearOrderedByMonth(final ExpActivityType type, final int year) {
