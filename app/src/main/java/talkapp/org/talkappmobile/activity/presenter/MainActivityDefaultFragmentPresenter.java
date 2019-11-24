@@ -50,6 +50,11 @@ public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefau
         view.onDifficultWordSetRepetitionTaskClicked(wordSets);
     }
 
+    @Override
+    public void onNewYourWordSetTaskClicked() {
+        view.onNewYourWordSetTaskClicked();
+    }
+
     public void findTasks() {
         interactor.findTasks(this);
     }

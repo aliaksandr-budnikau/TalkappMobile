@@ -16,4 +16,6 @@ public interface MainActivityDefaultFragmentView {
     void onWordSetRepetitionTaskClick(RepetitionClass clazz);
 
     void onDifficultWordSetRepetitionTaskClicked(List<WordSet> wordSets);
+
+    void onNewYourWordSetTaskClicked();
 }

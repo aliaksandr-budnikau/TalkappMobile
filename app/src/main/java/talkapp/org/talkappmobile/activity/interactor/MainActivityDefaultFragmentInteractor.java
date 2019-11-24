@@ -22,16 +22,21 @@ public class MainActivityDefaultFragmentInteractor {
     private final String wordSetsLearningDescription;
     private final String wordSetsExtraRepetitionTitle;
     private final String wordSetsExtraRepetitionDescription;
+    private final String wordSetsAddNewTitle;
+    private final String wordSetsAddNewDescription;
 
     public MainActivityDefaultFragmentInteractor(WordRepetitionProgressService exerciseService,
                                                  String wordSetsRepetitionTitle, String wordSetsRepetitionDescription,
                                                  String wordSetsLearningTitle, String wordSetsLearningDescription,
+                                                 String wordSetsAddNewTitle, String wordSetsAddNewDescription,
                                                  String wordSetsExtraRepetitionTitle, String wordSetsExtraRepetitionDescription) {
         this.exerciseService = exerciseService;
         this.wordSetsRepetitionTitle = wordSetsRepetitionTitle;
         this.wordSetsRepetitionDescription = wordSetsRepetitionDescription;
         this.wordSetsLearningTitle = wordSetsLearningTitle;
         this.wordSetsLearningDescription = wordSetsLearningDescription;
+        this.wordSetsAddNewTitle = wordSetsAddNewTitle;
+        this.wordSetsAddNewDescription = wordSetsAddNewDescription;
         this.wordSetsExtraRepetitionTitle = wordSetsExtraRepetitionTitle;
         this.wordSetsExtraRepetitionDescription = wordSetsExtraRepetitionDescription;
     }
@@ -61,11 +66,21 @@ public class MainActivityDefaultFragmentInteractor {
             tasks.add(repetitionTasks);
         }
         tasks.add(findStudyTask(listener));
+        tasks.add(findStudyYourOwnSetTask(listener));
         DifficultWordSetRepetitionTask difficultWordSetTasks = findRepetitionOfDifficultWordSetTasks(listener);
         if (difficultWordSetTasks != null) {
             tasks.add(difficultWordSetTasks);
         }
         listener.onFoundTasks(tasks);
+    }
+
+    private Task findStudyYourOwnSetTask(final OnMainActivityDefaultFragmentListener listener) {
+        return new Task(wordSetsAddNewTitle, wordSetsAddNewDescription) {
+            @Override
+            public void start() {
+                listener.onNewYourWordSetTaskClicked();
+            }
+        };
     }
 
     private DifficultWordSetRepetitionTask findRepetitionOfDifficultWordSetTasks(final OnMainActivityDefaultFragmentListener listener) {

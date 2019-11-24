@@ -1,8 +1,11 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -30,11 +33,13 @@ import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
+import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_MODE_MAPPING;
 
@@ -65,6 +70,14 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     String wordSetsExtraRepetitionTitle;
     @StringRes(R.string.word_set_task_extra_repetitions_description)
     String wordSetsExtraRepetitionDescription;
+    @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set)
+    String optionAddNewWordSet;
+    @StringRes(R.string.menu_exercises_learn_words_option_open_custom_word_sets)
+    String optionOpenCustomWordSets;
+    @StringRes(R.string.word_set_task_add_new_title)
+    String wordSetsAddNewTitle;
+    @StringRes(R.string.word_set_task_add_new_description)
+    String wordSetsAddNewDescription;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
@@ -76,6 +89,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository(),
                 wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
+                wordSetsAddNewTitle, wordSetsAddNewDescription,
                 wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription
         );
         presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
@@ -117,6 +131,27 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         intent.putExtra(PracticeWordSetActivity.WORD_SET_MAPPING, wordSets.get(0));
         intent.putExtra(PracticeWordSetActivity.REPETITION_MODE_MAPPING, true);
         startActivity(intent);
+    }
+
+    @Override
+    public void onNewYourWordSetTaskClicked() {
+        final FragmentManager fragmentManager = getFragmentManager();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+        builder
+                .setItems((new String[]{optionAddNewWordSet, optionOpenCustomWordSets}), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
+                        } else if (which == 1) {
+                            Topic topic = new Topic();
+                            topic.setId(43);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, createWordSetsListFragment(topic)).commit();
+                        }
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     private void openWordSetsListFragment(boolean repetitionMode, RepetitionClass clazz1) {

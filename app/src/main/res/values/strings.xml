@@ -42,10 +42,13 @@
     <string name="word_set_task_extra_repetitions_title">Extra repetition</string>
     <string name="word_set_task_extra_repetitions_description">Not memorable words only</string>
 
-    <string name="menu_exercises_learn_words_option_add_new_word_set">Add new words / phrases</string>
-    <string name="menu_exercises_learn_words_option_open_custom_word_sets">Open added words / phrases</string>
-    <string name="menu_exercises_learn_words_option_open_word_sets">Open all words / phrases</string>
-    <string name="menu_exercises_learn_words_option_open_word_sets_by_topics">Open all words / phrases by topics</string>
+    <string name="word_set_task_add_new_title">Your set</string>
+    <string name="word_set_task_add_new_description">Only your own sets</string>
+
+    <string name="menu_exercises_learn_words_option_add_new_word_set">Add new words</string>
+    <string name="menu_exercises_learn_words_option_open_custom_word_sets">Open added words</string>
+    <string name="menu_exercises_learn_words_option_open_word_sets">Open all words</string>
+    <string name="menu_exercises_learn_words_option_open_word_sets_by_topics">Open all words by topics</string>
 
     <string name="adding_new_word_set_fragment_button_save">Save</string>
     <string name="adding_new_word_set_fragment_warning_translation_not_found">No translation!</string>
