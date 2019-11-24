@@ -9,6 +9,9 @@
             <item
                 android:id="@+id/default_fragment"
                 android:title="@string/menu_exercises_repetitions" />
+            <item
+                android:id="@+id/statistic_activity"
+                android:title="@string/menu_exercises_statistics" />
         </menu>
     </item>
 

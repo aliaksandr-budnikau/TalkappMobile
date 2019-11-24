@@ -111,6 +111,9 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                                 }
                             });
                     builder.create().show();
+                } else if (id == R.id.statistic_activity) {
+                    Intent intent = new Intent(MainActivity.this, StatisticActivity_.class);
+                    startActivity(intent);
                 }
 
                 drawer.closeDrawer(GravityCompat.START);

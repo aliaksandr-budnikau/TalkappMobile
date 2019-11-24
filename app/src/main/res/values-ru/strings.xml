@@ -65,6 +65,7 @@
     <string name="menu_exercises">Упражнения</string>
     <string name="menu_exercises_learn_words">Выучить</string>
     <string name="menu_exercises_repetitions">Повторить</string>
+    <string name="menu_exercises_statistics">Статистика</string>
 
     <string name="activity_practice_word_set_tab_title_vocabulary">СЛОВАРЬ</string>
     <string name="activity_practice_word_set_tab_title_practice">ПРАКТИКА</string>
