@@ -33,14 +33,14 @@
     <string name="insult_sentence_option">Insult or rude</string>
     <string name="error_invalid_unchecking_all">impossible to uncheck all</string>
 
-    <string name="word_set_task_repetitions_title">Sets for repetition %s</string>
-    <string name="word_set_task_repetitions_description">The experience that you\'ll get depends on the number of repetitions you did. More you repeat any single word than more, you gain experience.</string>
+    <string name="word_set_task_repetitions_title">Repeat old sets</string>
+    <string name="word_set_task_repetitions_description">More reps give more experience</string>
 
     <string name="word_set_task_learning_title">Studying new words</string>
-    <string name="word_set_task_learning_description">Start learning new words.</string>
+    <string name="word_set_task_learning_description">Start learning new words</string>
 
-    <string name="word_set_task_extra_repetitions_title">Extra Repetition</string>
-    <string name="word_set_task_extra_repetitions_description">"Extra repetition of not catchy words."</string>
+    <string name="word_set_task_extra_repetitions_title">Extra repetition</string>
+    <string name="word_set_task_extra_repetitions_description">Not memorable words only</string>
 
     <string name="menu_exercises_learn_words_option_add_new_word_set">Add new words / phrases</string>
     <string name="menu_exercises_learn_words_option_open_custom_word_sets">Open added words / phrases</string>
@@ -63,6 +63,7 @@
 
     <string name="menu_exercises">Exercises</string>
     <string name="menu_exercises_learn_words">Learn</string>
+    <string name="menu_exercises_home">Home</string>
     <string name="menu_exercises_repetitions">Repeat</string>
     <string name="menu_exercises_statistics">Statistics</string>
 

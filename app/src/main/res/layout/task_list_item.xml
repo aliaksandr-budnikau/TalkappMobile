@@ -15,7 +15,7 @@
 
         android:paddingRight="10dp"
         android:textColor="@color/color.word_set_vocabulary_item.word"
-        android:textSize="13pt" />
+        android:textSize="11pt" />
 
     <TextView
         android:id="@+id/description"

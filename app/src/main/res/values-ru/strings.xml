@@ -33,14 +33,14 @@
     <string name="insult_sentence_option">Insult or rude</string>
     <string name="error_invalid_unchecking_all">impossible to uncheck all</string>
 
-    <string name="word_set_task_repetitions_title">Повторить %s набор(ов)</string>
-    <string name="word_set_task_repetitions_description">Опыт, который вы получите, зависит от количества повторений, которые вы сделали. Чем больше вы повторяете какое-то одно слово, тем больше вы приобретаете опыт.</string>
+    <string name="word_set_task_repetitions_title">Повтор старых наборов</string>
+    <string name="word_set_task_repetitions_description">Больше повторений дают больше опыта</string>
 
-    <string name="word_set_task_learning_title">Изучение новых слов / фраз</string>
-    <string name="word_set_task_learning_description">Начните учить новые слова.</string>
+    <string name="word_set_task_learning_title">Изучение новых слов</string>
+    <string name="word_set_task_learning_description">Начните учить новые слова</string>
 
-    <string name="word_set_task_extra_repetitions_title">Повторить дополнительно</string>
-    <string name="word_set_task_extra_repetitions_description">Дополнительное повторение не запоминающихся слов.</string>
+    <string name="word_set_task_extra_repetitions_title">Экстра повторение</string>
+    <string name="word_set_task_extra_repetitions_description">Самые незапоминающиеся слова</string>
 
     <string name="menu_exercises_learn_words_option_add_new_word_set">Добавить новые слова / фразы</string>
     <string name="menu_exercises_learn_words_option_open_custom_word_sets">Открыть добавленые слова / фразы</string>
@@ -64,6 +64,7 @@
 
     <string name="menu_exercises">Упражнения</string>
     <string name="menu_exercises_learn_words">Выучить</string>
+    <string name="menu_exercises_home">Домой</string>
     <string name="menu_exercises_repetitions">Повторить</string>
     <string name="menu_exercises_statistics">Статистика</string>
 

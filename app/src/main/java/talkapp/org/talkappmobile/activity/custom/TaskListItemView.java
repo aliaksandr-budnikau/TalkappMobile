@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-import talkapp.org.talkappmobile.model.Task;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.model.Task;
 
 @EViewGroup(R.layout.task_list_item)
 public class TaskListItemView extends RelativeLayout {
@@ -50,11 +50,10 @@ public class TaskListItemView extends RelativeLayout {
         } else {
             description.setLines(MIN_LINES);
         }
-        setOnLongClickListener(new OnLongClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 task.start();
-                return true;
             }
         });
     }

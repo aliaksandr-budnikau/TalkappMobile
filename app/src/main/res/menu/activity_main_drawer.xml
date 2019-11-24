@@ -4,10 +4,13 @@
     <item android:title="@string/menu_exercises">
         <menu>
             <item
+                android:id="@+id/default_fragment"
+                android:title="@string/menu_exercises_home" />
+            <item
                 android:id="@+id/word_set_practise"
                 android:title="@string/menu_exercises_learn_words" />
             <item
-                android:id="@+id/default_fragment"
+                android:id="@+id/word_set_practise_rep"
                 android:title="@string/menu_exercises_repetitions" />
             <item
                 android:id="@+id/statistic_activity"

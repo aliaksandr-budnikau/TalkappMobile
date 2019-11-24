@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,9 +33,12 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
+import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_MODE_MAPPING;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
@@ -90,6 +94,13 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 int id = item.getItemId();
                 if (id == R.id.default_fragment) {
                     fragmentManager.beginTransaction().replace(R.id.content_frame, new MainActivityDefaultFragment_()).commit();
+                } else if (id == R.id.word_set_practise_rep) {
+                    Bundle args = new Bundle();
+                    args.putBoolean(REPETITION_MODE_MAPPING, true);
+                    args.putSerializable(REPETITION_CLASS_MAPPING, RepetitionClass.NEW);
+                    WordSetsListFragment fragment = new WordSetsListFragment_();
+                    fragment.setArguments(args);
+                    getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
                 } else if (id == R.id.word_set_practise) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder

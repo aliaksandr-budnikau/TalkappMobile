@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.IgnoreWhen;
 import org.androidannotations.annotations.UiThread;
@@ -36,7 +34,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
-import static java.lang.String.format;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_MODE_MAPPING;
@@ -50,8 +47,6 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
 
-    @ViewById(R.id.wordsForRepetitionTextView)
-    TextView wordsForRepetitionTextView;
     @ViewById(R.id.tasksListView)
     TasksListView tasksListView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -95,12 +90,6 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     @Override
     public void onWordsForRepetitionCounted(int counter) {
-        wordsForRepetitionTextView.setText(format(wordSetsRepetitionTitle, counter));
-    }
-
-    @Click(R.id.wordsForRepetitionTextView)
-    public void onWordsForRepetitionTextViewClick() {
-        openWordSetsListFragment(true);
     }
 
     @Override

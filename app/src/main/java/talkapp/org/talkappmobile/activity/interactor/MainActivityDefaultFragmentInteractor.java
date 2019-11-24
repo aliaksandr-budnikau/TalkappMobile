@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,14 +8,10 @@ import java.util.List;
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityDefaultFragmentListener;
 import talkapp.org.talkappmobile.model.DifficultWordSetRepetitionTask;
 import talkapp.org.talkappmobile.model.NewWordSetTask;
-import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetRepetitionTask;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-
-import static java.lang.String.format;
-import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
 
 public class MainActivityDefaultFragmentInteractor {
 
@@ -59,75 +56,53 @@ public class MainActivityDefaultFragmentInteractor {
     public void findTasks(OnMainActivityDefaultFragmentListener listener) {
         LinkedList<Task> tasks = new LinkedList<>();
 
-        int repetitionTasks = findRepetitionTasks(tasks, listener);
-        if (tasks.size() < 3) {
-            findStudyTaks(tasks, listener);
+        WordSetRepetitionTask repetitionTasks = findRepetitionTasks(listener);
+        if (repetitionTasks != null) {
+            tasks.add(repetitionTasks);
         }
-        if (tasks.size() < 3) {
-            findRepetitionOfDifficultWordSetTasks(tasks, listener);
+        tasks.add(findStudyTask(listener));
+        DifficultWordSetRepetitionTask difficultWordSetTasks = findRepetitionOfDifficultWordSetTasks(listener);
+        if (difficultWordSetTasks != null) {
+            tasks.add(difficultWordSetTasks);
         }
-
         listener.onFoundTasks(tasks);
     }
 
-    private void findRepetitionOfDifficultWordSetTasks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
+    private DifficultWordSetRepetitionTask findRepetitionOfDifficultWordSetTasks(final OnMainActivityDefaultFragmentListener listener) {
         final List<WordSet> wordSets = exerciseService.findWordSetOfDifficultWords();
-        String description = wordSetsExtraRepetitionDescription + " " + wordSetsRepetitionDescription;
         if (wordSets.isEmpty()) {
-            return;
+            return null;
         }
-        tasks.add(new DifficultWordSetRepetitionTask(wordSetsExtraRepetitionTitle, description) {
+        return new DifficultWordSetRepetitionTask(wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription) {
             @Override
             public void start() {
                 listener.onDifficultWordSetRepetitionTaskClicked(wordSets);
             }
-        });
+        };
     }
 
-    private int findStudyTaks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
-        LinkedList<Task> result = new LinkedList<>();
-        result.add(new NewWordSetTask(wordSetsLearningTitle, wordSetsLearningDescription) {
+    private NewWordSetTask findStudyTask(final OnMainActivityDefaultFragmentListener listener) {
+        return new NewWordSetTask(wordSetsLearningTitle, wordSetsLearningDescription) {
             @Override
             public void start() {
                 listener.onNewWordSetTaskClicked();
             }
-        });
-        tasks.addAll(result);
-        return result.size();
+        };
     }
 
-    private int findRepetitionTasks(LinkedList<Task> tasks, final OnMainActivityDefaultFragmentListener listener) {
-        LinkedList<Task> result = new LinkedList<>();
+    private WordSetRepetitionTask findRepetitionTasks(final OnMainActivityDefaultFragmentListener listener) {
         List<WordSet> sets = exerciseService.findFinishedWordSetsSortByUpdatedDate(24 * 2);
-        for (final RepetitionClass clazz : RepetitionClass.values()) {
-            if (clazz.equals(LEARNED)) {
-                continue;
-            }
-            for (WordSet set : sets) {
-                if (set.getRepetitionClass().equals(clazz) && set.getWords().size() == exerciseService.getMaxWordSetSize()) {
-                    int counter = countSetsOfThisClass(sets, clazz);
-                    String title = format(wordSetsRepetitionTitle, counter);
-                    result.add(new WordSetRepetitionTask(title, wordSetsRepetitionDescription, clazz) {
-                        @Override
-                        public void start() {
-                            listener.onWordSetRepetitionTaskClick(clazz);
-                        }
-                    });
-                    break;
-                }
+        Collections.shuffle(sets);
+        for (final WordSet set : sets) {
+            if (set.getWords().size() == exerciseService.getMaxWordSetSize()) {
+                return new WordSetRepetitionTask(wordSetsRepetitionTitle, wordSetsRepetitionDescription, set.getRepetitionClass()) {
+                    @Override
+                    public void start() {
+                        listener.onWordSetRepetitionTaskClick(set.getRepetitionClass());
+                    }
+                };
             }
         }
-        tasks.addAll(result);
-        return result.size();
-    }
-
-    private int countSetsOfThisClass(List<WordSet> sets, RepetitionClass clazz) {
-        int result = 0;
-        for (WordSet set : sets) {
-            if (set.getRepetitionClass() == clazz && set.getWords().size() == exerciseService.getMaxWordSetSize()) {
-                result++;
-            }
-        }
-        return result;
+        return null;
     }
 }

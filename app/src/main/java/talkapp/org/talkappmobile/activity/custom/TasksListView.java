@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.model.Task;
 
 @EView
 public class TasksListView extends RecyclerView {
+    @Deprecated
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -84,14 +85,6 @@ public class TasksListView extends RecyclerView {
             void bind(final TaskExpandable task, final int position) {
                 view.setModel(task.getTask());
                 view.refreshModel(task.isExpanded());
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean expanded = task.isExpanded();
-                        task.setExpanded(!expanded);
-                        notifyItemChanged(position);
-                    }
-                });
             }
         }
     }
