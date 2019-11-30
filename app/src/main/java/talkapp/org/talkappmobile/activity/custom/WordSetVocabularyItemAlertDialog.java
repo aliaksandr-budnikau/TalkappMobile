@@ -18,6 +18,9 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class WordSetVocabularyItemAlertDialog {
+    public static final int LEFT_PADDING_LABELS = 50;
+    public static final int LEFT_PADDING_INPUTS = 10;
+    public static final int BOTTOM_PADDING_INPUTS = 30;
     @StringRes(R.string.phrase_translation_input_text_view_popup_title)
     String popupTitle;
     @StringRes(R.string.phrase_translation_input_text_view_popup_phrase_label)
@@ -51,20 +54,24 @@ public class WordSetVocabularyItemAlertDialog {
 
         final TextView messageForPhraseBox = new TextView(context);
         messageForPhraseBox.setText(popupPhraseLabel);
+        messageForPhraseBox.setPadding(LEFT_PADDING_LABELS, 0, 0, 0);
         layout.addView(messageForPhraseBox);
 
         phraseBox = new EditText(context);
         phraseBox.setHint(popupPhraseHint);
         phraseBox.setText(isEmpty(origPhrase) ? "" : origPhrase);
+        phraseBox.setPadding(LEFT_PADDING_INPUTS, 0, 0, BOTTOM_PADDING_INPUTS);
         layout.addView(phraseBox);
 
         final TextView messageForTranslationBox = new TextView(context);
         messageForTranslationBox.setText(popupTranslationLabel);
+        messageForTranslationBox.setPadding(LEFT_PADDING_LABELS, 0, 0, 0);
         layout.addView(messageForTranslationBox);
 
         translationBox = new EditText(context);
         translationBox.setHint(popupTranslationHint);
         translationBox.setText(isEmpty(origTranslation) ? "" : origTranslation);
+        translationBox.setPadding(LEFT_PADDING_INPUTS, 0, 0, BOTTOM_PADDING_INPUTS);
         layout.addView(translationBox); // Another add method
 
         alertDialogBuilder.setView(layout); // Again this is a set method, not add

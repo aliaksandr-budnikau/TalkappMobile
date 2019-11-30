@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TalkappMobile</string>
+    <string name="app_name">Tellme</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -16,7 +16,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_main"><b><font size="20">T<strike><font color="red">o</font></strike>llmuch</font></b></string>
+    <string name="title_activity_main">Tellme</string>
     <string name="title_crash_main">Crash page</string>
     <string name="title_activity_statistic">Statistic</string>
 
@@ -60,10 +60,10 @@
 
     <string name="word_sets_list_fragment_tab_new_label">НОВЫЕ</string>
     <string name="word_sets_list_fragment_tab_started_label">НАЧАТЫЕ</string>
-    <string name="word_sets_list_fragment_tab_finished_label">ЗАКОНЧЕННЫЕ</string>
+    <string name="word_sets_list_fragment_tab_finished_label">ЗАКРЫТЫЕ</string>
 
     <string name="word_sets_list_fragment_tab_rep_new_label">НОВЫЕ</string>
-    <string name="word_sets_list_fragment_tab_rep_learned_label">ВЫУЧЕННЫЕ</string>
+    <string name="word_sets_list_fragment_tab_rep_learned_label">ВЫУЧИЛ</string>
 
     <string name="menu_exercises">Упражнения</string>
     <string name="menu_exercises_learn_words">Выучить</string>

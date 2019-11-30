@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.activity.custom;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 @EView
 public class WordSetVocabularyView extends RecyclerView {
+    public static final float BUTTON_WIDTH_RATIO = 0.2f;
     @StringRes(R.string.phrase_translation_hidden_button_say_label)
     String hiddenButtonSayLabel;
     @StringRes(R.string.phrase_translation_hidden_button_reset_label)
@@ -60,6 +63,7 @@ public class WordSetVocabularyView extends RecyclerView {
         }
     };
     private int editedItemPosition = -1;
+    private float buttonWidth;
 
     public WordSetVocabularyView(Context context) {
         super(context);
@@ -86,9 +90,18 @@ public class WordSetVocabularyView extends RecyclerView {
         setLayoutManager(layoutManager);
         DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
         addItemDecoration(itemDecor);
-        SwipeController swipeController = new SwipeController(new SwipeControllerActions());
+        buttonWidth = (getWidthPixels() * BUTTON_WIDTH_RATIO);
+        SwipeController swipeController = new SwipeController(new SwipeControllerActions(), buttonWidth);
         new ItemTouchHelper(swipeController).attachToRecyclerView(this);
         setupRecyclerView(swipeController);
+    }
+
+    private int getWidthPixels() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager()
+                .getDefaultDisplay()
+                .getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 
     public List<WordTranslation> getVocabulary() {
@@ -272,18 +285,19 @@ public class WordSetVocabularyView extends RecyclerView {
 
     private class SwipeController extends ItemTouchHelper.Callback {
 
-        private static final float buttonWidth = 120;
         private static final String SAY_BUTTON = "SAY_BUTTON";
         private static final String EDIT_BUTTON = "EDIT_BUTTON";
         private static final String RESET_BUTTON = "RESET_BUTTON";
+        private final float buttonWidth;
         private boolean swipeBack = false;
         private ButtonsState buttonShowedState = ButtonsState.GONE;
         private HashMap<String, RectF> buttonInstances = null;
         private RecyclerView.ViewHolder currentItemViewHolder = null;
         private SwipeControllerActions buttonsActions = null;
 
-        public SwipeController(SwipeControllerActions buttonsActions) {
+        public SwipeController(SwipeControllerActions buttonsActions, float buttonWidth) {
             this.buttonsActions = buttonsActions;
+            this.buttonWidth = buttonWidth;
         }
 
         @Override
@@ -451,7 +465,7 @@ public class WordSetVocabularyView extends RecyclerView {
         }
 
         private void drawText(String text, Canvas c, RectF button, Paint p) {
-            float textSize = 17;
+            float textSize = buttonWidth / 7;
             p.setColor(getResources().getColor(R.color.color_word_set_vocabulary_item_word));
             p.setAntiAlias(true);
             p.setTextSize(textSize);
