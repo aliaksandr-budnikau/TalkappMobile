@@ -112,6 +112,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
         eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
 
+        this.getActivity().recreate();
         startWordSetActivity(event.getWordSet());
     }
 
