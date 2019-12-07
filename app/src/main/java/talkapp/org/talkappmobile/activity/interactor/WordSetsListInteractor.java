@@ -16,4 +16,6 @@ public interface WordSetsListInteractor {
     void itemLongClick(WordSet wordSet, int clickedItemNumber, OnWordSetsListListener listener);
 
     void refreshWordSets(Topic topic, OnWordSetsListListener listener);
+
+    void prepareWordSetDraftForQRCode(int wordSetId, OnWordSetsListListener listener);
 }

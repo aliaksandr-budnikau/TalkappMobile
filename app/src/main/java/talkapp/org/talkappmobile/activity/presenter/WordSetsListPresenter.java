@@ -1,13 +1,14 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
 
 public class WordSetsListPresenter implements OnWordSetsListListener {
     private final Topic topic;
@@ -95,6 +96,11 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetsRefreshed(wordSets, repetitionClass);
     }
 
+    @Override
+    public void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject) {
+        view.onWordSetDraftPrepare(qrObject);
+    }
+
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }
@@ -106,5 +112,9 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
                 interactor.refreshWordSets(topic, WordSetsListPresenter.this);
             }
         });
+    }
+
+    public void prepareWordSetDraftForQRCode(int wordSetId) {
+        interactor.prepareWordSetDraftForQRCode(wordSetId, this);
     }
 }

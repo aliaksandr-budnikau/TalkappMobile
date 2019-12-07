@@ -277,4 +277,9 @@ public class ServiceFactoryBean implements ServiceFactory {
         databaseHelper.setMigrationService(getMigrationService());
         return databaseHelper;
     }
+
+    @Override
+    public ObjectMapper getMapper() {
+        return MAPPER;
+    }
 }

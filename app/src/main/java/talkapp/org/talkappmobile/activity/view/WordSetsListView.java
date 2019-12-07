@@ -1,10 +1,11 @@
 package talkapp.org.talkappmobile.activity.view;
 
+import java.util.List;
+
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-
-import java.util.List;
 
 public interface WordSetsListView {
     void onWordSetsInitialized(List<WordSet> wordSets, RepetitionClass repetitionClass);
@@ -28,4 +29,6 @@ public interface WordSetsListView {
     void onWordSetTooSmallForRepetition(int maxWordSetSize, int actualSize);
 
     void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass);
+
+    void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject);
 }

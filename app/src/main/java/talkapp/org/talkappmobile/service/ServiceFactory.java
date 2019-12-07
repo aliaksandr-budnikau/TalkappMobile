@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
@@ -25,4 +27,6 @@ public interface ServiceFactory {
     WordTranslationMapper getWordTranslationMapper();
 
     ExpAuditMapper getExpAuditMapper();
+
+    ObjectMapper getMapper();
 }

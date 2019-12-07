@@ -2,17 +2,21 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.support.annotation.NonNull;
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
-
-import java.util.Collections;
-import java.util.List;
 
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -93,5 +97,17 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     public void refreshWordSets(Topic topic, OnWordSetsListListener listener) {
         List<WordSet> wordSets = getWordSets(topic);
         listener.onWordSetsFetched(wordSets, null);
+    }
+
+    @Override
+    public void prepareWordSetDraftForQRCode(int wordSetId, OnWordSetsListListener listener) {
+        WordSet wordSet = wordSetService.findById(wordSetId);
+        List<WordTranslation> wordTranslations = server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
+        LinkedList<WordAndTranslationQRObject> qrObjects = new LinkedList<>();
+        for (WordTranslation wordTranslation : wordTranslations) {
+            qrObjects.add(new WordAndTranslationQRObject(wordTranslation.getWord(), wordTranslation.getTranslation()));
+        }
+        NewWordSetDraftQRObject draft = new NewWordSetDraftQRObject(qrObjects);
+        listener.onWordSetDraftPrepare(draft);
     }
 }

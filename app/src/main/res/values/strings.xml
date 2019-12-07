@@ -18,6 +18,7 @@
     </string>
     <string name="title_activity_main">Tellme</string>
     <string name="title_crash_main">Crash page</string>
+    <string name="title_word_set_export_by_qr_main">Sharing by QR</string>
     <string name="title_activity_statistic">Statistic</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -67,6 +68,8 @@
 
     <string name="word_sets_list_fragment_tab_rep_new_label">NEW</string>
     <string name="word_sets_list_fragment_tab_rep_learned_label">LEARNED</string>
+
+    <string name="word_sets_list_fragment_sharing_option_label">Share by QR</string>
 
     <string name="menu_exercises">Exercises</string>
     <string name="menu_exercises_learn_words">Learn</string>

@@ -59,4 +59,9 @@ public class RepetitionWordSetsListInteractor implements WordSetsListInteractor 
         List<WordSet> wordSets = getFinishedWordSetsSortByUpdatedDate();
         listener.onWordSetsFetched(wordSets, repetitionClass);
     }
+
+    @Override
+    public void prepareWordSetDraftForQRCode(int wordSetId, OnWordSetsListListener listener) {
+
+    }
 }

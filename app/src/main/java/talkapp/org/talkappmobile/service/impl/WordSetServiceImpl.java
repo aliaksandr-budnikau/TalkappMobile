@@ -18,7 +18,9 @@ import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -182,8 +184,15 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void save(@NonNull String wordSetJson) throws IOException {
-        NewWordSetDraft draft = mapper.readValue(wordSetJson, NewWordSetDraft.class);
-        save(draft);
+        NewWordSetDraftQRObject draft = mapper.readValue(wordSetJson, NewWordSetDraftQRObject.class);
+        LinkedList<WordTranslation> translations = new LinkedList<>();
+        for (WordAndTranslationQRObject qrObject : draft.getWordTranslations()) {
+            WordTranslation translation = new WordTranslation();
+            translation.setWord(qrObject.getWord());
+            translation.setTranslation(qrObject.getTranslation());
+            translations.add(translation);
+        }
+        save(new NewWordSetDraft(translations));
     }
 
     @Override

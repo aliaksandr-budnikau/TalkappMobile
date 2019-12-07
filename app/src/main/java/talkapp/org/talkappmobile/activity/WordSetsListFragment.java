@@ -47,6 +47,7 @@ import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
 import talkapp.org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
 import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
 import talkapp.org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -95,6 +96,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     String tabRepNewLabel;
     @StringRes(R.string.word_sets_list_fragment_tab_rep_learned_label)
     String tabRepLearnedLabel;
+    @StringRes(R.string.word_sets_list_fragment_sharing_option_label)
+    String sharingOptionLabel;
 
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
@@ -160,7 +163,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     private void askToResetExperience(final WordSet wordSet, final int clickedItemNumber) {
         new AlertDialog.Builder(getActivity())
-                .setItems(new String[]{"Reset progress", "Edit words", "Delete words"}, new DialogInterface.OnClickListener() {
+                .setItems(new String[]{"Reset progress", sharingOptionLabel, "Delete words"}, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
@@ -173,6 +176,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, null).show();
+                        } else if (which == 1) {
+                            prepareWordSetDraftForQRCode(wordSet);
                         } else if (which == 2) {
                             new AlertDialog.Builder(getActivity())
                                     .setMessage("Do you want to remove these words?")
@@ -187,6 +192,11 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
                         dialog.dismiss();
                     }
                 }).show();
+    }
+
+    @Background
+    public void prepareWordSetDraftForQRCode(WordSet wordSet) {
+        presenter.prepareWordSetDraftForQRCode(wordSet.getId());
     }
 
     @Override
@@ -322,6 +332,14 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
             pickRepetitionFilter(repetitionClass);
             tabHost.setCurrentTabByTag(repetitionClass.name());
         }
+    }
+
+    @UiThread
+    @Override
+    public void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject) {
+        Intent intent = new Intent(getActivity(), WordSetQRExportActivity_.class);
+        intent.putExtra(WordSetQRExportActivity.WORD_SET_MAPPING, qrObject);
+        startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

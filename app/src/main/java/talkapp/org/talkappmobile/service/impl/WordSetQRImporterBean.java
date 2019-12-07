@@ -14,6 +14,7 @@ import org.androidannotations.annotations.res.StringRes;
 import java.io.IOException;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.AddingNewWordSetFragment_;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -61,6 +62,7 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                     return;
                 }
                 Toast.makeText(activity, addingFinishedSuccessfullyMessage, Toast.LENGTH_LONG).show();
+                activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
             }
             if (resultCode == RESULT_CANCELED) {
                 //handle cancel

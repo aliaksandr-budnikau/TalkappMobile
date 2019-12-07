@@ -36,7 +36,14 @@
         <activity
             android:name="talkapp.org.talkappmobile.activity.CrashActivity_"
             android:label="@string/title_crash_main"
+            android:parentActivityName="talkapp.org.talkappmobile.activity.MainActivity_"
             android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name="talkapp.org.talkappmobile.activity.WordSetQRExportActivity_"
+            android:label="@string/title_word_set_export_by_qr_main"
+            android:parentActivityName="talkapp.org.talkappmobile.activity.MainActivity_"
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="talkapp.org.talkappmobile.activity.StatisticActivity_"
