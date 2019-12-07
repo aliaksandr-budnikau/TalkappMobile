@@ -29,4 +29,6 @@ public interface OnWordSetsListListener {
     void onWordSetsFetched(List<WordSet> wordSets, RepetitionClass repetitionClass);
 
     void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject);
+
+    void onWordSetCantBeShared();
 }

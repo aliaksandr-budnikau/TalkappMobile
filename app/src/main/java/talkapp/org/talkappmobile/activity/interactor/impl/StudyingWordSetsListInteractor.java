@@ -101,6 +101,10 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
 
     @Override
     public void prepareWordSetDraftForQRCode(int wordSetId, OnWordSetsListListener listener) {
+        if (wordSetId < wordSetService.getCustomWordSetsStartsSince()) {
+            listener.onWordSetCantBeShared();
+            return;
+        }
         WordSet wordSet = wordSetService.findById(wordSetId);
         List<WordTranslation> wordTranslations = server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
         LinkedList<WordAndTranslationQRObject> qrObjects = new LinkedList<>();

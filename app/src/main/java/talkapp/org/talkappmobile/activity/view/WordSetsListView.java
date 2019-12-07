@@ -31,4 +31,6 @@ public interface WordSetsListView {
     void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass);
 
     void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject);
+
+    void onWordSetCantBeShared();
 }

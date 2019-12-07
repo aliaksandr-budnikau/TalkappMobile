@@ -101,6 +101,11 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetDraftPrepare(qrObject);
     }
 
+    @Override
+    public void onWordSetCantBeShared() {
+        view.onWordSetCantBeShared();
+    }
+
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }

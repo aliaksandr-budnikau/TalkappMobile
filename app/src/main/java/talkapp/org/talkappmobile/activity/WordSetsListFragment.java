@@ -342,6 +342,12 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         startActivity(intent);
     }
 
+    @UiThread
+    @Override
+    public void onWordSetCantBeShared() {
+        Toast.makeText(getActivity(), "Only custom words can be shared", Toast.LENGTH_LONG).show();
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OpenWordSetForStudyingEM event) {
         Intent intent = new Intent(getActivity(), PracticeWordSetActivity_.class);
