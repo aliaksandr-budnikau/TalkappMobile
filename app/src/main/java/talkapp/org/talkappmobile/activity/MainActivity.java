@@ -35,6 +35,8 @@ import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.WordSetQRImporter;
+import talkapp.org.talkappmobile.service.impl.WordSetQRImporterBean;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
@@ -44,7 +46,8 @@ import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION
 public class MainActivity extends BaseActivity implements MainActivityView {
     @Bean
     PresenterFactory presenterFactory;
-
+    @Bean(WordSetQRImporterBean.class)
+    WordSetQRImporter wordSetQRImporter;
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(R.id.drawer_layout)
@@ -53,6 +56,8 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     NavigationView navigationView;
     @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set)
     String optionAddNewWordSet;
+    @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set_by_qrc)
+    String optionAddNewWordSetByQRC;
     @StringRes(R.string.menu_exercises_learn_words_option_open_custom_word_sets)
     String optionOpenCustomWordSets;
     @StringRes(R.string.menu_exercises_learn_words_option_open_word_sets)
@@ -104,18 +109,20 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                 } else if (id == R.id.word_set_practise) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder
-                            .setItems((new String[]{optionAddNewWordSet, optionOpenCustomWordSets, optionOpenWordSet, optionOpenWordSetsByTopics}), new DialogInterface.OnClickListener() {
+                            .setItems((new String[]{optionAddNewWordSet, optionAddNewWordSetByQRC, optionOpenCustomWordSets, optionOpenWordSet, optionOpenWordSetsByTopics}), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
                                         fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
                                     } else if (which == 1) {
+                                        wordSetQRImporter.startScanActivity(MainActivity.this);
+                                    } else if (which == 2) {
                                         Topic topic = new Topic();
                                         topic.setId(43);
                                         FragmentManager fragmentManager = getFragmentManager();
                                         fragmentManager.beginTransaction().replace(R.id.content_frame, createWordSetsListFragment(topic)).commit();
-                                    } else if (which == 2) {
-                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
                                     } else if (which == 3) {
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_()).commit();
+                                    } else if (which == 4) {
                                         fragmentManager.beginTransaction().replace(R.id.content_frame, new TopicsFragment_()).commit();
                                     }
                                     dialog.cancel();
@@ -191,5 +198,11 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     public void setYourExp(String text) {
         TextView userExp = navigationView.getHeaderView(0).findViewById(R.id.userExp);
         userExp.setText(text);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        wordSetQRImporter.onActivityResult(this, requestCode, resultCode, data);
     }
 }

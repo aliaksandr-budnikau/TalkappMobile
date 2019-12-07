@@ -46,10 +46,14 @@
     <string name="word_set_task_add_new_description">Добавь или выбрать уже добавленный</string>
 
     <string name="menu_exercises_learn_words_option_add_new_word_set">Добавить новые слова</string>
+    <string name="menu_exercises_learn_words_option_add_new_word_set_by_qrc">Добавить через QR</string>
     <string name="menu_exercises_learn_words_option_open_custom_word_sets">Открыть добавленые слова</string>
     <string name="menu_exercises_learn_words_option_open_word_sets">Открыть все слова</string>
     <string name="menu_exercises_learn_words_option_open_word_sets_by_topics">Открыть все слова по темам</string>
 
+    <string name="adding_new_word_set_by_qrc_finished_successfully">Набор добавлен успешно!</string>
+    <string name="adding_new_word_set_by_qrc_failed_json_format">Неизвестный формат набора!</string>
+    <string name="adding_new_word_set_by_qrc_failed_mapping_error">Набор не валиден!</string>
     <string name="adding_new_word_set_fragment_button_save">Сохранить</string>
     <string name="adding_new_word_set_fragment_warning_translation_not_found">Нет перевода!</string>
     <string name="adding_new_word_set_fragment_warning_empty_field">Не может быть пустым!</string>

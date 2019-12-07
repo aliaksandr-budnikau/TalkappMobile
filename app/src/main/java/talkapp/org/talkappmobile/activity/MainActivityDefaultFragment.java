@@ -36,7 +36,9 @@ import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.impl.WordSetQRImporterBean;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
@@ -51,6 +53,8 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
+    @Bean(WordSetQRImporterBean.class)
+    WordSetQRImporter wordSetQRImporter;
 
     @ViewById(R.id.tasksListView)
     TasksListView tasksListView;
@@ -72,6 +76,8 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     String wordSetsExtraRepetitionDescription;
     @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set)
     String optionAddNewWordSet;
+    @StringRes(R.string.menu_exercises_learn_words_option_add_new_word_set_by_qrc)
+    String optionAddNewWordSetByQRC;
     @StringRes(R.string.menu_exercises_learn_words_option_open_custom_word_sets)
     String optionOpenCustomWordSets;
     @StringRes(R.string.word_set_task_add_new_title)
@@ -138,11 +144,13 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
         final FragmentManager fragmentManager = getFragmentManager();
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
         builder
-                .setItems((new String[]{optionAddNewWordSet, optionOpenCustomWordSets}), new DialogInterface.OnClickListener() {
+                .setItems((new String[]{optionAddNewWordSet, optionAddNewWordSetByQRC, optionOpenCustomWordSets}), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
                             fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
                         } else if (which == 1) {
+                            wordSetQRImporter.startScanActivity(getActivity());
+                        } else if (which == 2) {
                             Topic topic = new Topic();
                             topic.setId(43);
                             FragmentManager fragmentManager = getFragmentManager();
@@ -165,5 +173,11 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
 
     private void openWordSetsListFragment(boolean repetitionMode) {
         openWordSetsListFragment(repetitionMode, null);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        wordSetQRImporter.onActivityResult(getActivity(), requestCode, resultCode, data);
     }
 }

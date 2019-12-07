@@ -46,10 +46,14 @@
     <string name="word_set_task_add_new_description">Only your own sets</string>
 
     <string name="menu_exercises_learn_words_option_add_new_word_set">Add new words</string>
+    <string name="menu_exercises_learn_words_option_add_new_word_set_by_qrc">Add by QR</string>
     <string name="menu_exercises_learn_words_option_open_custom_word_sets">Open added words</string>
     <string name="menu_exercises_learn_words_option_open_word_sets">Open all words</string>
     <string name="menu_exercises_learn_words_option_open_word_sets_by_topics">Open all words by topics</string>
 
+    <string name="adding_new_word_set_by_qrc_finished_successfully">Added successfully!</string>
+    <string name="adding_new_word_set_by_qrc_failed_json_format">Unknown set format!</string>
+    <string name="adding_new_word_set_by_qrc_failed_mapping_error">The set is not valid!</string>
     <string name="adding_new_word_set_fragment_button_save">Save</string>
     <string name="adding_new_word_set_fragment_warning_translation_not_found">No translation!</string>
     <string name="adding_new_word_set_fragment_warning_empty_field">Cannot be empty!</string>

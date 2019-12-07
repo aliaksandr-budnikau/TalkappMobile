@@ -181,6 +181,12 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
+    public void save(@NonNull String wordSetJson) throws IOException {
+        NewWordSetDraft draft = mapper.readValue(wordSetJson, NewWordSetDraft.class);
+        save(draft);
+    }
+
+    @Override
     public WordSet findById(int wordSetId) {
         WordSetMapping mapping = wordSetDao.findById(wordSetId);
         return wordSetMapper.toDto(mapping);
