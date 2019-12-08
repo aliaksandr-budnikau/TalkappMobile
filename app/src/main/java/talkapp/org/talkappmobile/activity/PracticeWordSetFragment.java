@@ -138,7 +138,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         presenter.prepareOriginalTextClickEM();
     }
 
-    @Touch(R.id.rightAnswer)
+    @Touch(R.id.showButton)
     public boolean onRightAnswerOnTouch(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
