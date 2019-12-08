@@ -13,9 +13,11 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
@@ -40,6 +42,11 @@ public class WordSetQRExportActivity extends BaseActivity {
 
     @AfterViews
     public void init() {
+        generateQR();
+    }
+
+    @Background
+    public void generateQR() {
         ObjectMapper mapper = serviceFactory.getMapper();
         String text = null;
         try {
@@ -54,9 +61,14 @@ public class WordSetQRExportActivity extends BaseActivity {
             BitMatrix bitMatrix = multiFormatWriter.encode(text, BarcodeFormat.QR_CODE, 500, 500, hints);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            qrCode.setImageBitmap(bitmap);
+            showQR(bitmap);
         } catch (WriterException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @UiThread
+    public void showQR(Bitmap bitmap) {
+        qrCode.setImageBitmap(bitmap);
     }
 }
