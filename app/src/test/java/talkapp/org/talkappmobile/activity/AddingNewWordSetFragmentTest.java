@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.app.Activity;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,15 +18,18 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddingNewWordSetFragmentTest {
 
     @Test
     public void testOnMessageEventNewWordSuccessfullySubmittedEM() {
-        AddingNewWordSetFragment addingNewWordSetFragment = new AddingNewWordSetFragment();
+        AddingNewWordSetFragment addingNewWordSetFragment = mock(AddingNewWordSetFragment.class, CALLS_REAL_METHODS);
+        when(addingNewWordSetFragment.getActivity()).thenReturn(mock(Activity.class));
         TestHelper testHelper = new TestHelper();
 
         WordSetVocabularyView wordSetVocabularyView = mock(WordSetVocabularyView.class);

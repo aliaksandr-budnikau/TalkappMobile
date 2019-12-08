@@ -79,7 +79,7 @@ public class StatisticActivityInteractorTest {
         int dayOfMonth = instance.get(Calendar.DAY_OF_MONTH);
         instance.add(Calendar.DATE, -(dayOfMonth / 2));
         when(userExpService.findAllByTypeOrderedByDate(type)).thenReturn(asList(new ExpAudit(instance.getTime(), 20, type)));
-        interactor.loadDailyStat(type, 2019, 10, listener);
+        interactor.loadDailyStat(type, instance.get(Calendar.YEAR), instance.get(Calendar.MONTH), listener);
 
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(listener).onDailyStatLoaded(captor.capture());
