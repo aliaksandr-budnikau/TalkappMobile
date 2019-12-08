@@ -12,12 +12,18 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.res.StringRes;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.AddingNewWordSetFragment_;
+import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
+import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -51,9 +57,9 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 String wordSetJson = data.getStringExtra("SCAN_RESULT");
-                WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+                NewWordSetDraftQRObject draft = null;
                 try {
-                    wordSetService.save(wordSetJson);
+                    draft = serviceFactory.getMapper().readValue(wordSetJson, NewWordSetDraftQRObject.class);
                 } catch (JsonMappingException e) {
                     Toast.makeText(activity, addingFailedMessageMappingError, Toast.LENGTH_LONG).show();
                     return;
@@ -61,6 +67,14 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                     Toast.makeText(activity, addingFailedMessageJsonFormat, Toast.LENGTH_LONG).show();
                     return;
                 }
+                NewWordSetDraft wordSetDraft = assembleDraft(draft);
+
+                WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+                WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
+
+                wordSetService.save(wordSetDraft);
+                wordTranslationService.saveWordTranslations(wordSetDraft);
+
                 Toast.makeText(activity, addingFinishedSuccessfullyMessage, Toast.LENGTH_LONG).show();
                 activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
             }
@@ -68,5 +82,16 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                 //handle cancel
             }
         }
+    }
+
+    private NewWordSetDraft assembleDraft(NewWordSetDraftQRObject draft) {
+        LinkedList<WordTranslation> translations = new LinkedList<>();
+        for (WordAndTranslationQRObject qrObject : draft.getWordTranslations()) {
+            WordTranslation translation = new WordTranslation();
+            translation.setWord(qrObject.getWord());
+            translation.setTranslation(qrObject.getTranslation());
+            translations.add(translation);
+        }
+        return new NewWordSetDraft(translations);
     }
 }

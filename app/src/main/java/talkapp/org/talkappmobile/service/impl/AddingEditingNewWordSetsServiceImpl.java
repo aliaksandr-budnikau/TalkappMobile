@@ -38,12 +38,7 @@ public class AddingEditingNewWordSetsServiceImpl implements AddingEditingNewWord
             }
             wordTranslationService.saveWordTranslations(asList(result));
         } else {
-            WordTranslation wordTranslation = new WordTranslation();
-            wordTranslation.setLanguage(RUSSIAN_LANGUAGE);
-            wordTranslation.setTranslation(normalizedPhrase.getTranslation());
-            wordTranslation.setWord(normalizedPhrase.getWord());
-            wordTranslation.setTokens(normalizedPhrase.getWord());
-            wordTranslationService.saveWordTranslations(asList(wordTranslation));
+            wordTranslationService.saveWordTranslations(normalizedPhrase.getWord(), normalizedPhrase.getTranslation());
         }
         eventBus.post(new PhraseTranslationInputWasValidatedSuccessfullyEM(phrase, translation));
     }

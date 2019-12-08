@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
@@ -28,8 +27,6 @@ public interface WordSetService {
     NewWordSetDraft getNewWordSetDraft();
 
     void save(NewWordSetDraft draft);
-
-    void save(String wordSetJson) throws IOException;
 
     WordSet findById(int id);
 
