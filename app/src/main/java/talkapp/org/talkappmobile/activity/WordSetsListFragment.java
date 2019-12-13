@@ -16,8 +16,6 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.IgnoreWhen;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.ItemLongClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
@@ -28,10 +26,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.activity.custom.PhraseSetsListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.custom.WordSetsListItemView;
-import talkapp.org.talkappmobile.activity.custom.WordSetsListListView;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
@@ -39,14 +36,7 @@ import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
-import talkapp.org.talkappmobile.events.WordSetsFinishedFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsLearnedRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
 import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
-import talkapp.org.talkappmobile.events.WordSetsRepeatedRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsStartedFilterAppliedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
@@ -62,7 +52,7 @@ import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 
 @EFragment(value = R.layout.word_sets_list_layout)
-public class WordSetsListFragment extends Fragment implements WordSetsListView {
+public class WordSetsListFragment extends Fragment implements WordSetsListView, PhraseSetsListView.Adapter.OnItemClickListener, PhraseSetsListView.Adapter.OnItemLongClickListener {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     public static final String REPETITION_CLASS_MAPPING = "repetitionClass";
@@ -80,7 +70,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     EventBus eventBus;
 
     @ViewById(R.id.wordSetsListView)
-    WordSetsListListView wordSetsListView;
+    PhraseSetsListView phraseSetsListView;
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
     @ViewById(R.id.tabHost)
@@ -110,7 +100,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @AfterViews
     public void init() {
-        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetsListView);
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, phraseSetsListView);
 
         initPresenter();
     }
@@ -126,18 +116,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
         presenter.initialize();
     }
 
-    @ItemClick(R.id.wordSetsListView)
-    public void onItemClick(int position) {
-        WordSet wordSet = wordSetsListView.getWordSet(position);
-        presenter.itemClick(wordSet, position);
-    }
-
-    @ItemLongClick(R.id.wordSetsListView)
-    public void onItemLongClick(final int position) {
-        WordSet wordSet = wordSetsListView.getWordSet(position);
-        presenter.itemLongClick(wordSet, position);
-    }
-
     @Override
     public void onWordSetFinished(WordSet wordSet, int clickedItemNumber) {
         askToResetExperience(wordSet, clickedItemNumber);
@@ -145,10 +123,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     @Override
     public void onResetExperienceClick(WordSet wordSet, int clickedItemNumber) {
-        WordSetsListItemView itemView = wordSetsListView.getClickedItemView(clickedItemNumber);
-        itemView.setModel(wordSet);
-        itemView.refreshModel();
-        itemView.hideProgress();
+        phraseSetsListView.getAdapter().setWordSet(wordSet, clickedItemNumber);
     }
 
     @Override
@@ -203,8 +178,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void onWordSetsInitialized(final List<WordSet> wordSets, RepetitionClass selectedClass) {
-        wordSetsListView.addAll(wordSets);
-        wordSetsListView.refreshModel();
+        PhraseSetsListView.Adapter adapter = new PhraseSetsListView.Adapter(wordSets, this, this);
+        phraseSetsListView.setAdapter(adapter);
 
         if (repetitionMode) {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -269,23 +244,23 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
 
     private void pickStudingFilter(String tabId) {
         if (NEW.equals(tabId)) {
-            eventBus.post(new WordSetsNewFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterNew();
         } else if (STARTED.equals(tabId)) {
-            eventBus.post(new WordSetsStartedFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterStarted();
         } else if (FINISHED.equals(tabId)) {
-            eventBus.post(new WordSetsFinishedFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterFinished();
         }
     }
 
     private void pickRepetitionFilter(RepetitionClass selectedClass) {
         if (RepetitionClass.NEW == selectedClass) {
-            eventBus.post(new WordSetsNewRepFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterNewRep();
         } else if (SEEN == selectedClass) {
-            eventBus.post(new WordSetsSeenRepFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterSeenRep();
         } else if (REPEATED == selectedClass) {
-            eventBus.post(new WordSetsRepeatedRepFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterRepeatedRep();
         } else if (LEARNED == selectedClass) {
-            eventBus.post(new WordSetsLearnedRepFilterAppliedEM());
+            phraseSetsListView.getAdapter().filterLearnedRep();
         }
     }
 
@@ -323,8 +298,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass) {
-        wordSetsListView.addAll(wordSets);
-        wordSetsListView.refreshModel();
+        PhraseSetsListView.Adapter adapter = new PhraseSetsListView.Adapter(wordSets, this, this);
+        phraseSetsListView.setAdapter(adapter);
         if (repetitionClass == null) {
             pickStudingFilter(NEW);
             tabHost.setCurrentTabByTag(NEW);
@@ -360,5 +335,17 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(ParentScreenOutdatedEM event) {
         presenter.refresh();
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+        WordSet wordSet = phraseSetsListView.getAdapter().getByPosition(position);
+        presenter.itemLongClick(wordSet, position);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        WordSet wordSet = phraseSetsListView.getAdapter().getByPosition(position);
+        presenter.itemClick(wordSet, position);
     }
 }

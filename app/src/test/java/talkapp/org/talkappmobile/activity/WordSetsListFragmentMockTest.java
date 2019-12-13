@@ -12,22 +12,22 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.activity.custom.WordSetsListListView;
-import talkapp.org.talkappmobile.events.WordSetsNewFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsNewRepFilterAppliedEM;
-import talkapp.org.talkappmobile.events.WordSetsSeenRepFilterAppliedEM;
+import talkapp.org.talkappmobile.activity.custom.PhraseSetsListView;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.NEW;
 import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordSetsListFragmentMockTest {
     @Mock
-    private WordSetsListListView wordSetsListView;
+    private PhraseSetsListView.Adapter adapter;
+    @Mock
+    private PhraseSetsListView wordSetsListView;
     @Mock
     private TabHost tabHost;
     @Mock
@@ -36,7 +36,8 @@ public class WordSetsListFragmentMockTest {
 
     @Before
     public void init() {
-        Whitebox.setInternalState(wordSetsListFragment, "wordSetsListView", wordSetsListView);
+        when(wordSetsListView.getAdapter()).thenReturn(adapter);
+        Whitebox.setInternalState(wordSetsListFragment, "phraseSetsListView", wordSetsListView);
         Whitebox.setInternalState(wordSetsListFragment, "tabHost", tabHost);
         Whitebox.setInternalState(wordSetsListFragment, "eventBus", eventBus);
     }
@@ -44,11 +45,9 @@ public class WordSetsListFragmentMockTest {
     @Test
     public void testOnWordSetsRefreshed_repetitionClassNull() {
         LinkedList<WordSet> wordSets = new LinkedList<>();
-
         wordSetsListFragment.onWordSetsRefreshed(wordSets, null);
-        verify(wordSetsListView).refreshModel();
-        verify(wordSetsListView).addAll(wordSets);
-        verify(eventBus).post(any(WordSetsNewFilterAppliedEM.class));
+        verify(adapter).addAll(wordSets);
+        verify(adapter).filterNew();
         verify(tabHost).setCurrentTabByTag(NEW);
     }
 
@@ -57,9 +56,8 @@ public class WordSetsListFragmentMockTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, RepetitionClass.NEW);
-        verify(wordSetsListView).refreshModel();
-        verify(wordSetsListView).addAll(wordSets);
-        verify(eventBus).post(any(WordSetsNewRepFilterAppliedEM.class));
+        verify(adapter).addAll(wordSets);
+        verify(adapter).filterNewRep();
         verify(tabHost).setCurrentTabByTag(RepetitionClass.NEW.name());
     }
 
@@ -68,9 +66,8 @@ public class WordSetsListFragmentMockTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, SEEN);
-        verify(wordSetsListView).refreshModel();
-        verify(wordSetsListView).addAll(wordSets);
-        verify(eventBus).post(any(WordSetsSeenRepFilterAppliedEM.class));
+        verify(adapter).addAll(wordSets);
+        verify(adapter).filterSeenRep();
         verify(tabHost).setCurrentTabByTag(SEEN.name());
     }
 }

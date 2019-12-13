@@ -7,7 +7,6 @@ import talkapp.org.talkappmobile.activity.AddingNewWordSetFragmentTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractorTest;
 import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenterTest;
-import talkapp.org.talkappmobile.activity.custom.presenter.WordSetListAdapterPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractorTest;
 import talkapp.org.talkappmobile.activity.interactor.StatisticActivityInteractorTest;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenterTest;
@@ -48,7 +47,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         PronounceRightAnswerButtonInteractorTest.class,
         RightAnswerTextViewPresenterTest.class,
         MainActivityDefaultFragmentInteractorTest.class,
-        WordSetListAdapterPresenterAndInteractorIntegTest.class,
         RefereeServiceImplTest.class,
         RandomWordsCombinatorBeanTest.class,
         SentenceServiceImplTest.class,
