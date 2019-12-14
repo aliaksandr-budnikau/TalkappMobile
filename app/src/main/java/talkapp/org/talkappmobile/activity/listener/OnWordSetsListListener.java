@@ -31,4 +31,6 @@ public interface OnWordSetsListListener {
     void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject);
 
     void onWordSetCantBeShared();
+
+    void onWordSetIsNotAvailableYet(int availableInHours);
 }

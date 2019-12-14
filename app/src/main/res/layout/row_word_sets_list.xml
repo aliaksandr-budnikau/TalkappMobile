@@ -4,9 +4,18 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/availableInHours"
+        android:paddingTop="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="5pt" />
+
+    <TextView
         android:id="@+id/wordSetRow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/availableInHours"
         android:textSize="10pt" />
 
     <ProgressBar

@@ -72,6 +72,8 @@
 
     <string name="word_sets_list_fragment_sharing_option_label">Поделиться через QR</string>
 
+    <string name="word_sets_list_fragment_opening_warning_too_early_message">Эти фразы будут доступны через %s часов</string>
+
     <string name="menu_exercises">Упражнения</string>
     <string name="menu_exercises_learn_words">Выучить</string>
     <string name="menu_exercises_home">Домой</string>

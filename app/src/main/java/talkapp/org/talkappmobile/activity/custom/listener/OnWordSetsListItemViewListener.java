@@ -1,5 +1,5 @@
 package talkapp.org.talkappmobile.activity.custom.listener;
 
 public interface OnWordSetsListItemViewListener {
-    void onModelPrepared(String wordSetRowValue, int progressValue);
+    void onModelPrepared(String wordSetRowValue, int progressValue, int availableInHours);
 }

@@ -11,6 +11,9 @@
     <color name="colorAccent">#4b6b86</color>
     <color name="colorRedLogo">#9f0000</color>
 
+    <color name="wordSetInListText">#E12C1B1B</color>
+    <color name="wordSetDisabledInListText">#D8D6D6</color>
+
     <color name="color.text.origin">#47525E</color>
     <color name="color.text.answer">#47525E</color>
     <color name="color.text.pron">#47525E</color>

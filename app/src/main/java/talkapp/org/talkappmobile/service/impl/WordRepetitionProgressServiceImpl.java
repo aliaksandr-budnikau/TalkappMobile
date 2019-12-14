@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -181,51 +180,52 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        //cal.add(Calendar.SECOND, -olderThenInHours);
         cal.add(Calendar.HOUR, -olderThenInHours);
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(limit * wordSetSize, cal.getTime(), FINISHED.name());
-        Iterator<WordRepetitionProgressMapping> iterator = exercises.iterator();
-        while (iterator.hasNext()) {
-            WordRepetitionProgressMapping exe = iterator.next();
-            cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            // 5, 7, 13, 23, 37,
-            //cal.add(Calendar.SECOND, -countHours(olderThenInHours, exe.getRepetitionCounter()));
-            cal.add(Calendar.HOUR, -(countHours(olderThenInHours, exe.getRepetitionCounter())));
-            if (exe.getUpdatedDate().after(cal.getTime())) {
-                iterator.remove();
-            }
-        }
-        NavigableMap<Integer, List<Word2Tokens>> tree = getSortedTreeByRepetitionCount(exercises);
+        NavigableMap<Integer, List<Word2TokensAndAvailableInHours>> tree = getSortedTreeByRepetitionCount(exercises, olderThenInHours);
         List<WordSet> wordSets = new LinkedList<>();
         for (RepetitionClass clazz : RepetitionClass.values()) {
             insertWordSetGroup(wordSets, tree.subMap(clazz.getFrom(), clazz.getTo()).values(), clazz);
         }
+        sort(wordSets, new Comparator<WordSet>() {
+            @Override
+            public int compare(WordSet o1, WordSet o2) {
+                return o1.getAvailableInHours() - o2.getAvailableInHours();
+            }
+        });
         return wordSets;
     }
 
     @NonNull
-    private NavigableMap<Integer, List<Word2Tokens>> getSortedTreeByRepetitionCount(List<WordRepetitionProgressMapping> exercises) {
-        NavigableMap<Integer, List<Word2Tokens>> tree = new TreeMap<>();
+    private NavigableMap<Integer, List<Word2TokensAndAvailableInHours>> getSortedTreeByRepetitionCount(List<WordRepetitionProgressMapping> exercises, int olderThenInHours) {
+        NavigableMap<Integer, List<Word2TokensAndAvailableInHours>> tree = new TreeMap<>();
         for (WordRepetitionProgressMapping exercise : exercises) {
             Word2Tokens word2Tokens = getWord2Tokens(exercise);
             if (tree.get(exercise.getRepetitionCounter()) == null) {
-                tree.put(exercise.getRepetitionCounter(), new LinkedList<Word2Tokens>());
+                tree.put(exercise.getRepetitionCounter(), new LinkedList<Word2TokensAndAvailableInHours>());
             }
-            tree.get(exercise.getRepetitionCounter()).add(word2Tokens);
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            cal.add(Calendar.HOUR, -(countHours(olderThenInHours, exercise.getRepetitionCounter())));
+            tree.get(exercise.getRepetitionCounter()).add(
+                    new Word2TokensAndAvailableInHours(word2Tokens, getDifferenceInHours(cal.getTime(), exercise.getUpdatedDate()))
+            );
         }
         return tree;
     }
 
-    private void insertWordSetGroup(List<WordSet> allWordSets, Collection<List<Word2Tokens>> words, RepetitionClass clazz) {
-        LinkedList<Word2Tokens> flattenList = new LinkedList<>();
-        for (List<Word2Tokens> list : words) {
+    private void insertWordSetGroup(List<WordSet> allWordSets, Collection<List<Word2TokensAndAvailableInHours>> words, RepetitionClass clazz) {
+        LinkedList<Word2TokensAndAvailableInHours> flattenList = new LinkedList<>();
+        for (List<Word2TokensAndAvailableInHours> list : words) {
             flattenList.addAll(list);
         }
         WordSet set = new WordSet();
         set.setWords(new LinkedList<Word2Tokens>());
         set.setRepetitionClass(clazz);
-        for (Word2Tokens word : flattenList) {
-            set.getWords().add(word);
+        for (Word2TokensAndAvailableInHours word : flattenList) {
+            if (set.getAvailableInHours() < word.getAvailableInHours()) {
+                set.setAvailableInHours(word.getAvailableInHours());
+            }
+            set.getWords().add(word.getWord2Tokens());
             if (set.getWords().size() == wordSetSize) {
                 allWordSets.add(set);
                 set = new WordSet();
@@ -435,5 +435,33 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
 
     private boolean isNotThereCurrentExercise(List<WordRepetitionProgressMapping> current) {
         return current.isEmpty();
+    }
+
+    private int getDifferenceInHours(Date startDate, Date endDate) {
+        long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        return (int) (different / hoursInMilli);
+    }
+
+    private static class Word2TokensAndAvailableInHours {
+        private final Word2Tokens word2Tokens;
+        private final int availableInHours;
+
+        public Word2TokensAndAvailableInHours(Word2Tokens word2Tokens, int availableInHours) {
+            this.word2Tokens = word2Tokens;
+            this.availableInHours = availableInHours;
+        }
+
+        public Word2Tokens getWord2Tokens() {
+            return word2Tokens;
+        }
+
+        public int getAvailableInHours() {
+            return availableInHours;
+        }
     }
 }

@@ -9,17 +9,19 @@ import android.widget.TextView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
+import org.androidannotations.annotations.res.StringRes;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemViewInteractor;
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetsListItemViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
+import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {
@@ -32,8 +34,14 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
     @ViewById(R.id.wordSetRow)
     TextView wordSetRow;
 
+    @ViewById(R.id.availableInHours)
+    TextView availableInHours;
+
     @ViewById(R.id.wordSetProgress)
     ProgressBar wordSetProgress;
+
+    @StringRes(R.string.word_sets_list_fragment_opening_warning_too_early_message)
+    String openingWarningTooEarlyMessage;
 
     private WordSetsListItemViewPresenter presenter;
 
@@ -89,5 +97,35 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
     @Override
     public void setProgressBarValue(int progressValue) {
         wordSetProgress.setProgress(progressValue);
+    }
+
+    @Override
+    @UiThread
+    public void setAvailableInHours(int availableInHours) {
+        this.availableInHours.setText(String.format(openingWarningTooEarlyMessage, availableInHours));
+    }
+
+    @Override
+    @UiThread
+    public void disableWordSet() {
+        wordSetRow.setTextColor(getResources().getColor(R.color.wordSetDisabledInListText));
+    }
+
+    @Override
+    @UiThread
+    public void hideAvailableInHoursTextView() {
+        this.availableInHours.setVisibility(GONE);
+    }
+
+    @Override
+    @UiThread
+    public void showAvailableInHoursTextView() {
+        this.availableInHours.setVisibility(VISIBLE);
+    }
+
+    @Override
+    @UiThread
+    public void enableWordSet() {
+        wordSetRow.setTextColor(getResources().getColor(R.color.wordSetInListText));
     }
 }

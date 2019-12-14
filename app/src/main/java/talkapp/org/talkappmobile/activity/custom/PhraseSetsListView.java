@@ -44,7 +44,7 @@ public class PhraseSetsListView extends RecyclerView {
     public void init() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         setLayoutManager(layoutManager);
-        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), HORIZONTAL);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), VERTICAL);
         addItemDecoration(itemDecor);
     }
 

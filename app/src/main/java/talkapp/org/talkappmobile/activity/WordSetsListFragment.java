@@ -88,6 +88,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     String tabRepLearnedLabel;
     @StringRes(R.string.word_sets_list_fragment_sharing_option_label)
     String sharingOptionLabel;
+    @StringRes(R.string.word_sets_list_fragment_opening_warning_too_early_message)
+    String openingWarningTooEarlyMessage;
 
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
@@ -321,6 +323,12 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     @Override
     public void onWordSetCantBeShared() {
         Toast.makeText(getActivity(), "Only custom words can be shared", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    @UiThread
+    public void onWordSetIsNotAvailableYet(int availableInHours) {
+        Toast.makeText(getActivity(), String.format(openingWarningTooEarlyMessage, availableInHours), Toast.LENGTH_LONG).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

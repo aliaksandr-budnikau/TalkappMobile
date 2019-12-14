@@ -8,4 +8,14 @@ public interface WordSetsListItemViewView {
     void setWordSetRowValue(String wordSetRowValue);
 
     void setProgressBarValue(int progressValue);
+
+    void setAvailableInHours(int availableInHours);
+
+    void disableWordSet();
+
+    void hideAvailableInHoursTextView();
+
+    void showAvailableInHoursTextView();
+
+    void enableWordSet();
 }

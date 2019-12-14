@@ -32,9 +32,17 @@ public class WordSetsListItemViewPresenter implements OnWordSetsListItemViewList
     }
 
     @Override
-    public void onModelPrepared(String wordSetRowValue, int progressValue) {
+    public void onModelPrepared(String wordSetRowValue, int progressValue, int availableInHours) {
         view.setWordSetRowValue(wordSetRowValue);
         view.setProgressBarValue(progressValue);
+        if (availableInHours == 0) {
+            view.hideAvailableInHoursTextView();
+            view.enableWordSet();
+        } else {
+            view.showAvailableInHoursTextView();
+            view.setAvailableInHours(availableInHours);
+            view.disableWordSet();
+        }
         if (progressValue == 0 || progressValue == 100) {
             view.hideProgressBar();
         } else {

@@ -24,6 +24,6 @@ public class WordSetsListItemViewInteractor {
         String wordSetRowValue = StringUtils.joinWith(", ", words.toArray());
 
         int progressValue = experienceUtils.getProgress(wordSet.getTrainingExperience(), experienceUtils.getMaxTrainingProgress(wordSet));
-        listener.onModelPrepared(wordSetRowValue, progressValue);
+        listener.onModelPrepared(wordSetRowValue, progressValue, wordSet.getAvailableInHours());
     }
 }

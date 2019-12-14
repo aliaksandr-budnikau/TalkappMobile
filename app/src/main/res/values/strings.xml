@@ -71,6 +71,8 @@
 
     <string name="word_sets_list_fragment_sharing_option_label">Share by QR</string>
 
+    <string name="word_sets_list_fragment_opening_warning_too_early_message">These phrases will be available in %s hours</string>
+
     <string name="menu_exercises">Exercises</string>
     <string name="menu_exercises_learn_words">Learn</string>
     <string name="menu_exercises_home">Home</string>

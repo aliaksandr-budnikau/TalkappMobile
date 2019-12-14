@@ -120,27 +120,36 @@ public class WordRepetitionProgressServiceImplTest {
         // setup
         long limit = 2;
         int olderThenInHours = 4;
+        int sourceWordSetId = 3;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+
+        Word2Tokens word2Tokens = new Word2Tokens("ddd", "sss", sourceWordSetId);
+
+        WordSetMapping wordSetMapping = new WordSetMapping();
+        wordSetMapping.setId(String.valueOf(sourceWordSetId));
+        wordSetMapping.setWords("[" + mapper.writeValueAsString(word2Tokens) + "]");
 
         // when
         ObjectMapper mapper = new ObjectMapper();
 
-        Word2Tokens value = new Word2Tokens("ddd", "sss", 3);
 
+        WordRepetitionProgressMapping progressMapping = new WordRepetitionProgressMapping();
+        progressMapping.setWordSetId(sourceWordSetId);
         LinkedList<WordRepetitionProgressMapping> expectedWordSets = new LinkedList<>();
-        expectedWordSets.add(new WordRepetitionProgressMapping());
+        expectedWordSets.add(progressMapping);
         expectedWordSets.get(0).setId(1);
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
 
         int wordSetSize = 1;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
+        when(wordSetDao.findById(sourceWordSetId)).thenReturn(wordSetMapping);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
-        assertEquals(0, wordSets.size());
+        assertEquals(1, wordSets.size());
     }
 
     @Test

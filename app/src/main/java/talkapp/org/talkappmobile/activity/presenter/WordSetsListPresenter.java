@@ -106,6 +106,11 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetCantBeShared();
     }
 
+    @Override
+    public void onWordSetIsNotAvailableYet(int availableInHours) {
+        view.onWordSetIsNotAvailableYet(availableInHours);
+    }
+
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }

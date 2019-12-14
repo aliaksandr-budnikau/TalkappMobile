@@ -33,4 +33,6 @@ public interface WordSetsListView {
     void onWordSetDraftPrepare(NewWordSetDraftQRObject qrObject);
 
     void onWordSetCantBeShared();
+
+    void onWordSetIsNotAvailableYet(int availableInHours);
 }

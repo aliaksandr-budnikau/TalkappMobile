@@ -26,6 +26,8 @@ public class WordSet implements Serializable {
 
     private RepetitionClass repetitionClass;
 
+    private int availableInHours;
+
     public WordSet() {
     }
 
@@ -37,6 +39,7 @@ public class WordSet implements Serializable {
         this.trainingExperience = wordSet.getTrainingExperience();
         this.status = wordSet.getStatus();
         this.repetitionClass = wordSet.getRepetitionClass();
+        this.availableInHours = wordSet.getAvailableInHours();
     }
 
     public int getId() {
@@ -116,5 +119,13 @@ public class WordSet implements Serializable {
         sb.append(", topicId=").append(topicId);
         sb.append('}');
         return sb.toString();
+    }
+
+    public int getAvailableInHours() {
+        return availableInHours;
+    }
+
+    public void setAvailableInHours(int availableInHours) {
+        this.availableInHours = availableInHours;
     }
 }
