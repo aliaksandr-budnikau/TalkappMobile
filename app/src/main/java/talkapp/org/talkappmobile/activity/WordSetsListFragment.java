@@ -36,7 +36,6 @@ import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
-import talkapp.org.talkappmobile.events.WordSetsRemoveClickedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
@@ -282,7 +281,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     @UiThread
     public void onWordSetRemoved(WordSet wordSet, int clickedItemNumber) {
         Toast.makeText(getActivity(), "The words were removed", Toast.LENGTH_LONG).show();
-        eventBus.post(new WordSetsRemoveClickedEM(wordSet, clickedItemNumber));
+        phraseSetsListView.getAdapter().removeItem(clickedItemNumber);
     }
 
     @Override

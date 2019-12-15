@@ -227,6 +227,12 @@ public class PhraseSetsListView extends RecyclerView {
             notifyDataSetChanged();
         }
 
+        public void removeItem(int position) {
+            Integer index = filteredWordSetList.remove(position);
+            origWordSetList.remove(index);
+            notifyDataSetChanged();
+        }
+
         public interface OnItemLongClickListener {
             void onItemLongClick(int position);
         }
