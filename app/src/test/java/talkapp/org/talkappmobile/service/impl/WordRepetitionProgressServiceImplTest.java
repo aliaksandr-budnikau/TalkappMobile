@@ -60,7 +60,6 @@ public class WordRepetitionProgressServiceImplTest {
         long limit = 2;
         int olderThenInHours = 4;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(HOUR, -4);
 
         // when
         int wordSetSize = 12;
@@ -81,7 +80,6 @@ public class WordRepetitionProgressServiceImplTest {
         long limit = 2;
         int olderThenInHours = 4;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(HOUR, -4);
 
         // when
         ObjectMapper mapper = new ObjectMapper();
@@ -158,7 +156,6 @@ public class WordRepetitionProgressServiceImplTest {
         long limit = 2;
         int olderThenInHours = 4;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(HOUR, -4);
 
         // when
         ObjectMapper mapper = new ObjectMapper();
@@ -208,7 +205,6 @@ public class WordRepetitionProgressServiceImplTest {
         long limit = 2;
         int olderThenInHours = 4;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(HOUR, -4);
 
         // when
         ObjectMapper mapper = new ObjectMapper();
@@ -259,7 +255,6 @@ public class WordRepetitionProgressServiceImplTest {
         long limit = 1;
         int olderThenInHours = 4;
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(HOUR, -4);
 
         // when
         ObjectMapper mapper = new ObjectMapper();

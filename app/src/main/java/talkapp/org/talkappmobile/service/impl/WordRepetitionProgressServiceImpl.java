@@ -180,7 +180,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.add(Calendar.HOUR, -olderThenInHours);
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(limit * wordSetSize, cal.getTime(), FINISHED.name());
         NavigableMap<Integer, List<Word2TokensAndAvailableInHours>> tree = getSortedTreeByRepetitionCount(exercises, olderThenInHours);
         List<WordSet> wordSets = new LinkedList<>();
