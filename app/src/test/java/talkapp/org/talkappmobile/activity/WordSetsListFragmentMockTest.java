@@ -12,22 +12,25 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.activity.custom.PhraseSetsListView;
+import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
+import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_NEW_REP_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_NEW_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_SEEN_REP_WORD_SETS;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.NEW;
 import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordSetsListFragmentMockTest {
     @Mock
-    private PhraseSetsListView.Adapter adapter;
+    private FilterableAdapter adapter;
     @Mock
-    private PhraseSetsListView wordSetsListView;
+    private PhraseSetsRecyclerView wordSetsListView;
     @Mock
     private TabHost tabHost;
     @Mock
@@ -47,7 +50,7 @@ public class WordSetsListFragmentMockTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
         wordSetsListFragment.onWordSetsRefreshed(wordSets, null);
         verify(adapter).addAll(wordSets);
-        verify(adapter).filterNew();
+        verify(adapter).filterOut(ONLY_NEW_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(NEW);
     }
 
@@ -57,7 +60,7 @@ public class WordSetsListFragmentMockTest {
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, RepetitionClass.NEW);
         verify(adapter).addAll(wordSets);
-        verify(adapter).filterNewRep();
+        verify(adapter).filterOut(ONLY_NEW_REP_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(RepetitionClass.NEW.name());
     }
 
@@ -67,7 +70,7 @@ public class WordSetsListFragmentMockTest {
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, SEEN);
         verify(adapter).addAll(wordSets);
-        verify(adapter).filterSeenRep();
+        verify(adapter).filterOut(ONLY_SEEN_REP_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(SEEN.name());
     }
 }

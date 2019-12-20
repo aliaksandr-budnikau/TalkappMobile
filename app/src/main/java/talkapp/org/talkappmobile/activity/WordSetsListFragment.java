@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.PhraseSetsListView;
+import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
@@ -40,18 +40,30 @@ import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.widget.adapter.filterable.AbstractFilter;
+import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
+import talkapp.org.talkappmobile.widget.adapter.filterable.OnItemClickListener;
+import talkapp.org.talkappmobile.widget.adapter.filterable.OnItemLongClickListener;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_FINISHED_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_LEARNED_REP_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_NEW_REP_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_NEW_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_REPEATED_REP_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_SEEN_REP_WORD_SETS;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_STARTED_WORD_SETS;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 
 @EFragment(value = R.layout.word_sets_list_layout)
-public class WordSetsListFragment extends Fragment implements WordSetsListView, PhraseSetsListView.Adapter.OnItemClickListener, PhraseSetsListView.Adapter.OnItemLongClickListener {
+public class WordSetsListFragment extends Fragment implements WordSetsListView, OnItemClickListener, OnItemLongClickListener {
     public static final String TOPIC_MAPPING = "topic";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
     public static final String REPETITION_CLASS_MAPPING = "repetitionClass";
@@ -64,17 +76,14 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     BackendServerFactory backendServerFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-
     @EventBusGreenRobot
     EventBus eventBus;
-
     @ViewById(R.id.wordSetsListView)
-    PhraseSetsListView phraseSetsListView;
+    PhraseSetsRecyclerView phraseSetsRecyclerView;
     @ViewById(R.id.please_wait_progress_bar)
     View progressBarView;
     @ViewById(R.id.tabHost)
     TabHost tabHost;
-
     @StringRes(R.string.word_sets_list_fragment_tab_new_label)
     String tabNewLabel;
     @StringRes(R.string.word_sets_list_fragment_tab_started_label)
@@ -89,7 +98,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     String sharingOptionLabel;
     @StringRes(R.string.word_sets_list_fragment_opening_warning_too_early_message)
     String openingWarningTooEarlyMessage;
-
     @FragmentArg(TOPIC_MAPPING)
     Topic topic;
     @FragmentArg(REPETITION_MODE_MAPPING)
@@ -101,7 +109,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @AfterViews
     public void init() {
-        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, phraseSetsListView);
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, phraseSetsRecyclerView);
 
         initPresenter();
     }
@@ -124,7 +132,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Override
     public void onResetExperienceClick(WordSet wordSet, int clickedItemNumber) {
-        phraseSetsListView.getAdapter().setWordSet(wordSet, clickedItemNumber);
+        phraseSetsRecyclerView.getAdapter().setItem(wordSet, clickedItemNumber);
     }
 
     @Override
@@ -179,8 +187,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void onWordSetsInitialized(final List<WordSet> wordSets, RepetitionClass selectedClass) {
-        PhraseSetsListView.Adapter adapter = new PhraseSetsListView.Adapter(wordSets, this, this);
-        phraseSetsListView.setAdapter(adapter);
+        FilterableAdapter<WordSet, PhraseSetsRecyclerView.ViewHolder> adapter = new FilterableAdapter<>(wordSets, new PhraseSetsRecyclerView.ViewHolderFactory(this, this));
+        phraseSetsRecyclerView.setAdapter(adapter);
 
         if (repetitionMode) {
             tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -245,23 +253,23 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     private void pickStudingFilter(String tabId) {
         if (NEW.equals(tabId)) {
-            phraseSetsListView.getAdapter().filterNew();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_NEW_WORD_SETS.getFilter());
         } else if (STARTED.equals(tabId)) {
-            phraseSetsListView.getAdapter().filterStarted();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_STARTED_WORD_SETS.getFilter());
         } else if (FINISHED.equals(tabId)) {
-            phraseSetsListView.getAdapter().filterFinished();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_FINISHED_WORD_SETS.getFilter());
         }
     }
 
     private void pickRepetitionFilter(RepetitionClass selectedClass) {
         if (RepetitionClass.NEW == selectedClass) {
-            phraseSetsListView.getAdapter().filterNewRep();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_NEW_REP_WORD_SETS.getFilter());
         } else if (SEEN == selectedClass) {
-            phraseSetsListView.getAdapter().filterSeenRep();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_SEEN_REP_WORD_SETS.getFilter());
         } else if (REPEATED == selectedClass) {
-            phraseSetsListView.getAdapter().filterRepeatedRep();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_REPEATED_REP_WORD_SETS.getFilter());
         } else if (LEARNED == selectedClass) {
-            phraseSetsListView.getAdapter().filterLearnedRep();
+            phraseSetsRecyclerView.getAdapter().filterOut(ONLY_LEARNED_REP_WORD_SETS.getFilter());
         }
     }
 
@@ -281,7 +289,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     @UiThread
     public void onWordSetRemoved(WordSet wordSet, int clickedItemNumber) {
         Toast.makeText(getActivity(), "The words were removed", Toast.LENGTH_LONG).show();
-        phraseSetsListView.getAdapter().removeItem(clickedItemNumber);
+        phraseSetsRecyclerView.getAdapter().removeItem(clickedItemNumber);
     }
 
     @Override
@@ -299,8 +307,9 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     @UiThread
     @IgnoreWhen(VIEW_DESTROYED)
     public void onWordSetsRefreshed(List<WordSet> wordSets, RepetitionClass repetitionClass) {
-        PhraseSetsListView.Adapter adapter = new PhraseSetsListView.Adapter(wordSets, this, this);
-        phraseSetsListView.setAdapter(adapter);
+        PhraseSetsRecyclerView.ViewHolderFactory viewHolderFactory = new PhraseSetsRecyclerView.ViewHolderFactory(this, this);
+        FilterableAdapter<WordSet, PhraseSetsRecyclerView.ViewHolder> adapter = new FilterableAdapter<>(wordSets, viewHolderFactory);
+        phraseSetsRecyclerView.setAdapter(adapter);
         if (repetitionClass == null) {
             pickStudingFilter(NEW);
             tabHost.setCurrentTabByTag(NEW);
@@ -346,13 +355,68 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Override
     public void onItemLongClick(int position) {
-        WordSet wordSet = phraseSetsListView.getAdapter().getByPosition(position);
+        WordSet wordSet = phraseSetsRecyclerView.getAdapter().get(position);
         presenter.itemLongClick(wordSet, position);
     }
 
     @Override
     public void onItemClick(int position) {
-        WordSet wordSet = phraseSetsListView.getAdapter().getByPosition(position);
+        WordSet wordSet = phraseSetsRecyclerView.getAdapter().get(position);
         presenter.itemClick(wordSet, position);
+    }
+
+    public enum WordSetFilter {
+        ONLY_NEW_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getTrainingExperience() == 0;
+            }
+        }),
+        ONLY_STARTED_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getTrainingExperience() != 0 && WordSetProgressStatus.FINISHED != wordSet.getStatus();
+            }
+        }),
+        ONLY_FINISHED_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return WordSetProgressStatus.FINISHED == wordSet.getStatus();
+            }
+        }),
+        ONLY_NEW_REP_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getRepetitionClass() == RepetitionClass.NEW;
+            }
+        }),
+        ONLY_SEEN_REP_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getRepetitionClass() == SEEN;
+            }
+        }),
+        ONLY_REPEATED_REP_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getRepetitionClass() == REPEATED;
+            }
+        }),
+        ONLY_LEARNED_REP_WORD_SETS(new AbstractFilter<WordSet>() {
+            @Override
+            public boolean filter(WordSet wordSet) {
+                return wordSet.getRepetitionClass() == LEARNED;
+            }
+        });
+
+        private final AbstractFilter<WordSet> filter;
+
+        WordSetFilter(AbstractFilter<WordSet> filter) {
+            this.filter = filter;
+        }
+
+        public AbstractFilter<WordSet> getFilter() {
+            return filter;
+        }
     }
 }

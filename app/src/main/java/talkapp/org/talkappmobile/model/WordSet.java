@@ -103,7 +103,11 @@ public class WordSet implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WordSet wordSet = (WordSet) o;
-        return Objects.equals(id, wordSet.id);
+        boolean areIdsEqual = Objects.equals(id, wordSet.id);
+        if (areIdsEqual && id == 0) {
+            return Objects.equals(words, wordSet.words);
+        }
+        return areIdsEqual;
     }
 
     @Override

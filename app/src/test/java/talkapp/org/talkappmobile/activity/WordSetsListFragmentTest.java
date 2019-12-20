@@ -21,9 +21,10 @@ import java.util.List;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.TestHelper;
-import talkapp.org.talkappmobile.activity.custom.PhraseSetsListView;
+import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
@@ -56,6 +57,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFilter.ONLY_NEW_WORD_SETS;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -65,7 +67,7 @@ public class WordSetsListFragmentTest {
     private WordRepetitionProgressServiceImpl repetitionProgressService;
     private WordSetExperienceUtilsImpl experienceUtils;
     private WordSetServiceImpl wordSetService;
-    private PhraseSetsListView wordSetsListView;
+    private PhraseSetsRecyclerView wordSetsListView;
     private LocalDataServiceImpl localDataService;
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
@@ -74,7 +76,7 @@ public class WordSetsListFragmentTest {
     private DaoHelper daoHelper;
     private TestHelper testHelper;
     private EventBus eventBus;
-    private PhraseSetsListView.Adapter adapter;
+    private FilterableAdapter adapter;
 
     @Before
     public void setup() throws SQLException {
@@ -102,7 +104,7 @@ public class WordSetsListFragmentTest {
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
-        when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsListView.class))).thenReturn(mock(WaitingForProgressBarManager.class));
+        when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsRecyclerView.class))).thenReturn(mock(WaitingForProgressBarManager.class));
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         eventBus = testHelper.getEventBusMock();
@@ -116,10 +118,10 @@ public class WordSetsListFragmentTest {
         Whitebox.setInternalState(wordSetsListFragment, "eventBus", eventBus);
         Whitebox.setInternalState(wordSetsListFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
         Whitebox.setInternalState(wordSetsListFragment, "progressBarView", mock(View.class));
-        wordSetsListView = mock(PhraseSetsListView.class);
-        adapter = mock(PhraseSetsListView.Adapter.class);
+        wordSetsListView = mock(PhraseSetsRecyclerView.class);
+        adapter = mock(FilterableAdapter.class);
         when(wordSetsListView.getAdapter()).thenReturn(adapter);
-        Whitebox.setInternalState(wordSetsListFragment, "phraseSetsListView", wordSetsListView);
+        Whitebox.setInternalState(wordSetsListFragment, "phraseSetsRecyclerView", wordSetsListView);
     }
 
     @Test
@@ -127,13 +129,13 @@ public class WordSetsListFragmentTest {
         Whitebox.setInternalState(wordSetsListFragment, "repetitionMode", false);
 
         wordSetsListFragment.init();
-        ArgumentCaptor<PhraseSetsListView.Adapter> argumentCaptor = forClass(PhraseSetsListView.Adapter.class);
+        ArgumentCaptor<FilterableAdapter> argumentCaptor = forClass(FilterableAdapter.class);
         verify(wordSetsListView).setAdapter(argumentCaptor.capture());
-        PhraseSetsListView.Adapter adapter = argumentCaptor.getValue();
-        List<WordSet> wordSetList = adapter.getWordSets();
+        FilterableAdapter adapter = argumentCaptor.getValue();
+        List<WordSet> wordSetList = adapter.getItems();
 
         int position = 1;
-        when(this.adapter.getByPosition(position)).thenReturn(wordSetList.get(position));
+        when(this.adapter.get(position)).thenReturn(wordSetList.get(position));
         wordSetsListFragment.onItemClick(position);
 
         OpenWordSetForStudyingEM em = testHelper.getEM(OpenWordSetForStudyingEM.class, 1);
@@ -157,17 +159,17 @@ public class WordSetsListFragmentTest {
          */
         wordSetsListFragment.onMessageEvent(new ParentScreenOutdatedEM());
 
-        argumentCaptor = forClass(PhraseSetsListView.Adapter.class);
+        argumentCaptor = forClass(FilterableAdapter.class);
         verify(this.wordSetsListView).setAdapter(argumentCaptor.capture());
         adapter = argumentCaptor.getValue();
-        List<WordSet> wordSetListForRefresh = adapter.getWordSets();
+        List<WordSet> wordSetListForRefresh = adapter.getItems();
         assertNotEquals(0, wordSetListForRefresh.size() % 100);
 
         for (WordSet set : wordSetListForRefresh) {
             checkWord2Tokens(set, set.getWords());
         }
 
-        verify(this.adapter).filterNew();
+        verify(this.adapter).filterOut(ONLY_NEW_WORD_SETS.getFilter());
     }
 
     @After
