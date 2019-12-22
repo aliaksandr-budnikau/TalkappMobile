@@ -79,6 +79,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private NewWordSetDraftDao newWordSetDraftDao;
     private MigrationService migrationService;
     private CurrentWordSetDao currentWordSetDao;
+    private StemmerAdapterImpl stemmerAdapter;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
@@ -287,6 +288,10 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     @Override
     public StemmerAdapter getStemmer() {
-        return new StemmerAdapterImpl(context);
+        if (stemmerAdapter != null) {
+            return stemmerAdapter;
+        }
+        stemmerAdapter = new StemmerAdapterImpl(context);
+        return stemmerAdapter;
     }
 }
