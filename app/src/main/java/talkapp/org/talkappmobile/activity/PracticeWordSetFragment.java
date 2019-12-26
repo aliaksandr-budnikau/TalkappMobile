@@ -33,7 +33,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
@@ -103,7 +103,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     EventBus eventBus;
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
-    private PracticeWordSetPresenter presenter;
+    private IPracticeWordSetPresenter presenter;
 
     /**
      * Returns a new instance of this fragment for the given section

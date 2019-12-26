@@ -16,6 +16,8 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
+import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.decorator.PleaseWaitProgressBarDecorator;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
@@ -55,7 +57,7 @@ public class PresenterFactory {
     @Bean(AudioStuffFactoryBean.class)
     AudioStuffFactory audioStuffFactory;
 
-    public PracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
+    public IPracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
         SentenceServiceImpl sentenceService = new SentenceServiceImpl(backendServerFactory.get(), serviceFactory.getPracticeWordSetExerciseRepository());
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
@@ -64,7 +66,7 @@ public class PresenterFactory {
         if (repetitionMode) {
             interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), context, audioStuffFactory);
         }
-        return new PracticeWordSetPresenter(interactor, viewStrategy);
+        return new PleaseWaitProgressBarDecorator(new PracticeWordSetPresenter(interactor, viewStrategy), view);
     }
 
     public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {

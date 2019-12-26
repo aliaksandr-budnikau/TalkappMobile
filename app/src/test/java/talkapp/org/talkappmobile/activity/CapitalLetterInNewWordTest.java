@@ -29,7 +29,7 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
+import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
@@ -286,7 +286,7 @@ public class CapitalLetterInNewWordTest {
             assertEquals(wordSet.getId(), word.getSourceWordSetId().intValue());
         }
 
-        PracticeWordSetPresenter presenter = Whitebox.getInternalState(practiceWordSetFragment, "presenter");
+        IPracticeWordSetPresenter presenter = Whitebox.getInternalState(practiceWordSetFragment, "presenter");
         Sentence currentSentence = presenter.getCurrentSentence();
 
         assertNotNull(currentSentence);

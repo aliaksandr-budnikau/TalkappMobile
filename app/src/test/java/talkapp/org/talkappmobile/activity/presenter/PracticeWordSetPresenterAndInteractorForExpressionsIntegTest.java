@@ -20,6 +20,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.activity.PresenterFactory;
+import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -66,7 +67,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
     public static final String MAKE_OUT = "make out";
     public static final String IN_FACT = "in fact";
     private PracticeWordSetView view;
-    private PracticeWordSetPresenter presenter;
+    private IPracticeWordSetPresenter presenter;
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSet wordSet;
@@ -190,7 +191,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 1
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -201,14 +201,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -239,7 +237,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 2
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -250,14 +247,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -288,7 +283,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 3
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -299,14 +293,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -337,7 +329,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 4
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -373,7 +364,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 5
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -409,7 +399,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 6
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -453,7 +442,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 1
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -464,14 +452,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -502,7 +488,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 2
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -519,7 +504,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -530,14 +514,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -568,7 +550,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 3
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -585,7 +566,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -596,14 +576,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.changeSentence(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableCheckButton(false);
         verify(view).setEnableNextButton(false);
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
 
-        verify(view).hidePleaseWaitProgressBar();
         verify(view).setEnableCheckButton(true);
         verify(view).setEnableNextButton(true);
         reset(view);
@@ -634,7 +612,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 4
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -651,7 +628,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -687,7 +663,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 5
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -704,7 +679,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -740,7 +714,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
 
         // sentence 6
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
@@ -757,7 +730,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).showPleaseWaitProgressBar();
         verify(view).setEnableNextButton(false);
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);

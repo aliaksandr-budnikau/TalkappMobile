@@ -97,28 +97,24 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onNextButtonStart() {
-        view.showPleaseWaitProgressBar();
         view.setEnableRightAnswerTextView(false);
         view.setEnablePronounceRightAnswerButton(false);
         view.setEnableNextButton(false);
     }
 
     public void onNextButtonFinish() {
-        view.hidePleaseWaitProgressBar();
         view.setEnableRightAnswerTextView(true);
         view.setEnablePronounceRightAnswerButton(true);
         view.setEnableNextButton(true);
     }
 
     public void onCheckAnswerStart() {
-        view.showPleaseWaitProgressBar();
         view.setEnableRightAnswerTextView(false);
         view.setEnablePronounceRightAnswerButton(false);
         view.setEnableCheckButton(false);
     }
 
     public void onCheckAnswerFinish() {
-        view.hidePleaseWaitProgressBar();
         view.setEnableRightAnswerTextView(true);
         view.setEnablePronounceRightAnswerButton(true);
         view.setEnableCheckButton(true);
@@ -133,25 +129,21 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onScoreSentenceStart() {
-        view.showPleaseWaitProgressBar();
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
     }
 
     public void onScoreSentenceFinish() {
-        view.hidePleaseWaitProgressBar();
         view.setEnableCheckButton(true);
         view.setEnableNextButton(true);
     }
 
     public void onChangeSentenceStart() {
-        view.showPleaseWaitProgressBar();
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
     }
 
     public void onChangeSentenceFinish() {
-        view.hidePleaseWaitProgressBar();
         view.setEnableCheckButton(true);
         view.setEnableNextButton(true);
     }

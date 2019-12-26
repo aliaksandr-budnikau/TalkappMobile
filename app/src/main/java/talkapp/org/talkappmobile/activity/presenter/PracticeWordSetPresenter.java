@@ -2,16 +2,17 @@ package talkapp.org.talkappmobile.activity.presenter;
 
 import android.net.Uri;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
+import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import java.util.List;
-
-public class PracticeWordSetPresenter implements OnPracticeWordSetListener {
+public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
     private boolean answerHasBeenSeen;
