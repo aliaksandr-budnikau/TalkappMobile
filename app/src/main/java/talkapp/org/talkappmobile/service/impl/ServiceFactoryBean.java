@@ -28,8 +28,6 @@ import talkapp.org.talkappmobile.dao.impl.TopicDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
-import talkapp.org.talkappmobile.language.stemmer.StemmerAdapter;
-import talkapp.org.talkappmobile.language.stemmer.StemmerAdapterImpl;
 import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
@@ -79,7 +77,6 @@ public class ServiceFactoryBean implements ServiceFactory {
     private NewWordSetDraftDao newWordSetDraftDao;
     private MigrationService migrationService;
     private CurrentWordSetDao currentWordSetDao;
-    private StemmerAdapterImpl stemmerAdapter;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
@@ -284,14 +281,5 @@ public class ServiceFactoryBean implements ServiceFactory {
     @Override
     public ObjectMapper getMapper() {
         return MAPPER;
-    }
-
-    @Override
-    public StemmerAdapter getStemmer() {
-        if (stemmerAdapter != null) {
-            return stemmerAdapter;
-        }
-        stemmerAdapter = new StemmerAdapterImpl(context);
-        return stemmerAdapter;
     }
 }

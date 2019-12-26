@@ -22,7 +22,6 @@ import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentControllerIn
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImplTest;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImplTest;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImplTest;
-import talkapp.org.talkappmobile.language.stemmer.StemmerAdapterImplTest;
 import talkapp.org.talkappmobile.service.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBeanTest;
 import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBeanTest;
@@ -63,7 +62,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         AddingNewWordSetFragmentTest.class,
         UserExpServiceImplTest.class,
         StatisticActivityInteractorTest.class,
-        StemmerAdapterImplTest.class,
         AddingNewWordSetFragmentControllerIntegTest.class
 })
 @RunWith(Suite.class)

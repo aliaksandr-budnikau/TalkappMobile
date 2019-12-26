@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
-import talkapp.org.talkappmobile.language.stemmer.StemmerAdapter;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
@@ -30,6 +29,4 @@ public interface ServiceFactory {
     ExpAuditMapper getExpAuditMapper();
 
     ObjectMapper getMapper();
-
-    StemmerAdapter getStemmer();
 }
