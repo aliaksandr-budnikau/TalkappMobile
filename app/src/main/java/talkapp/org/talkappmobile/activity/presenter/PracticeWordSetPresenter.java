@@ -141,16 +141,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void nextButtonClick(int wordSetId) {
-        try {
-            viewStrategy.onNextButtonStart();
-            Word2Tokens word = interactor.peekAnyNewWordByWordSetId(wordSetId);
-            if (word == null) {
-                return;
-            }
-            interactor.initialiseSentence(word, this);
-        } finally {
-            viewStrategy.onNextButtonFinish();
+        Word2Tokens word = interactor.peekAnyNewWordByWordSetId(wordSetId);
+        if (word == null) {
+            return;
         }
+        interactor.initialiseSentence(word, this);
     }
 
     public Sentence getCurrentSentence() {
@@ -158,13 +153,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void checkAnswerButtonClick(final String answer, WordSet wordSet) {
-        try {
-            viewStrategy.onCheckAnswerStart();
-            Sentence currentSentence = interactor.getCurrentSentence();
-            interactor.checkAnswer(answer, wordSet, currentSentence, answerHasBeenSeen, this);
-        } finally {
-            viewStrategy.onCheckAnswerFinish();
-        }
+        Sentence currentSentence = interactor.getCurrentSentence();
+        interactor.checkAnswer(answer, wordSet, currentSentence, answerHasBeenSeen, this);
     }
 
     public void playVoiceButtonClick() {
@@ -181,30 +171,15 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void changeSentence(int wordSetId) {
-        try {
-            viewStrategy.onChangeSentenceStart();
-            interactor.changeSentence(wordSetId, this);
-        } finally {
-            viewStrategy.onChangeSentenceFinish();
-        }
+        interactor.changeSentence(wordSetId, this);
     }
 
     public void changeSentence(List<Sentence> sentences, Word2Tokens currentWord) {
-        try {
-            viewStrategy.onChangeSentenceStart();
-            interactor.changeSentence(currentWord, sentences, this);
-        } finally {
-            viewStrategy.onChangeSentenceFinish();
-        }
+        interactor.changeSentence(currentWord, sentences, this);
     }
 
     public void scoreSentence(SentenceContentScore score, Sentence sentence) {
-        try {
-            viewStrategy.onScoreSentenceStart();
-            interactor.scoreSentence(sentence, score, this);
-        } finally {
-            viewStrategy.onScoreSentenceFinish();
-        }
+        interactor.scoreSentence(sentence, score, this);
     }
 
     public void markAnswerHasBeenSeen() {
@@ -212,11 +187,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void disableButtonsDuringPronunciation() {
-        viewStrategy.onStartSpeaking();
     }
 
     public void enableButtonsAfterPronunciation() {
-        viewStrategy.onStopSpeaking();
     }
 
     public void findSentencesForChange(Word2Tokens currentWord) {
@@ -228,11 +201,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void refreshCurrentWord() {
-        try {
-            viewStrategy.onNextButtonStart();
-            interactor.refreshSentence(this);
-        } finally {
-            viewStrategy.onNextButtonFinish();
-        }
+        interactor.refreshSentence(this);
     }
 }

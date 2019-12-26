@@ -216,103 +216,68 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         // sentence 1
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         String wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 2
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
 
         // sentence 3
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(100);
         verify(view, times(0)).setRightAnswer(sentence.getText());
         verify(view, times(0)).showNextButton();
@@ -320,7 +285,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).showCongratulationMessage();
         verify(view).hideNextButton();
         verify(view).showCloseButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(1);
         reset(view);
 
@@ -341,49 +305,31 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         // sentence 1
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         String wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 2
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         createPresenter(interactor);
@@ -393,49 +339,31 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 3
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         createPresenter(interactor);
@@ -445,49 +373,31 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 4
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         createPresenter(interactor);
@@ -497,49 +407,31 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 5
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         createPresenter(interactor);
@@ -549,49 +441,31 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
         verify(view).showNextButton();
         verify(view).hideCheckButton();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
 
         // sentence 6
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         createPresenter(interactor);
@@ -601,34 +475,22 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         presenter.nextButtonClick(wordSet.getId());
-        verify(view).setEnableNextButton(false);
-        verify(view).setEnableRightAnswerTextView(false);
-        verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
-        verify(view).setEnableNextButton(true);
-        verify(view).setEnableRightAnswerTextView(true);
-        verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
         presenter.checkAnswerButtonClick("", wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).showMessageAnswerEmpty();
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         wrongWord = "Housd";
         presenter.checkAnswerButtonClick(wrongWord, wordSet);
-        verify(view).setEnableCheckButton(false);
-        verify(view).setEnableCheckButton(true);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
         presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
-        verify(view).setEnableCheckButton(false);
         verify(view).setProgress(33);
         verify(view, times(0)).showCongratulationMessage();
-        verify(view).setEnableCheckButton(true);
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
         reset(view);
     }

@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
+import talkapp.org.talkappmobile.activity.presenter.decorator.ButtonsDisablingDecorator;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.decorator.PleaseWaitProgressBarDecorator;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
@@ -66,7 +67,11 @@ public class PresenterFactory {
         if (repetitionMode) {
             interactor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getUserExpService(), experienceUtils, serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), context, audioStuffFactory);
         }
-        return new PleaseWaitProgressBarDecorator(new PracticeWordSetPresenter(interactor, viewStrategy), view);
+        PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(interactor, viewStrategy);
+
+        ButtonsDisablingDecorator disablingDecorator = new ButtonsDisablingDecorator(presenter, view);
+        PleaseWaitProgressBarDecorator progressBarDecorator = new PleaseWaitProgressBarDecorator(disablingDecorator, view);
+        return progressBarDecorator;
     }
 
     public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {

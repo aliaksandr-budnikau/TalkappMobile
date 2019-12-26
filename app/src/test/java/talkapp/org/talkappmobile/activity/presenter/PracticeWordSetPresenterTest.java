@@ -7,14 +7,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.HashMap;
+
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
-import java.util.HashMap;
-
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -125,22 +125,7 @@ public class PracticeWordSetPresenterTest {
         presenter.nextButtonClick(word1.getSourceWordSetId());
 
         // then
-        verify(viewStrategy).onNextButtonStart();
-        verify(viewStrategy).onNextButtonFinish();
         verify(interactor).initialiseSentence(word1, presenter);
-    }
-
-    @Test
-    public void onNextButtonClick_exception() {
-        // when
-        doThrow(new RuntimeException()).when(viewStrategy).onNextButtonStart();
-        try {
-            presenter.nextButtonClick(3);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(viewStrategy).onNextButtonFinish();
     }
 
     @Test
@@ -158,25 +143,7 @@ public class PracticeWordSetPresenterTest {
         presenter.checkAnswerButtonClick(answer, wordSet);
 
         // then
-        verify(viewStrategy).onCheckAnswerFinish();
-        verify(viewStrategy).onCheckAnswerStart();
         verify(interactor).checkAnswer(answer, wordSet, sentence, false, presenter);
-    }
-
-    @Test
-    public void onCheckAnswerButtonClick_exception() {
-        // setup
-        String answer = "sdfsd";
-
-        // when
-        doThrow(new RuntimeException()).when(viewStrategy).onCheckAnswerStart();
-        try {
-            presenter.checkAnswerButtonClick(answer, null);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(viewStrategy).onCheckAnswerFinish();
     }
 
     @Test
