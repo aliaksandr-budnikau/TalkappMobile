@@ -404,7 +404,7 @@ public class StudyingPracticeWordSetInteractorTest {
     @Test
     public void playVoice_bufferIsEmpty() {
         // when
-        interactor.playVoice(null, listener);
+        interactor.playVoice(listener);
 
         // then
         verify(listener, times(0)).onStartPlaying();
@@ -417,11 +417,12 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         Uri empty = mock(Uri.class);
+        interactor.saveVoice(empty, listener);
 
         // when
         when(audioStuffFactory.createMediaPlayer()).thenReturn(mediaPlayer);
         when(mediaPlayer.isPlaying()).thenReturn(true).thenReturn(false);
-        interactor.playVoice(empty, listener);
+        interactor.playVoice(listener);
 
         // then
         verify(listener).onStartPlaying();
@@ -436,11 +437,12 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         Uri empty = mock(Uri.class);
+        interactor.saveVoice(empty, listener);
 
         // when
         doThrow(RuntimeException.class).when(listener).onStartPlaying();
         try {
-            interactor.playVoice(empty, listener);
+            interactor.playVoice(listener);
         } catch (Exception e) {
         }
 
@@ -458,12 +460,13 @@ public class StudyingPracticeWordSetInteractorTest {
         // setup
         MediaPlayer mediaPlayer = mock(MediaPlayer.class);
         Uri empty = mock(Uri.class);
+        interactor.saveVoice(empty, listener);
 
         // when
         doThrow(RuntimeException.class).when(mediaPlayer).start();
         when(audioStuffFactory.createMediaPlayer()).thenReturn(mediaPlayer);
         try {
-            interactor.playVoice(empty, listener);
+            interactor.playVoice(listener);
         } catch (Exception e) {
         }
 

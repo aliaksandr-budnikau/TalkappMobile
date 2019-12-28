@@ -167,6 +167,6 @@ public class PracticeWordSetPresenterTest {
         presenter.playVoiceButtonClick();
 
         // then
-        verify(interactor).playVoice(empty, presenter);
+        verify(interactor).playVoice(presenter);
     }
 }

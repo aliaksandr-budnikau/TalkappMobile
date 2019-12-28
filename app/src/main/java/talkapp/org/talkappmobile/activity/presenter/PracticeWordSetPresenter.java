@@ -15,7 +15,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
-    private Uri voiceRecordUri;
 
     public PracticeWordSetPresenter(PracticeWordSetInteractor interactor,
                                     PracticeWordSetViewStrategy viewStrategy) {
@@ -162,11 +161,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void playVoiceButtonClick() {
-        interactor.playVoice(this.voiceRecordUri, this);
+        interactor.playVoice(this);
     }
 
     public void voiceRecorded(Uri voiceRecordUri) {
-        this.voiceRecordUri = voiceRecordUri;
+        interactor.saveVoice(voiceRecordUri, this);
     }
 
     public void checkRightAnswerCommandRecognized() {

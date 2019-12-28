@@ -36,6 +36,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final SentenceService sentenceService;
     private final WordSetService wordSetService;
     private boolean answerHasBeenSeen;
+    private Uri voiceRecordUri;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
@@ -80,7 +81,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
-    public void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
+    public void playVoice(OnPracticeWordSetListener listener) {
         if (voiceRecordUri == null) {
             logger.i(TAG, "voice record uri is empty");
             return;
@@ -196,6 +197,11 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void markAnswerHasBeenSeen() {
         this.answerHasBeenSeen = true;
+    }
+
+    @Override
+    public void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
+        this.voiceRecordUri = voiceRecordUri;
     }
 
     protected abstract Word2Tokens getCurrentWord();

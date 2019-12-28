@@ -24,7 +24,7 @@ public interface PracticeWordSetInteractor {
 
     boolean checkAnswer(String answer, Sentence currentSentence, OnPracticeWordSetListener listener);
 
-    void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
+    void playVoice(OnPracticeWordSetListener listener);
 
     void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener);
 
@@ -43,4 +43,6 @@ public interface PracticeWordSetInteractor {
     void resetSentenceState(OnPracticeWordSetListener listener);
 
     void markAnswerHasBeenSeen();
+
+    void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 }
