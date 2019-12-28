@@ -36,4 +36,6 @@ public interface PracticeWordSetInteractor {
     void prepareOriginalTextClickEM(OnPracticeWordSetListener listener);
 
     void refreshSentence(OnPracticeWordSetListener listener);
+
+    void saveCurrentWordSet(WordSet wordSet);
 }

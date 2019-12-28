@@ -138,7 +138,6 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
-        experienceService.saveCurrent(wordSet);
 
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDao.createNewOrUpdate(wordSetMapping);

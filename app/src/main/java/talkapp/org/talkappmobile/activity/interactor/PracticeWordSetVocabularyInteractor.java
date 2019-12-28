@@ -30,7 +30,6 @@ public class PracticeWordSetVocabularyInteractor {
     }
 
     public void initialiseVocabulary(WordSet wordSet, OnPracticeWordSetVocabularyListener listener) {
-        wordSetService.saveCurrent(wordSet);
         List<WordTranslation> wordTranslations = getWordTranslations(wordSet);
         listener.onWordSetVocabularyFound(wordTranslations);
     }

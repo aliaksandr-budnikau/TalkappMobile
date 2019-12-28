@@ -185,7 +185,6 @@ public class ChangeSentenceTest {
         wordSet.setStatus(status);
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDaoMock.createNewOrUpdate(wordSetMapping);
-        experienceService.saveCurrent(wordSet);
         return wordSet;
     }
 

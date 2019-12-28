@@ -176,7 +176,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
-        experienceService.saveCurrent(wordSet);
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDao.createNewOrUpdate(wordSetMapping);
         presenter = presenterFactory.create(view, context, false);

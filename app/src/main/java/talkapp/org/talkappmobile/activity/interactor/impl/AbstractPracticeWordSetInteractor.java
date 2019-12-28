@@ -177,6 +177,11 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         listener.onOriginalTextClickEMPrepared(getCurrentWord());
     }
 
+    @Override
+    public void saveCurrentWordSet(WordSet wordSet) {
+        wordSetService.saveCurrent(wordSet);
+    }
+
     protected abstract Word2Tokens getCurrentWord();
 
     protected abstract void setCurrentSentence(Sentence sentence);
