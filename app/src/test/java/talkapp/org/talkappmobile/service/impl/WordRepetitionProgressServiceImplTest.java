@@ -170,14 +170,17 @@ public class WordRepetitionProgressServiceImplTest {
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(0);
+        expectedWordSets.getLast().setRepetitionCounter(1);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(1);
+        expectedWordSets.getLast().setRepetitionCounter(2);
         expectedWordSets.add(new WordRepetitionProgressMapping());
         expectedWordSets.getLast().setWordSetId(sourceWordSetId);
         expectedWordSets.getLast().setUpdatedDate(cal.getTime());
         expectedWordSets.getLast().setWordIndex(2);
+        expectedWordSets.getLast().setRepetitionCounter(3);
 
         int wordSetSize = 2;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
