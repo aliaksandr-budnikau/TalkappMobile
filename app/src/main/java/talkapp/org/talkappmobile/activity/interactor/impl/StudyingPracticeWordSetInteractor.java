@@ -64,12 +64,14 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
+    public void initialiseExperience(OnPracticeWordSetListener listener) {
+        WordSet wordSet = wordSetService.getCurrent();
         if (wordSet.getTrainingExperience() == 0) {
             logger.i(TAG, "create new experience");
             experienceService.resetProgress(wordSet);
             wordSet.setTrainingExperience(0);
             wordSet.setStatus(FIRST_CYCLE);
+            wordSetService.save(wordSet);
         }
         if (SECOND_CYCLE.equals(wordSet.getStatus())) {
             logger.i(TAG, "enable repetition mode");
@@ -107,7 +109,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public boolean checkAnswer(String answer, final WordSet wordSet, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
@@ -118,6 +120,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
 
         int experience = experienceService.increaseExperience(wordSetId, 1);
+        WordSet wordSet = wordSetService.getCurrent();
         wordSet.setTrainingExperience(experience);
         listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
 
@@ -142,6 +145,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             }
             listener.onRightAnswer(sentence);
         }
+        wordSetService.save(wordSet);
         return true;
     }
 

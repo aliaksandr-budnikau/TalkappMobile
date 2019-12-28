@@ -85,7 +85,8 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(1);
 
         // when
-        interactor.initialiseExperience(wordSet, listener);
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
+        interactor.initialiseExperience(listener);
 
         // then
         verify(listener).onInitialiseExperience(wordSet);
@@ -103,7 +104,8 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setStatus(SECOND_CYCLE);
 
         // when
-        interactor.initialiseExperience(wordSet, listener);
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
+        interactor.initialiseExperience(listener);
 
         // then
         verify(wordSetService, times(0)).resetProgress(wordSet);
@@ -122,7 +124,8 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setTrainingExperience(2);
 
         // when
-        interactor.initialiseExperience(wordSet, listener);
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
+        interactor.initialiseExperience(listener);
 
         // then
         verify(wordSetService, times(0)).resetProgress(wordSet);
@@ -231,12 +234,13 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience() + 1);
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, false, listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
@@ -269,12 +273,13 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience());
         when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, false, listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
@@ -311,7 +316,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, false, listener);
 
         // then
         verify(listener, times(0)).onUpdateProgress(wordSet);
@@ -347,7 +352,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, false, listener);
 
         // then
         verify(listener, times(0)).onUpdateProgress(wordSet);
@@ -381,7 +386,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), wordSet, sentence, false, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, false, listener);
 
         // then
         verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);

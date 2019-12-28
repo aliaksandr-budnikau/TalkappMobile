@@ -192,7 +192,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         if (CHEAT_SEND_WRITE_ANSWER.equals(answer)) {
             presenter.checkRightAnswerCommandRecognized(wordSet);
         } else {
-            presenter.checkAnswerButtonClick(answer, wordSet);
+            presenter.checkAnswerButtonClick(answer);
         }
     }
 

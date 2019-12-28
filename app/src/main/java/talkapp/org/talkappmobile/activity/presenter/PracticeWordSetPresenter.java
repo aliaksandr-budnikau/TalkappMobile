@@ -136,7 +136,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void initialise(WordSet wordSet) {
-        interactor.initialiseExperience(wordSet, this);
+        interactor.initialiseExperience(this);
         interactor.initialiseWordsSequence(wordSet, this);
     }
 
@@ -152,9 +152,9 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         return interactor.getCurrentSentence();
     }
 
-    public void checkAnswerButtonClick(final String answer, WordSet wordSet) {
+    public void checkAnswerButtonClick(final String answer) {
         Sentence currentSentence = interactor.getCurrentSentence();
-        interactor.checkAnswer(answer, wordSet, currentSentence, answerHasBeenSeen, this);
+        interactor.checkAnswer(answer, currentSentence, answerHasBeenSeen, this);
     }
 
     public void playVoiceButtonClick() {
@@ -167,7 +167,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
 
     public void checkRightAnswerCommandRecognized(WordSet wordSet) {
         Sentence currentSentence = interactor.getCurrentSentence();
-        checkAnswerButtonClick(currentSentence.getText(), wordSet);
+        checkAnswerButtonClick(currentSentence.getText());
     }
 
     public void changeSentence(int wordSetId) {

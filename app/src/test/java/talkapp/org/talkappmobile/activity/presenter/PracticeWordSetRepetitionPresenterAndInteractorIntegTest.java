@@ -197,6 +197,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
+        wordSetService.saveCurrent(wordSet);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(interactor, firstCycleViewStrategy);
         Whitebox.setInternalState(interactor, "finishedWords", new LinkedList<>());
@@ -219,17 +220,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         String wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -243,17 +244,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(66);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -267,17 +268,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         shuffle(wordSet.getWords());
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(100);
         verify(view, times(0)).setRightAnswer(sentence.getText());
         verify(view, times(0)).showNextButton();
@@ -308,17 +309,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         String wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -342,17 +343,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -376,17 +377,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -410,17 +411,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -444,17 +445,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view).setRightAnswer(sentence.getText());
         verify(view).onExerciseGotAnswered();
@@ -478,17 +479,17 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
-        presenter.checkAnswerButtonClick("", wordSet);
+        presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
         reset(view);
 
         wrongWord = "Housd";
-        presenter.checkAnswerButtonClick(wrongWord, wordSet);
+        presenter.checkAnswerButtonClick(wrongWord);
         reset(view);
 
         sentence = interactor.getCurrentSentence();
         increaseCounter(sentencesCounter, sentence);
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
         verify(view).setProgress(33);
         verify(view, times(0)).showCongratulationMessage();
         verify(view).onUpdateUserExp(sentencesCounter.get(sentence.getText()));
@@ -515,7 +516,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         Sentence sentence = interactor.getCurrentSentence();
-        presenter.checkAnswerButtonClick(sentence.getText(), wordSet);
+        presenter.checkAnswerButtonClick(sentence.getText());
 
         verify(view).onExerciseGotAnswered();
     }

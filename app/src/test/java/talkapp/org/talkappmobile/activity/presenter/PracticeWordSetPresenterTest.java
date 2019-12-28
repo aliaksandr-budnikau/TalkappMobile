@@ -110,7 +110,7 @@ public class PracticeWordSetPresenterTest {
         presenter.initialise(wordSet);
 
         // then
-        verify(interactor).initialiseExperience(wordSet, presenter);
+        verify(interactor).initialiseExperience(presenter);
         verify(interactor).initialiseWordsSequence(wordSet, presenter);
     }
 
@@ -140,10 +140,10 @@ public class PracticeWordSetPresenterTest {
 
         // when
         when(interactor.getCurrentSentence()).thenReturn(sentence);
-        presenter.checkAnswerButtonClick(answer, wordSet);
+        presenter.checkAnswerButtonClick(answer);
 
         // then
-        verify(interactor).checkAnswer(answer, wordSet, sentence, false, presenter);
+        verify(interactor).checkAnswer(answer, sentence, false, presenter);
     }
 
     @Test

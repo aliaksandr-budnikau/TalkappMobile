@@ -38,6 +38,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private int maxTrainingProgress;
     private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
+    private WordSet wordSet;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -71,7 +72,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener) {
+    public void initialiseExperience(OnPracticeWordSetListener listener) {
+        wordSet = wordSetService.getCurrent();
         for (Word2Tokens word : wordSet.getWords()) {
             WordSet set = wordSetService.findById(word.getSourceWordSetId());
             wordsSources.add(new WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
@@ -110,7 +112,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public boolean checkAnswer(String answer, WordSet wordSet, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }

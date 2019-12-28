@@ -57,8 +57,8 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     }
 
     @Override
-    public void checkAnswerButtonClick(String answer, WordSet wordSet) {
-        presenter.checkAnswerButtonClick(answer, wordSet);
+    public void checkAnswerButtonClick(String answer) {
+        presenter.checkAnswerButtonClick(answer);
     }
 
     @Override

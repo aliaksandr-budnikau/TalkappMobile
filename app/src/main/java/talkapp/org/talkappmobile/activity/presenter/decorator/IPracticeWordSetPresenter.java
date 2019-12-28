@@ -27,7 +27,7 @@ public interface IPracticeWordSetPresenter {
 
     void checkRightAnswerCommandRecognized(WordSet wordSet);
 
-    void checkAnswerButtonClick(String answer, WordSet wordSet);
+    void checkAnswerButtonClick(String answer);
 
     void gotRecognitionResult(List<String> suggestedWords);
 

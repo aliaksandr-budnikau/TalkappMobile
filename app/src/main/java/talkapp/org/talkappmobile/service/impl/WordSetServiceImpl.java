@@ -256,4 +256,10 @@ public class WordSetServiceImpl implements WordSetService {
         }
         currentWordSetDao.save(currentWordSetMapping);
     }
+
+    @Override
+    public void save(WordSet wordSet) {
+        WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
+        wordSetDao.createNewOrUpdate(wordSetMapping);
+    }
 }

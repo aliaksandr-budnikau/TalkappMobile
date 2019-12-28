@@ -13,7 +13,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 public interface PracticeWordSetInteractor {
     Sentence getCurrentSentence();
 
-    void initialiseExperience(WordSet wordSet, OnPracticeWordSetListener listener);
+    void initialiseExperience(OnPracticeWordSetListener listener);
 
     void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener);
 
@@ -21,7 +21,7 @@ public interface PracticeWordSetInteractor {
 
     void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener);
 
-    boolean checkAnswer(String answer, WordSet wordSet, Sentence currentSentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener);
+    boolean checkAnswer(String answer, Sentence currentSentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener);
 
     void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 

@@ -33,4 +33,6 @@ public interface WordSetService {
     WordSet getCurrent();
 
     void saveCurrent(WordSet wordSet);
+
+    void save(WordSet wordSet);
 }
