@@ -63,12 +63,12 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
     }
 
     @Override
-    public void checkRightAnswerCommandRecognized(WordSet wordSet) {
+    public void checkRightAnswerCommandRecognized() {
         try {
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableCheckButton(false);
-            super.checkRightAnswerCommandRecognized(wordSet);
+            super.checkRightAnswerCommandRecognized();
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);

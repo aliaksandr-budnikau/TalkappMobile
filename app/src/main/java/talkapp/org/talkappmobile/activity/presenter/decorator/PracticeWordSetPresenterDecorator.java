@@ -52,8 +52,8 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     }
 
     @Override
-    public void checkRightAnswerCommandRecognized(WordSet wordSet) {
-        presenter.checkRightAnswerCommandRecognized(wordSet);
+    public void checkRightAnswerCommandRecognized() {
+        presenter.checkRightAnswerCommandRecognized();
     }
 
     @Override

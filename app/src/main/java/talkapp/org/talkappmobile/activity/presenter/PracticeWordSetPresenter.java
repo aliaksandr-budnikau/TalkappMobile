@@ -165,7 +165,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         this.voiceRecordUri = voiceRecordUri;
     }
 
-    public void checkRightAnswerCommandRecognized(WordSet wordSet) {
+    public void checkRightAnswerCommandRecognized() {
         Sentence currentSentence = interactor.getCurrentSentence();
         checkAnswerButtonClick(currentSentence.getText());
     }

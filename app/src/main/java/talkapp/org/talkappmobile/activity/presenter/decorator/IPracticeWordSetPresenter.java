@@ -25,7 +25,7 @@ public interface IPracticeWordSetPresenter {
 
     void enableButtonsAfterPronunciation();
 
-    void checkRightAnswerCommandRecognized(WordSet wordSet);
+    void checkRightAnswerCommandRecognized();
 
     void checkAnswerButtonClick(String answer);
 

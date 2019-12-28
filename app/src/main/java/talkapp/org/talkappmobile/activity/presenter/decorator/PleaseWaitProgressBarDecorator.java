@@ -89,11 +89,11 @@ public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDeco
     }
 
     @Override
-    public void checkRightAnswerCommandRecognized(final WordSet wordSet) {
+    public void checkRightAnswerCommandRecognized() {
         new SuperClassWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.checkRightAnswerCommandRecognized(wordSet);
+                PleaseWaitProgressBarDecorator.super.checkRightAnswerCommandRecognized();
             }
         }.execute();
     }
