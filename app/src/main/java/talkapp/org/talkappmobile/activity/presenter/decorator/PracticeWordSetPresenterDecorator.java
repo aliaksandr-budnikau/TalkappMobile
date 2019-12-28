@@ -17,8 +17,8 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     }
 
     @Override
-    public void nextButtonClick(int wordSetId) {
-        presenter.nextButtonClick(wordSetId);
+    public void nextButtonClick() {
+        presenter.nextButtonClick();
     }
 
     @Override

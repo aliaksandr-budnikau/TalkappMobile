@@ -11,7 +11,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 
 public interface IPracticeWordSetPresenter {
 
-    void nextButtonClick(int wordSetId);
+    void nextButtonClick();
 
     void initialise(WordSet wordSet);
 

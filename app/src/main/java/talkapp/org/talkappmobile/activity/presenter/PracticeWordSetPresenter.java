@@ -140,8 +140,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         interactor.initialiseWordsSequence(wordSet, this);
     }
 
-    public void nextButtonClick(int wordSetId) {
-        Word2Tokens word = interactor.peekAnyNewWordByWordSetId(wordSetId);
+    public void nextButtonClick() {
+        Word2Tokens word = interactor.peekAnyNewWordByWordSetId();
         if (word == null) {
             return;
         }

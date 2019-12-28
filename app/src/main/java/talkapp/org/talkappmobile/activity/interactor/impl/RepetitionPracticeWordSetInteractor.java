@@ -84,7 +84,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public Word2Tokens peekAnyNewWordByWordSetId(int wordSetId) {
+    public Word2Tokens peekAnyNewWordByWordSetId() {
         LinkedList<Word2Tokens> words = new LinkedList<>();
         for (WordSource word : wordsSources) {
             WordSet set = wordSetService.findById(word.getWordSetId());

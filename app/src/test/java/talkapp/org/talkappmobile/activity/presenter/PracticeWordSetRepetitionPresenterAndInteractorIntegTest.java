@@ -215,7 +215,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -239,7 +239,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -263,7 +263,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -304,7 +304,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -328,7 +328,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -338,7 +338,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setProgress(0);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -362,7 +362,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -372,7 +372,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setProgress(0);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -396,7 +396,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 4
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -406,7 +406,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setProgress(0);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -430,7 +430,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 5
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -440,7 +440,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setProgress(0);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -464,7 +464,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         reset(view);
 
         // sentence 6
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -474,7 +474,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).setProgress(0);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);
 
@@ -509,7 +509,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         createPresenter(interactor);
 
         presenter.initialise(wordSet);
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);

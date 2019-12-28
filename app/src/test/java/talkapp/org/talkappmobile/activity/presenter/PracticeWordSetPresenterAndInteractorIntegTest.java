@@ -137,6 +137,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
+        experienceService.saveCurrent(wordSet);
 
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDao.createNewOrUpdate(wordSetMapping);
@@ -152,7 +153,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -186,7 +187,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -220,7 +221,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -253,7 +254,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 4
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -280,7 +281,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 5
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -307,7 +308,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 6
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -342,7 +343,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 1
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -376,7 +377,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 2
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -390,7 +391,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setProgress(16);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -423,7 +424,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 3
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -437,7 +438,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setProgress(33);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -470,7 +471,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 4
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -484,7 +485,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setProgress(50);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -511,7 +512,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 5
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -525,7 +526,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setProgress(66);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -552,7 +553,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         reset(view);
 
         // sentence 6
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -566,7 +567,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setProgress(83);
         reset(view);
 
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
@@ -597,7 +598,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         createPresenter();
 
         presenter.initialise(wordSet);
-        presenter.nextButtonClick(wordSet.getId());
+        presenter.nextButtonClick();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         reset(view);

@@ -121,8 +121,8 @@ public class PracticeWordSetPresenterTest {
         Word2Tokens word1 = new Word2Tokens("sdfsd", "sdfsd", wordSetId);
 
         // when
-        when(interactor.peekAnyNewWordByWordSetId(wordSetId)).thenReturn(word1);
-        presenter.nextButtonClick(word1.getSourceWordSetId());
+        when(interactor.peekAnyNewWordByWordSetId()).thenReturn(word1);
+        presenter.nextButtonClick();
 
         // then
         verify(interactor).initialiseSentence(word1, presenter);

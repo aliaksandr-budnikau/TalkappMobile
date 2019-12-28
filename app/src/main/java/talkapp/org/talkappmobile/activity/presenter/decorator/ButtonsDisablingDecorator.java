@@ -17,12 +17,12 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
     }
 
     @Override
-    public void nextButtonClick(int wordSetId) {
+    public void nextButtonClick() {
         try {
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableNextButton(false);
-            super.nextButtonClick(wordSetId);
+            super.nextButtonClick();
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);
