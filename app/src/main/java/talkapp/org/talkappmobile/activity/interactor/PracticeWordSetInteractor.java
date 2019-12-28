@@ -27,7 +27,7 @@ public interface PracticeWordSetInteractor {
 
     void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener);
 
-    void changeSentence(int wordSetId, OnPracticeWordSetListener listener);
+    void changeSentence(OnPracticeWordSetListener listener);
 
     void changeSentence(Word2Tokens currentWord, List<Sentence> sentences, OnPracticeWordSetListener listener);
 

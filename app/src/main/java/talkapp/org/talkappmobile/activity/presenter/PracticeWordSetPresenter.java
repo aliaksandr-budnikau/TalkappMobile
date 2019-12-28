@@ -170,8 +170,8 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         checkAnswerButtonClick(currentSentence.getText());
     }
 
-    public void changeSentence(int wordSetId) {
-        interactor.changeSentence(wordSetId, this);
+    public void changeSentence() {
+        interactor.changeSentence(this);
     }
 
     public void changeSentence(List<Sentence> sentences, Word2Tokens currentWord) {

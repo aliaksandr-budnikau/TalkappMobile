@@ -162,7 +162,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
@@ -196,7 +196,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
@@ -230,7 +230,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
@@ -352,7 +352,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
@@ -400,7 +400,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();
@@ -447,7 +447,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
 
-        presenter.changeSentence(wordSet.getId());
+        presenter.changeSentence();
 
         verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
         verify(view).showSentenceChangedSuccessfullyMessage();

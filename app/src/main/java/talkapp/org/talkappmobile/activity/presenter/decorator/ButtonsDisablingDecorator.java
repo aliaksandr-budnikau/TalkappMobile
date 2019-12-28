@@ -115,11 +115,11 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
     }
 
     @Override
-    public void changeSentence(int wordSetId) {
+    public void changeSentence() {
         try {
             view.setEnableCheckButton(false);
             view.setEnableNextButton(false);
-            super.changeSentence(wordSetId);
+            super.changeSentence();
         } finally {
             view.setEnableCheckButton(true);
             view.setEnableNextButton(true);

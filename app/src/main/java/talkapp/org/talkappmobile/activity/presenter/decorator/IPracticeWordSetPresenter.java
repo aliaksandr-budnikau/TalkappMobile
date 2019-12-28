@@ -45,5 +45,5 @@ public interface IPracticeWordSetPresenter {
 
     Sentence getCurrentSentence();
 
-    void changeSentence(int wordSetId);
+    void changeSentence();
 }

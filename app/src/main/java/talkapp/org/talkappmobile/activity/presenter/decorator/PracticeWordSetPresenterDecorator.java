@@ -102,7 +102,7 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     }
 
     @Override
-    public void changeSentence(int wordSetId) {
-        presenter.changeSentence(wordSetId);
+    public void changeSentence() {
+        presenter.changeSentence();
     }
 }
