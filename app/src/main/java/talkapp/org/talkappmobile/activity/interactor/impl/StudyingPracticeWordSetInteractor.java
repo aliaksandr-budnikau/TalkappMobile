@@ -39,7 +39,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final WordTranslationService wordTranslationService;
     private int currentWordIndex;
     private Sentence currentSentence;
-    private Integer wordSetId;
 
     public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
                                              SentenceService sentenceService,
@@ -85,8 +84,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
-        wordSetId = word.getSourceWordSetId();
-        WordSet wordSet = wordSetService.findById(wordSetId);
+        WordSet wordSet = wordSetService.findById(word.getSourceWordSetId());
         this.currentWordIndex = wordSet.getWords().indexOf(word);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
@@ -118,7 +116,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
             return false;
         }
-
+        int wordSetId = wordSetService.getCurrent().getId();
         int experience = experienceService.increaseExperience(wordSetId, 1);
         WordSet wordSet = wordSetService.getCurrent();
         wordSet.setTrainingExperience(experience);
@@ -151,7 +149,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void refreshSentence(OnPracticeWordSetListener listener) {
-        WordSet wordSet = wordSetService.findById(wordSetId);
+        WordSet wordSet = wordSetService.getCurrent();
         Word2Tokens word = wordSet.getWords().get(currentWordIndex);
         initialiseSentence(word, listener);
     }
@@ -179,7 +177,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     protected Word2Tokens getCurrentWord() {
-        WordSet wordSet = wordSetService.findById(wordSetId);
+        WordSet wordSet = wordSetService.getCurrent();
         return wordSet.getWords().get(currentWordIndex);
     }
 }

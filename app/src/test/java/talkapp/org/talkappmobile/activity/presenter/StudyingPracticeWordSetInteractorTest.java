@@ -172,7 +172,6 @@ public class StudyingPracticeWordSetInteractorTest {
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
@@ -201,7 +200,6 @@ public class StudyingPracticeWordSetInteractorTest {
         translation.setTranslation("fdsf");
 
         // when
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenThrow(new LocalCacheIsEmptyException(""));
         when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
@@ -239,7 +237,6 @@ public class StudyingPracticeWordSetInteractorTest {
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience() + 1);
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
@@ -276,7 +273,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience());
         when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
@@ -314,8 +310,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
@@ -349,9 +344,8 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
@@ -384,9 +378,8 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("");
 
         // when
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
+        when(wordSetService.getCurrent()).thenReturn(wordSet);
         Whitebox.setInternalState(interactor, "currentWordIndex", 0);
-        Whitebox.setInternalState(interactor, "wordSetId", wordSet.getId());
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
