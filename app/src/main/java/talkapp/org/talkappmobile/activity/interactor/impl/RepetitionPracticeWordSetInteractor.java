@@ -38,7 +38,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private int maxTrainingProgress;
     private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
-    private WordSet wordSet;
+    private int trainingExperience;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -73,7 +73,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
-        wordSet = wordSetService.getCurrent();
+        WordSet wordSet = wordSetService.getCurrent();
         for (Word2Tokens word : wordSet.getWords()) {
             WordSet set = wordSetService.findById(word.getSourceWordSetId());
             wordsSources.add(new WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
@@ -81,6 +81,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
+        trainingExperience = 0;
         wordSet.setTrainingExperience(0);
         listener.onInitialiseExperience(wordSet);
     }
@@ -124,14 +125,14 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
+        trainingExperience++;
         finishedWords.add(currentWord);
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
+        listener.onUpdateProgress(trainingExperience, maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == maxTrainingProgress) {
+        if (trainingExperience == maxTrainingProgress) {
             logger.i(TAG, "training finished");
             listener.onTrainingFinished();
         } else {
