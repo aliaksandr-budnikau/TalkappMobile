@@ -112,12 +112,12 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public boolean checkAnswer(String answer, Sentence sentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, Sentence sentence, OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
 
-        if (answerHasBeenSeen) {
+        if (isAnswerHasBeenSeen()) {
             int counter = exerciseService.markAsForgottenAgain(getCurrentWord());
             listener.onForgottenAgain(counter);
             listener.onRightAnswer(sentence);

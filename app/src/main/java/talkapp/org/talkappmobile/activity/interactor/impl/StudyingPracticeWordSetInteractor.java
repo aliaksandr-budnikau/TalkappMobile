@@ -109,12 +109,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public boolean checkAnswer(String answer, final Sentence sentence, boolean answerHasBeenSeen, final OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, final Sentence sentence, final OnPracticeWordSetListener listener) {
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
 
-        if (answerHasBeenSeen) {
+        if (isAnswerHasBeenSeen()) {
             listener.onRightAnswer(sentence);
             return false;
         }

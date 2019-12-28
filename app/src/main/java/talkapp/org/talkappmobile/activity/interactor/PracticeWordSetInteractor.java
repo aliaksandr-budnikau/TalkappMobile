@@ -5,6 +5,7 @@ import android.net.Uri;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
+import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -21,7 +22,7 @@ public interface PracticeWordSetInteractor {
 
     void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener);
 
-    boolean checkAnswer(String answer, Sentence currentSentence, boolean answerHasBeenSeen, OnPracticeWordSetListener listener);
+    boolean checkAnswer(String answer, Sentence currentSentence, OnPracticeWordSetListener listener);
 
     void playVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 
@@ -38,4 +39,8 @@ public interface PracticeWordSetInteractor {
     void refreshSentence(OnPracticeWordSetListener listener);
 
     void saveCurrentWordSet(WordSet wordSet);
+
+    void resetSentenceState(OnPracticeWordSetListener listener);
+
+    void markAnswerHasBeenSeen();
 }

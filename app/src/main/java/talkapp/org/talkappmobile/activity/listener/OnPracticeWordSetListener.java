@@ -46,4 +46,6 @@ public interface OnPracticeWordSetListener {
     void onForgottenAgain(int counter);
 
     void onOriginalTextClickEMPrepared(Word2Tokens word);
+
+    void onSentencesFound();
 }

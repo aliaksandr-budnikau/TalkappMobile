@@ -15,7 +15,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
-    private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
 
     public PracticeWordSetPresenter(PracticeWordSetInteractor interactor,
@@ -35,8 +34,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void refreshSentence() {
-        answerHasBeenSeen = false;
-        viewStrategy.onSentencesFound();
+        interactor.resetSentenceState(this);
     }
 
     @Override
@@ -130,6 +128,11 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         viewStrategy.onOriginalTextClickEMPrepared(word);
     }
 
+    @Override
+    public void onSentencesFound() {
+        viewStrategy.onSentencesFound();
+    }
+
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence();
         viewStrategy.onGotRecognitionResult(currentSentence, result);
@@ -155,7 +158,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
 
     public void checkAnswerButtonClick(final String answer) {
         Sentence currentSentence = interactor.getCurrentSentence();
-        interactor.checkAnswer(answer, currentSentence, answerHasBeenSeen, this);
+        interactor.checkAnswer(answer, currentSentence, this);
     }
 
     public void playVoiceButtonClick() {
@@ -184,7 +187,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
     }
 
     public void markAnswerHasBeenSeen() {
-        this.answerHasBeenSeen = true;
+        interactor.markAnswerHasBeenSeen();
     }
 
     public void disableButtonsDuringPronunciation() {

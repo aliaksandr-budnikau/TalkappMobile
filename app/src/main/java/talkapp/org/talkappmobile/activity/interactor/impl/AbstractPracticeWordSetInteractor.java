@@ -35,6 +35,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
     private final WordSetService wordSetService;
+    private boolean answerHasBeenSeen;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
@@ -50,6 +51,10 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.audioStuffFactory = audioStuffFactory;
+    }
+
+    public boolean isAnswerHasBeenSeen() {
+        return answerHasBeenSeen;
     }
 
     protected boolean checkAccuracyOfAnswer(String answer, Word2Tokens word, Sentence sentence, OnPracticeWordSetListener listener) {
@@ -180,6 +185,17 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void saveCurrentWordSet(WordSet wordSet) {
         wordSetService.saveCurrent(wordSet);
+    }
+
+    @Override
+    public void resetSentenceState(OnPracticeWordSetListener listener) {
+        answerHasBeenSeen = false;
+        listener.onSentencesFound();
+    }
+
+    @Override
+    public void markAnswerHasBeenSeen() {
+        this.answerHasBeenSeen = true;
     }
 
     protected abstract Word2Tokens getCurrentWord();

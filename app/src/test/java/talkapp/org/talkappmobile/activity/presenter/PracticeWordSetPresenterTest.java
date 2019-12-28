@@ -143,7 +143,7 @@ public class PracticeWordSetPresenterTest {
         presenter.checkAnswerButtonClick(answer);
 
         // then
-        verify(interactor).checkAnswer(answer, sentence, false, presenter);
+        verify(interactor).checkAnswer(answer, sentence, presenter);
     }
 
     @Test
