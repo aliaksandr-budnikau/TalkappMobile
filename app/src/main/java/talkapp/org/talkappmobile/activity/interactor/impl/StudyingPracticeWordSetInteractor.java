@@ -23,9 +23,6 @@ import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Arrays.asList;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
-import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = StudyingPracticeWordSetInteractor.class.getSimpleName();
@@ -64,21 +61,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
+        PracticeWordSetInteractorStrategy state = getStrategy();
+        state.initialiseExperience(listener);
         WordSet wordSet = wordSetService.getCurrent();
-        if (wordSet.getTrainingExperience() == 0) {
-            logger.i(TAG, "create new experience");
-            experienceService.resetProgress(wordSet);
-            wordSet.setTrainingExperience(0);
-            wordSet.setStatus(FIRST_CYCLE);
-            wordSetService.save(wordSet);
-        }
-        if (SECOND_CYCLE.equals(wordSet.getStatus())) {
-            logger.i(TAG, "enable repetition mode");
-            listener.onEnableRepetitionMode();
-        } else {
-            logger.i(TAG, "disable repetition mode for state {} ", wordSet.getStatus());
-        }
-        logger.i(TAG, "experience was initialized");
         listener.onInitialiseExperience(wordSet);
     }
 
@@ -121,29 +106,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         WordSet wordSet = wordSetService.getCurrent();
         wordSet.setTrainingExperience(experience);
         listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
+        wordSetService.save(wordSet);
 
         exerciseService.moveCurrentWordToNextState(wordSetId);
         double expScore = userExpService.increaseForRepetition(1, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
-            logger.i(TAG, "training half finished");
-            experienceService.moveToAnotherState(wordSetId, SECOND_CYCLE);
-            wordSet.setStatus(SECOND_CYCLE);
-            listener.onTrainingHalfFinished(sentence);
-            listener.onEnableRepetitionMode();
-        } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
-            logger.i(TAG, "training finished");
-            experienceService.moveToAnotherState(wordSetId, FINISHED);
-            exerciseService.shiftSentences(getCurrentWord());
-            wordSet.setStatus(FINISHED);
-            listener.onTrainingFinished();
-        } else {
-            if (wordSet.getStatus() == SECOND_CYCLE) {
-                exerciseService.shiftSentences(getCurrentWord());
-            }
-            listener.onRightAnswer(sentence);
-        }
-        wordSetService.save(wordSet);
         return true;
     }
 
@@ -152,6 +119,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         WordSet wordSet = wordSetService.getCurrent();
         Word2Tokens word = wordSet.getWords().get(currentWordIndex);
         initialiseSentence(word, listener);
+    }
+
+    @Override
+    public void finishWord(OnPracticeWordSetListener listener) {
+        getStrategy().finishWord(listener);
     }
 
     @Override
@@ -176,7 +148,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    protected Word2Tokens getCurrentWord() {
+    public Word2Tokens getCurrentWord() {
         WordSet wordSet = wordSetService.getCurrent();
         return wordSet.getWords().get(currentWordIndex);
     }

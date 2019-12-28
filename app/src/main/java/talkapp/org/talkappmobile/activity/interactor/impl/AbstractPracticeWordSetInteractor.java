@@ -37,6 +37,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final WordSetService wordSetService;
     private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
+    private PracticeWordSetInteractorStrategy strategy;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
                                              Context context,
@@ -52,6 +53,10 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.audioStuffFactory = audioStuffFactory;
+    }
+
+    public PracticeWordSetInteractorStrategy getStrategy() {
+        return strategy;
     }
 
     public boolean isAnswerHasBeenSeen() {
@@ -204,7 +209,12 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.voiceRecordUri = voiceRecordUri;
     }
 
-    protected abstract Word2Tokens getCurrentWord();
+    @Override
+    public void changeStrategy(PracticeWordSetInteractorStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public abstract Word2Tokens getCurrentWord();
 
     protected abstract void setCurrentSentence(Sentence sentence);
 }

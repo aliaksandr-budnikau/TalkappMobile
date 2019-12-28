@@ -132,13 +132,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         exerciseService.shiftSentences(getCurrentWord());
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
-        if (trainingExperience == maxTrainingProgress) {
-            logger.i(TAG, "training finished");
-            listener.onTrainingFinished();
-        } else {
-            logger.i(TAG, "right answer");
-            listener.onRightAnswer(sentence);
-        }
         return true;
     }
 
@@ -147,6 +140,17 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         WordSet wordSet = wordSetService.findById(currentWord.wordSetId);
         Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
         initialiseSentence(word, listener);
+    }
+
+    @Override
+    public void finishWord(OnPracticeWordSetListener listener) {
+        if (trainingExperience == maxTrainingProgress) {
+            logger.i(TAG, "training finished");
+            listener.onTrainingFinished();
+        } else {
+            logger.i(TAG, "right answer");
+            listener.onRightAnswer(getCurrentSentence());
+        }
     }
 
     @Override
@@ -165,7 +169,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    protected Word2Tokens getCurrentWord() {
+    public Word2Tokens getCurrentWord() {
         if (currentWord == null) {
             return null;
         }

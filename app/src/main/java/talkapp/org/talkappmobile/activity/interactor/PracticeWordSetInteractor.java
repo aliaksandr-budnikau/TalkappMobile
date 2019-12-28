@@ -4,8 +4,8 @@ import android.net.Uri;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.interactor.impl.PracticeWordSetInteractorStrategy;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -13,6 +13,8 @@ import talkapp.org.talkappmobile.model.WordSet;
 
 public interface PracticeWordSetInteractor {
     Sentence getCurrentSentence();
+
+    Word2Tokens getCurrentWord();
 
     void initialiseExperience(OnPracticeWordSetListener listener);
 
@@ -45,4 +47,8 @@ public interface PracticeWordSetInteractor {
     void markAnswerHasBeenSeen();
 
     void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
+
+    void changeStrategy(PracticeWordSetInteractorStrategy strategy);
+
+    void finishWord(OnPracticeWordSetListener listener);
 }

@@ -157,7 +157,10 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
 
     public void checkAnswerButtonClick(final String answer) {
         Sentence currentSentence = interactor.getCurrentSentence();
-        interactor.checkAnswer(answer, currentSentence, this);
+        boolean result = interactor.checkAnswer(answer, currentSentence, this);
+        if (result) {
+            interactor.finishWord(this);
+        }
     }
 
     public void playVoiceButtonClick() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -76,7 +79,15 @@ public class StudyingPracticeWordSetInteractorTest {
     @Mock
     private Logger logger;
     @InjectMocks
-    private StudyingPracticeWordSetInteractor interactor;
+    private StudyingPracticeWordSetInteractor origInteractor;
+    private PracticeWordSetInteractor interactor;
+
+
+    @Before
+    public void setUp() throws Exception {
+        interactor = new StrategySwitcherDecorator(origInteractor, wordSetService, experienceUtils, exerciseService);
+        Whitebox.setInternalState(origInteractor, "currentWordIndex", 0);
+    }
 
     @Test
     public void initialiseExperience_experienceIsNull() {
@@ -172,7 +183,6 @@ public class StudyingPracticeWordSetInteractorTest {
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
         // then
@@ -205,7 +215,6 @@ public class StudyingPracticeWordSetInteractorTest {
         when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
         when(sentenceService.convertToSentence(translation)).thenReturn(selectedSentence);
         when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.initialiseSentence(word, listener);
 
         // then
@@ -236,13 +245,10 @@ public class StudyingPracticeWordSetInteractorTest {
         when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience() + 1);
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
-        verify(listener).onRightAnswer(sentence);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
@@ -272,17 +278,13 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(wordSetService.getCurrent()).thenReturn(wordSet);
-        when(wordSetService.findById(wordSet.getId())).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience());
-        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
         verify(listener, times(0)).onRightAnswer(sentence);
-        verify(listener).onTrainingFinished();
-        verify(wordSetService).moveToAnotherState(wordSet.getId(), FINISHED);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
@@ -311,7 +313,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         when(wordSetService.getCurrent()).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
@@ -346,7 +347,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(wordSetService.getCurrent()).thenReturn(wordSet);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
@@ -379,7 +379,6 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(wordSetService.getCurrent()).thenReturn(wordSet);
-        Whitebox.setInternalState(interactor, "currentWordIndex", 0);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
