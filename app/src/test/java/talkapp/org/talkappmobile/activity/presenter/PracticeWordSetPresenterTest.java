@@ -111,7 +111,7 @@ public class PracticeWordSetPresenterTest {
 
         // then
         verify(interactor).initialiseExperience(presenter);
-        verify(interactor).initialiseWordsSequence(wordSet, presenter);
+        verify(interactor).initialiseWordsSequence(presenter);
     }
 
     @Test

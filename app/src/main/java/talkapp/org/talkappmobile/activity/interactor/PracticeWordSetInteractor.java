@@ -15,7 +15,7 @@ public interface PracticeWordSetInteractor {
 
     void initialiseExperience(OnPracticeWordSetListener listener);
 
-    void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener);
+    void initialiseWordsSequence(OnPracticeWordSetListener listener);
 
     Word2Tokens peekAnyNewWordByWordSetId();
 

@@ -137,7 +137,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
 
     public void initialise(WordSet wordSet) {
         interactor.initialiseExperience(this);
-        interactor.initialiseWordsSequence(wordSet, this);
+        interactor.initialiseWordsSequence(this);
     }
 
     public void nextButtonClick() {

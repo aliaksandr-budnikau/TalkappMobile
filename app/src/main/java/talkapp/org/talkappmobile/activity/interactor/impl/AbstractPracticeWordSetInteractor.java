@@ -103,7 +103,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
-    public void initialiseWordsSequence(WordSet wordSet, OnPracticeWordSetListener listener) {
+    public void initialiseWordsSequence(OnPracticeWordSetListener listener) {
+        WordSet wordSet = wordSetService.getCurrent();
         exerciseService.createSomeIfNecessary(wordSet.getWords());
     }
 
