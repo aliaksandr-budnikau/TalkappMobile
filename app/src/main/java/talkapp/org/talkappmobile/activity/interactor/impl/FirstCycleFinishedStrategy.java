@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
+import talkapp.org.talkappmobile.model.PracticeState;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.WordSetService;
 
@@ -17,10 +18,10 @@ class FirstCycleFinishedStrategy extends PracticeWordSetInteractorStrategy {
 
     @Override
     void finishWord(OnPracticeWordSetListener listener) {
-        WordSet wordSet = wordSetService.getCurrent();
-        wordSetService.moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
-        wordSet.setStatus(SECOND_CYCLE);
-        wordSetService.saveCurrent(wordSet);
+        PracticeState practiceState = wordSetService.getCurrent();
+        wordSetService.moveToAnotherState(practiceState.getWordSet().getId(), SECOND_CYCLE);
+        practiceState.getWordSet().setStatus(SECOND_CYCLE);
+        wordSetService.saveCurrent(practiceState);
         listener.onTrainingHalfFinished(getInteractor().getCurrentSentence());
         listener.onEnableRepetitionMode();
     }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
+import talkapp.org.talkappmobile.model.PracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -72,17 +73,17 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
-        WordSet wordSet = wordSetService.getCurrent();
-        for (Word2Tokens word : wordSet.getWords()) {
+        PracticeState practiceState = wordSetService.getCurrent();
+        for (Word2Tokens word : practiceState.getWordSet().getWords()) {
             WordSet set = wordSetService.findById(word.getSourceWordSetId());
             wordsSources.add(new WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
         }
-        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
+        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(practiceState.getWordSet()) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
-        wordSet.setTrainingExperience(0);
-        wordSetService.saveCurrent(wordSet);
-        listener.onInitialiseExperience(wordSet);
+        practiceState.getWordSet().setTrainingExperience(0);
+        wordSetService.saveCurrent(practiceState);
+        listener.onInitialiseExperience(practiceState.getWordSet());
     }
 
     @Override
@@ -124,11 +125,11 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        WordSet wordSet = wordSetService.getCurrent();
-        wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
-        wordSetService.saveCurrent(wordSet);
+        PracticeState practiceState = wordSetService.getCurrent();
+        practiceState.getWordSet().setTrainingExperience(practiceState.getWordSet().getTrainingExperience() + 1);
+        wordSetService.saveCurrent(practiceState);
         finishedWords.add(currentWord);
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
+        listener.onUpdateProgress(practiceState.getWordSet().getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);

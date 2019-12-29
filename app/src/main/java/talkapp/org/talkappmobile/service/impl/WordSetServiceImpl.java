@@ -18,6 +18,7 @@ import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.PracticeState;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
@@ -187,7 +188,7 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public WordSet getCurrent() {
+    public PracticeState getCurrent() {
         CurrentWordSetMapping mapping = currentWordSetDao.getById(CURRENT_WORD_SET_ID);
         LinkedList<CurrentWordSetMapping.WordSource> wordSources;
         try {
@@ -204,12 +205,12 @@ public class WordSetServiceImpl implements WordSetService {
             wordSet.setWords(words);
             wordSet.setId(0);
             wordSet.setTrainingExperience(mapping.getTrainingExperience());
-            return wordSet;
+            return new PracticeState(wordSet);
         } else {
             int wordSetId = wordSources.get(0).getWordSetId();
             WordSet wordSet = findById(wordSetId);
             wordSet.setWords(words);
-            return wordSet;
+            return new PracticeState(wordSet);
         }
     }
 
@@ -241,15 +242,15 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
-    public void saveCurrent(WordSet wordSet) {
+    public void saveCurrent(PracticeState state) {
         LinkedList<CurrentWordSetMapping.WordSource> wordSources = new LinkedList<>();
-        for (Word2Tokens word : wordSet.getWords()) {
+        for (Word2Tokens word : state.getWordSet().getWords()) {
             WordSet origWordSet = findById(word.getSourceWordSetId());
             int wordIndex = origWordSet.getWords().indexOf(word);
             wordSources.add(new CurrentWordSetMapping.WordSource(word.getSourceWordSetId(), wordIndex));
         }
         CurrentWordSetMapping currentWordSetMapping = new CurrentWordSetMapping();
-        currentWordSetMapping.setTrainingExperience(wordSet.getTrainingExperience());
+        currentWordSetMapping.setTrainingExperience(state.getWordSet().getTrainingExperience());
         currentWordSetMapping.setId(CURRENT_WORD_SET_ID);
         try {
             currentWordSetMapping.setWords(mapper.writeValueAsString(wordSources));

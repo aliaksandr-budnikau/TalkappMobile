@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetVocabularyListener;
+import talkapp.org.talkappmobile.model.PracticeState;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -53,8 +54,8 @@ public class PracticeWordSetVocabularyInteractor {
     }
 
     public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation, OnPracticeWordSetVocabularyListener listener) {
-        WordSet wordSet = wordSetService.getCurrent();
-        Word2Tokens oldWord2Token = wordSet.getWords().get(editedItemPosition);
+        PracticeState practiceState = wordSetService.getCurrent();
+        Word2Tokens oldWord2Token = practiceState.getWordSet().getWords().get(editedItemPosition);
         if (oldWord2Token.getSourceWordSetId() < wordSetService.getCustomWordSetsStartsSince()) {
             listener.onUpdateNotCustomWordSet();
             return;
