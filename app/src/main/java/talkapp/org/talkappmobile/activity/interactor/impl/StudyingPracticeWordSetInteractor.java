@@ -6,7 +6,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.PracticeState;
+import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -57,8 +57,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     public void initialiseExperience(OnPracticeWordSetListener listener) {
         PracticeWordSetInteractorStrategy state = getStrategy();
         state.initialiseExperience(listener);
-        PracticeState practiceState = wordSetService.getCurrent();
-        listener.onInitialiseExperience(practiceState.getWordSet());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        listener.onInitialiseExperience(currentPracticeState.getWordSet());
     }
 
     @Override
@@ -95,12 +95,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
             return false;
         }
-        int wordSetId = wordSetService.getCurrent().getWordSet().getId();
+        int wordSetId = wordSetService.getCurrentPracticeState().getWordSet().getId();
         int experience = experienceService.increaseExperience(wordSetId, 1);
-        PracticeState practiceState = wordSetService.getCurrent();
-        practiceState.getWordSet().setTrainingExperience(experience);
-        listener.onUpdateProgress(practiceState.getWordSet().getTrainingExperience(), practiceState.getWordSet().getWords().size() * 2);
-        wordSetService.save(practiceState.getWordSet());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        currentPracticeState.getWordSet().setTrainingExperience(experience);
+        listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), currentPracticeState.getWordSet().getWords().size() * 2);
+        wordSetService.save(currentPracticeState.getWordSet());
 
         exerciseService.moveCurrentWordToNextState(wordSetId);
         double expScore = userExpService.increaseForRepetition(1, WORD_SET_PRACTICE);
@@ -110,19 +110,19 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public void refreshSentence(OnPracticeWordSetListener listener) {
-        PracticeState practiceState = wordSetService.getCurrent();
-        Word2Tokens word = practiceState.getWordSet().getWords().get(currentWordIndex);
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Word2Tokens word = currentPracticeState.getWordSet().getWords().get(currentWordIndex);
         initialiseSentence(word, listener);
     }
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
-        PracticeState practiceState = wordSetService.getCurrent();
-        Word2Tokens currentWord = exerciseService.getCurrentWord(practiceState.getWordSet().getId());
-        exerciseService.putOffCurrentWord(practiceState.getWordSet().getId());
-        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(practiceState.getWordSet().getId());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Word2Tokens currentWord = exerciseService.getCurrentWord(currentPracticeState.getWordSet().getId());
+        exerciseService.putOffCurrentWord(currentPracticeState.getWordSet().getId());
+        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(currentPracticeState.getWordSet().getId());
         Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
-        exerciseService.markNewCurrentWordByWordSetIdAndWord(practiceState.getWordSet().getId(), newCurrentWord);
+        exerciseService.markNewCurrentWordByWordSetIdAndWord(currentPracticeState.getWordSet().getId(), newCurrentWord);
         return newCurrentWord;
     }
 
@@ -138,7 +138,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public Word2Tokens getCurrentWord() {
-        PracticeState practiceState = wordSetService.getCurrent();
-        return practiceState.getWordSet().getWords().get(currentWordIndex);
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        return currentPracticeState.getWordSet().getWords().get(currentWordIndex);
     }
 }

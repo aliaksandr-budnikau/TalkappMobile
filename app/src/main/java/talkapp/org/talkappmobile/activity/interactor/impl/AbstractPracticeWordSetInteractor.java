@@ -10,7 +10,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.PracticeState;
+import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -116,8 +116,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void initialiseWordsSequence(OnPracticeWordSetListener listener) {
-        PracticeState practiceState = wordSetService.getCurrent();
-        exerciseService.createSomeIfNecessary(practiceState.getWordSet().getWords());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        exerciseService.createSomeIfNecessary(currentPracticeState.getWordSet().getWords());
     }
 
     @Override
@@ -137,8 +137,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void changeSentence(OnPracticeWordSetListener listener) {
-        PracticeState practiceState = wordSetService.getCurrent();
-        Word2Tokens word = exerciseService.getCurrentWord(practiceState.getWordSet().getId());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Word2Tokens word = exerciseService.getCurrentWord(currentPracticeState.getWordSet().getId());
         initialiseSentence(word, listener);
         listener.onSentenceChanged();
     }
@@ -196,7 +196,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void saveCurrentWordSet(WordSet wordSet) {
-        wordSetService.saveCurrent(new PracticeState(wordSet));
+        wordSetService.saveCurrentPracticeState(new CurrentPracticeState(wordSet));
     }
 
     @Override
