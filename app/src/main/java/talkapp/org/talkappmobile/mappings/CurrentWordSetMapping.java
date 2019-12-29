@@ -8,12 +8,16 @@ public class CurrentWordSetMapping {
     public static final String CURRENT_WORD_SET_TABLE = "CurrentWordSet";
     public static final String ID_FN = "id";
     public static final String WORDS_FN = "words";
+    public static final String TRAINING_EXPERIENCE_FN = "trainingExperience";
 
     @DatabaseField(id = true, unique = true, canBeNull = false, columnName = ID_FN)
     private String id;
 
     @DatabaseField(canBeNull = false, columnName = WORDS_FN)
     private String words;
+
+    @DatabaseField(canBeNull = false, columnName = TRAINING_EXPERIENCE_FN)
+    private int trainingExperience;
 
     public CurrentWordSetMapping() {
     }
@@ -32,6 +36,14 @@ public class CurrentWordSetMapping {
 
     public void setWords(String words) {
         this.words = words;
+    }
+
+    public int getTrainingExperience() {
+        return trainingExperience;
+    }
+
+    public void setTrainingExperience(int trainingExperience) {
+        this.trainingExperience = trainingExperience;
     }
 
     @Override

@@ -120,6 +120,11 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     @Override
+    public void finishWord(OnPracticeWordSetListener listener) {
+        strategy.finishWord(listener);
+    }
+
+    @Override
     public void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener) {
         sentence.setContentScore(score);
         if (sentenceService.classifySentence(sentence)) {

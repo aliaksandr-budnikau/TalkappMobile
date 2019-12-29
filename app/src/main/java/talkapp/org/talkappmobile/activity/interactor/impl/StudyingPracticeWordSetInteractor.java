@@ -122,11 +122,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public void finishWord(OnPracticeWordSetListener listener) {
-        getStrategy().finishWord(listener);
-    }
-
-    @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
         WordSet wordSet = wordSetService.getCurrent();
         Word2Tokens currentWord = exerciseService.getCurrentWord(wordSet.getId());

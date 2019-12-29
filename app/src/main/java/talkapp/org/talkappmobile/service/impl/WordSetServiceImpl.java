@@ -203,6 +203,7 @@ public class WordSetServiceImpl implements WordSetService {
             WordSet wordSet = new WordSet();
             wordSet.setWords(words);
             wordSet.setId(0);
+            wordSet.setTrainingExperience(mapping.getTrainingExperience());
             return wordSet;
         } else {
             int wordSetId = wordSources.get(0).getWordSetId();
@@ -248,6 +249,7 @@ public class WordSetServiceImpl implements WordSetService {
             wordSources.add(new CurrentWordSetMapping.WordSource(word.getSourceWordSetId(), wordIndex));
         }
         CurrentWordSetMapping currentWordSetMapping = new CurrentWordSetMapping();
+        currentWordSetMapping.setTrainingExperience(wordSet.getTrainingExperience());
         currentWordSetMapping.setId(CURRENT_WORD_SET_ID);
         try {
             currentWordSetMapping.setWords(mapper.writeValueAsString(wordSources));

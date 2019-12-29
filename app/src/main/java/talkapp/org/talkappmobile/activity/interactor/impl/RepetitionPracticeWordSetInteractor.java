@@ -38,7 +38,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private int maxTrainingProgress;
     private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
-    private int trainingExperience;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -81,8 +80,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
-        trainingExperience = 0;
         wordSet.setTrainingExperience(0);
+        wordSetService.saveCurrent(wordSet);
         listener.onInitialiseExperience(wordSet);
     }
 
@@ -125,9 +124,11 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        trainingExperience++;
+        WordSet wordSet = wordSetService.getCurrent();
+        wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
+        wordSetService.saveCurrent(wordSet);
         finishedWords.add(currentWord);
-        listener.onUpdateProgress(trainingExperience, maxTrainingProgress);
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
         double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
@@ -140,17 +141,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         WordSet wordSet = wordSetService.findById(currentWord.wordSetId);
         Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
         initialiseSentence(word, listener);
-    }
-
-    @Override
-    public void finishWord(OnPracticeWordSetListener listener) {
-        if (trainingExperience == maxTrainingProgress) {
-            logger.i(TAG, "training finished");
-            listener.onTrainingFinished();
-        } else {
-            logger.i(TAG, "right answer");
-            listener.onRightAnswer(getCurrentSentence());
-        }
     }
 
     @Override

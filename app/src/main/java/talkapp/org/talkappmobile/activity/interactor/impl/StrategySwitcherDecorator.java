@@ -7,6 +7,7 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE;
 
 public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorator {
@@ -35,7 +36,13 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
     @Override
     public void finishWord(OnPracticeWordSetListener listener) {
         WordSet wordSet = wordSetService.getCurrent();
-        if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
+        if (wordSet.getId() == 0) {
+            if (wordSet.getTrainingExperience() == wordSet.getWords().size()) {
+                super.changeStrategy(new RepetitionFinishedStrategy(this));
+            } else {
+                super.changeStrategy(new InsideRepetitionCycleStrategy(this));
+            }
+        } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet) / 2) {
             super.changeStrategy(new FirstCycleFinishedStrategy(this, wordSetService));
         } else if (wordSet.getTrainingExperience() == experienceUtils.getMaxTrainingProgress(wordSet)) {
             super.changeStrategy(new SecondCycleFinishedStrategy(this, wordSetService, progressService));

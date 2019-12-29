@@ -23,6 +23,7 @@ import java.util.Map;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
@@ -198,7 +199,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
-        presenter = new PracticeWordSetPresenter(interactor, firstCycleViewStrategy);
+        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, wordSetService, experienceUtils, exerciseService), firstCycleViewStrategy);
         Whitebox.setInternalState(interactor, "finishedWords", new LinkedList<>());
     }
 
