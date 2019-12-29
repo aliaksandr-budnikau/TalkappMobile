@@ -31,7 +31,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final UserExpService userExpService;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
-    private int currentWordIndex;
     private Sentence currentSentence;
 
     public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
@@ -64,7 +63,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
         WordSet wordSet = wordSetService.findById(word.getSourceWordSetId());
-        this.currentWordIndex = wordSet.getWords().indexOf(word);
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(wordSet.getId(), wordSet.getWords().indexOf(word)));
+        wordSetService.saveCurrentPracticeState(currentPracticeState);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             try {
@@ -111,7 +112,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void refreshSentence(OnPracticeWordSetListener listener) {
         CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
-        Word2Tokens word = currentPracticeState.getWordSet().getWords().get(currentWordIndex);
+        int wordIndex = currentPracticeState.getCurrentWord().getWordIndex();
+        Word2Tokens word = currentPracticeState.getWordSet().getWords().get(wordIndex);
         initialiseSentence(word, listener);
     }
 
@@ -139,6 +141,11 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public Word2Tokens getCurrentWord() {
         CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
-        return currentPracticeState.getWordSet().getWords().get(currentWordIndex);
+        CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
+        int wordIndex = 0;
+        if (currentWord != null) {
+            wordIndex = currentWord.getWordIndex();
+        }
+        return currentPracticeState.getWordSet().getWords().get(wordIndex);
     }
 }

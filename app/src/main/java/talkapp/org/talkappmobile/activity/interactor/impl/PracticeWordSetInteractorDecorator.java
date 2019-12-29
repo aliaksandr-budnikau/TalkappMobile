@@ -24,11 +24,6 @@ class PracticeWordSetInteractorDecorator implements PracticeWordSetInteractor {
     }
 
     @Override
-    public Word2Tokens getCurrentWord() {
-        return interactor.getCurrentWord();
-    }
-
-    @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
         interactor.initialiseExperience(listener);
     }

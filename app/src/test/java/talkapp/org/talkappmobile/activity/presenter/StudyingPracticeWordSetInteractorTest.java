@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +86,6 @@ public class StudyingPracticeWordSetInteractorTest {
     @Before
     public void setUp() throws Exception {
         interactor = new StrategySwitcherDecorator(origInteractor, wordSetService, experienceUtils, exerciseService);
-        Whitebox.setInternalState(origInteractor, "currentWordIndex", 0);
     }
 
     @Test
@@ -184,6 +182,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
+        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
         interactor.initialiseSentence(word, listener);
 
         // then
@@ -216,6 +215,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
         when(sentenceService.convertToSentence(translation)).thenReturn(selectedSentence);
         when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
+        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
         interactor.initialiseSentence(word, listener);
 
         // then

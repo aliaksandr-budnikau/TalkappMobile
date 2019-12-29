@@ -14,8 +14,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 public interface PracticeWordSetInteractor {
     Sentence getCurrentSentence();
 
-    Word2Tokens getCurrentWord();
-
     void initialiseExperience(OnPracticeWordSetListener listener);
 
     void initialiseWordsSequence(OnPracticeWordSetListener listener);
