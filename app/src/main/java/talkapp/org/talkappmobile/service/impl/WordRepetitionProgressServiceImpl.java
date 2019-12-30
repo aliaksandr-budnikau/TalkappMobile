@@ -265,15 +265,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         exerciseDao.createNewOrUpdate(mapping);
     }
 
-    @Override
-    public Word2Tokens getCurrentWord(int wordSetId) {
-        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        if (isNotThereCurrentExercise(current)) {
-            return null;
-        }
-        return getWord2Tokens(current.get(0));
-    }
-
     private Word2Tokens getWord2Tokens(WordRepetitionProgressMapping mapping) {
         WordSetMapping wordSetMapping = wordSetDao.findById(mapping.getWordSetId());
         WordSet wordSet = wordSetMapper.toDto(wordSetMapping);

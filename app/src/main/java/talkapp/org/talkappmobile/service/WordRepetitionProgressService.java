@@ -27,8 +27,6 @@ public interface WordRepetitionProgressService {
 
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(int olderThenInHours);
 
-    Word2Tokens getCurrentWord(int wordSetId);
-
     void putOffCurrentWord(int wordSetId);
 
     void moveCurrentWordToNextState(int wordSetId);

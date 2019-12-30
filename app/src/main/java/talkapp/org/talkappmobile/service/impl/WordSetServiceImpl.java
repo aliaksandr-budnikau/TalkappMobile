@@ -16,7 +16,6 @@ import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
@@ -26,7 +25,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -45,7 +43,6 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final WordSetMapper wordSetMapper;
     private final ObjectMapper mapper;
-    private final SentenceMapper sentenceMapper;
     private int wordSetSize = 12;
 
     public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
@@ -53,7 +50,6 @@ public class WordSetServiceImpl implements WordSetService {
         this.currentWordSetDao = currentWordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
         this.wordSetMapper = new WordSetMapper(mapper);
-        this.sentenceMapper = new SentenceMapper(mapper);
         this.mapper = mapper;
         LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, CurrentWordSetMapping.WordSource.class);
     }
@@ -219,11 +215,6 @@ public class WordSetServiceImpl implements WordSetService {
             currentPracticeState.setCurrentSentence(sentence);
             return currentPracticeState;
         }
-    }
-
-    @Nullable
-    private Sentence getSentenceDTO(List<SentenceMapping> sentenceList) {
-        return sentenceList.isEmpty() ? null : sentenceMapper.toDto(sentenceList.get(0));
     }
 
     @NonNull

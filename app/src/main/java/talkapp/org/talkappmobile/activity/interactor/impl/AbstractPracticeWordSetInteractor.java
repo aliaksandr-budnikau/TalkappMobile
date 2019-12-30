@@ -142,8 +142,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void changeSentence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
-        Word2Tokens word = exerciseService.getCurrentWord(currentPracticeState.getWordSet().getId());
+        Word2Tokens word = getCurrentWord();
         initialiseSentence(word, listener);
         listener.onSentenceChanged();
     }

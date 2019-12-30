@@ -118,7 +118,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
         CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
-        Word2Tokens currentWord = exerciseService.getCurrentWord(currentPracticeState.getWordSet().getId());
+        Word2Tokens currentWord = getCurrentWord();
         exerciseService.putOffCurrentWord(currentPracticeState.getWordSet().getId());
         List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(currentPracticeState.getWordSet().getId());
         Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
