@@ -49,13 +49,14 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
 
     @Before
     public void setup() {
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+        ObjectMapper mapper = new ObjectMapper();
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(mock(WordTranslationDao.class), new WordTranslationMapper(new ObjectMapper())));
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(mock(WordTranslationDao.class), mapper));
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(mock(WordSetService.class));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());

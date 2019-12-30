@@ -137,7 +137,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordTranslationService != null) {
             return wordTranslationService;
         }
-        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao(), getWordTranslationMapper());
+        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao(), getMapper());
         return wordTranslationService;
     }
 

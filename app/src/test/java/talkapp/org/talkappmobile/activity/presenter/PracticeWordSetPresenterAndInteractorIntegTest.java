@@ -89,7 +89,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), new WordTranslationMapper(mapper));
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         when(mockServiceFactoryBean.getMapper()).thenReturn(new ObjectMapper());
 

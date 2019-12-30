@@ -66,7 +66,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
@@ -116,7 +115,7 @@ public class ChangeSentenceTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), new WordTranslationMapper(mapper));
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         expAuditDaoMock = daoHelper.getExpAuditDao();
         userExpService = new UserExpServiceImpl(expAuditDaoMock, mock(ExpAuditMapper.class));

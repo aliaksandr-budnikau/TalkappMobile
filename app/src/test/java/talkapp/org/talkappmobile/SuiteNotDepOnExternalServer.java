@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImplTest;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImplTest;
 import talkapp.org.talkappmobile.service.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBeanTest;
-import talkapp.org.talkappmobile.service.impl.RandomWordsCombinatorBeanTest;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.RequestExecutorTest;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImplTest;
@@ -48,7 +47,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         RightAnswerTextViewPresenterTest.class,
         MainActivityDefaultFragmentInteractorTest.class,
         RefereeServiceImplTest.class,
-        RandomWordsCombinatorBeanTest.class,
         SentenceServiceImplTest.class,
         EqualityScorerBeanTest.class,
         TextUtilsImplTest.class,

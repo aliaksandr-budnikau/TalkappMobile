@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.WordsCombinator;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Arrays.asList;
@@ -58,8 +57,6 @@ public class StudyingPracticeWordSetInteractorTest {
     AudioStuffFactory audioStuffFactory;
     @Mock
     WordRepetitionProgressService exerciseService;
-    @Mock
-    private WordsCombinator wordsCombinator;
     @Mock
     private SentenceService sentenceService;
     @Mock

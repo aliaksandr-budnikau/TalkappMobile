@@ -57,7 +57,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -108,7 +107,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), daoHelper.getSentenceDao(), experienceUtils, new WordSetMapper(mapper), mapper);
-        wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), new WordTranslationMapper(mapper));
+        wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), mapper);
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService, mapper);
         interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, userExpService, experienceUtils, wordSetService, wordTranslationService, context, new AudioStuffFactoryBean());

@@ -78,7 +78,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao, wordTranslationMapper);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao, mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);

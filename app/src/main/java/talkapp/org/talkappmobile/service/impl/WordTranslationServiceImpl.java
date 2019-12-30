@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
@@ -18,18 +20,20 @@ import static java.util.Arrays.asList;
 public class WordTranslationServiceImpl implements WordTranslationService {
     public static final String RUSSIAN_LANGUAGE = "russian";
     private final WordTranslationDao wordTranslationDao;
-    private final WordTranslationMapper mapper;
+    private final ObjectMapper mapper;
+    private final WordTranslationMapper wordTranslationMapper;
 
-    public WordTranslationServiceImpl(WordTranslationDao wordTranslationDao, WordTranslationMapper mapper) {
+    public WordTranslationServiceImpl(WordTranslationDao wordTranslationDao, ObjectMapper mapper) {
         this.wordTranslationDao = wordTranslationDao;
         this.mapper = mapper;
+        this.wordTranslationMapper = new WordTranslationMapper(mapper);
     }
 
     @Override
     public void saveWordTranslations(List<WordTranslation> wordTranslations) {
         List<WordTranslationMapping> mappings = new LinkedList<>();
         for (WordTranslation wordTranslation : wordTranslations) {
-            WordTranslationMapping mapping = mapper.toMapping(wordTranslation);
+            WordTranslationMapping mapping = wordTranslationMapper.toMapping(wordTranslation);
             if (StringUtils.isEmpty(mapping.getId())) {
                 mapping.setId(valueOf(System.currentTimeMillis()));
             }
@@ -62,6 +66,6 @@ public class WordTranslationServiceImpl implements WordTranslationService {
         if (translationMapping == null) {
             return null;
         }
-        return mapper.toDto(translationMapping);
+        return wordTranslationMapper.toDto(translationMapping);
     }
 }
