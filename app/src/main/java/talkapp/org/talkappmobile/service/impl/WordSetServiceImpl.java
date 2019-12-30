@@ -13,7 +13,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
@@ -43,8 +42,6 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final CurrentWordSetDao currentWordSetDao;
     @NonNull
-    private final SentenceDao sentenceDao;
-    @NonNull
     private final NewWordSetDraftDao newWordSetDraftDao;
     @NonNull
     private final WordSetExperienceUtils experienceUtils;
@@ -54,13 +51,12 @@ public class WordSetServiceImpl implements WordSetService {
     private final SentenceMapper sentenceMapper;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull SentenceDao sentenceDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
         this.currentWordSetDao = currentWordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
-        this.sentenceDao = sentenceDao;
         this.experienceUtils = experienceUtils;
-        this.wordSetMapper = wordSetMapper;
+        this.wordSetMapper = new WordSetMapper(mapper);
         this.sentenceMapper = new SentenceMapper(mapper);
         this.mapper = mapper;
         LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, CurrentWordSetMapping.WordSource.class);

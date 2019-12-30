@@ -34,7 +34,6 @@ import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -65,7 +64,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         daoHelper = new DaoHelper();
         WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
-        WordSetServiceImpl experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), daoHelper.getSentenceDao(), experienceUtils, new WordSetMapper(mapper), mapper);
+        WordSetServiceImpl experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), experienceUtils, mapper);
 
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
 

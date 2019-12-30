@@ -128,7 +128,7 @@ public class ChangeSentenceTest {
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
         wordSetMapper = new WordSetMapper(mapper);
-        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), newWordSetDraftDaoMock, daoHelper.getSentenceDao(), experienceUtils, wordSetMapper, mapper);
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), newWordSetDraftDaoMock, experienceUtils, mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
