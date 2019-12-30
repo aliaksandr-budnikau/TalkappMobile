@@ -87,8 +87,11 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordRepetitionProgressMapping exercise = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         List<SentenceIdMapping> ids = new LinkedList<>();
         for (Sentence sentence : sentences) {
-            String[] split = sentence.getId().split("#");
-            ids.add(new SentenceIdMapping(split[0], Integer.valueOf(split[2])));
+            try {
+                ids.add(mapper.readValue(sentence.getId(), SentenceIdMapping.class));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         setSentencesIds(exercise, ids);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());

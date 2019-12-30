@@ -63,7 +63,7 @@ public class PresenterFactory {
 
     public IPracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
         WordRepetitionProgressService progressService = serviceFactory.getPracticeWordSetExerciseRepository();
-        SentenceServiceImpl sentenceService = new SentenceServiceImpl(backendServerFactory.get(), progressService);
+        SentenceServiceImpl sentenceService = new SentenceServiceImpl(backendServerFactory.get(), progressService, serviceFactory.getMapper());
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
 

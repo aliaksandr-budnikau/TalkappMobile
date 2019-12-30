@@ -38,9 +38,4 @@ public class SentenceIdMapping {
     public int getLengthInWords() {
         return lengthInWords;
     }
-
-    @Override
-    public String toString() {
-        return sentenceId + "#" + word + "#" + lengthInWords;
-    }
 }

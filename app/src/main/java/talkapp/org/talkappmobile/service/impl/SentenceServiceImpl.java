@@ -2,6 +2,9 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,10 +30,12 @@ public class SentenceServiceImpl implements SentenceService {
     public static final int WORDS_NUMBER = 6;
     private final DataServer server;
     private final WordRepetitionProgressService exerciseService;
+    private final ObjectMapper mapper;
 
-    public SentenceServiceImpl(DataServer server, WordRepetitionProgressService exerciseService) {
+    public SentenceServiceImpl(DataServer server, WordRepetitionProgressService exerciseService, ObjectMapper mapper) {
         this.server = server;
         this.exerciseService = exerciseService;
+        this.mapper = mapper;
     }
 
     @Override
@@ -106,7 +111,12 @@ public class SentenceServiceImpl implements SentenceService {
     @Override
     public Sentence convertToSentence(WordTranslation wordTranslation) {
         Sentence sentence = new Sentence();
-        sentence.setId(new SentenceIdMapping(valueOf(System.currentTimeMillis()), 6).toString());
+        SentenceIdMapping sentenceIdMapping = new SentenceIdMapping(valueOf(System.currentTimeMillis()), 6);
+        try {
+            sentence.setId(mapper.writeValueAsString(sentenceIdMapping));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         sentence.setTokens(getTextTokens(wordTranslation));
         HashMap<String, String> translations = new HashMap<>();
         translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());

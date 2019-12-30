@@ -123,6 +123,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getMapper()).thenReturn(new ObjectMapper());
 
         expAuditDaoMock = daoHelper.getExpAuditDao();
         userExpService = new UserExpServiceImpl(expAuditDaoMock, mock(ExpAuditMapper.class));

@@ -52,11 +52,7 @@ public class SentenceMapper {
 
     public Sentence toDto(SentenceMapping mapping) {
         Sentence sentence = new Sentence();
-        try {
-            sentence.setId(mapper.readValue(mapping.getId(), SentenceIdMapping.class).toString());
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        sentence.setId(mapping.getId());
         sentence.setText(mapping.getText());
         sentence.setContentScore(mapping.getContentScore() == null ? null : SentenceContentScore.valueOf(mapping.getContentScore()));
         Map<String, String> translation = null;
