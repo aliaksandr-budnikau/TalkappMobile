@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.activity.interactor.StatisticActivityInteractor
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
+import talkapp.org.talkappmobile.activity.interactor.impl.UserExperienceDecorator;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
@@ -68,11 +69,13 @@ public class PresenterFactory {
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
 
         WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
-        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(wordSetService, sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), progressService, serviceFactory.getUserExpService(), context, audioStuffFactory);
-        PracticeWordSetInteractor interactor = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, wordSetService, experienceUtils, progressService);
+        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(wordSetService, sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), progressService, context, audioStuffFactory);
+        StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, wordSetService, experienceUtils, progressService);
+        PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, wordSetService, serviceFactory.getUserExpService(), serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, serviceFactory.getUserExpService(), experienceUtils, wordSetService, serviceFactory.getWordTranslationService(), context, audioStuffFactory);
-            interactor = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, wordSetService, experienceUtils, progressService);
+            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, experienceUtils, wordSetService, serviceFactory.getWordTranslationService(), context, audioStuffFactory);
+            strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, wordSetService, experienceUtils, progressService);
+            interactor = new UserExperienceDecorator(strategySwitcherDecorator, wordSetService, serviceFactory.getUserExpService(), serviceFactory.getPracticeWordSetExerciseRepository());
         }
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(interactor, viewStrategy);
 

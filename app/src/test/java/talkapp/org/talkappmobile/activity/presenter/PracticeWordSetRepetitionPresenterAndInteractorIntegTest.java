@@ -22,8 +22,10 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
+import talkapp.org.talkappmobile.activity.interactor.impl.UserExperienceDecorator;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
@@ -78,12 +80,13 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private WordRepetitionProgressService exerciseService;
     private UserExpService userExpService;
     private WordSet wordSet;
-    private RepetitionPracticeWordSetInteractor interactor;
+    private PracticeWordSetInteractor interactor;
     private Context context;
     private WordSetExperienceUtilsImpl experienceUtils;
     private WordSetService wordSetService;
     private DaoHelper daoHelper;
     private WordTranslationService wordTranslationService;
+    private RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
 
     @Before
     public void setup() throws SQLException {
@@ -109,8 +112,9 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
         wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), mapper);
         SentenceService sentenceService = new SentenceServiceImpl(server, exerciseService, mapper);
-        interactor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, exerciseService, userExpService, experienceUtils, wordSetService, wordTranslationService, context, new AudioStuffFactoryBean());
+        repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
+                logger, exerciseService, experienceUtils, wordSetService, wordTranslationService, context, new AudioStuffFactoryBean());
+        this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, wordSetService, userExpService, exerciseService);
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }
 
@@ -119,7 +123,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         daoHelper.releaseHelper();
     }
 
-    private void createPresenter(RepetitionPracticeWordSetInteractor interactor) throws JsonProcessingException, SQLException {
+    private void createPresenter(PracticeWordSetInteractor interactor) throws JsonProcessingException, SQLException {
         int id = 0;
         int trainingExperience = 0;
         WordSetProgressStatus status = WordSetProgressStatus.FINISHED;
@@ -199,7 +203,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, wordSetService, experienceUtils, exerciseService), firstCycleViewStrategy);
-        Whitebox.setInternalState(interactor, "finishedWords", new LinkedList<>());
+        Whitebox.setInternalState(repetitionPracticeWordSetInteractor, "finishedWords", new LinkedList<>());
     }
 
     private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {

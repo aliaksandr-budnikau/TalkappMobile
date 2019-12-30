@@ -339,6 +339,12 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
+    public int getRepetitionCounter(Word2Tokens word) {
+        WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word);
+        return exercise.getRepetitionCounter();
+    }
+
+    @Override
     public int markAsForgottenAgain(Word2Tokens word) {
         WordRepetitionProgressMapping exercise = getWordRepetitionProgressMapping(word);
         int counter = exercise.getForgettingCounter();

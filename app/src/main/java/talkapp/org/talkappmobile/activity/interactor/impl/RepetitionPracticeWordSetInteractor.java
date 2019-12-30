@@ -16,21 +16,18 @@ import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static java.util.Collections.singletonList;
-import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
     private final SentenceService sentenceService;
     private final Logger logger;
     private final WordRepetitionProgressService exerciseService;
-    private final UserExpService userExpService;
     private final WordSetExperienceUtils experienceUtils;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
@@ -43,7 +40,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             RefereeService refereeService,
             Logger logger,
             WordRepetitionProgressService exerciseService,
-            UserExpService userExpService,
             WordSetExperienceUtils experienceUtils,
             WordSetService wordSetService,
             WordTranslationService wordTranslationService,
@@ -53,7 +49,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
-        this.userExpService = userExpService;
         this.experienceUtils = experienceUtils;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
@@ -122,8 +117,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
-        double expScore = userExpService.increaseForRepetition(repetitionCounter, WORD_SET_PRACTICE);
-        listener.onUpdateUserExp(expScore);
         return true;
     }
 

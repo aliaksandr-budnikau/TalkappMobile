@@ -15,19 +15,16 @@ import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Arrays.asList;
-import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private final SentenceService sentenceService;
     private final WordRepetitionProgressService exerciseService;
-    private final UserExpService userExpService;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
 
@@ -37,7 +34,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              Logger logger,
                                              WordTranslationService wordTranslationService,
                                              WordRepetitionProgressService exerciseService,
-                                             UserExpService userExpService,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, wordTranslationService);
@@ -45,7 +41,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
         this.exerciseService = exerciseService;
-        this.userExpService = userExpService;
     }
 
     @Override
@@ -102,8 +97,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         wordSetService.save(wordSet);
         listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
-        double expScore = userExpService.increaseForRepetition(1, WORD_SET_PRACTICE);
-        listener.onUpdateUserExp(expScore);
         return true;
     }
 
