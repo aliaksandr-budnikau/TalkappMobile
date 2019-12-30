@@ -83,7 +83,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideCurrentWordSetDao(), provideNewWordSetDraftDao(), provideExperienceUtils(), getMapper());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideCurrentWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetExperienceService;
     }
 

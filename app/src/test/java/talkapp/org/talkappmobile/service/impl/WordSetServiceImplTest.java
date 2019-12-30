@@ -41,7 +41,7 @@ public class WordSetServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        wordSetService = new WordSetServiceImpl(wordSetDao, currentWordSetDao, newWordSetDraftDao, experienceUtils, new ObjectMapper());
+        wordSetService = new WordSetServiceImpl(wordSetDao, currentWordSetDao, newWordSetDraftDao, new ObjectMapper());
     }
 
     @Test

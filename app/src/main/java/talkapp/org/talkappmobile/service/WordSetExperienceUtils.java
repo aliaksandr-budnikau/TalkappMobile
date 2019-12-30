@@ -5,6 +5,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 /**
  * @author Budnikau Aliaksandr
  */
+@Deprecated
 public interface WordSetExperienceUtils {
     int getProgress(double experience, double maxTrainingExperience);
 

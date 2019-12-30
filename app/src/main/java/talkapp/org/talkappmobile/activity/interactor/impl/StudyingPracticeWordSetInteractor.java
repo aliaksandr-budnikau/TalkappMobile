@@ -26,7 +26,6 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private final SentenceService sentenceService;
-    private final WordSetService experienceService;
     private final WordRepetitionProgressService exerciseService;
     private final UserExpService userExpService;
     private final WordSetService wordSetService;
@@ -36,7 +35,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              SentenceService sentenceService,
                                              RefereeService refereeService,
                                              Logger logger,
-                                             WordSetService experienceService,
                                              WordTranslationService wordTranslationService,
                                              WordRepetitionProgressService exerciseService,
                                              UserExpService userExpService,
@@ -46,7 +44,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
-        this.experienceService = experienceService;
         this.exerciseService = exerciseService;
         this.userExpService = userExpService;
     }
@@ -95,14 +92,16 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
             return false;
         }
-        int wordSetId = wordSetService.getCurrentPracticeState().getWordSet().getId();
-        int experience = experienceService.increaseExperience(wordSetId, 1);
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
-        currentPracticeState.getWordSet().setTrainingExperience(experience);
-        listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), currentPracticeState.getWordSet().getWords().size() * 2);
-        wordSetService.save(currentPracticeState.getWordSet());
-
-        exerciseService.moveCurrentWordToNextState(wordSetId);
+        WordSet wordSet = wordSetService.getCurrentPracticeState().getWordSet();
+        int maxTrainingProgress = getMaxTrainingProgress(wordSet);
+        if (wordSet.getTrainingExperience() > maxTrainingProgress) {
+            wordSet.setTrainingExperience(maxTrainingProgress);
+        } else {
+            wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
+        }
+        wordSetService.save(wordSet);
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
+        exerciseService.moveCurrentWordToNextState(wordSet.getId());
         double expScore = userExpService.increaseForRepetition(1, WORD_SET_PRACTICE);
         listener.onUpdateUserExp(expScore);
         return true;
@@ -136,5 +135,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             wordIndex = currentWord.getWordIndex();
         }
         return currentPracticeState.getWordSet().getWords().get(wordIndex);
+    }
+
+    private int getMaxTrainingProgress(WordSet wordSet) {
+        return wordSet.getWords().size() * 2;
     }
 }

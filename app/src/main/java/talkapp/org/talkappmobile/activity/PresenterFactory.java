@@ -68,7 +68,7 @@ public class PresenterFactory {
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
 
         WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
-        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(wordSetService, sentenceService, refereeService, logger, wordSetService, serviceFactory.getWordTranslationService(), progressService, serviceFactory.getUserExpService(), context, audioStuffFactory);
+        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(wordSetService, sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), progressService, serviceFactory.getUserExpService(), context, audioStuffFactory);
         PracticeWordSetInteractor interactor = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, wordSetService, experienceUtils, progressService);
         if (repetitionMode) {
             RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, serviceFactory.getUserExpService(), experienceUtils, wordSetService, serviceFactory.getWordTranslationService(), context, audioStuffFactory);

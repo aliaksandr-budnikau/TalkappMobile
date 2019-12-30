@@ -25,7 +25,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
@@ -44,18 +43,15 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final NewWordSetDraftDao newWordSetDraftDao;
     @NonNull
-    private final WordSetExperienceUtils experienceUtils;
-    @NonNull
     private final WordSetMapper wordSetMapper;
     private final ObjectMapper mapper;
     private final SentenceMapper sentenceMapper;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
         this.currentWordSetDao = currentWordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
-        this.experienceUtils = experienceUtils;
         this.wordSetMapper = new WordSetMapper(mapper);
         this.sentenceMapper = new SentenceMapper(mapper);
         this.mapper = mapper;
@@ -68,20 +64,6 @@ public class WordSetServiceImpl implements WordSetService {
         wordSetMapping.setTrainingExperience(0);
         wordSetMapping.setStatus(FIRST_CYCLE.name());
         wordSetDao.createNewOrUpdate(wordSetMapping);
-    }
-
-    @Override
-    public int increaseExperience(int wordSetId, int value) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(wordSetId);
-        int experience = wordSetMapping.getTrainingExperience() + value;
-        WordSet wordSet = wordSetMapper.toDto(wordSetMapping);
-        if (experience > experienceUtils.getMaxTrainingProgress(wordSet)) {
-            wordSetMapping.setTrainingExperience(experienceUtils.getMaxTrainingProgress(wordSet));
-        } else {
-            wordSetMapping.setTrainingExperience(experience);
-        }
-        wordSetDao.createNewOrUpdate(wordSetMapping);
-        return wordSetMapping.getTrainingExperience();
     }
 
     @Override

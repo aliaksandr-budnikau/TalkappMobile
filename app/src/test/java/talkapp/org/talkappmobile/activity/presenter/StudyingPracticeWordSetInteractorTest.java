@@ -242,7 +242,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience() + 1);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
@@ -277,7 +276,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        when(wordSetService.increaseExperience(wordSet.getId(), 1)).thenReturn(wordSet.getTrainingExperience());
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
 
         // then
