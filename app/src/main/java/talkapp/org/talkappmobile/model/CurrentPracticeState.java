@@ -6,6 +6,7 @@ public class CurrentPracticeState {
 
     private final WordSet wordSet;
     private WordSource currentWord;
+    private Sentence currentSentence;
 
     public CurrentPracticeState(WordSet wordSet) {
         this.wordSet = wordSet;
@@ -21,6 +22,14 @@ public class CurrentPracticeState {
 
     public void setCurrentWord(WordSource currentWord) {
         this.currentWord = currentWord;
+    }
+
+    public Sentence getCurrentSentence() {
+        return currentSentence;
+    }
+
+    public void setCurrentSentence(Sentence currentSentence) {
+        this.currentSentence = currentSentence;
     }
 
     public static class WordSource implements Serializable {

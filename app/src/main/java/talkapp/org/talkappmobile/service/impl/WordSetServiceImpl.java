@@ -13,18 +13,22 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
+import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -39,20 +43,25 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final CurrentWordSetDao currentWordSetDao;
     @NonNull
+    private final SentenceDao sentenceDao;
+    @NonNull
     private final NewWordSetDraftDao newWordSetDraftDao;
     @NonNull
     private final WordSetExperienceUtils experienceUtils;
     @NonNull
     private final WordSetMapper wordSetMapper;
     private final ObjectMapper mapper;
+    private final SentenceMapper sentenceMapper;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull SentenceDao sentenceDao, @NonNull WordSetExperienceUtils experienceUtils, @NonNull WordSetMapper wordSetMapper, @NonNull ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
         this.currentWordSetDao = currentWordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
+        this.sentenceDao = sentenceDao;
         this.experienceUtils = experienceUtils;
         this.wordSetMapper = wordSetMapper;
+        this.sentenceMapper = new SentenceMapper(mapper);
         this.mapper = mapper;
         LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, CurrentWordSetMapping.WordSource.class);
     }
@@ -202,6 +211,14 @@ public class WordSetServiceImpl implements WordSetService {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        Sentence sentence = null;
+        if (mapping.getCurrentSentence() != null) {
+            try {
+                sentence = mapper.readValue(mapping.getCurrentSentence(), Sentence.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+        }
 
         LinkedList<Word2Tokens> words = getWords(wordSources);
         Integer origWordSetId = getWordSetId(wordSources);
@@ -213,6 +230,7 @@ public class WordSetServiceImpl implements WordSetService {
             wordSet.setTrainingExperience(mapping.getTrainingExperience());
             CurrentPracticeState currentPracticeState = new CurrentPracticeState(wordSet);
             currentPracticeState.setCurrentWord(currentWord);
+            currentPracticeState.setCurrentSentence(sentence);
             return currentPracticeState;
         } else {
             int wordSetId = wordSources.get(0).getWordSetId();
@@ -220,19 +238,28 @@ public class WordSetServiceImpl implements WordSetService {
             wordSet.setWords(words);
             CurrentPracticeState currentPracticeState = new CurrentPracticeState(wordSet);
             currentPracticeState.setCurrentWord(currentWord);
+            currentPracticeState.setCurrentSentence(sentence);
             return currentPracticeState;
         }
+    }
+
+    @Nullable
+    private Sentence getSentenceDTO(List<SentenceMapping> sentenceList) {
+        return sentenceList.isEmpty() ? null : sentenceMapper.toDto(sentenceList.get(0));
     }
 
     @NonNull
     private LinkedList<Word2Tokens> getWords(LinkedList<CurrentWordSetMapping.WordSource> wordSources) {
         LinkedList<Word2Tokens> words = new LinkedList<>();
         for (CurrentWordSetMapping.WordSource wordSource : wordSources) {
-            WordSet origWordSet = findById(wordSource.getWordSetId());
-            Word2Tokens word = origWordSet.getWords().get(wordSource.getWordIndex());
-            words.add(word);
+            words.add(getWord2Tokens(wordSource.getWordSetId(), wordSource.getWordIndex()));
         }
         return words;
+    }
+
+    private Word2Tokens getWord2Tokens(int wordSetId, int wordIndex) {
+        WordSet origWordSet = findById(wordSetId);
+        return origWordSet.getWords().get(wordIndex);
     }
 
     @Nullable
@@ -254,12 +281,21 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public void saveCurrentPracticeState(CurrentPracticeState state) {
         LinkedList<CurrentWordSetMapping.WordSource> wordSources = new LinkedList<>();
-        for (Word2Tokens word : state.getWordSet().getWords()) {
+        List<Word2Tokens> words = state.getWordSet().getWords();
+        for (Word2Tokens word : words) {
             WordSet origWordSet = findById(word.getSourceWordSetId());
             int wordIndex = origWordSet.getWords().indexOf(word);
             wordSources.add(new CurrentWordSetMapping.WordSource(word.getSourceWordSetId(), wordIndex));
         }
         CurrentWordSetMapping currentWordSetMapping = new CurrentWordSetMapping();
+        Sentence currentSentence = state.getCurrentSentence();
+        if (currentSentence != null) {
+            try {
+                currentWordSetMapping.setCurrentSentence(mapper.writeValueAsString(currentSentence));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         currentWordSetMapping.setTrainingExperience(state.getWordSet().getTrainingExperience());
         try {
             currentWordSetMapping.setCurrentWord(mapper.writeValueAsString(state.getCurrentWord()));

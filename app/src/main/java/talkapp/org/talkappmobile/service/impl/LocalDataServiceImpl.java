@@ -166,15 +166,6 @@ public class LocalDataServiceImpl implements LocalDataService {
         }
     }
 
-    @Override
-    public void saveSentences(String word, List<Sentence> sentences, int wordsNumber) {
-        LinkedList<SentenceMapping> mappings = new LinkedList<>();
-        for (Sentence sentence : sentences) {
-            mappings.add(sentenceMapper.toMapping(sentence, word, wordsNumber));
-        }
-        sentenceDao.save(mappings);
-    }
-
     private TopicMapping toMapping(Topic topic) {
         TopicMapping mapping = new TopicMapping();
         mapping.setId(topic.getId());

@@ -56,25 +56,6 @@ public class DataServerImpl implements DataServer {
     }
 
     @Override
-    public void initLocalCacheOfAllSentencesForThisWord(String word, int wordsNumber) {
-        Call<List<Sentence>> call = gitHubRestClient.findSentencesByWord(word, wordsNumber);
-        List<Sentence> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            // do nothing
-        }
-        if (body != null) {
-            localDataService.saveSentences(word, body, wordsNumber);
-        }
-    }
-
-    @Override
-    public void initLocalCacheOfAllSentencesForThisWord(String word, List<Sentence> sentences, int wordsNumber) {
-        localDataService.saveSentences(word, sentences, wordsNumber);
-    }
-
-    @Override
     public List<Topic> findAllTopics() {
         Call<List<Topic>> call = gitHubRestClient.findAllTopics();
         List<Topic> body = null;

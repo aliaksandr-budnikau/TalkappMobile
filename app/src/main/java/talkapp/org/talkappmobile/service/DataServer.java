@@ -14,10 +14,6 @@ public interface DataServer {
 
     void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber);
 
-    void initLocalCacheOfAllSentencesForThisWord(String word, int wordsNumber);
-
-    void initLocalCacheOfAllSentencesForThisWord(String word, List<Sentence> sentences, int wordsNumber);
-
     List<Topic> findAllTopics();
 
     List<WordSet> findAllWordSets();

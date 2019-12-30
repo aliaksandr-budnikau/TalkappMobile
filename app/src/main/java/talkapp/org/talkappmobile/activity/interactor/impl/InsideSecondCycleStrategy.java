@@ -26,7 +26,8 @@ class InsideSecondCycleStrategy extends PracticeWordSetInteractorStrategy {
     void finishWord(OnPracticeWordSetListener listener) {
         Word2Tokens word2Tokens = getCurrentWord();
         progressService.shiftSentences(word2Tokens);
-        listener.onRightAnswer(getInteractor().getCurrentSentence());
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        listener.onRightAnswer(currentPracticeState.getCurrentSentence());
     }
 
     private Word2Tokens getCurrentWord() {

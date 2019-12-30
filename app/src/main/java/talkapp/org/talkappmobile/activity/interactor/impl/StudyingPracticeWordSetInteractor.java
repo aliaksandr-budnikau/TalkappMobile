@@ -31,7 +31,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     private final UserExpService userExpService;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
-    private Sentence currentSentence;
 
     public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
                                              SentenceService sentenceService,
@@ -43,7 +42,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              UserExpService userExpService,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, wordTranslationService);
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
@@ -129,17 +128,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public Sentence getCurrentSentence() {
-        return currentSentence;
-    }
-
-    @Override
-    protected void setCurrentSentence(Sentence sentence) {
-        this.currentSentence = sentence;
-    }
-
-    @Override
-    public Word2Tokens getCurrentWord() {
+    protected Word2Tokens getCurrentWord() {
         CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
         CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
         int wordIndex = 0;

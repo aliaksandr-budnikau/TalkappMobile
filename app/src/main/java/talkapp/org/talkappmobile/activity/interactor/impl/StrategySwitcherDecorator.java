@@ -39,7 +39,7 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
             if (currentPracticeState.getWordSet().getTrainingExperience() == currentPracticeState.getWordSet().getWords().size()) {
                 super.changeStrategy(new RepetitionFinishedStrategy(this));
             } else {
-                super.changeStrategy(new InsideRepetitionCycleStrategy(this));
+                super.changeStrategy(new InsideRepetitionCycleStrategy(this, wordSetService));
             }
         } else if (currentPracticeState.getWordSet().getTrainingExperience() == experienceUtils.getMaxTrainingProgress(currentPracticeState.getWordSet()) / 2) {
             super.changeStrategy(new FirstCycleFinishedStrategy(this, wordSetService));
@@ -49,7 +49,7 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
             if (currentPracticeState.getWordSet().getStatus() == SECOND_CYCLE) {
                 super.changeStrategy(new InsideSecondCycleStrategy(this, wordSetService, progressService));
             } else {
-                super.changeStrategy(new InsideFirstCycleStrategy(this));
+                super.changeStrategy(new InsideFirstCycleStrategy(this, wordSetService));
             }
         }
         super.finishWord(listener);

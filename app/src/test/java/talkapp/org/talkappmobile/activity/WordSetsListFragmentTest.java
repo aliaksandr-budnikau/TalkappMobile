@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
@@ -44,6 +43,7 @@ import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static junit.framework.Assert.assertNotNull;
@@ -100,7 +100,7 @@ public class WordSetsListFragmentTest {
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        wordSetService = new WordSetServiceImpl(wordSetDaoMock, daoHelper.getCurrentWordSetDao(), newWordSetDraftDaoMock, experienceUtils, new WordSetMapper(mapper), mapper);
+        wordSetService = new WordSetServiceImpl(wordSetDaoMock, daoHelper.getCurrentWordSetDao(), newWordSetDraftDaoMock, daoHelper.getSentenceDao(), experienceUtils, new WordSetMapper(mapper), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);

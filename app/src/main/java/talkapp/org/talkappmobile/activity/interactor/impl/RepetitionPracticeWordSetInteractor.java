@@ -34,7 +34,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordSetExperienceUtils experienceUtils;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
-    private Sentence currentSentence;
     private int maxTrainingProgress;
     private List<CurrentPracticeState.WordSource> finishedWords = new LinkedList<>();
     private List<CurrentPracticeState.WordSource> wordsSources = new LinkedList<>();
@@ -50,7 +49,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordTranslationService wordTranslationService,
             Context context,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, wordTranslationService);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
@@ -58,16 +57,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.experienceUtils = experienceUtils;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
-    }
-
-    @Override
-    public Sentence getCurrentSentence() {
-        return currentSentence;
-    }
-
-    @Override
-    protected void setCurrentSentence(Sentence sentence) {
-        this.currentSentence = sentence;
     }
 
     @Override
@@ -163,7 +152,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public Word2Tokens getCurrentWord() {
+    protected Word2Tokens getCurrentWord() {
         CurrentPracticeState.WordSource currentWord = wordSetService.getCurrentPracticeState().getCurrentWord();
         if (currentWord == null) {
             return null;

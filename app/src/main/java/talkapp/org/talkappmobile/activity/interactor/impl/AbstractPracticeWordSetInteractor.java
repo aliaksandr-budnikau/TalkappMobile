@@ -16,12 +16,14 @@ import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Collections.shuffle;
@@ -36,6 +38,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
     private final WordSetService wordSetService;
+    private final WordTranslationService wordTranslationService;
     private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
     private PracticeWordSetInteractorStrategy strategy;
@@ -46,7 +49,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
                                              WordSetService wordSetService,
-                                             AudioStuffFactory audioStuffFactory) {
+                                             AudioStuffFactory audioStuffFactory,
+                                             WordTranslationService wordTranslationService) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
@@ -54,6 +58,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.audioStuffFactory = audioStuffFactory;
+        this.wordTranslationService = wordTranslationService;
     }
 
     public PracticeWordSetInteractorStrategy getStrategy() {
@@ -220,7 +225,17 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.strategy = strategy;
     }
 
-    public abstract Word2Tokens getCurrentWord();
+    public Sentence getCurrentSentence() {
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Sentence currentSentence = currentPracticeState.getCurrentSentence();
+        return currentSentence;
+    }
 
-    protected abstract void setCurrentSentence(Sentence sentence);
+    protected void setCurrentSentence(Sentence sentence) {
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        currentPracticeState.setCurrentSentence(sentence);
+        wordSetService.saveCurrentPracticeState(currentPracticeState);
+    }
+
+    protected abstract Word2Tokens getCurrentWord();
 }

@@ -21,7 +21,7 @@ class FirstCycleFinishedStrategy extends PracticeWordSetInteractorStrategy {
         wordSetService.moveToAnotherState(currentPracticeState.getWordSet().getId(), SECOND_CYCLE);
         currentPracticeState.getWordSet().setStatus(SECOND_CYCLE);
         wordSetService.saveCurrentPracticeState(currentPracticeState);
-        listener.onTrainingHalfFinished(getInteractor().getCurrentSentence());
+        listener.onTrainingHalfFinished(currentPracticeState.getCurrentSentence());
         listener.onEnableRepetitionMode();
     }
 }

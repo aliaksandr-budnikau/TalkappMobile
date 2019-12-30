@@ -12,7 +12,9 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
@@ -29,14 +31,18 @@ public class WordSetServiceImplTest {
     @Mock
     private NewWordSetDraftDao newWordSetDraftDao;
     @Mock
+    private SentenceDao sentenceDao;
+    @Mock
     private WordSetExperienceUtils experienceUtils;
+    @Mock
+    private WordTranslationDao wordTranslationDao;
     @Mock
     private CurrentWordSetDao currentWordSetDao;
     private WordSetServiceImpl wordSetService;
 
     @Before
     public void setUp() throws Exception {
-        wordSetService = new WordSetServiceImpl(wordSetDao, currentWordSetDao, newWordSetDraftDao, experienceUtils, new WordSetMapper(new ObjectMapper()), new ObjectMapper());
+        wordSetService = new WordSetServiceImpl(wordSetDao, currentWordSetDao, newWordSetDraftDao, sentenceDao, experienceUtils, new WordSetMapper(new ObjectMapper()), new ObjectMapper());
     }
 
     @Test
