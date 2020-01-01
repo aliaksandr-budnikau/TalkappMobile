@@ -13,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -78,7 +77,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, WordTranslationMapping.class);
             TableUtils.createTable(connectionSource, TopicMapping.class);
             TableUtils.createTable(connectionSource, SentenceMapping.class);
-            TableUtils.createTable(connectionSource, CurrentWordSetMapping.class);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

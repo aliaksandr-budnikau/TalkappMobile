@@ -4,6 +4,7 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -15,15 +16,18 @@ public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator 
 
     private final WordSetService wordSetService;
     private final UserExpService userExpService;
+    private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService progressService;
 
     public UserExperienceDecorator(PracticeWordSetInteractor interactor,
                                    WordSetService wordSetService,
                                    UserExpService userExpService,
+                                   CurrentPracticeStateService currentPracticeStateService,
                                    WordRepetitionProgressService progressService) {
         super(interactor);
         this.wordSetService = wordSetService;
         this.userExpService = userExpService;
+        this.currentPracticeStateService = currentPracticeStateService;
         this.progressService = progressService;
     }
 
@@ -33,7 +37,7 @@ public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator 
         if (!result) {
             return false;
         }
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         WordSet wordSet = currentPracticeState.getWordSet();
         double expScore;
         if (wordSet.getStatus() == FINISHED || wordSet.getId() == 0) {

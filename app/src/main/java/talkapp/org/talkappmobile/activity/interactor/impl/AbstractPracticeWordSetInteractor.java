@@ -16,14 +16,13 @@ import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Collections.shuffle;
@@ -38,7 +37,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
     private final WordSetService wordSetService;
-    private final WordTranslationService wordTranslationService;
+    private final CurrentPracticeStateService currentPracticeStateService;
     private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
     private PracticeWordSetInteractorStrategy strategy;
@@ -50,7 +49,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
                                              SentenceService sentenceService,
                                              WordSetService wordSetService,
                                              AudioStuffFactory audioStuffFactory,
-                                             WordTranslationService wordTranslationService) {
+                                             CurrentPracticeStateService currentPracticeStateService) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
@@ -58,7 +57,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.audioStuffFactory = audioStuffFactory;
-        this.wordTranslationService = wordTranslationService;
+        this.currentPracticeStateService = currentPracticeStateService;
     }
 
     public PracticeWordSetInteractorStrategy getStrategy() {
@@ -121,7 +120,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void initialiseWordsSequence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         exerciseService.createSomeIfNecessary(currentPracticeState.getWordSet().getWords());
     }
 
@@ -200,7 +199,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void saveCurrentWordSet(WordSet wordSet) {
-        wordSetService.saveCurrentPracticeState(new CurrentPracticeState(wordSet));
+        currentPracticeStateService.save(new CurrentPracticeState(wordSet));
     }
 
     @Override
@@ -225,15 +224,15 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     }
 
     public Sentence getCurrentSentence() {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Sentence currentSentence = currentPracticeState.getCurrentSentence();
         return currentSentence;
     }
 
     protected void setCurrentSentence(Sentence sentence) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         currentPracticeState.setCurrentSentence(sentence);
-        wordSetService.saveCurrentPracticeState(currentPracticeState);
+        currentPracticeStateService.save(currentPracticeState);
     }
 
     protected abstract Word2Tokens getCurrentWord();

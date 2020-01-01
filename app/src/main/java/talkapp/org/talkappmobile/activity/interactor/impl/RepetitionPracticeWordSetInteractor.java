@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -31,6 +32,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordSetExperienceUtils experienceUtils;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
+    private final CurrentPracticeStateService currentPracticeStateService;
     private int maxTrainingProgress;
     private List<CurrentPracticeState.WordSource> finishedWords = new LinkedList<>();
     private List<CurrentPracticeState.WordSource> wordsSources = new LinkedList<>();
@@ -44,19 +46,21 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             WordSetService wordSetService,
             WordTranslationService wordTranslationService,
             Context context,
+            CurrentPracticeStateService currentPracticeStateService,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, wordTranslationService);
+        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, currentPracticeStateService);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
         this.experienceUtils = experienceUtils;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
+        this.currentPracticeStateService = currentPracticeStateService;
     }
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         for (Word2Tokens word : currentPracticeState.getWordSet().getWords()) {
             WordSet set = wordSetService.findById(word.getSourceWordSetId());
             wordsSources.add(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
@@ -65,7 +69,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
         currentPracticeState.getWordSet().setTrainingExperience(0);
-        wordSetService.saveCurrentPracticeState(currentPracticeState);
+        currentPracticeStateService.save(currentPracticeState);
         listener.onInitialiseExperience(currentPracticeState.getWordSet());
     }
 
@@ -81,10 +85,10 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         WordSet wordSet = wordSetService.findById(word.getSourceWordSetId());
         currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word)));
-        wordSetService.saveCurrentPracticeState(currentPracticeState);
+        currentPracticeStateService.save(currentPracticeState);
         List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
@@ -99,7 +103,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Sentence sentence = currentPracticeState.getCurrentSentence();
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
@@ -113,7 +117,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
 
         currentPracticeState.getWordSet().setTrainingExperience(currentPracticeState.getWordSet().getTrainingExperience() + 1);
-        wordSetService.saveCurrentPracticeState(currentPracticeState);
+        currentPracticeStateService.save(currentPracticeState);
         finishedWords.add(currentPracticeState.getCurrentWord());
         listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
@@ -123,7 +127,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void refreshSentence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
         WordSet wordSet = wordSetService.findById(currentWord.getWordSetId());
         Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
@@ -147,7 +151,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     protected Word2Tokens getCurrentWord() {
-        CurrentPracticeState.WordSource currentWord = wordSetService.getCurrentPracticeState().getCurrentWord();
+        CurrentPracticeState.WordSource currentWord = currentPracticeStateService.get().getCurrentWord();
         if (currentWord == null) {
             return null;
         }

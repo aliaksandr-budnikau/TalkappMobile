@@ -6,7 +6,6 @@ import org.robolectric.RuntimeEnvironment;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -14,14 +13,12 @@ import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.CurrentWordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
-import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -36,7 +33,6 @@ public class DaoHelper {
     private final DatabaseHelper databaseHelper;
     private ExpAuditDaoImpl expAuditDao;
     private NewWordSetDraftDaoImpl newWordSetDraftDao;
-    private CurrentWordSetDaoImpl currentWordSetDao;
     private WordSetDaoImpl wordSetDao;
     private SentenceDaoImpl sentenceDao;
     private WordTranslationDaoImpl wordTranslationDao;
@@ -79,13 +75,6 @@ public class DaoHelper {
             newWordSetDraftDao = new NewWordSetDraftDaoImpl(databaseHelper.getConnectionSource(), NewWordSetDraftMapping.class);
         }
         return newWordSetDraftDao;
-    }
-
-    public synchronized CurrentWordSetDao getCurrentWordSetDao() throws SQLException {
-        if (currentWordSetDao == null) {
-            currentWordSetDao = new CurrentWordSetDaoImpl(databaseHelper.getConnectionSource(), CurrentWordSetMapping.class);
-        }
-        return currentWordSetDao;
     }
 
     public synchronized ExpAuditDao getExpAuditDao() throws SQLException {

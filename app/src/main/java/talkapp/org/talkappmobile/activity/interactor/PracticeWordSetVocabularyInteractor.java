@@ -10,6 +10,7 @@ import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -21,12 +22,14 @@ public class PracticeWordSetVocabularyInteractor {
     private final DataServer server;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
+    private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService wordRepetitionProgressService;
 
-    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService) {
+    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService, CurrentPracticeStateService currentPracticeStateService) {
         this.server = server;
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
+        this.currentPracticeStateService = currentPracticeStateService;
         this.wordRepetitionProgressService = wordRepetitionProgressService;
     }
 
@@ -54,7 +57,7 @@ public class PracticeWordSetVocabularyInteractor {
     }
 
     public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation, OnPracticeWordSetVocabularyListener listener) {
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Word2Tokens oldWord2Token = currentPracticeState.getWordSet().getWords().get(editedItemPosition);
         if (oldWord2Token.getSourceWordSetId() < wordSetService.getCustomWordSetsStartsSince()) {
             listener.onUpdateNotCustomWordSet();

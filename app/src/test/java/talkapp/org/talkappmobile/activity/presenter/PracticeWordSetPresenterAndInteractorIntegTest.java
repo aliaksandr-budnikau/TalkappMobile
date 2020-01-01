@@ -28,12 +28,14 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
+import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -69,6 +71,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private Context context;
     private WordSetService experienceService;
     private WordSetExperienceUtilsImpl experienceUtils;
+    private CurrentPracticeStateService currentPracticeStateService;
     private PresenterFactory presenterFactory;
     private DaoHelper daoHelper;
     private WordSetDao wordSetDao;
@@ -85,6 +88,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
+        currentPracticeStateService = new CurrentPracticeStateServiceImpl();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
@@ -94,13 +98,14 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
 
         userExpService = new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class));
         when(mockServiceFactoryBean.getUserExpService()).thenReturn(userExpService);
+        when(mockServiceFactoryBean.getCurrentPracticeStateService()).thenReturn(currentPracticeStateService);
 
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);
         when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(exerciseService);
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetMapper = new WordSetMapper(mapper);
-        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getCurrentWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
+        experienceService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
@@ -128,7 +133,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         int trainingExperience = 0;
         WordSetProgressStatus status = FIRST_CYCLE;
         if (wordSet != null) {
-            CurrentPracticeState currentPracticeState = experienceService.getCurrentPracticeState();
+            CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
             trainingExperience = currentPracticeState.getWordSet().getTrainingExperience();
             status = currentPracticeState.getWordSet().getStatus();
         }

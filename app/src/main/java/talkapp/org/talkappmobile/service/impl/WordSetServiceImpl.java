@@ -1,25 +1,17 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
-import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
@@ -30,28 +22,20 @@ import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class WordSetServiceImpl implements WordSetService {
-    public static final String CURRENT_WORD_SET_ID = "0";
     private static final int DEFAULT_TOP_SUM = 20000;
-    public final CollectionType LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE;
     private final int CUSTOM_WORD_SETS_STARTS_SINCE = 1000000;
     @NonNull
     private final WordSetDao wordSetDao;
     @NonNull
-    private final CurrentWordSetDao currentWordSetDao;
-    @NonNull
     private final NewWordSetDraftDao newWordSetDraftDao;
     @NonNull
     private final WordSetMapper wordSetMapper;
-    private final ObjectMapper mapper;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull CurrentWordSetDao currentWordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
-        this.currentWordSetDao = currentWordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
         this.wordSetMapper = new WordSetMapper(mapper);
-        this.mapper = mapper;
-        LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, CurrentWordSetMapping.WordSource.class);
     }
 
     @Override
@@ -168,116 +152,6 @@ public class WordSetServiceImpl implements WordSetService {
     public WordSet findById(int wordSetId) {
         WordSetMapping mapping = wordSetDao.findById(wordSetId);
         return wordSetMapper.toDto(mapping);
-    }
-
-    @Override
-    public CurrentPracticeState getCurrentPracticeState() {
-        CurrentWordSetMapping mapping = currentWordSetDao.getById(CURRENT_WORD_SET_ID);
-        LinkedList<CurrentWordSetMapping.WordSource> wordSources;
-        try {
-            wordSources = mapper.readValue(mapping.getWords(), LINKED_LIST_OF_WORD_SOURCES_JAVA_TYPE);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        CurrentPracticeState.WordSource currentWord;
-        try {
-            currentWord = mapper.readValue(mapping.getCurrentWord(), CurrentPracticeState.WordSource.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        Sentence sentence = null;
-        if (mapping.getCurrentSentence() != null) {
-            try {
-                sentence = mapper.readValue(mapping.getCurrentSentence(), Sentence.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-
-        LinkedList<Word2Tokens> words = getWords(wordSources);
-        Integer origWordSetId = getWordSetId(wordSources);
-
-        if (origWordSetId == null) {
-            WordSet wordSet = new WordSet();
-            wordSet.setWords(words);
-            wordSet.setId(0);
-            wordSet.setTrainingExperience(mapping.getTrainingExperience());
-            CurrentPracticeState currentPracticeState = new CurrentPracticeState(wordSet);
-            currentPracticeState.setCurrentWord(currentWord);
-            currentPracticeState.setCurrentSentence(sentence);
-            return currentPracticeState;
-        } else {
-            int wordSetId = wordSources.get(0).getWordSetId();
-            WordSet wordSet = findById(wordSetId);
-            wordSet.setWords(words);
-            CurrentPracticeState currentPracticeState = new CurrentPracticeState(wordSet);
-            currentPracticeState.setCurrentWord(currentWord);
-            currentPracticeState.setCurrentSentence(sentence);
-            return currentPracticeState;
-        }
-    }
-
-    @NonNull
-    private LinkedList<Word2Tokens> getWords(LinkedList<CurrentWordSetMapping.WordSource> wordSources) {
-        LinkedList<Word2Tokens> words = new LinkedList<>();
-        for (CurrentWordSetMapping.WordSource wordSource : wordSources) {
-            words.add(getWord2Tokens(wordSource.getWordSetId(), wordSource.getWordIndex()));
-        }
-        return words;
-    }
-
-    private Word2Tokens getWord2Tokens(int wordSetId, int wordIndex) {
-        WordSet origWordSet = findById(wordSetId);
-        return origWordSet.getWords().get(wordIndex);
-    }
-
-    @Nullable
-    private Integer getWordSetId(LinkedList<CurrentWordSetMapping.WordSource> wordSources) {
-        Integer origWordSetId = null;
-        for (CurrentWordSetMapping.WordSource wordSource : wordSources) {
-            if (origWordSetId == null) {
-                origWordSetId = wordSource.getWordSetId();
-            } else {
-                if (origWordSetId != wordSource.getWordSetId()) {
-                    origWordSetId = null;
-                    break;
-                }
-            }
-        }
-        return origWordSetId;
-    }
-
-    @Override
-    public void saveCurrentPracticeState(CurrentPracticeState state) {
-        LinkedList<CurrentWordSetMapping.WordSource> wordSources = new LinkedList<>();
-        List<Word2Tokens> words = state.getWordSet().getWords();
-        for (Word2Tokens word : words) {
-            WordSet origWordSet = findById(word.getSourceWordSetId());
-            int wordIndex = origWordSet.getWords().indexOf(word);
-            wordSources.add(new CurrentWordSetMapping.WordSource(word.getSourceWordSetId(), wordIndex));
-        }
-        CurrentWordSetMapping currentWordSetMapping = new CurrentWordSetMapping();
-        Sentence currentSentence = state.getCurrentSentence();
-        if (currentSentence != null) {
-            try {
-                currentWordSetMapping.setCurrentSentence(mapper.writeValueAsString(currentSentence));
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        currentWordSetMapping.setTrainingExperience(state.getWordSet().getTrainingExperience());
-        try {
-            currentWordSetMapping.setCurrentWord(mapper.writeValueAsString(state.getCurrentWord()));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        currentWordSetMapping.setId(CURRENT_WORD_SET_ID);
-        try {
-            currentWordSetMapping.setWords(mapper.writeValueAsString(wordSources));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        currentWordSetDao.save(currentWordSetMapping);
     }
 
     @Override

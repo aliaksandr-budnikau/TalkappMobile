@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -28,10 +27,6 @@ public interface WordSetService {
     void save(NewWordSetDraft draft);
 
     WordSet findById(int id);
-
-    CurrentPracticeState getCurrentPracticeState();
-
-    void saveCurrentPracticeState(CurrentPracticeState currentPracticeState);
 
     void save(WordSet wordSet);
 }

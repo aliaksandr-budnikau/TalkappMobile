@@ -11,7 +11,6 @@ import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.dao.CurrentWordSetDao;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -20,7 +19,6 @@ import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.CurrentWordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.ExpAuditDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.NewWordSetDraftDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
@@ -28,7 +26,6 @@ import talkapp.org.talkappmobile.dao.impl.TopicDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
-import talkapp.org.talkappmobile.mappings.CurrentWordSetMapping;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -36,6 +33,7 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.MigrationService;
@@ -46,8 +44,6 @@ import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {
@@ -67,23 +63,21 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordRepetitionProgressServiceImpl practiceWordSetExerciseService;
     private WordSetServiceImpl wordSetExperienceService;
     private UserExpService userExpService;
-    private WordSetMapper wordSetMapper;
     private ExpAuditMapper expAuditMapper;
-    private WordTranslationMapper wordTranslationMapper;
     private LocalDataService localDataService;
     private WordTranslationService wordTranslationService;
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
     private NewWordSetDraftDao newWordSetDraftDao;
     private MigrationService migrationService;
-    private CurrentWordSetDao currentWordSetDao;
+    private CurrentPracticeStateServiceImpl currentPracticeStateService;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideCurrentWordSetDao(), provideNewWordSetDraftDao(), getMapper());
+        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetExperienceService;
     }
 
@@ -94,19 +88,6 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         migrationService = new MigrationServiceImpl(providePracticeWordSetExerciseDao(), provideWordSetDao(), provideSentenceDao(), MAPPER);
         return migrationService;
-    }
-
-    @Override
-    public CurrentWordSetDao provideCurrentWordSetDao() {
-        if (currentWordSetDao != null) {
-            return currentWordSetDao;
-        }
-        try {
-            currentWordSetDao = new CurrentWordSetDaoImpl(databaseHelper().getConnectionSource(), CurrentWordSetMapping.class);
-            return currentWordSetDao;
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     @Override
@@ -139,24 +120,6 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao(), getMapper());
         return wordTranslationService;
-    }
-
-    @Override
-    public WordSetMapper getWordSetMapper() {
-        if (wordSetMapper != null) {
-            return wordSetMapper;
-        }
-        wordSetMapper = new WordSetMapper(MAPPER);
-        return wordSetMapper;
-    }
-
-    @Override
-    public WordTranslationMapper getWordTranslationMapper() {
-        if (wordTranslationMapper != null) {
-            return wordTranslationMapper;
-        }
-        wordTranslationMapper = new WordTranslationMapper(MAPPER);
-        return wordTranslationMapper;
     }
 
     @Override
@@ -281,5 +244,14 @@ public class ServiceFactoryBean implements ServiceFactory {
     @Override
     public ObjectMapper getMapper() {
         return MAPPER;
+    }
+
+    @Override
+    public CurrentPracticeStateService getCurrentPracticeStateService() {
+        if (currentPracticeStateService != null) {
+            return currentPracticeStateService;
+        }
+        currentPracticeStateService = new CurrentPracticeStateServiceImpl();
+        return currentPracticeStateService;
     }
 }
