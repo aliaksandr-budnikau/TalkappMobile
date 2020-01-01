@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
-import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -29,8 +28,8 @@ public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator 
     }
 
     @Override
-    public boolean checkAnswer(String answer, Sentence currentSentence, OnPracticeWordSetListener listener) {
-        boolean result = super.checkAnswer(answer, currentSentence, listener);
+    public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
+        boolean result = super.checkAnswer(answer, listener);
         if (!result) {
             return false;
         }

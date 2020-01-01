@@ -139,11 +139,10 @@ public class PracticeWordSetPresenterTest {
         sentence.setId("323");
 
         // when
-        when(interactor.getCurrentSentence()).thenReturn(sentence);
         presenter.checkAnswerButtonClick(answer);
 
         // then
-        verify(interactor).checkAnswer(answer, sentence, presenter);
+        verify(interactor).checkAnswer(answer, presenter);
     }
 
     @Test

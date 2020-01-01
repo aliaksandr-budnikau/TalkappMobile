@@ -44,8 +44,8 @@ class PracticeWordSetInteractorDecorator implements PracticeWordSetInteractor {
     }
 
     @Override
-    public boolean checkAnswer(String answer, Sentence currentSentence, OnPracticeWordSetListener listener) {
-        return interactor.checkAnswer(answer, currentSentence, listener);
+    public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
+        return interactor.checkAnswer(answer, listener);
     }
 
     @Override

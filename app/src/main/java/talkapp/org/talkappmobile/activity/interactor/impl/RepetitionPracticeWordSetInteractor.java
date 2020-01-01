@@ -98,7 +98,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public boolean checkAnswer(String answer, Sentence sentence, OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Sentence sentence = currentPracticeState.getCurrentSentence();
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
@@ -110,7 +112,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
         currentPracticeState.getWordSet().setTrainingExperience(currentPracticeState.getWordSet().getTrainingExperience() + 1);
         wordSetService.saveCurrentPracticeState(currentPracticeState);
         finishedWords.add(currentPracticeState.getCurrentWord());

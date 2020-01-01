@@ -240,9 +240,11 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
+        CurrentPracticeState state = new CurrentPracticeState(wordSet);
+        state.setCurrentSentence(sentence);
+        when(wordSetService.getCurrentPracticeState()).thenReturn(state);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
@@ -274,9 +276,11 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
+        CurrentPracticeState state = new CurrentPracticeState(wordSet);
+        state.setCurrentSentence(sentence);
+        when(wordSetService.getCurrentPracticeState()).thenReturn(state);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
         verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
@@ -308,8 +312,10 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
+        CurrentPracticeState state = new CurrentPracticeState(wordSet);
+        state.setCurrentSentence(sentence);
+        when(wordSetService.getCurrentPracticeState()).thenReturn(state);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
         verify(listener, times(0)).onUpdateProgress(wordSet);
@@ -341,9 +347,11 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
+        CurrentPracticeState state = new CurrentPracticeState(wordSet);
+        state.setCurrentSentence(sentence);
+        when(wordSetService.getCurrentPracticeState()).thenReturn(state);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
         verify(listener, times(0)).onUpdateProgress(wordSet);
@@ -375,7 +383,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(wordSetService.getCurrentPracticeState()).thenReturn(new CurrentPracticeState(wordSet));
-        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), sentence, listener);
+        interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
         verify(refereeService, times(0)).checkAnswer(uncheckedAnswer);

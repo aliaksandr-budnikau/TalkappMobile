@@ -22,7 +22,7 @@ public interface PracticeWordSetInteractor {
 
     void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener);
 
-    boolean checkAnswer(String answer, Sentence currentSentence, OnPracticeWordSetListener listener);
+    boolean checkAnswer(String answer, OnPracticeWordSetListener listener);
 
     void playVoice(OnPracticeWordSetListener listener);
 

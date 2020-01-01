@@ -78,7 +78,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public boolean checkAnswer(String answer, final Sentence sentence, final OnPracticeWordSetListener listener) {
+    public boolean checkAnswer(String answer, final OnPracticeWordSetListener listener) {
+        CurrentPracticeState currentPracticeState = wordSetService.getCurrentPracticeState();
+        Sentence sentence = currentPracticeState.getCurrentSentence();
         if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
             return false;
         }
@@ -87,7 +89,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
             return false;
         }
-        WordSet wordSet = wordSetService.getCurrentPracticeState().getWordSet();
+        WordSet wordSet = currentPracticeState.getWordSet();
         int maxTrainingProgress = getMaxTrainingProgress(wordSet);
         if (wordSet.getTrainingExperience() > maxTrainingProgress) {
             wordSet.setTrainingExperience(maxTrainingProgress);
