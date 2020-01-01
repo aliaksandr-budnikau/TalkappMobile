@@ -207,7 +207,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
         presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, wordSetService, experienceUtils, exerciseService, currentPracticeStateService), firstCycleViewStrategy);
-        Whitebox.setInternalState(repetitionPracticeWordSetInteractor, "finishedWords", new LinkedList<>());
     }
 
     private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {

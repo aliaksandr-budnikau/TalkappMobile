@@ -34,7 +34,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private int maxTrainingProgress;
-    private List<CurrentPracticeState.WordSource> finishedWords = new LinkedList<>();
     private List<CurrentPracticeState.WordSource> wordsSources = new LinkedList<>();
 
     public RepetitionPracticeWordSetInteractor(
@@ -117,8 +116,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
 
         currentPracticeState.getWordSet().setTrainingExperience(currentPracticeState.getWordSet().getTrainingExperience() + 1);
+        currentPracticeState.addFinishedWords(currentPracticeState.getCurrentWord());
         currentPracticeStateService.save(currentPracticeState);
-        finishedWords.add(currentPracticeState.getCurrentWord());
         listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), maxTrainingProgress);
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
@@ -127,8 +126,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
-        for (CurrentPracticeState.WordSource finishedWord : finishedWords) {
+        for (CurrentPracticeState.WordSource finishedWord : currentPracticeState.getFinishedWords()) {
             leftOver.remove(getWord2TokensSource(finishedWord));
         }
         return super.peekRandomWordWithoutCurrentWord(leftOver, currentWord);

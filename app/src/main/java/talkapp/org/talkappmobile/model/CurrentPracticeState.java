@@ -1,12 +1,16 @@
 package talkapp.org.talkappmobile.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class CurrentPracticeState {
 
     private final WordSet wordSet;
     private WordSource currentWord;
     private Sentence currentSentence;
+    private List<WordSource> finishedWords = new LinkedList<>();
 
     public CurrentPracticeState(WordSet wordSet) {
         this.wordSet = wordSet;
@@ -30,6 +34,14 @@ public class CurrentPracticeState {
 
     public void setCurrentSentence(Sentence currentSentence) {
         this.currentSentence = currentSentence;
+    }
+
+    public void addFinishedWords(WordSource word) {
+        finishedWords.add(word);
+    }
+
+    public List<WordSource> getFinishedWords() {
+        return new ArrayList<>(finishedWords);
     }
 
     public static class WordSource implements Serializable {
