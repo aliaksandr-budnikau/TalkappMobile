@@ -48,7 +48,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Context context,
             CurrentPracticeStateService currentPracticeStateService,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, currentPracticeStateService);
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, wordSetService);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
@@ -123,15 +123,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
         exerciseService.shiftSentences(getCurrentWord());
         return true;
-    }
-
-    @Override
-    public void refreshSentence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
-        WordSet wordSet = wordSetService.findById(currentWord.getWordSetId());
-        Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
-        initialiseSentence(word, listener);
     }
 
     @Override

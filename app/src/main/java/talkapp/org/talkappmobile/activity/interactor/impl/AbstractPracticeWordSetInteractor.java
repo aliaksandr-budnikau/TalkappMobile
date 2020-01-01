@@ -36,8 +36,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
-    private final WordSetService wordSetService;
     private final CurrentPracticeStateService currentPracticeStateService;
+    private final WordSetService wordSetService;
     private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
     private PracticeWordSetInteractorStrategy strategy;
@@ -47,9 +47,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
-                                             WordSetService wordSetService,
                                              AudioStuffFactory audioStuffFactory,
-                                             CurrentPracticeStateService currentPracticeStateService) {
+                                             CurrentPracticeStateService currentPracticeStateService, WordSetService wordSetService) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
@@ -233,6 +232,15 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         currentPracticeState.setCurrentSentence(sentence);
         currentPracticeStateService.save(currentPracticeState);
+    }
+
+    @Override
+    public void refreshSentence(OnPracticeWordSetListener listener) {
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
+        CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
+        WordSet wordSet = wordSetService.findById(currentWord.getWordSetId());
+        Word2Tokens word = wordSet.getWords().get(currentWord.getWordIndex());
+        initialiseSentence(word, listener);
     }
 
     protected abstract Word2Tokens getCurrentWord();

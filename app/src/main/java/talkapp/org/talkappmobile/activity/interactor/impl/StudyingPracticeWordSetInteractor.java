@@ -39,7 +39,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordRepetitionProgressService exerciseService,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, wordSetService, audioStuffFactory, currentPracticeStateService);
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, wordSetService);
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.currentPracticeStateService = currentPracticeStateService;
@@ -104,14 +104,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         return true;
-    }
-
-    @Override
-    public void refreshSentence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        int wordIndex = currentPracticeState.getCurrentWord().getWordIndex();
-        Word2Tokens word = currentPracticeState.getWordSet().getWords().get(wordIndex);
-        initialiseSentence(word, listener);
     }
 
     @Override
