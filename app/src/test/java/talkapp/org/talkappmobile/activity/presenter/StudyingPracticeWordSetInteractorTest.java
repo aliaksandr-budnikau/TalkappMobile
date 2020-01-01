@@ -149,7 +149,7 @@ public class StudyingPracticeWordSetInteractorTest {
         List<Word2Tokens> words = new ArrayList<>(wordSet.getWords());
 
         // when
-        when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
+        when(currentPracticeStateService.getAllWords()).thenReturn(wordSet.getWords());
         interactor.initialiseWordsSequence(listener);
 
         // then

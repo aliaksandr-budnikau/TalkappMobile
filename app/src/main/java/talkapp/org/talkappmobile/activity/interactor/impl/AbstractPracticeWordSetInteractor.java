@@ -115,7 +115,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void initialiseWordsSequence(OnPracticeWordSetListener listener) {
-        exerciseService.createSomeIfNecessary(currentPracticeStateService.getWordSet().getWords());
+        exerciseService.createSomeIfNecessary(currentPracticeStateService.getAllWords());
     }
 
     @Override

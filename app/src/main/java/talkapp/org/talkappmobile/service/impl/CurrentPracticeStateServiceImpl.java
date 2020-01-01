@@ -96,6 +96,10 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
 
     @Override
     public void set(WordSet wordSet) {
+        finishedWords.clear();
+        wordsSources.clear();
+        currentWord = null;
+        currentSentence = null;
         for (Word2Tokens word : wordSet.getWords()) {
             wordsSources.add(getWordSource(word));
         }
