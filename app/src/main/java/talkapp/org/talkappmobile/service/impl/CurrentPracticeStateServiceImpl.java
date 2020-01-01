@@ -64,6 +64,13 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     }
 
     @Override
+    public void setCurrentWord(Word2Tokens word) {
+        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mapping);
+        currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word)));
+    }
+
+    @Override
     public Sentence getCurrentSentence() {
         return currentPracticeState.getCurrentSentence();
     }
@@ -71,6 +78,20 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     @Override
     public void setCurrentSentence(Sentence sentence) {
         currentPracticeState.setCurrentSentence(sentence);
+    }
+
+    @Override
+    public WordSet getWordSet() {
+        return currentPracticeState.getWordSet();
+    }
+
+    @Override
+    public void persistWordSet() {
+        WordSet wordSet = currentPracticeState.getWordSet();
+        if (wordSet.getId() == 0) {
+            throw new UnsupportedOperationException();
+        }
+        wordSetDao.createNewOrUpdate(wordSetMapper.toMapping(wordSet));
     }
 
     private Word2Tokens getWord2Tokens(CurrentPracticeState.WordSource source) {

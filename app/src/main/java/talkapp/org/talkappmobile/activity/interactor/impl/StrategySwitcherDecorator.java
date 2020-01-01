@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
@@ -27,9 +28,9 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
+        WordSet wordSet = currentPracticeStateService.getWordSet();
         super.changeStrategy(new UnknownState(this));
-        if (SECOND_CYCLE.equals(currentPracticeState.getWordSet().getStatus())) {
+        if (SECOND_CYCLE.equals(wordSet.getStatus())) {
             super.changeStrategy(new InsideSecondCycleStrategy(this, wordSetService, progressService, currentPracticeStateService));
         }
         super.initialiseExperience(listener);

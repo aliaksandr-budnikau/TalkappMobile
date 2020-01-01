@@ -6,7 +6,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -17,7 +16,6 @@ import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
@@ -26,12 +24,10 @@ import static java.util.Arrays.asList;
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private final SentenceService sentenceService;
     private final WordRepetitionProgressService exerciseService;
-    private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
 
-    public StudyingPracticeWordSetInteractor(WordSetService wordSetService,
-                                             SentenceService sentenceService,
+    public StudyingPracticeWordSetInteractor(SentenceService sentenceService,
                                              RefereeService refereeService,
                                              Logger logger,
                                              WordTranslationService wordTranslationService,
@@ -41,7 +37,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService);
         this.sentenceService = sentenceService;
-        this.wordSetService = wordSetService;
         this.currentPracticeStateService = currentPracticeStateService;
         this.exerciseService = exerciseService;
         this.wordTranslationService = wordTranslationService;
@@ -51,16 +46,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     public void initialiseExperience(OnPracticeWordSetListener listener) {
         PracticeWordSetInteractorStrategy state = getStrategy();
         state.initialiseExperience(listener);
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        listener.onInitialiseExperience(currentPracticeState.getWordSet());
+        listener.onInitialiseExperience(currentPracticeStateService.getWordSet());
     }
 
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
-        WordSet wordSet = wordSetService.findById(word.getSourceWordSetId());
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(wordSet.getId(), wordSet.getWords().indexOf(word)));
-        currentPracticeStateService.save(currentPracticeState);
+        currentPracticeStateService.setCurrentWord(word);
         List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             try {
@@ -83,7 +74,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public boolean checkAnswer(String answer, final OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Sentence sentence = currentPracticeStateService.getCurrentSentence();
         Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
         if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
@@ -94,14 +84,14 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             listener.onRightAnswer(sentence);
             return false;
         }
-        WordSet wordSet = currentPracticeState.getWordSet();
+        WordSet wordSet = currentPracticeStateService.getWordSet();
         int maxTrainingProgress = getMaxTrainingProgress(wordSet);
         if (wordSet.getTrainingExperience() > maxTrainingProgress) {
             wordSet.setTrainingExperience(maxTrainingProgress);
         } else {
             wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         }
-        wordSetService.save(wordSet);
+        currentPracticeStateService.persistWordSet();
         listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
         exerciseService.moveCurrentWordToNextState(wordSet.getId());
         return true;
@@ -109,12 +99,12 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
-        exerciseService.putOffCurrentWord(currentPracticeState.getWordSet().getId());
-        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(currentPracticeState.getWordSet().getId());
+        int wordSetId = currentPracticeStateService.getWordSet().getId();
+        exerciseService.putOffCurrentWord(wordSetId);
+        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId);
         Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);
-        exerciseService.markNewCurrentWordByWordSetIdAndWord(currentPracticeState.getWordSet().getId(), newCurrentWord);
+        exerciseService.markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
         return newCurrentWord;
     }
 
