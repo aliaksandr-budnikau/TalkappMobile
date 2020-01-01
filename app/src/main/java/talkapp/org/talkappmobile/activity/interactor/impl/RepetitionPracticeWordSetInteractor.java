@@ -34,7 +34,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private int maxTrainingProgress;
-    private List<CurrentPracticeState.WordSource> wordsSources = new LinkedList<>();
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
@@ -62,7 +61,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         for (Word2Tokens word : currentPracticeState.getWordSet().getWords()) {
             WordSet set = wordSetService.findById(word.getSourceWordSetId());
-            wordsSources.add(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
+            currentPracticeState.addWordsSources(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
         }
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(currentPracticeState.getWordSet()) / 2;
         logger.i(TAG, "enable repetition mode");
@@ -74,8 +73,9 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
+        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         LinkedList<Word2Tokens> words = new LinkedList<>();
-        for (CurrentPracticeState.WordSource word : wordsSources) {
+        for (CurrentPracticeState.WordSource word : currentPracticeState.getWordsSources()) {
             WordSet set = wordSetService.findById(word.getWordSetId());
             words.add(set.getWords().get(word.getWordIndex()));
         }

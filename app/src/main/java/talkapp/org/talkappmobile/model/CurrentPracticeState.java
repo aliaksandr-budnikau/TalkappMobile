@@ -11,6 +11,7 @@ public class CurrentPracticeState {
     private WordSource currentWord;
     private Sentence currentSentence;
     private List<WordSource> finishedWords = new LinkedList<>();
+    private List<WordSource> wordsSources = new LinkedList<>();
 
     public CurrentPracticeState(WordSet wordSet) {
         this.wordSet = wordSet;
@@ -40,8 +41,16 @@ public class CurrentPracticeState {
         finishedWords.add(word);
     }
 
+    public void addWordsSources(WordSource word) {
+        wordsSources.add(word);
+    }
+
     public List<WordSource> getFinishedWords() {
         return new ArrayList<>(finishedWords);
+    }
+
+    public List<WordSource> getWordsSources() {
+        return new ArrayList<>(wordsSources);
     }
 
     public static class WordSource implements Serializable {
