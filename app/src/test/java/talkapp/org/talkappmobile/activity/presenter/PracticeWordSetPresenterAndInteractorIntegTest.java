@@ -88,7 +88,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        currentPracticeStateService = new CurrentPracticeStateServiceImpl();
+        currentPracticeStateService = new CurrentPracticeStateServiceImpl(wordSetDao, mapper);
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);

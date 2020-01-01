@@ -73,13 +73,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        LinkedList<Word2Tokens> words = new LinkedList<>();
-        for (CurrentPracticeState.WordSource word : currentPracticeState.getWordsSources()) {
-            WordSet set = wordSetService.findById(word.getWordSetId());
-            words.add(set.getWords().get(word.getWordIndex()));
-        }
-        return peekRandomWordWithoutCurrentWord(words, getCurrentWord());
+        List<Word2Tokens> allWords = currentPracticeStateService.getAllWords();
+        return peekRandomWordWithoutCurrentWord(allWords, getCurrentWord());
     }
 
     @Override
@@ -126,17 +121,10 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
-        for (CurrentPracticeState.WordSource finishedWord : currentPracticeState.getFinishedWords()) {
-            leftOver.remove(getWord2TokensSource(finishedWord));
+        for (Word2Tokens word2Tokens : currentPracticeStateService.getFinishedWords()) {
+            leftOver.remove(word2Tokens);
         }
         return super.peekRandomWordWithoutCurrentWord(leftOver, currentWord);
-    }
-
-    private Word2Tokens getWord2TokensSource(CurrentPracticeState.WordSource source) {
-        int wordSetId = source.getWordSetId();
-        int wordIndex = source.getWordIndex();
-        return wordSetService.findById(wordSetId).getWords().get(wordIndex);
     }
 }

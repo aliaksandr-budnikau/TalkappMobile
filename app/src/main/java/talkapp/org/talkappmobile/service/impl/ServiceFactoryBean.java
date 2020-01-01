@@ -251,7 +251,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (currentPracticeStateService != null) {
             return currentPracticeStateService;
         }
-        currentPracticeStateService = new CurrentPracticeStateServiceImpl();
+        currentPracticeStateService = new CurrentPracticeStateServiceImpl(provideWordSetDao(), getMapper());
         return currentPracticeStateService;
     }
 }
