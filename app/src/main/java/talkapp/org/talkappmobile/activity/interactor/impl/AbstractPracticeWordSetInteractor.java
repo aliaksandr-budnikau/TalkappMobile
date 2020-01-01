@@ -243,5 +243,17 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         initialiseSentence(word, listener);
     }
 
-    protected abstract Word2Tokens getCurrentWord();
+    private Word2Tokens getWord2TokensSource(CurrentPracticeState.WordSource source) {
+        int wordSetId = source.getWordSetId();
+        int wordIndex = source.getWordIndex();
+        return wordSetService.findById(wordSetId).getWords().get(wordIndex);
+    }
+
+    protected Word2Tokens getCurrentWord() {
+        CurrentPracticeState.WordSource currentWord = currentPracticeStateService.get().getCurrentWord();
+        if (currentWord == null) {
+            return null;
+        }
+        return getWord2TokensSource(currentWord);
+    }
 }

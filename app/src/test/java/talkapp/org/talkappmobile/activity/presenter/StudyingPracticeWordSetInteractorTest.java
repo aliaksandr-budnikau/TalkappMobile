@@ -487,7 +487,10 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(wordSetId);
         wordSet.setWords(words);
-        when(currentPracticeStateService.get()).thenReturn(new CurrentPracticeState(wordSet));
+        CurrentPracticeState state = new CurrentPracticeState(wordSet);
+        state.setCurrentWord(new CurrentPracticeState.WordSource(wordSetId, words.indexOf(currentWord)));
+        when(currentPracticeStateService.get()).thenReturn(state);
+        when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
         when(exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId)).thenReturn(asList(currentWord, newCurrentWord));
         Word2Tokens actual = interactor.peekAnyNewWordByWordSetId();
 

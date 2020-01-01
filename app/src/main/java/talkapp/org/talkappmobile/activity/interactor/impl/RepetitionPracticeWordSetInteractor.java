@@ -139,13 +139,4 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         int wordIndex = source.getWordIndex();
         return wordSetService.findById(wordSetId).getWords().get(wordIndex);
     }
-
-    @Override
-    protected Word2Tokens getCurrentWord() {
-        CurrentPracticeState.WordSource currentWord = currentPracticeStateService.get().getCurrentWord();
-        if (currentWord == null) {
-            return null;
-        }
-        return getWord2TokensSource(currentWord);
-    }
 }

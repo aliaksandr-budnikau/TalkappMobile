@@ -117,17 +117,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         return newCurrentWord;
     }
 
-    @Override
-    protected Word2Tokens getCurrentWord() {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        CurrentPracticeState.WordSource currentWord = currentPracticeState.getCurrentWord();
-        int wordIndex = 0;
-        if (currentWord != null) {
-            wordIndex = currentWord.getWordIndex();
-        }
-        return currentPracticeState.getWordSet().getWords().get(wordIndex);
-    }
-
     private int getMaxTrainingProgress(WordSet wordSet) {
         return wordSet.getWords().size() * 2;
     }
