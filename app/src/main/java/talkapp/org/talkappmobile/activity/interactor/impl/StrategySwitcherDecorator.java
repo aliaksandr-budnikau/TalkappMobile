@@ -36,7 +36,7 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
     public void finishWord(OnPracticeWordSetListener listener) {
         WordSet wordSet = currentPracticeStateService.getWordSet();
         if (wordSet.getId() == 0) {
-            if (wordSet.getTrainingExperience() == wordSet.getWords().size()) {
+            if (wordSet.getTrainingExperience() == currentPracticeStateService.getAllWords().size()) {
                 super.changeStrategy(new RepetitionFinishedStrategy(this));
             } else {
                 super.changeStrategy(new InsideRepetitionCycleStrategy(this, currentPracticeStateService));
