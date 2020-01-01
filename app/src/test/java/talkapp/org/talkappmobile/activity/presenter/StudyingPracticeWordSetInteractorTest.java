@@ -19,7 +19,6 @@ import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -238,8 +237,6 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        CurrentPracticeState state = new CurrentPracticeState();
-        state.setCurrentSentence(sentence);
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
@@ -310,8 +307,6 @@ public class StudyingPracticeWordSetInteractorTest {
 
         // when
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
-        CurrentPracticeState state = new CurrentPracticeState();
-        state.setCurrentSentence(sentence);
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
@@ -345,8 +340,6 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setActualAnswer("fsdf");
 
         // when
-        CurrentPracticeState state = new CurrentPracticeState();
-        state.setCurrentSentence(sentence);
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
@@ -484,8 +477,6 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(wordSetId);
         wordSet.setWords(words);
-        CurrentPracticeState state = new CurrentPracticeState();
-        state.setCurrentWord(new CurrentPracticeState.WordSource(wordSetId, words.indexOf(currentWord)));
         when(currentPracticeStateService.getCurrentWord()).thenReturn(currentWord);
         when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
         when(exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId)).thenReturn(asList(currentWord, newCurrentWord));
