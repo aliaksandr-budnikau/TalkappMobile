@@ -75,7 +75,7 @@ public class PresenterFactory {
         StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, wordSetService, experienceUtils, progressService, stateService);
         PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, wordSetService, serviceFactory.getUserExpService(), stateService, serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, experienceUtils, wordSetService, serviceFactory.getWordTranslationService(), context, stateService, audioStuffFactory);
+            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, experienceUtils, serviceFactory.getWordTranslationService(), context, stateService, audioStuffFactory);
             strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, wordSetService, experienceUtils, progressService, stateService);
             interactor = new UserExperienceDecorator(strategySwitcherDecorator, wordSetService, serviceFactory.getUserExpService(), stateService, serviceFactory.getPracticeWordSetExerciseRepository());
         }

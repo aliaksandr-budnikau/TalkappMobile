@@ -19,7 +19,6 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static java.util.Collections.singletonList;
@@ -30,7 +29,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final Logger logger;
     private final WordRepetitionProgressService exerciseService;
     private final WordSetExperienceUtils experienceUtils;
-    private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private int maxTrainingProgress;
@@ -41,7 +39,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Logger logger,
             WordRepetitionProgressService exerciseService,
             WordSetExperienceUtils experienceUtils,
-            WordSetService wordSetService,
             WordTranslationService wordTranslationService,
             Context context,
             CurrentPracticeStateService currentPracticeStateService,
@@ -51,24 +48,21 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         this.logger = logger;
         this.exerciseService = exerciseService;
         this.experienceUtils = experienceUtils;
-        this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
         this.currentPracticeStateService = currentPracticeStateService;
     }
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        for (Word2Tokens word : currentPracticeState.getWordSet().getWords()) {
-            WordSet set = wordSetService.findById(word.getSourceWordSetId());
-            currentPracticeState.addWordsSources(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), set.getWords().indexOf(word)));
+        WordSet wordSet = currentPracticeStateService.getWordSet();
+        for (Word2Tokens word : wordSet.getWords()) {
+            currentPracticeStateService.addWordSource(word);
         }
-        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(currentPracticeState.getWordSet()) / 2;
+        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
-        currentPracticeState.getWordSet().setTrainingExperience(0);
-        currentPracticeStateService.save(currentPracticeState);
-        listener.onInitialiseExperience(currentPracticeState.getWordSet());
+        wordSet.setTrainingExperience(0);
+        listener.onInitialiseExperience(wordSet);
     }
 
     @Override
@@ -79,10 +73,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public void initialiseSentence(Word2Tokens word, OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        WordSet wordSet = wordSetService.findById(word.getSourceWordSetId());
-        currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word)));
-        currentPracticeStateService.save(currentPracticeState);
+        currentPracticeStateService.setCurrentWord(word);
         List<Sentence> sentences = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");

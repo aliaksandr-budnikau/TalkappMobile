@@ -7,18 +7,18 @@ import java.util.List;
 
 public class CurrentPracticeState {
 
-    private final WordSet wordSet;
+    private WordSet wordSet;
     private WordSource currentWord;
     private Sentence currentSentence;
     private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
 
-    public CurrentPracticeState(WordSet wordSet) {
-        this.wordSet = wordSet;
-    }
-
     public WordSet getWordSet() {
         return wordSet;
+    }
+
+    public void setWordSet(WordSet wordSet) {
+        this.wordSet = wordSet;
     }
 
     public WordSource getCurrentWord() {

@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateService {
     private final WordSetDao wordSetDao;
     private final WordSetMapper wordSetMapper;
-    private CurrentPracticeState currentPracticeState;
+    private CurrentPracticeState currentPracticeState = new CurrentPracticeState();
 
     public CurrentPracticeStateServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
@@ -65,9 +67,14 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
 
     @Override
     public void setCurrentWord(Word2Tokens word) {
+        currentPracticeState.setCurrentWord(getWordSource(word));
+    }
+
+    @NonNull
+    private CurrentPracticeState.WordSource getWordSource(Word2Tokens word) {
         WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
         WordSet wordSet = wordSetMapper.toDto(mapping);
-        currentPracticeState.setCurrentWord(new CurrentPracticeState.WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word)));
+        return new CurrentPracticeState.WordSource(word.getSourceWordSetId(), wordSet.getWords().indexOf(word));
     }
 
     @Override
@@ -92,6 +99,17 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
             throw new UnsupportedOperationException();
         }
         wordSetDao.createNewOrUpdate(wordSetMapper.toMapping(wordSet));
+    }
+
+    @Override
+    public void set(WordSet wordSet) {
+        currentPracticeState.setWordSet(wordSet);
+    }
+
+    @Override
+    public void addWordSource(Word2Tokens word) {
+        CurrentPracticeState.WordSource wordSource = getWordSource(word);
+        currentPracticeState.addWordsSources(wordSource);
     }
 
     private Word2Tokens getWord2Tokens(CurrentPracticeState.WordSource source) {

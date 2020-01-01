@@ -10,7 +10,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
@@ -116,8 +115,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void initialiseWordsSequence(OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        exerciseService.createSomeIfNecessary(currentPracticeState.getWordSet().getWords());
+        exerciseService.createSomeIfNecessary(currentPracticeStateService.getWordSet().getWords());
     }
 
     @Override
@@ -195,7 +193,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void saveCurrentWordSet(WordSet wordSet) {
-        currentPracticeStateService.save(new CurrentPracticeState(wordSet));
+        currentPracticeStateService.set(wordSet);
     }
 
     @Override
