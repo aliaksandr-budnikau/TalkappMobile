@@ -8,6 +8,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.CurrentPracticeState;
+import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
@@ -51,6 +52,25 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
             result.add(getWord2Tokens(source));
         }
         return result;
+    }
+
+    @Override
+    public Word2Tokens getCurrentWord() {
+        CurrentPracticeState.WordSource source = currentPracticeState.getCurrentWord();
+        if (source == null) {
+            return null;
+        }
+        return getWord2Tokens(source);
+    }
+
+    @Override
+    public Sentence getCurrentSentence() {
+        return currentPracticeState.getCurrentSentence();
+    }
+
+    @Override
+    public void setCurrentSentence(Sentence sentence) {
+        currentPracticeState.setCurrentSentence(sentence);
     }
 
     private Word2Tokens getWord2Tokens(CurrentPracticeState.WordSource source) {

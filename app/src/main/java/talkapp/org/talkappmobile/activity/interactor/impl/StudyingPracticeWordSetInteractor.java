@@ -39,7 +39,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              WordRepetitionProgressService exerciseService,
                                              Context context,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, wordSetService);
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService);
         this.sentenceService = sentenceService;
         this.wordSetService = wordSetService;
         this.currentPracticeStateService = currentPracticeStateService;
@@ -84,8 +84,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public boolean checkAnswer(String answer, final OnPracticeWordSetListener listener) {
         CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        Sentence sentence = currentPracticeState.getCurrentSentence();
-        if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
+        Sentence sentence = currentPracticeStateService.getCurrentSentence();
+        Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
+        if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
         }
 
@@ -109,7 +110,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
         CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        Word2Tokens currentWord = getCurrentWord();
+        Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
         exerciseService.putOffCurrentWord(currentPracticeState.getWordSet().getId());
         List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(currentPracticeState.getWordSet().getId());
         Word2Tokens newCurrentWord = peekRandomWordWithoutCurrentWord(leftOver, currentWord);

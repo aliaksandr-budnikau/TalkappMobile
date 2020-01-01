@@ -46,7 +46,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Context context,
             CurrentPracticeStateService currentPracticeStateService,
             AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, wordSetService);
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService);
         this.sentenceService = sentenceService;
         this.logger = logger;
         this.exerciseService = exerciseService;
@@ -74,7 +74,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     public Word2Tokens peekAnyNewWordByWordSetId() {
         List<Word2Tokens> allWords = currentPracticeStateService.getAllWords();
-        return peekRandomWordWithoutCurrentWord(allWords, getCurrentWord());
+        return peekRandomWordWithoutCurrentWord(allWords, currentPracticeStateService.getCurrentWord());
     }
 
     @Override
@@ -98,13 +98,14 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
         CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-        Sentence sentence = currentPracticeState.getCurrentSentence();
-        if (!super.checkAccuracyOfAnswer(answer, getCurrentWord(), sentence, listener)) {
+        Sentence sentence = currentPracticeStateService.getCurrentSentence();
+        Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
+        if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
             return false;
         }
 
         if (isAnswerHasBeenSeen()) {
-            int counter = exerciseService.markAsForgottenAgain(getCurrentWord());
+            int counter = exerciseService.markAsForgottenAgain(currentWord);
             listener.onForgottenAgain(counter);
             listener.onRightAnswer(sentence);
             return false;
@@ -114,8 +115,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         currentPracticeState.addFinishedWords(currentPracticeState.getCurrentWord());
         currentPracticeStateService.save(currentPracticeState);
         listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), maxTrainingProgress);
-        int repetitionCounter = exerciseService.markAsRepeated(getCurrentWord());
-        exerciseService.shiftSentences(getCurrentWord());
+        int repetitionCounter = exerciseService.markAsRepeated(currentWord);
+        exerciseService.shiftSentences(currentWord);
         return true;
     }
 

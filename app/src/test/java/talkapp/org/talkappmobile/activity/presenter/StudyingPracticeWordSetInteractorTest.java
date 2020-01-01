@@ -179,6 +179,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
         when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
         when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(selectedSentence);
         when(currentPracticeStateService.get()).thenReturn(new CurrentPracticeState(wordSet));
         interactor.initialiseSentence(word, listener);
 
@@ -211,6 +212,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenThrow(new LocalCacheIsEmptyException(""));
         when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
         when(sentenceService.convertToSentence(translation)).thenReturn(selectedSentence);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(selectedSentence);
         when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
         when(currentPracticeStateService.get()).thenReturn(new CurrentPracticeState(wordSet));
         interactor.initialiseSentence(word, listener);
@@ -243,6 +245,7 @@ public class StudyingPracticeWordSetInteractorTest {
         CurrentPracticeState state = new CurrentPracticeState(wordSet);
         state.setCurrentSentence(sentence);
         when(currentPracticeStateService.get()).thenReturn(state);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
@@ -278,6 +281,7 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         CurrentPracticeState state = new CurrentPracticeState(wordSet);
         state.setCurrentSentence(sentence);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(currentPracticeStateService.get()).thenReturn(state);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
@@ -314,6 +318,7 @@ public class StudyingPracticeWordSetInteractorTest {
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         CurrentPracticeState state = new CurrentPracticeState(wordSet);
         state.setCurrentSentence(sentence);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(currentPracticeStateService.get()).thenReturn(state);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
@@ -350,6 +355,7 @@ public class StudyingPracticeWordSetInteractorTest {
         CurrentPracticeState state = new CurrentPracticeState(wordSet);
         state.setCurrentSentence(sentence);
         when(currentPracticeStateService.get()).thenReturn(state);
+        when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(false);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
@@ -490,7 +496,7 @@ public class StudyingPracticeWordSetInteractorTest {
         CurrentPracticeState state = new CurrentPracticeState(wordSet);
         state.setCurrentWord(new CurrentPracticeState.WordSource(wordSetId, words.indexOf(currentWord)));
         when(currentPracticeStateService.get()).thenReturn(state);
-        when(wordSetService.findById(wordSetId)).thenReturn(wordSet);
+        when(currentPracticeStateService.getCurrentWord()).thenReturn(currentWord);
         when(exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId)).thenReturn(asList(currentWord, newCurrentWord));
         Word2Tokens actual = interactor.peekAnyNewWordByWordSetId();
 
