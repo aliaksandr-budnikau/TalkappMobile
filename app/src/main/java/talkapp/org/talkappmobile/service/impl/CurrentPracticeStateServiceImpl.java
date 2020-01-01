@@ -100,7 +100,7 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     }
 
     @Override
-    public void addWordSource(Word2Tokens word) {
+    public void addWord(Word2Tokens word) {
         wordsSources.add(getWordSource(word));
     }
 
