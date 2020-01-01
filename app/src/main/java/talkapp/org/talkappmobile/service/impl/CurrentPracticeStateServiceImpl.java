@@ -96,12 +96,10 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
 
     @Override
     public void set(WordSet wordSet) {
+        for (Word2Tokens word : wordSet.getWords()) {
+            wordsSources.add(getWordSource(word));
+        }
         this.wordSet = wordSet;
-    }
-
-    @Override
-    public void addWord(Word2Tokens word) {
-        wordsSources.add(getWordSource(word));
     }
 
     @Override

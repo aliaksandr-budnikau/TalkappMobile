@@ -54,9 +54,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
         WordSet wordSet = currentPracticeStateService.getWordSet();
-        for (Word2Tokens word : wordSet.getWords()) {
-            currentPracticeStateService.addWord(word);
-        }
         maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();

@@ -26,8 +26,6 @@ public interface CurrentPracticeStateService {
 
     void set(WordSet wordSet);
 
-    void addWord(Word2Tokens word);
-
     void changeWordSetStatus(WordSetProgressStatus status);
 
     void addFinishedWord(Word2Tokens word);
