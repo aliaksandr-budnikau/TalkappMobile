@@ -26,7 +26,6 @@ import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -167,9 +166,9 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         int trainingExperience = 0;
         WordSetProgressStatus status = FIRST_CYCLE;
         if (wordSet != null) {
-            CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
-            trainingExperience = currentPracticeState.getWordSet().getTrainingExperience();
-            status = currentPracticeState.getWordSet().getStatus();
+            WordSet wordSet = currentPracticeStateService.getWordSet();
+            trainingExperience = wordSet.getTrainingExperience();
+            status = wordSet.getStatus();
         }
         wordSet = new WordSet();
         wordSet.setId(id);

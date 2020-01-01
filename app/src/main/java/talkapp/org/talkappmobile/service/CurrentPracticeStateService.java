@@ -6,9 +6,9 @@ import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public interface CurrentPracticeStateService {
-    CurrentPracticeState get();
 
     void save(CurrentPracticeState currentPracticeState);
 
@@ -31,4 +31,8 @@ public interface CurrentPracticeStateService {
     void set(WordSet wordSet);
 
     void addWordSource(Word2Tokens word);
+
+    void changeWordSetStatus(WordSetProgressStatus status);
+
+    void addFinishedWord(Word2Tokens word);
 }

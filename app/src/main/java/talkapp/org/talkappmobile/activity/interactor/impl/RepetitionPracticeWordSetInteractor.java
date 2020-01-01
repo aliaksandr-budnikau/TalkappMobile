@@ -7,7 +7,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -88,7 +87,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
 
     @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
-        CurrentPracticeState currentPracticeState = currentPracticeStateService.get();
         Sentence sentence = currentPracticeStateService.getCurrentSentence();
         Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
         if (!super.checkAccuracyOfAnswer(answer, currentWord, sentence, listener)) {
@@ -102,11 +100,11 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             return false;
         }
 
-        currentPracticeState.getWordSet().setTrainingExperience(currentPracticeState.getWordSet().getTrainingExperience() + 1);
-        currentPracticeState.addFinishedWords(currentPracticeState.getCurrentWord());
-        currentPracticeStateService.save(currentPracticeState);
-        listener.onUpdateProgress(currentPracticeState.getWordSet().getTrainingExperience(), maxTrainingProgress);
-        int repetitionCounter = exerciseService.markAsRepeated(currentWord);
+        WordSet wordSet = currentPracticeStateService.getWordSet();
+        wordSet.setTrainingExperience(wordSet.getTrainingExperience() + 1);
+        currentPracticeStateService.addFinishedWord(currentPracticeStateService.getCurrentWord());
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
+        exerciseService.markAsRepeated(currentWord);
         exerciseService.shiftSentences(currentWord);
         return true;
     }

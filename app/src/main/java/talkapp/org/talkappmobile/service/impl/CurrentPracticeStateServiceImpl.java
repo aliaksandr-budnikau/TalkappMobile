@@ -13,6 +13,7 @@ import talkapp.org.talkappmobile.model.CurrentPracticeState;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -24,11 +25,6 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     public CurrentPracticeStateServiceImpl(WordSetDao wordSetDao, ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
         this.wordSetMapper = new WordSetMapper(mapper);
-    }
-
-    @Override
-    public CurrentPracticeState get() {
-        return currentPracticeState;
     }
 
     @Override
@@ -110,6 +106,19 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     public void addWordSource(Word2Tokens word) {
         CurrentPracticeState.WordSource wordSource = getWordSource(word);
         currentPracticeState.addWordsSources(wordSource);
+    }
+
+    @Override
+    public void changeWordSetStatus(WordSetProgressStatus status) {
+        WordSet wordSet = currentPracticeState.getWordSet();
+        wordSet.setStatus(status);
+        wordSetDao.createNewOrUpdate(wordSetMapper.toMapping(wordSet));
+    }
+
+    @Override
+    public void addFinishedWord(Word2Tokens word) {
+        CurrentPracticeState.WordSource wordSource = getWordSource(word);
+        currentPracticeState.addFinishedWords(wordSource);
     }
 
     private Word2Tokens getWord2Tokens(CurrentPracticeState.WordSource source) {

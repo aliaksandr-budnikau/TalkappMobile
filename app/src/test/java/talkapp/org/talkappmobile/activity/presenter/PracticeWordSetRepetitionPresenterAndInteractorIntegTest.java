@@ -118,7 +118,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         currentPracticeStateService = new CurrentPracticeStateServiceImpl(daoHelper.getWordSetDao(), mapper);
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, experienceUtils, wordTranslationService, context, currentPracticeStateService, new AudioStuffFactoryBean());
-        this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, wordSetService, userExpService, currentPracticeStateService, exerciseService);
+        this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, userExpService, currentPracticeStateService, exerciseService);
         server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
     }
 
@@ -206,7 +206,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
-        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, wordSetService, experienceUtils, exerciseService, currentPracticeStateService), firstCycleViewStrategy);
+        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, experienceUtils, exerciseService, currentPracticeStateService), firstCycleViewStrategy);
     }
 
     private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {

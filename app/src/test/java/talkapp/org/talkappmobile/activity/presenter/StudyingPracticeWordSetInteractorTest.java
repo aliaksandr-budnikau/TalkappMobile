@@ -82,7 +82,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
     @Before
     public void setUp() throws Exception {
-        interactor = new StrategySwitcherDecorator(origInteractor, wordSetService, experienceUtils, exerciseService, currentPracticeStateService);
+        interactor = new StrategySwitcherDecorator(origInteractor, experienceUtils, exerciseService, currentPracticeStateService);
     }
 
     @Test
