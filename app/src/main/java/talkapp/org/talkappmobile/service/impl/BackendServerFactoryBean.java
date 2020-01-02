@@ -12,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
+import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.Logger;
@@ -33,19 +34,18 @@ public class BackendServerFactoryBean implements BackendServerFactory {
     RequestExecutor requestExecutor;
     private Retrofit retrofit;
     private Retrofit gitHubRetrofit;
-    private DataServerImpl backendServer;
+    private DataServer backendServer;
 
     @Override
     public synchronized DataServer get() {
         if (backendServer != null) {
             return backendServer;
         }
-        backendServer = new DataServerImpl(
+        backendServer = new CachedDataServerDecorator(new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
-                serviceFactory.getLocalDataService(),
-                serviceFactory.getWordTranslationService(), requestExecutor
-        );
+                requestExecutor
+        ), serviceFactory.getLocalDataService(), serviceFactory.getWordTranslationService());
         return backendServer;
     }
 

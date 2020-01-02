@@ -30,6 +30,8 @@ import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
@@ -71,7 +73,7 @@ public class DataServerImplTest {
     @Mock
     private WordTranslationService wordTranslationService;
     private LocalDataService localDataService;
-    private DataServerImpl server;
+    private DataServer server;
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
@@ -89,7 +91,7 @@ public class DataServerImplTest {
             }
         };
         localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new DataServerImpl(sentenceRestClient, gitHubRestClient, localDataService, wordTranslationService, requestExecutor);
+        server = new CachedDataServerDecorator(new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor), localDataService, wordTranslationService);
     }
 
     @Test

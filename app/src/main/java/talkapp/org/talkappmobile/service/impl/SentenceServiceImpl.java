@@ -73,7 +73,7 @@ public class SentenceServiceImpl implements SentenceService {
         try {
             result = new LinkedList<>(server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId()));
         } catch (LocalCacheIsEmptyException e) {
-            server.initLocalCacheOfAllSentencesForThisWordset(word.getSourceWordSetId(), WORDS_NUMBER);
+            server.findSentencesByWordSetId(word.getSourceWordSetId(), WORDS_NUMBER);
             List<Sentence> cached = server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId());
             result = new LinkedList<>(cached);
         }

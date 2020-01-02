@@ -119,7 +119,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, experienceUtils, wordTranslationService, context, currentPracticeStateService, new AudioStuffFactoryBean());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, userExpService, currentPracticeStateService, exerciseService);
-        server.initLocalCacheOfAllSentencesForThisWordset(-1, 6);
+        server.findSentencesByWordSetId(-1, 6);
     }
 
     @After

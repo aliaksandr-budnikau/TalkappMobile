@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.support.annotation.NonNull;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,35 +12,28 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
-import talkapp.org.talkappmobile.service.WordTranslationService;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 public class DataServerImpl implements DataServer {
-    private final SentenceRestClient sentenceRestClient;
-
-    private final LocalDataService localDataService;
-    private final WordTranslationService wordTranslationService;
     private final RequestExecutor requestExecutor;
+    private final SentenceRestClient sentenceRestClient;
     private final GitHubRestClient gitHubRestClient;
 
-    public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, LocalDataService localDataService, WordTranslationService wordTranslationService, RequestExecutor requestExecutor) {
+    public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, RequestExecutor requestExecutor) {
+        this.requestExecutor = requestExecutor;
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
-        this.localDataService = localDataService;
-        this.wordTranslationService = wordTranslationService;
-        this.requestExecutor = requestExecutor;
     }
 
     @Override
     public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
-        return localDataService.findSentencesByWords(words, wordsNumber);
+        return emptyList();
     }
 
     @Override
-    public void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber) {
+    public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
         Call<Map<String, List<Sentence>>> call = gitHubRestClient.findSentencesByWordSetId(wordSetId, wordsNumber);
         Map<String, List<Sentence>> body = null;
         try {
@@ -50,37 +41,19 @@ public class DataServerImpl implements DataServer {
         } catch (InternetConnectionLostException e) {
             // do nothing
         }
-        if (body != null) {
-            localDataService.saveSentences(body, wordsNumber);
-        }
+        return body;
     }
 
     @Override
     public List<Topic> findAllTopics() {
         Call<List<Topic>> call = gitHubRestClient.findAllTopics();
-        List<Topic> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            return localDataService.findAllTopics();
-        }
-        if (body == null) {
-            return new LinkedList<>();
-        } else {
-            localDataService.saveTopics(body);
-        }
-        return body;
+        return requestExecutor.execute(call).body();
     }
 
     @Override
     public List<WordSet> findAllWordSets() {
         Call<Map<Integer, List<WordSet>>> call = gitHubRestClient.findAllWordSets();
-        Map<Integer, List<WordSet>> body;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            return localDataService.findAllWordSets();
-        }
+        Map<Integer, List<WordSet>> body = requestExecutor.execute(call).body();
         if (body == null) {
             return new LinkedList<>();
         }
@@ -88,82 +61,24 @@ public class DataServerImpl implements DataServer {
         for (List<WordSet> wordSets : body.values()) {
             result.addAll(wordSets);
         }
-        initWordSetIdsOfWord2Tokens(result);
-        localDataService.saveWordSets(result);
-        return localDataService.findAllWordSets();
-    }
-
-    private void initWordSetIdsOfWord2Tokens(LinkedList<WordSet> wordSets) {
-        for (WordSet wordSet : wordSets) {
-            LinkedList<Word2Tokens> newWords = new LinkedList<>();
-            for (Word2Tokens word : wordSet.getWords()) {
-                newWords.add(new Word2Tokens(word.getWord(), word.getTokens(), wordSet.getId()));
-            }
-            wordSet.setWords(newWords);
-        }
+        return result;
     }
 
     @Override
     public List<WordSet> findWordSetsByTopicId(int topicId) {
-        List<WordSet> sets = localDataService.findAllWordSetsByTopicId(topicId);
-        if (sets == null || sets.isEmpty()) {
-            throw new LocalCacheIsEmptyException("WordSets weren't initialized locally");
-        }
-        return sets;
+        return emptyList();
     }
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language) {
-        List<String> words = localDataService.findWordsOfWordSetById(wordSetId);
         Call<List<WordTranslation>> call = gitHubRestClient.findWordTranslationsByWordSetIdAndByLanguage(wordSetId, language);
-        List<WordTranslation> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            try {
-                return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
-            } catch (InternetConnectionLostException e1) {
-                body = getWordTranslations(language, words);
-            }
-        }
-        if (body == null || body.isEmpty()) {
-            body = getWordTranslations(language, words);
-        }
-        if (body.isEmpty()) {
-            return new LinkedList<>();
-        } else {
-            wordTranslationService.saveWordTranslations(body);
-        }
-        return body;
+        return requestExecutor.execute(call).body();
     }
 
-    @NonNull
-    private List<WordTranslation> getWordTranslations(String language, List<String> words) {
-        List<WordTranslation> result;
-        result = new LinkedList<>();
-        for (String word : words) {
-            Call<WordTranslation> callSingleWord = gitHubRestClient.findWordTranslationByWordAndByLanguageAndByLetter(word, String.valueOf(word.charAt(0)), language);
-            WordTranslation body = null;
-            try {
-                body = requestExecutor.execute(callSingleWord).body();
-            } catch (InternetConnectionLostException e) {
-                result.addAll(getFromLocalDataStorage(language, word));
-            }
-            if (body == null) {
-                result.addAll(getFromLocalDataStorage(language, word));
-            } else {
-                result.add(body);
-            }
-        }
-        return result;
-    }
-
-    private List<WordTranslation> getFromLocalDataStorage(String language, String word) {
-        List<WordTranslation> localTranslations = localDataService.findWordTranslationsByWordsAndByLanguage(asList(word), language);
-        if (localTranslations.isEmpty()) {
-            throw new RuntimeException("It's a bug. Word " + word + " doesn't have translation in the local database.");
-        }
-        return localTranslations;
+    @Override
+    public WordTranslation findWordTranslationByWordAndByLanguageAndByLetter(String word, String letter, String language) {
+        Call<WordTranslation> callSingleWord = gitHubRestClient.findWordTranslationByWordAndByLanguageAndByLetter(word, letter, language);
+        return requestExecutor.execute(callSingleWord).body();
     }
 
     @Override
@@ -179,7 +94,7 @@ public class DataServerImpl implements DataServer {
 
     @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
-        return localDataService.findWordTranslationsByWordsAndByLanguage(words, language);
+        return emptyList();
     }
 
     @Override

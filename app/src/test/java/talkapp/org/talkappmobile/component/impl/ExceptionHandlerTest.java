@@ -12,6 +12,7 @@ import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
@@ -41,7 +42,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ExceptionHandlerTest {
 
-    private DataServer server;
+    private CachedDataServerDecorator server;
     private ExceptionHandlerInteractor interactor;
     private GitHubRestClient gitHubRestClient;
 
@@ -62,11 +63,11 @@ public class ExceptionHandlerTest {
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
         Whitebox.setInternalState(factory, "requestExecutor", requestExecutor);
-        server = factory.get();
+        server = (CachedDataServerDecorator) factory.get();
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
         gitHubRestClient = mock(GitHubRestClient.class);
-        Whitebox.setInternalState(server, "gitHubRestClient", gitHubRestClient);
+        Whitebox.setInternalState(server.getServer(), "gitHubRestClient", gitHubRestClient);
     }
 
     @Test

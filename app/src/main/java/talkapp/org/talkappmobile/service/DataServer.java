@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.service;
 
 import java.util.List;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
@@ -12,7 +13,7 @@ public interface DataServer {
 
     List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId);
 
-    void initLocalCacheOfAllSentencesForThisWordset(int wordSetId, int wordsNumber);
+    Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);
 
     List<Topic> findAllTopics();
 
@@ -27,4 +28,6 @@ public interface DataServer {
     WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word);
 
     boolean saveSentenceScore(Sentence sentence);
+
+    WordTranslation findWordTranslationByWordAndByLanguageAndByLetter(String word, String letter, String language);
 }
