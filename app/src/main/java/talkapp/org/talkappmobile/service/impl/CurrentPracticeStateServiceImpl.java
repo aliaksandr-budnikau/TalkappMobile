@@ -107,14 +107,18 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     }
 
     @Override
-    public void changeWordSetStatus(WordSetProgressStatus status) {
+    public void setStatus(WordSetProgressStatus status) {
         wordSet.setStatus(status);
-        wordSetDao.createNewOrUpdate(wordSetMapper.toMapping(wordSet));
     }
 
     @Override
     public void addFinishedWord(Word2Tokens word) {
         finishedWords.add(getWordSource(word));
+    }
+
+    @Override
+    public void setTrainingExperience(int trainingExperience) {
+        wordSet.setTrainingExperience(trainingExperience);
     }
 
     private Word2Tokens getWord2Tokens(WordSource source) {
@@ -126,11 +130,6 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     public static class WordSource implements Serializable {
         private final int wordSetId;
         private final int wordIndex;
-
-        public WordSource() {
-            wordSetId = 0;
-            wordIndex = 0;
-        }
 
         public WordSource(int wordSetId, int wordIndex) {
             this.wordSetId = wordSetId;

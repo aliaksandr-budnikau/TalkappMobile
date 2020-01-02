@@ -19,7 +19,8 @@ class SecondCycleFinishedStrategy extends PracticeWordSetInteractorStrategy {
 
     @Override
     void finishWord(OnPracticeWordSetListener listener) {
-        currentPracticeStateService.changeWordSetStatus(FINISHED);
+        currentPracticeStateService.setStatus(FINISHED);
+        currentPracticeStateService.persistWordSet();
         progressService.shiftSentences(currentPracticeStateService.getCurrentWord());
         listener.onTrainingFinished();
     }
