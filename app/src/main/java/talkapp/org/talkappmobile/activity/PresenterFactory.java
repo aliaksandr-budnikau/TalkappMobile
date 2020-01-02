@@ -31,17 +31,16 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.EqualityScorer;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
+import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
@@ -65,11 +64,9 @@ public class PresenterFactory {
 
     public IPracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
         WordRepetitionProgressService progressService = serviceFactory.getPracticeWordSetExerciseRepository();
-        SentenceServiceImpl sentenceService = new SentenceServiceImpl(backendServerFactory.get(), progressService, serviceFactory.getMapper());
+        SentenceService sentenceService = serviceFactory.getSentenceService(backendServerFactory.get());
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
-
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
         StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), stateService, progressService, context, audioStuffFactory);
         StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, experienceUtils, progressService, stateService);

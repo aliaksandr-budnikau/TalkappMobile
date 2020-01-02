@@ -22,4 +22,6 @@ public interface ServiceFactory {
     ObjectMapper getMapper();
 
     CurrentPracticeStateService getCurrentPracticeStateService();
+
+    SentenceService getSentenceService(DataServer server);
 }

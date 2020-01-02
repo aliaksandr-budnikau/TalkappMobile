@@ -13,10 +13,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -34,12 +32,10 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -47,7 +43,6 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
     private final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
-    private final SentenceMapper sentenceMapper;
     private final SentenceDao sentenceDao;
     private final WordSetMapper wordSetMapper;
     private WordRepetitionProgressDao exerciseDao;
@@ -60,24 +55,8 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         this.wordSetDao = wordSetDao;
         this.sentenceDao = sentenceDao;
         this.mapper = mapper;
-        this.sentenceMapper = new SentenceMapper(mapper);
         this.wordSetMapper = new WordSetMapper(mapper);
         LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
-    }
-
-    @Override
-    public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
-        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
-        WordSet wordSet = wordSetMapper.toDto(mapping);
-        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId());
-        if (exercises.isEmpty()) {
-            return emptyList();
-        }
-        WordRepetitionProgressMapping exercise = exercises.get(0);
-        if (StringUtils.isEmpty(exercise.getSentenceIds()) || getSentenceIdMappings(exercise.getSentenceIds()).isEmpty()) {
-            return emptyList();
-        }
-        return getSentence(exercise);
     }
 
     @Override
@@ -278,38 +257,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         mapping.setStatus(next(WordSetProgressStatus.valueOf(mapping.getStatus())).name());
         mapping.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
         exerciseDao.createNewOrUpdate(mapping);
-    }
-
-    private List<Sentence> getSentence(WordRepetitionProgressMapping exercise) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(exercise.getWordSetId());
-        WordSet wordSet = wordSetMapper.toDto(wordSetMapping);
-        List<SentenceIdMapping> ids = getSentenceIdMappings(exercise);
-        String[] sentenceIds = new String[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            try {
-                SentenceIdMapping idMapping = ids.get(i);
-                idMapping.setWord(wordSet.getWords().get(exercise.getWordIndex()).getWord());
-                sentenceIds[i] = mapper.writeValueAsString(idMapping);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException();
-            }
-        }
-        List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
-        if (sentences.isEmpty()) {
-            return emptyList();
-        }
-        Map<String, SentenceMapping> hashMap = new HashMap<>();
-        for (SentenceMapping sentence : sentences) {
-            hashMap.put(sentence.getId(), sentence);
-        }
-        LinkedList<Sentence> result = new LinkedList<>();
-        for (String id : sentenceIds) {
-            SentenceMapping mapping = hashMap.get(id);
-            if (mapping != null) {
-                result.add(sentenceMapper.toDto(mapping));
-            }
-        }
-        return result;
     }
 
     private List<SentenceIdMapping> getSentenceIdMappings(WordRepetitionProgressMapping exercise) {

@@ -52,7 +52,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
         currentPracticeStateService.setCurrentWord(word);
-        List<Sentence> sentences = exerciseService.findByWordAndWordSetId(word);
+        List<Sentence> sentences = sentenceService.findByWordAndWordSetId(word);
         if (sentences.isEmpty()) {
             try {
                 sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);

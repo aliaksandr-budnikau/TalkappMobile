@@ -13,6 +13,8 @@ public interface SentenceService {
 
     List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word);
 
+    List<Sentence> findByWordAndWordSetId(Word2Tokens word);
+
     List<Sentence> selectSentences(List<Sentence> sentences);
 
     Sentence convertToSentence(WordTranslation wordTranslation);

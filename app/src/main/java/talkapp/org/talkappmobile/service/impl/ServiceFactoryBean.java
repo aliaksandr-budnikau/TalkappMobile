@@ -34,9 +34,11 @@ import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.MigrationService;
+import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -71,6 +73,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private NewWordSetDraftDao newWordSetDraftDao;
     private MigrationService migrationService;
     private CurrentPracticeStateServiceImpl currentPracticeStateService;
+    private SentenceService sentenceService;
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
@@ -253,5 +256,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         currentPracticeStateService = new CurrentPracticeStateServiceImpl(provideWordSetDao(), getMapper());
         return currentPracticeStateService;
+    }
+
+    @Override
+    public SentenceService getSentenceService(DataServer server) {
+        if (sentenceService != null) {
+            return sentenceService;
+        }
+        sentenceService = new SentenceServiceImpl(server, provideWordSetDao(),
+                provideSentenceDao(), providePracticeWordSetExerciseDao(), getMapper());
+        return sentenceService;
     }
 }

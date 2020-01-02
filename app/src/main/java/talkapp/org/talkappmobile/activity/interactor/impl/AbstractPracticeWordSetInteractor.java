@@ -163,7 +163,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
 
     @Override
     public void findSentencesForChange(Word2Tokens currentWord, OnPracticeWordSetListener listener) {
-        List<Sentence> alreadyPickedSentences = exerciseService.findByWordAndWordSetId(currentWord);
+        List<Sentence> alreadyPickedSentences = sentenceService.findByWordAndWordSetId(currentWord);
         List<Sentence> sentences;
         try {
             sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(currentWord);

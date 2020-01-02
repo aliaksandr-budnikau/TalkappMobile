@@ -1,15 +1,12 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.SentenceContentScore;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,9 +15,16 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.SentenceContentScore;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.service.DataServer;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,11 +39,19 @@ import static talkapp.org.talkappmobile.service.impl.SentenceServiceImpl.WORDS_N
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {
     @Mock
-    WordRepetitionProgressService exerciseService;
-    @Mock
     private DataServer dataServer;
-    @InjectMocks
+    @Mock
+    private WordSetDao wordSetDao;
+    @Mock
+    private SentenceDao sentenceDao;
+    @Mock
+    private WordRepetitionProgressDao progressDao;
     private SentenceServiceImpl sentenceService;
+
+    @Before
+    public void setUp() {
+        sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, progressDao, new ObjectMapper());
+    }
 
     @Test
     public void fetchSentencesFromServerByWordAndWordSetId() {
@@ -140,20 +152,6 @@ public class SentenceServiceImplTest {
 
         // then
         assertTrue(sentencesActual.isEmpty());
-    }
-
-    @Test
-    public void findByWordAndWordSetId() {
-        // setup
-        int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("", "", wordSetId);
-
-        // when
-        when(exerciseService.findByWordAndWordSetId(word)).thenReturn(singletonList(new Sentence()));
-        List<Sentence> list = sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
-
-        // then
-        list.clear();
     }
 
     @Test(expected = IllegalArgumentException.class)

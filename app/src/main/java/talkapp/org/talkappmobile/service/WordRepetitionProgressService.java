@@ -7,7 +7,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public interface WordRepetitionProgressService {
-    List<Sentence> findByWordAndWordSetId(Word2Tokens word);
 
     void save(Word2Tokens word, List<Sentence> sentences);
 
