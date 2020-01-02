@@ -5,14 +5,10 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface DataServer {
-
-    List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId);
-
     Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);
 
     List<Topic> findAllTopics();

@@ -10,7 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,13 +17,14 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,27 +47,35 @@ public class SentenceServiceImplTest {
     @Mock
     private WordRepetitionProgressDao progressDao;
     private SentenceServiceImpl sentenceService;
+    private SentenceMapper sentenceMapper;
 
     @Before
     public void setUp() {
-        sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, progressDao, new ObjectMapper());
+        ObjectMapper mapper = new ObjectMapper();
+        sentenceMapper = new SentenceMapper(mapper);
+        sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, progressDao, mapper);
     }
 
     @Test
     public void fetchSentencesFromServerByWordAndWordSetId() {
         // setup
-        LinkedList<Sentence> sentences = new LinkedList<>();
-        sentences.add(new Sentence());
-        sentences.getLast().getTranslations().put("russian", "Текст 1");
-        sentences.add(new Sentence());
-        sentences.getLast().getTranslations().put("russian", "Текст 1");
-        sentences.add(new Sentence());
-        sentences.getLast().getTranslations().put("russian", "Текст 2");
-        sentences.add(new Sentence());
-        sentences.getLast().getTranslations().put("russian", "Текст 1");
+        LinkedList<SentenceMapping> sentences = new LinkedList<>();
+        sentences.add(new SentenceMapping());
+        sentences.getLast().setTranslations("{\"russian\":\"Текст 1\"}");
+        sentences.getLast().setTokens("[]");
+        sentences.add(new SentenceMapping());
+        sentences.getLast().setTranslations("{\"russian\":\"Текст 1\"}");
+        sentences.getLast().setTokens("[]");
+        sentences.add(new SentenceMapping());
+        sentences.getLast().setTranslations("{\"russian\":\"Текст 2\"}");
+        sentences.getLast().setTokens("[]");
+        sentences.add(new SentenceMapping());
+        sentences.getLast().setTranslations("{\"russian\":\"Текст 1\"}");
+        sentences.getLast().setTokens("[]");
 
         // when
-        when(dataServer.findSentencesByWords(any(Word2Tokens.class), anyInt(), anyInt())).thenReturn(sentences);
+
+        when(sentenceDao.findAllByWord(any(String.class), anyInt())).thenReturn(sentences);
         List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens("sdfsd", "sdfsd", 2));
 
         // then
@@ -83,24 +91,24 @@ public class SentenceServiceImplTest {
         int wordSetId = 3;
         Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
-        Sentence sentence1 = new Sentence();
+        SentenceMapping sentence1 = new SentenceMapping();
         sentence1.setId("fds32ddd");
-        sentence1.setTranslations(new HashMap<String, String>());
-        sentence1.getTranslations().put("russian", "fsdfsdfs");
-        Sentence sentence2 = new Sentence();
+        sentence1.setTokens("[]");
+        sentence1.setTranslations("{\"russian\":\"fsdfsdfs\"}");
+        SentenceMapping sentence2 = new SentenceMapping();
         sentence2.setId("fds32ddddsas");
-        sentence2.setTranslations(new HashMap<String, String>());
-        sentence2.getTranslations().put("russian", "fsdfsdfs2");
-        List<Sentence> sentences = asList(sentence1, sentence2);
+        sentence2.setTokens("[]");
+        sentence2.setTranslations("{\"russian\":\"fsdfsdfs2\"}");
+        List<SentenceMapping> sentences = asList(sentence1, sentence2);
 
         // when
-        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
-        assertEquals(sentences.get(0), sentencesActual.get(0));
+        assertEquals(sentenceMapper.toDto(sentence1), sentencesActual.get(0));
         assertEquals("fds32ddd", sentencesActual.get(0).getId());
-        assertEquals(sentences.get(1), sentencesActual.get(1));
+        assertEquals(sentenceMapper.toDto(sentence2), sentencesActual.get(1));
         assertEquals("fds32ddddsas", sentencesActual.get(1).getId());
     }
 
@@ -114,26 +122,25 @@ public class SentenceServiceImplTest {
         sentence1.setId("fds32ddd");
         Sentence sentence2 = new Sentence();
         sentence2.setId("fds32ddddsas");
-        List<Sentence> sentences = asList(sentence1, sentence2);
+        List<SentenceMapping> sentences = asList(sentenceMapper.toMapping(sentence1, "", 6), sentenceMapper.toMapping(sentence2, "", 6));
 
         // when
-        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
         sentencesActual.clear();
     }
 
-    @Test
+    @Test(expected = LocalCacheIsEmptyException.class)
     public void findByWord_sentenceNotFound() {
         // setup
         int wordSetId = 3;
         Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
-        List<Sentence> sentences = emptyList();
 
         // when
-        when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId)).thenReturn(sentences);
+        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(Collections.<SentenceMapping>emptyList());
         List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then
@@ -147,7 +154,7 @@ public class SentenceServiceImplTest {
         Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
         // when
-        doThrow(RuntimeException.class).when(dataServer.findSentencesByWords(word, WORDS_NUMBER, wordSetId));
+        doThrow(RuntimeException.class).when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER));
         List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
 
         // then

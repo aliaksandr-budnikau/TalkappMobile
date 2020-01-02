@@ -71,10 +71,10 @@ public class SentenceServiceImpl implements SentenceService {
     public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word) {
         List<Sentence> result;
         try {
-            result = new LinkedList<>(server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId()));
+            result = new LinkedList<>(findSentencesByWords(word, WORDS_NUMBER));
         } catch (LocalCacheIsEmptyException e) {
             server.findSentencesByWordSetId(word.getSourceWordSetId(), WORDS_NUMBER);
-            List<Sentence> cached = server.findSentencesByWords(word, WORDS_NUMBER, word.getSourceWordSetId());
+            List<Sentence> cached = findSentencesByWords(word, WORDS_NUMBER);
             result = new LinkedList<>(cached);
         }
         return getRidOfDuplicates(result);
@@ -236,5 +236,19 @@ public class SentenceServiceImpl implements SentenceService {
             throw new RuntimeException(e.getMessage(), e);
         }
         return ids;
+    }
+
+    private List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (SentenceMapping mapping : sentenceDao.findAllByWord(words.getWord(), wordsNumber)) {
+            Sentence dto = sentenceMapper.toDto(mapping);
+            if (dto.getTokens().size() <= wordsNumber) {
+                result.add(dto);
+            }
+        }
+        if (result.isEmpty()) {
+            throw new LocalCacheIsEmptyException("Local cache is empty for sentences of this word set");
+        }
+        return result;
     }
 }

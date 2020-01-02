@@ -5,7 +5,6 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -13,17 +12,12 @@ class DataServerDecorator implements DataServer {
 
     private final DataServer server;
 
-    public DataServer getServer() {
-        return server;
-    }
-
     public DataServerDecorator(DataServer server) {
         this.server = server;
     }
 
-    @Override
-    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
-        return server.findSentencesByWords(words, wordsNumber, wordSetId);
+    public DataServer getServer() {
+        return server;
     }
 
     @Override

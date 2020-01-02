@@ -7,7 +7,6 @@ import java.util.Map;
 import retrofit2.Call;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -25,11 +24,6 @@ public class DataServerImpl implements DataServer {
         this.requestExecutor = requestExecutor;
         this.sentenceRestClient = sentenceRestClient;
         this.gitHubRestClient = gitHubRestClient;
-    }
-
-    @Override
-    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
-        return emptyList();
     }
 
     @Override

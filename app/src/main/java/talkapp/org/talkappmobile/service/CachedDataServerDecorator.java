@@ -28,11 +28,6 @@ public class CachedDataServerDecorator extends DataServerDecorator {
     }
 
     @Override
-    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber, int wordSetId) {
-        return localDataService.findSentencesByWords(words, wordsNumber);
-    }
-
-    @Override
     public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
         Map<String, List<Sentence>> body = super.findSentencesByWordSetId(wordSetId, wordsNumber);
         if (body != null) {

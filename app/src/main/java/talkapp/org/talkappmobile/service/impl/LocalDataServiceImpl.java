@@ -107,21 +107,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public List<Sentence> findSentencesByWords(Word2Tokens words, int wordsNumber) {
-        LinkedList<Sentence> result = new LinkedList<>();
-        for (SentenceMapping mapping : sentenceDao.findAllByWord(words.getWord(), wordsNumber)) {
-            Sentence dto = sentenceMapper.toDto(mapping);
-            if (dto.getTokens().size() <= wordsNumber) {
-                result.add(dto);
-            }
-        }
-        if (result.isEmpty()) {
-            throw new LocalCacheIsEmptyException("Local cache is empty for sentences of this word set");
-        }
-        return result;
-    }
-
-    @Override
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
         LinkedList<WordTranslation> result = new LinkedList<>();
         for (String word : words) {
