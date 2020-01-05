@@ -31,5 +31,11 @@ public interface WordSetService {
 
     void save(WordSet wordSet);
 
+    List<WordSet> findAllWordSets();
+
+    void saveWordSets(List<WordSet> incomingSets);
+
+    List<WordSet> findAllWordSetsLocally();
+
     List<WordSet> getWordSets(Topic topic);
 }

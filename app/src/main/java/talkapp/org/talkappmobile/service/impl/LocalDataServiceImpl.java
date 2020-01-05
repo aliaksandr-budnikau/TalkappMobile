@@ -52,33 +52,6 @@ public class LocalDataServiceImpl implements LocalDataService {
     }
 
     @Override
-    public List<WordSet> findAllWordSets() {
-        List<WordSetMapping> allMappings = wordSetDao.findAll();
-        List<WordSet> result = new LinkedList<>();
-        for (WordSetMapping mapping : allMappings) {
-            result.add(wordSetMapper.toDto(mapping));
-        }
-        return result;
-    }
-
-    @Override
-    public void saveWordSets(final List<WordSet> incomingSets) {
-        LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
-        for (WordSet wordSet : incomingSets) {
-            HashSet<Word2Tokens> setOfWords = new HashSet<>(wordSet.getWords());
-            wordSet.setWords(new LinkedList<>(setOfWords));
-            WordSetMapping newSet = wordSetMapper.toMapping(wordSet);
-            WordSetMapping old = wordSetDao.findById(wordSet.getId());
-            if (old != null) {
-                newSet.setStatus(old.getStatus());
-                newSet.setTrainingExperience(old.getTrainingExperience());
-            }
-            mappingsForSaving.add(newSet);
-        }
-        wordSetDao.refreshAll(mappingsForSaving);
-    }
-
-    @Override
     public List<WordSet> findAllWordSetsByTopicId(int topicId) {
         List<WordSetMapping> allMappings = wordSetDao.findAllByTopicId(String.valueOf(topicId));
         List<WordSet> result = new LinkedList<>();

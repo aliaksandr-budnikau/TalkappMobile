@@ -9,10 +9,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
 public interface LocalDataService {
-    List<WordSet> findAllWordSets();
-
-    void saveWordSets(List<WordSet> wordSets);
-
     List<WordSet> findAllWordSetsByTopicId(int topicId);
 
     void saveTopics(List<Topic> topics);

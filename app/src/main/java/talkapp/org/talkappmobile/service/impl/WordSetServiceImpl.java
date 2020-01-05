@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -167,18 +168,67 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
+    public List<WordSet> findAllWordSets() {
+        List<WordSet> allWordSets;
+        try {
+            allWordSets = server.findAllWordSets();
+        } catch (InternetConnectionLostException e) {
+            return findAllWordSetsLocally();
+        }
+        if (allWordSets == null) {
+            return new LinkedList<>();
+        }
+        initWordSetIdsOfWord2Tokens(allWordSets);
+        return allWordSets;
+    }
+
+
+    protected void initWordSetIdsOfWord2Tokens(List<WordSet> wordSets) {
+        for (WordSet wordSet : wordSets) {
+            LinkedList<Word2Tokens> newWords = new LinkedList<>();
+            for (Word2Tokens word : wordSet.getWords()) {
+                newWords.add(new Word2Tokens(word.getWord(), word.getTokens(), wordSet.getId()));
+            }
+            wordSet.setWords(newWords);
+        }
+    }
+
+    @Override
+    public void saveWordSets(final List<WordSet> incomingSets) {
+        LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
+        for (WordSet wordSet : incomingSets) {
+            HashSet<Word2Tokens> setOfWords = new HashSet<>(wordSet.getWords());
+            wordSet.setWords(new LinkedList<>(setOfWords));
+            WordSetMapping newSet = wordSetMapper.toMapping(wordSet);
+            WordSetMapping old = wordSetDao.findById(wordSet.getId());
+            if (old != null) {
+                newSet.setStatus(old.getStatus());
+                newSet.setTrainingExperience(old.getTrainingExperience());
+            }
+            mappingsForSaving.add(newSet);
+        }
+        wordSetDao.refreshAll(mappingsForSaving);
+    }
+
+    @Override
+    public List<WordSet> findAllWordSetsLocally() {
+        List<WordSetMapping> allMappings = wordSetDao.findAll();
+        List<WordSet> result = new LinkedList<>();
+        for (WordSetMapping mapping : allMappings) {
+            result.add(wordSetMapper.toDto(mapping));
+        }
+        return result;
+    }
+
+    @Override
     public List<WordSet> getWordSets(Topic topic) {
         List<WordSet> wordSets;
         if (topic == null) {
             wordSets = server.findAllWordSets();
         } else {
-            try {
-                wordSets = server.findWordSetsByTopicId(topic.getId());
-            } catch (LocalCacheIsEmptyException e) {
-                server.findAllWordSets();
-                wordSets = server.findWordSetsByTopicId(topic.getId());
-            }
+            wordSets = server.findWordSetsByTopicId(topic.getId());
         }
+        initWordSetIdsOfWord2Tokens(wordSets);
         Collections.sort(wordSets, new WordSetComparator());
         return wordSets;
     }

@@ -8,7 +8,6 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
@@ -50,32 +49,6 @@ public class CachedDataServerDecorator extends DataServerDecorator {
             localDataService.saveTopics(allTopics);
         }
         return allTopics;
-    }
-
-    @Override
-    public List<WordSet> findAllWordSets() {
-        List<WordSet> allWordSets;
-        try {
-            allWordSets = super.findAllWordSets();
-        } catch (InternetConnectionLostException e) {
-            return localDataService.findAllWordSets();
-        }
-        if (allWordSets == null) {
-            return new LinkedList<>();
-        }
-        initWordSetIdsOfWord2Tokens(allWordSets);
-        localDataService.saveWordSets(allWordSets);
-        return localDataService.findAllWordSets();
-    }
-
-    private void initWordSetIdsOfWord2Tokens(List<WordSet> wordSets) {
-        for (WordSet wordSet : wordSets) {
-            LinkedList<Word2Tokens> newWords = new LinkedList<>();
-            for (Word2Tokens word : wordSet.getWords()) {
-                newWords.add(new Word2Tokens(word.getWord(), word.getTokens(), wordSet.getId()));
-            }
-            wordSet.setWords(newWords);
-        }
     }
 
     @Override

@@ -8,26 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-
-import talkapp.org.talkappmobile.DaoHelper;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.LocalDataService;
-import talkapp.org.talkappmobile.service.Logger;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -37,6 +18,24 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
+import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.TextToken;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
+import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.LocalDataService;
+import talkapp.org.talkappmobile.service.Logger;
+import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.M;
 import static java.util.Arrays.asList;
@@ -63,6 +62,7 @@ public class DataServerImplIntegTest {
     private ObjectMapper mapper = new ObjectMapper();
     private WordSetDao wordSetDao;
     private DaoHelper daoHelper;
+    private WordSetService wordSetService;
 
     @Before
     public void init() throws SQLException {
@@ -84,6 +84,7 @@ public class DataServerImplIntegTest {
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         server = factory.get();
+        wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper));
     }
 
     @After
@@ -132,7 +133,7 @@ public class DataServerImplIntegTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
 
-        List<WordSet> actualSets = server.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.findAllWordSets();
         Thread.sleep(1000);
 
         // then
@@ -183,7 +184,7 @@ public class DataServerImplIntegTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
 
-        List<WordSet> actualSets = server.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.findAllWordSets();
         Thread.sleep(1000);
 
         // then
