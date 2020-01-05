@@ -10,7 +10,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
@@ -18,14 +17,12 @@ import talkapp.org.talkappmobile.service.WordTranslationService;
 import static java.util.Arrays.asList;
 
 public class PracticeWordSetVocabularyInteractor {
-    private final DataServer server;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService wordRepetitionProgressService;
 
-    public PracticeWordSetVocabularyInteractor(DataServer server, WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService, CurrentPracticeStateService currentPracticeStateService) {
-        this.server = server;
+    public PracticeWordSetVocabularyInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService, CurrentPracticeStateService currentPracticeStateService) {
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
         this.currentPracticeStateService = currentPracticeStateService;
@@ -39,9 +36,9 @@ public class PracticeWordSetVocabularyInteractor {
 
     private List<WordTranslation> getWordTranslations(WordSet wordSet) {
         if (wordSet.getId() == 0) {
-            return server.findWordTranslationsByWordsAndByLanguage(getWords(wordSet), "russian");
+            return wordTranslationService.findWordTranslationsByWordsAndByLanguage(getWords(wordSet), "russian");
         } else {
-            return server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
+            return wordTranslationService.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
         }
     }
 

@@ -37,5 +37,9 @@ public interface WordSetService {
 
     List<WordSet> findAllWordSetsLocally();
 
+    List<WordSet> findWordSetsByTopicId(int topicId);
+
+    List<WordSet> findAllWordSetsByTopicId(int topicId);
+
     List<WordSet> getWordSets(Topic topic);
 }

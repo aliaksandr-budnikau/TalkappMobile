@@ -85,7 +85,7 @@ public class WordSetsListFragmentTest {
         testHelper = new TestHelper();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        localDataService = new LocalDataServiceImpl(wordSetDaoMock, mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper, logger);
+        localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

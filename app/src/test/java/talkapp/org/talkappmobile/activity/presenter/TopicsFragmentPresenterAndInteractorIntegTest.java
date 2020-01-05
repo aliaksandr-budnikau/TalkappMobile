@@ -41,7 +41,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
 
     @Before
     public void setup() {
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(WordSetDao.class), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), new ObjectMapper(), new LoggerBean());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), new ObjectMapper());
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

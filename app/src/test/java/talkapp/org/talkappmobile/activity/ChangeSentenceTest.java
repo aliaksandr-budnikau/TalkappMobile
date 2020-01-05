@@ -110,14 +110,14 @@ public class ChangeSentenceTest {
         daoHelper = new DaoHelper();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDaoMock, mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper, logger);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(daoHelper.getWordTranslationDao(), mapper);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(mockServiceFactoryBean.getDataServer(), daoHelper.getWordTranslationDao(), wordSetDaoMock, mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         expAuditDaoMock = daoHelper.getExpAuditDao();
         userExpService = new UserExpServiceImpl(expAuditDaoMock, mock(ExpAuditMapper.class));

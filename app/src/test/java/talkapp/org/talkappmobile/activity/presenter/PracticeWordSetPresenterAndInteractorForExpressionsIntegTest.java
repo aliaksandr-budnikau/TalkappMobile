@@ -90,7 +90,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         LoggerBean logger = new LoggerBean();
         ObjectMapper mapper = new ObjectMapper();
         daoHelper = new DaoHelper();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

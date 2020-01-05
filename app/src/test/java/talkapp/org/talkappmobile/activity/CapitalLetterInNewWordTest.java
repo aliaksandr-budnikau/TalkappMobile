@@ -43,6 +43,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
+import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -119,7 +120,7 @@ public class CapitalLetterInNewWordTest {
         wordTranslationDaoMock = daoHelper.getWordTranslationDao();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDaoMock, mock(TopicDao.class), sentenceDaoMock, wordTranslationDaoMock, mapper, logger);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, wordTranslationDaoMock, mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -141,12 +142,13 @@ public class CapitalLetterInNewWordTest {
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         when(mockServiceFactoryBean.getCurrentPracticeStateService()).thenReturn(new CurrentPracticeStateServiceImpl(wordSetDaoMock, mapper));
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(wordTranslationDaoMock, mapper));
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
-        wordSetService = new WordSetServiceImpl(server, wordSetDaoMock, newWordSetDraftDaoMock, mapper);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(factory.get(), wordTranslationDaoMock, wordSetDaoMock, mapper);
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
+        wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, wordSetDaoMock, newWordSetDraftDaoMock, mapper));
         when(mockServiceFactoryBean.getSentenceService(server)).thenReturn(new SentenceServiceImpl(server, wordSetDaoMock, sentenceDaoMock, wordRepetitionProgressDaoMock, mapper));
 
         addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, server, mockServiceFactoryBean.getWordTranslationService());
@@ -160,7 +162,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
-        server.findAllWordSets();
+        wordSetService.findAllWordSets();
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));

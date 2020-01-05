@@ -146,7 +146,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordTranslationService != null) {
             return wordTranslationService;
         }
-        wordTranslationService = new WordTranslationServiceImpl(provideWordTranslationDao(), getMapper());
+        wordTranslationService = new WordTranslationServiceImpl(getDataServer(), provideWordTranslationDao(), provideWordSetDao(), getMapper());
         return wordTranslationService;
     }
 
@@ -164,7 +164,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (localDataService != null) {
             return localDataService;
         }
-        localDataService = new LocalDataServiceImpl(provideWordSetDao(), provideTopicDao(), provideSentenceDao(), provideWordTranslationDao(), MAPPER, logger);
+        localDataService = new LocalDataServiceImpl(provideTopicDao(), provideSentenceDao(), provideWordTranslationDao(), MAPPER);
         return localDataService;
     }
 
@@ -339,7 +339,7 @@ public class ServiceFactoryBean implements ServiceFactory {
                 sentenceRestClient(),
                 gitHubRestClient(),
                 requestExecutor
-        ), getLocalDataService(), getWordTranslationService());
+        ), getLocalDataService());
         return backendServer;
     }
 

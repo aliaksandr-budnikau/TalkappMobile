@@ -67,7 +67,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
 
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

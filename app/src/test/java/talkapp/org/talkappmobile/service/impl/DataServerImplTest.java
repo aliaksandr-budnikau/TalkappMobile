@@ -94,8 +94,8 @@ public class DataServerImplTest {
                 return wordSetDaoMock.createOrUpdate(data);
             }
         };
-        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
-        server = new CachedDataServerDecorator(new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor), localDataService, wordTranslationService);
+        localDataService = new LocalDataServiceImpl(topicDao, sentenceDao, wordTranslationDao, mapper);
+        server = new CachedDataServerDecorator(new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor), localDataService);
         wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper));
     }
 

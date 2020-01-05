@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -36,6 +37,7 @@ public class WordSetServiceImpl implements WordSetService {
     @NonNull
     private final WordSetMapper wordSetMapper;
     private final DataServer server;
+    private final ObjectMapper mapper;
     private int wordSetSize = 12;
 
     public WordSetServiceImpl(@NonNull DataServer server, @NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
@@ -43,6 +45,7 @@ public class WordSetServiceImpl implements WordSetService {
         this.wordSetDao = wordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
         this.wordSetMapper = new WordSetMapper(mapper);
+        this.mapper = mapper;
     }
 
     @Override
@@ -221,13 +224,33 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
+    public List<WordSet> findWordSetsByTopicId(int topicId) {
+        List<WordSet> sets = findAllWordSetsByTopicId(topicId);
+        if (sets == null || sets.isEmpty()) {
+            throw new LocalCacheIsEmptyException("WordSets weren't initialized locally");
+        }
+        return sets;
+    }
+
+    @Override
+    public List<WordSet> findAllWordSetsByTopicId(int topicId) {
+        List<WordSetMapping> allMappings = wordSetDao.findAllByTopicId(String.valueOf(topicId));
+        List<WordSet> result = new LinkedList<>();
+        for (WordSetMapping mapping : allMappings) {
+            result.add(wordSetMapper.toDto(mapping));
+        }
+        return result;
+    }
+
+    @Override
     public List<WordSet> getWordSets(Topic topic) {
         List<WordSet> wordSets;
         if (topic == null) {
             wordSets = server.findAllWordSets();
         } else {
-            wordSets = server.findWordSetsByTopicId(topic.getId());
+            wordSets = findWordSetsByTopicId(topic.getId());
         }
+
         initWordSetIdsOfWord2Tokens(wordSets);
         Collections.sort(wordSets, new WordSetComparator());
         return wordSets;

@@ -12,5 +12,11 @@ public interface WordTranslationService {
 
     void saveWordTranslations(NewWordSetDraft wordSetDraft);
 
+    List<String> findWordsOfWordSetById(int wordSetId);
+
+    List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language);
+
+    List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language);
+
     WordTranslation findByWordAndLanguage(String word, String language);
 }

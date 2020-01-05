@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -82,7 +81,7 @@ public class MainActivityTest {
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class)));
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper, logger);
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
         PresenterFactory presenterFactory = new PresenterFactory();

@@ -75,7 +75,7 @@ public class DataServerImplIntegTest {
 
         daoHelper = new DaoHelper();
         wordSetDao = daoHelper.getWordSetDao();
-        localDataService = new LocalDataServiceImpl(wordSetDao, topicDao, sentenceDao, wordTranslationDao, mapper, logger);
+        localDataService = new LocalDataServiceImpl(topicDao, sentenceDao, wordTranslationDao, mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());

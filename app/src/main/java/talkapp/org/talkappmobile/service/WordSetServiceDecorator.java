@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.service;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
@@ -81,6 +80,16 @@ public abstract class WordSetServiceDecorator implements WordSetService {
     @Override
     public List<WordSet> findAllWordSetsLocally() {
         return wordSetService.findAllWordSetsLocally();
+    }
+
+    @Override
+    public List<WordSet> findWordSetsByTopicId(int topicId) {
+        return wordSetService.findWordSetsByTopicId(topicId);
+    }
+
+    @Override
+    public List<WordSet> findAllWordSetsByTopicId(int topicId) {
+        return wordSetService.findAllWordSetsByTopicId(topicId);
     }
 
     @Override

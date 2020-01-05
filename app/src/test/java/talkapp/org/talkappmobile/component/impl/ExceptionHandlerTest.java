@@ -59,7 +59,7 @@ public class ExceptionHandlerTest {
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", loggerBean);
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(mock(WordSetDao.class), topicDao, sentenceDao, wordTranslationDao, new ObjectMapper(), new LoggerBean()));
+        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(new LocalDataServiceImpl(topicDao, sentenceDao, wordTranslationDao, new ObjectMapper()));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
         Whitebox.setInternalState(factory, "requestExecutor", requestExecutor);

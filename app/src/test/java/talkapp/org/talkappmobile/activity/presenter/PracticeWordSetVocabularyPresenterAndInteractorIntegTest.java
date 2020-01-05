@@ -52,20 +52,20 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     public void setup() {
         ObjectMapper mapper = new ObjectMapper();
         WordSetDao wordSetDao = mock(WordSetDao.class);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(wordSetDao, mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper, new LoggerBean());
+        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(new WordTranslationServiceImpl(mock(WordTranslationDao.class), mapper));
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(mock(WordSetService.class));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        Whitebox.setInternalState(factory, "logger", new LoggerBean());
+        WordTranslationServiceImpl translationService = new WordTranslationServiceImpl(server, mock(WordTranslationDao.class), wordSetDao, mapper);
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(translationService);
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(mock(WordSetService.class));
 
         CurrentPracticeStateService currentPracticeStateService = new CurrentPracticeStateServiceImpl(wordSetDao, mapper);
-        interactor = new PracticeWordSetVocabularyInteractor(server, mockServiceFactoryBean.getWordSetExperienceRepository(), mockServiceFactoryBean.getWordTranslationService(), mockServiceFactoryBean.getPracticeWordSetExerciseRepository(), currentPracticeStateService);
+        interactor = new PracticeWordSetVocabularyInteractor(mockServiceFactoryBean.getWordSetExperienceRepository(), mockServiceFactoryBean.getWordTranslationService(), mockServiceFactoryBean.getPracticeWordSetExerciseRepository(), currentPracticeStateService);
     }
 
     @Test
