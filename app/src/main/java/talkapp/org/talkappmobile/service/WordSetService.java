@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.service;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
@@ -29,4 +30,6 @@ public interface WordSetService {
     WordSet findById(int id);
 
     void save(WordSet wordSet);
+
+    List<WordSet> getWordSets(Topic topic);
 }

@@ -59,7 +59,6 @@ public class WordSetVocabularyViewControllerTest {
         daoHelper = new DaoHelper();
         WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
-        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -71,6 +70,7 @@ public class WordSetVocabularyViewControllerTest {
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        wordSetService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
 
         eventBus = mock(EventBus.class);
         service = new AddingEditingNewWordSetsServiceImpl(eventBus, server, wordTranslationService);

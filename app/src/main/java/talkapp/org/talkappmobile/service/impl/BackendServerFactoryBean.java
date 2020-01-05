@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 
+@Deprecated
 @EBean(scope = EBean.Scope.Singleton)
 public class BackendServerFactoryBean implements BackendServerFactory {
 

@@ -62,13 +62,13 @@ public class PracticeWordSetVocabularyFragmentTest {
 
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
 
-        WordSetServiceImpl wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
+        BackendServerFactoryBean serverFactoryBean = mock(BackendServerFactoryBean.class);
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(serverFactoryBean.get(), daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         PresenterFactory presenterFactory = new PresenterFactory();
         presenterFactory = new PresenterFactory();
 
-        BackendServerFactoryBean serverFactoryBean = mock(BackendServerFactoryBean.class);
         when(serverFactoryBean.get()).thenReturn(mock(DataServer.class));
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", serverFactoryBean);
         Whitebox.setInternalState(presenterFactory, "serviceFactory", mockServiceFactoryBean);

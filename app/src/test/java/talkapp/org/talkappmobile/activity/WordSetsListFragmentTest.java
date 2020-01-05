@@ -91,6 +91,7 @@ public class WordSetsListFragmentTest {
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
+        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
 
         wordRepetitionProgressDaoMock = daoHelper.getWordRepetitionProgressDao();
@@ -99,7 +100,7 @@ public class WordSetsListFragmentTest {
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        wordSetService = new WordSetServiceImpl(wordSetDaoMock, newWordSetDraftDaoMock, mapper);
+        wordSetService = new WordSetServiceImpl(factory.get(), wordSetDaoMock, newWordSetDraftDaoMock, mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);

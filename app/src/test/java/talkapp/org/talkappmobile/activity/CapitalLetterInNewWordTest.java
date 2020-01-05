@@ -138,7 +138,6 @@ public class CapitalLetterInNewWordTest {
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        wordSetService = new WordSetServiceImpl(wordSetDaoMock, newWordSetDraftDaoMock, mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         when(mockServiceFactoryBean.getCurrentPracticeStateService()).thenReturn(new CurrentPracticeStateServiceImpl(wordSetDaoMock, mapper));
@@ -147,6 +146,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        wordSetService = new WordSetServiceImpl(server, wordSetDaoMock, newWordSetDraftDaoMock, mapper);
         when(mockServiceFactoryBean.getSentenceService(server)).thenReturn(new SentenceServiceImpl(server, wordSetDaoMock, sentenceDaoMock, wordRepetitionProgressDaoMock, mapper));
 
         addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, server, mockServiceFactoryBean.getWordTranslationService());

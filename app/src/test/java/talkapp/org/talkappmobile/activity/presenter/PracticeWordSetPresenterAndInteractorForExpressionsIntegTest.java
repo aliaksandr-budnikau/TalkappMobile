@@ -108,12 +108,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         wordSetMapper = new WordSetMapper(mapper);
         currentPracticeStateService = new CurrentPracticeStateServiceImpl(wordSetDao, mapper);
         when(mockServiceFactoryBean.getCurrentPracticeStateService()).thenReturn(currentPracticeStateService);
-        experienceService = new WordSetServiceImpl(wordSetDao, daoHelper.getNewWordSetDraftDao(), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(experienceService);
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        experienceService = new WordSetServiceImpl(server, wordSetDao, daoHelper.getNewWordSetDraftDao(), mapper);
         when(mockServiceFactoryBean.getSentenceService(server)).thenReturn(new SentenceServiceImpl(server, wordSetDao, daoHelper.getSentenceDao(), daoHelper.getWordRepetitionProgressDao(), mapper));
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);

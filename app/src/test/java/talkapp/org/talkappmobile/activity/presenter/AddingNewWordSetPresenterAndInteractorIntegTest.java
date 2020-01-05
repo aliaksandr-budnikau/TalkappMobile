@@ -71,7 +71,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         daoHelper = new DaoHelper();
         wordTranslationDao = daoHelper.getWordTranslationDao();
         LocalDataServiceImpl localDataService = new LocalDataServiceImpl(daoHelper.getWordSetDao(), mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper, new LoggerBean());
-        wordSetService = new WordSetServiceImpl(daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -79,10 +78,11 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
         WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(wordTranslationDao, mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        wordSetService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
+        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         eventBus = mock(EventBus.class);
         controller = new AddingNewWordSetFragmentController(eventBus, server, mockServiceFactoryBean);

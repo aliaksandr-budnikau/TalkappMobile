@@ -10,7 +10,12 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
@@ -33,11 +38,14 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.MigrationService;
+import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.UserExpService;
@@ -50,6 +58,9 @@ import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {
 
+    public static final int TIMEOUT = 50;
+    public static final String SERVER_URL = "http://192.168.0.101:8080";
+    public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
     private final ObjectMapper MAPPER = new ObjectMapper();
     @Bean(LoggerBean.class)
     Logger logger;
@@ -74,13 +85,26 @@ public class ServiceFactoryBean implements ServiceFactory {
     private MigrationService migrationService;
     private CurrentPracticeStateServiceImpl currentPracticeStateService;
     private SentenceService sentenceService;
+    private RequestExecutor requestExecutor;
+    private Retrofit retrofit;
+    private Retrofit gitHubRetrofit;
+    private DataServer backendServer;
+
+    @Override
+    public RequestExecutor getRequestExecutor() {
+        if (requestExecutor != null) {
+            return requestExecutor;
+        }
+        requestExecutor = new RequestExecutor();
+        return requestExecutor;
+    }
 
     @Override
     public WordSetService getWordSetExperienceRepository() {
         if (wordSetExperienceService != null) {
             return wordSetExperienceService;
         }
-        wordSetExperienceService = new WordSetServiceImpl(provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
+        wordSetExperienceService = new WordSetServiceImpl(getDataServer(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetExperienceService;
     }
 
@@ -267,4 +291,63 @@ public class ServiceFactoryBean implements ServiceFactory {
                 provideSentenceDao(), providePracticeWordSetExerciseDao(), getMapper());
         return sentenceService;
     }
+
+    private Retrofit retrofit() {
+        if (retrofit != null) {
+            return retrofit;
+        }
+        retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_URL)
+                .client(okHttpClient())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(jacksonConverterFactory())
+                .build();
+        return retrofit;
+    }
+
+    private Retrofit gitHubRetrofit() {
+        if (gitHubRetrofit != null) {
+            return gitHubRetrofit;
+        }
+        gitHubRetrofit = new Retrofit.Builder()
+                .baseUrl(GIT_HUB_URL)
+                .client(okHttpClient())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(jacksonConverterFactory())
+                .build();
+        return gitHubRetrofit;
+    }
+
+    private OkHttpClient okHttpClient() {
+        return new OkHttpClient().newBuilder()
+                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS).build();
+    }
+
+    private JacksonConverterFactory jacksonConverterFactory() {
+        return JacksonConverterFactory.create(getMapper());
+    }
+
+    @Override
+    public synchronized DataServer getDataServer() {
+        if (backendServer != null) {
+            return backendServer;
+        }
+        backendServer = new CachedDataServerDecorator(new DataServerImpl(
+                sentenceRestClient(),
+                gitHubRestClient(),
+                requestExecutor
+        ), getLocalDataService(), getWordTranslationService());
+        return backendServer;
+    }
+
+    private SentenceRestClient sentenceRestClient() {
+        return retrofit().create(SentenceRestClient.class);
+    }
+
+    private GitHubRestClient gitHubRestClient() {
+        return gitHubRetrofit().create(GitHubRestClient.class);
+    }
+
 }

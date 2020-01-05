@@ -14,6 +14,7 @@ import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.DataServer;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -25,11 +26,13 @@ public class WordSetServiceImplTest {
     private WordSetDao wordSetDao;
     @Mock
     private NewWordSetDraftDao newWordSetDraftDao;
+    @Mock
+    private DataServer dataServer;
     private WordSetServiceImpl wordSetService;
 
     @Before
     public void setUp() throws Exception {
-        wordSetService = new WordSetServiceImpl(wordSetDao, newWordSetDraftDao, new ObjectMapper());
+        wordSetService = new WordSetServiceImpl(dataServer, wordSetDao, newWordSetDraftDao, new ObjectMapper());
     }
 
     @Test

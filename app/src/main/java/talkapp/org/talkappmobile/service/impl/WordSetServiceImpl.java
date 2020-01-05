@@ -4,18 +4,22 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.activity.interactor.impl.WordSetComparator;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -30,9 +34,11 @@ public class WordSetServiceImpl implements WordSetService {
     private final NewWordSetDraftDao newWordSetDraftDao;
     @NonNull
     private final WordSetMapper wordSetMapper;
+    private final DataServer server;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull DataServer server, @NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
+        this.server = server;
         this.wordSetDao = wordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
         this.wordSetMapper = new WordSetMapper(mapper);
@@ -158,5 +164,22 @@ public class WordSetServiceImpl implements WordSetService {
     public void save(WordSet wordSet) {
         WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
         wordSetDao.createNewOrUpdate(wordSetMapping);
+    }
+
+    @Override
+    public List<WordSet> getWordSets(Topic topic) {
+        List<WordSet> wordSets;
+        if (topic == null) {
+            wordSets = server.findAllWordSets();
+        } else {
+            try {
+                wordSets = server.findWordSetsByTopicId(topic.getId());
+            } catch (LocalCacheIsEmptyException e) {
+                server.findAllWordSets();
+                wordSets = server.findWordSetsByTopicId(topic.getId());
+            }
+        }
+        Collections.sort(wordSets, new WordSetComparator());
+        return wordSets;
     }
 }

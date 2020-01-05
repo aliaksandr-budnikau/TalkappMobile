@@ -1,8 +1,5 @@
 package talkapp.org.talkappmobile.activity.interactor.impl;
 
-import android.support.annotation.NonNull;
-
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +13,6 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -34,29 +30,8 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
 
     @Override
     public void initializeWordSets(Topic topic, OnWordSetsListListener listener) {
-        List<WordSet> wordSets = getWordSets(topic);
+        List<WordSet> wordSets = wordSetService.getWordSets(topic);
         listener.onWordSetsInitialized(wordSets, null);
-    }
-
-    @NonNull
-    private List<WordSet> getWordSets(Topic topic) {
-        List<WordSet> wordSets;
-        if (topic == null) {
-            wordSets = server.findAllWordSets();
-        } else {
-            try {
-                wordSets = server.findWordSetsByTopicId(topic.getId());
-            } catch (LocalCacheIsEmptyException e) {
-                initLocalCache();
-                wordSets = server.findWordSetsByTopicId(topic.getId());
-            }
-        }
-        Collections.sort(wordSets, new WordSetComparator());
-        return wordSets;
-    }
-
-    private void initLocalCache() {
-        server.findAllWordSets();
     }
 
     @Override
@@ -95,7 +70,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
 
     @Override
     public void refreshWordSets(Topic topic, OnWordSetsListListener listener) {
-        List<WordSet> wordSets = getWordSets(topic);
+        List<WordSet> wordSets = wordSetService.getWordSets(topic);
         listener.onWordSetsFetched(wordSets, null);
     }
 
