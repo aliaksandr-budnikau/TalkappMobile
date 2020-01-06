@@ -1,9 +1,10 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TabHost;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -13,37 +14,27 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -62,55 +53,35 @@ import static talkapp.org.talkappmobile.activity.WordSetsListFragment.WordSetFil
 public class WordSetsListFragmentTest {
 
     private WordSetsListFragment wordSetsListFragment;
-    private WordRepetitionProgressServiceImpl repetitionProgressService;
-    private WordSetExperienceUtilsImpl experienceUtils;
-    private WordSetServiceImpl wordSetService;
     private PhraseSetsRecyclerView wordSetsListView;
-    private TopicServiceImpl localDataService;
-    private WordSetDao wordSetDaoMock;
-    private SentenceDao sentenceDaoMock;
-    private WordRepetitionProgressDao wordRepetitionProgressDaoMock;
-    private NewWordSetDraftDao newWordSetDraftDaoMock;
-    private DaoHelper daoHelper;
     private TestHelper testHelper;
     private EventBus eventBus;
     private FilterableAdapter adapter;
+    private ServiceFactoryBean serviceFactory;
 
     @Before
     public void setup() throws SQLException {
-        LoggerBean logger = new LoggerBean();
-        ObjectMapper mapper = new ObjectMapper();
-        daoHelper = new DaoHelper();
         testHelper = new TestHelper();
-        wordSetDaoMock = daoHelper.getWordSetDao();
-        sentenceDaoMock = daoHelper.getSentenceDao();
 
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", new LoggerBean());
-        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
-        localDataService = new TopicServiceImpl(mock(TopicDao.class), factory.get());
+        serviceFactory = new ServiceFactoryBean() {
+            private DatabaseHelper helper;
 
-        wordRepetitionProgressDaoMock = daoHelper.getWordRepetitionProgressDao();
-        repetitionProgressService = new WordRepetitionProgressServiceImpl(wordRepetitionProgressDaoMock, wordSetDaoMock, sentenceDaoMock, mapper);
-        when(mockServiceFactoryBean.getPracticeWordSetExerciseRepository()).thenReturn(repetitionProgressService);
-
-        experienceUtils = new WordSetExperienceUtilsImpl();
-        newWordSetDraftDaoMock = daoHelper.getNewWordSetDraftDao();
-        wordSetService = new WordSetServiceImpl(factory.get(), wordSetDaoMock, newWordSetDraftDaoMock, mapper);
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
-
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
+        serviceFactory.setContext(mock(Context.class));
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsRecyclerView.class))).thenReturn(mock(WaitingForProgressBarManager.class));
-
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         eventBus = testHelper.getEventBusMock();
 
         wordSetsListFragment = new WordSetsListFragment();
-        Whitebox.setInternalState(wordSetsListFragment, "backendServerFactory", factory);
-        Whitebox.setInternalState(wordSetsListFragment, "serviceFactory", mockServiceFactoryBean);
+        Whitebox.setInternalState(wordSetsListFragment, "serviceFactory", serviceFactory);
         TabHost tabHost = mock(TabHost.class);
         when(tabHost.newTabSpec(anyString())).thenReturn(mock(TabHost.TabSpec.class));
         Whitebox.setInternalState(wordSetsListFragment, "tabHost", tabHost);
@@ -146,7 +117,7 @@ public class WordSetsListFragmentTest {
         checkWord2Tokens(wordSet, words);
         assertFalse(em.isRepetitionMode());
 
-        List<WordSet> allWordSets = wordSetService.findAllWordSets();
+        List<WordSet> allWordSets = serviceFactory.getWordSetExperienceRepository().findAllWordSets();
         for (WordSet set : allWordSets) {
             checkWord2Tokens(set, set.getWords());
         }
@@ -173,7 +144,7 @@ public class WordSetsListFragmentTest {
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
     }
 
     private void checkWord2Tokens(WordSet wordSet, List<Word2Tokens> words) {
