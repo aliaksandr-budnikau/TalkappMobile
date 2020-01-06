@@ -38,6 +38,7 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+import talkapp.org.talkappmobile.service.CachedSentenceServiceDecorator;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -259,7 +260,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
     }
 
-    private DatabaseHelper databaseHelper() {
+    protected DatabaseHelper databaseHelper() {
         if (databaseHelper != null) {
             return databaseHelper;
         }
@@ -287,8 +288,9 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (sentenceService != null) {
             return sentenceService;
         }
-        sentenceService = new SentenceServiceImpl(server, provideWordSetDao(),
-                provideSentenceDao(), providePracticeWordSetExerciseDao(), getMapper());
+        DataServer dataServer = server == null ? getDataServer() : server;
+        sentenceService = new CachedSentenceServiceDecorator(new SentenceServiceImpl(dataServer, provideWordSetDao(),
+                provideSentenceDao(), providePracticeWordSetExerciseDao(), getMapper()));
         return sentenceService;
     }
 
@@ -337,7 +339,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         backendServer = new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
-                requestExecutor
+                getRequestExecutor()
         );
         return backendServer;
     }
@@ -350,4 +352,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         return gitHubRetrofit().create(GitHubRestClient.class);
     }
 
+    public void setContext(Context context) {
+        this.context = context;
+    }
 }
