@@ -352,7 +352,14 @@ public class ServiceFactoryBean implements ServiceFactory {
         return gitHubRetrofit().create(GitHubRestClient.class);
     }
 
+    @Deprecated
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    @Deprecated
+    public WordRepetitionProgressDaoImpl getExerciseDao() {
+        providePracticeWordSetExerciseDao();
+        return exerciseDao;
     }
 }
