@@ -27,7 +27,7 @@ import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -52,7 +52,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     public void setup() {
         ObjectMapper mapper = new ObjectMapper();
         WordSetDao wordSetDao = mock(WordSetDao.class);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), mock(SentenceDao.class), mock(WordTranslationDao.class), mapper);
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);

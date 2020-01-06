@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecora
 import talkapp.org.talkappmobile.activity.interactor.impl.UserExperienceDecorator;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
@@ -36,6 +35,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.service.CachedSentenceServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -47,13 +47,13 @@ import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
@@ -99,12 +99,12 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         ObjectMapper mapper = new ObjectMapper();
         LoggerBean logger = new LoggerBean();
         daoHelper = new DaoHelper();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), daoHelper.getSentenceDao(), mock(WordTranslationDao.class), mapper);
+        TopicServiceImpl topicService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(topicService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
@@ -114,12 +114,12 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
         wordTranslationService = new WordTranslationServiceImpl(mockServiceFactoryBean.getDataServer(), daoHelper.getWordTranslationDao(), daoHelper.getWordSetDao(), mapper);
-        SentenceService sentenceService = new SentenceServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), daoHelper.getWordRepetitionProgressDao(), mapper);
+        SentenceService sentenceService = new CachedSentenceServiceDecorator(new SentenceServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), daoHelper.getWordRepetitionProgressDao(), mapper));
         currentPracticeStateService = new CurrentPracticeStateServiceImpl(daoHelper.getWordSetDao(), mapper);
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, exerciseService, experienceUtils, wordTranslationService, context, currentPracticeStateService, new AudioStuffFactoryBean());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, userExpService, currentPracticeStateService, exerciseService);
-        server.findSentencesByWordSetId(-1, 6);
+        sentenceService.findSentencesByWordSetId(-1, 6);
     }
 
     @After

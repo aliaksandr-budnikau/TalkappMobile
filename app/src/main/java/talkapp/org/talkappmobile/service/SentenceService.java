@@ -1,6 +1,7 @@
 package talkapp.org.talkappmobile.service;
 
 import java.util.List;
+import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -19,5 +20,9 @@ public interface SentenceService {
 
     Sentence convertToSentence(WordTranslation wordTranslation);
 
+    void saveSentences(Map<String, List<Sentence>> words2Sentences, int wordsNumber);
+
     void orderByScore(List<Sentence> sentences);
+
+    Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);
 }

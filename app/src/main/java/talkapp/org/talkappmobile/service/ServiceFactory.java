@@ -16,7 +16,7 @@ public interface ServiceFactory {
 
     UserExpService getUserExpService();
 
-    LocalDataService getLocalDataService();
+    TopicService getTopicService();
 
     WordTranslationService getWordTranslationService();
 

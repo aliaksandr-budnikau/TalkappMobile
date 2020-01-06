@@ -33,7 +33,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.LocalDataService;
+import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.WordSetService;
 
@@ -57,7 +57,7 @@ public class DataServerImplIntegTest {
     private GitHubRestClient gitHubRestClient;
     private Logger logger;
     private RequestExecutor requestExecutor;
-    private LocalDataService localDataService;
+    private TopicService topicService;
     private DataServer server;
     private ObjectMapper mapper = new ObjectMapper();
     private WordSetDao wordSetDao;
@@ -75,12 +75,12 @@ public class DataServerImplIntegTest {
 
         daoHelper = new DaoHelper();
         wordSetDao = daoHelper.getWordSetDao();
-        localDataService = new LocalDataServiceImpl(topicDao, sentenceDao, wordTranslationDao, mapper);
+        topicService = new TopicServiceImpl(topicDao);
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(topicService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         server = factory.get();

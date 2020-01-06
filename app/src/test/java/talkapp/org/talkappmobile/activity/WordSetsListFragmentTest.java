@@ -35,7 +35,7 @@ import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -67,7 +67,7 @@ public class WordSetsListFragmentTest {
     private WordSetExperienceUtilsImpl experienceUtils;
     private WordSetServiceImpl wordSetService;
     private PhraseSetsRecyclerView wordSetsListView;
-    private LocalDataServiceImpl localDataService;
+    private TopicServiceImpl localDataService;
     private WordSetDao wordSetDaoMock;
     private SentenceDao sentenceDaoMock;
     private WordRepetitionProgressDao wordRepetitionProgressDaoMock;
@@ -85,14 +85,14 @@ public class WordSetsListFragmentTest {
         testHelper = new TestHelper();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper);
+        localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
 
         wordRepetitionProgressDaoMock = daoHelper.getWordRepetitionProgressDao();
         repetitionProgressService = new WordRepetitionProgressServiceImpl(wordRepetitionProgressDaoMock, wordSetDaoMock, sentenceDaoMock, mapper);

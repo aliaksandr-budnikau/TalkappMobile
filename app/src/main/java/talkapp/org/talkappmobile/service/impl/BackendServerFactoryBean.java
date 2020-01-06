@@ -46,7 +46,7 @@ public class BackendServerFactoryBean implements BackendServerFactory {
                 sentenceRestClient(),
                 gitHubRestClient(),
                 requestExecutor
-        ), serviceFactory.getLocalDataService());
+        ), serviceFactory.getTopicService());
         return backendServer;
     }
 

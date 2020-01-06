@@ -43,12 +43,12 @@ import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.LocalDataService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
@@ -78,7 +78,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordSetService wordSetService;
     private UserExpService userExpService;
     private ExpAuditMapper expAuditMapper;
-    private LocalDataService localDataService;
+    private TopicService topicService;
     private WordTranslationService wordTranslationService;
     private ExpAuditDao expAuditDao;
     private WordSetExperienceUtils experienceUtils;
@@ -160,12 +160,12 @@ public class ServiceFactoryBean implements ServiceFactory {
     }
 
     @Override
-    public LocalDataService getLocalDataService() {
-        if (localDataService != null) {
-            return localDataService;
+    public TopicService getTopicService() {
+        if (topicService != null) {
+            return topicService;
         }
-        localDataService = new LocalDataServiceImpl(provideTopicDao(), provideSentenceDao(), provideWordTranslationDao(), MAPPER);
-        return localDataService;
+        topicService = new TopicServiceImpl(provideTopicDao());
+        return topicService;
     }
 
     private WordRepetitionProgressDao providePracticeWordSetExerciseDao() {
@@ -339,7 +339,7 @@ public class ServiceFactoryBean implements ServiceFactory {
                 sentenceRestClient(),
                 gitHubRestClient(),
                 requestExecutor
-        ), getLocalDataService());
+        ), getTopicService());
         return backendServer;
     }
 

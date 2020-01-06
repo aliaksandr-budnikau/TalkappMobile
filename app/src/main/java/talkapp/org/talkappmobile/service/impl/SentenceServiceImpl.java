@@ -69,14 +69,7 @@ public class SentenceServiceImpl implements SentenceService {
 
     @Override
     public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word) {
-        List<Sentence> result;
-        try {
-            result = new LinkedList<>(findSentencesByWords(word, WORDS_NUMBER));
-        } catch (LocalCacheIsEmptyException e) {
-            server.findSentencesByWordSetId(word.getSourceWordSetId(), WORDS_NUMBER);
-            List<Sentence> cached = findSentencesByWords(word, WORDS_NUMBER);
-            result = new LinkedList<>(cached);
-        }
+        List<Sentence> result = new LinkedList<>(findSentencesByWords(word, WORDS_NUMBER));
         return getRidOfDuplicates(result);
     }
 
@@ -196,6 +189,17 @@ public class SentenceServiceImpl implements SentenceService {
     }
 
     @Override
+    public void saveSentences(final Map<String, List<Sentence>> words2Sentences, final int wordsNumber) {
+        for (String word : words2Sentences.keySet()) {
+            LinkedList<SentenceMapping> mappings = new LinkedList<>();
+            for (Sentence sentence : words2Sentences.get(word)) {
+                mappings.add(sentenceMapper.toMapping(sentence, word, wordsNumber));
+            }
+            sentenceDao.save(mappings);
+        }
+    }
+
+    @Override
     public void orderByScore(List<Sentence> sentences) {
         Collections.sort(sentences, new Comparator<Sentence>() {
             @Override
@@ -214,6 +218,11 @@ public class SentenceServiceImpl implements SentenceService {
                 return o1.getContentScore().compareTo(o2.getContentScore());
             }
         });
+    }
+
+    @Override
+    public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
+        return server.findSentencesByWordSetId(wordSetId, wordsNumber);
     }
 
     @NonNull

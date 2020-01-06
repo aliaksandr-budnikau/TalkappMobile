@@ -47,6 +47,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.service.CachedSentenceServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -55,7 +56,7 @@ import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
@@ -110,12 +111,12 @@ public class ChangeSentenceTest {
         daoHelper = new DaoHelper();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, mock(WordTranslationDao.class), mapper);
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
 
         WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(mockServiceFactoryBean.getDataServer(), daoHelper.getWordTranslationDao(), wordSetDaoMock, mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
@@ -137,7 +138,7 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
         experienceService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), newWordSetDraftDaoMock, mapper);
-        when(mockServiceFactoryBean.getSentenceService(server)).thenReturn(new SentenceServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), daoHelper.getWordRepetitionProgressDao(), mapper));
+        when(mockServiceFactoryBean.getSentenceService(server)).thenReturn(new CachedSentenceServiceDecorator(new SentenceServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), daoHelper.getWordRepetitionProgressDao(), mapper)));
 
         PresenterFactory presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);

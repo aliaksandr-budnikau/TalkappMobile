@@ -25,7 +25,7 @@ import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -58,12 +58,12 @@ public class WordSetVocabularyViewControllerTest {
         this.wordTranslationMapper = new WordTranslationMapper(mapper);
         daoHelper = new DaoHelper();
         WordTranslationDao wordTranslationDao = mock(WordTranslationDao.class);
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), daoHelper.getSentenceDao(), wordTranslationDao, mapper);
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
         WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(mockServiceFactoryBean.getDataServer(), wordTranslationDao, daoHelper.getWordSetDao(), mapper);
         when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);

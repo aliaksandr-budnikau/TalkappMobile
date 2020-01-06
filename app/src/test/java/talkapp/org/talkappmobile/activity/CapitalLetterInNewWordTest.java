@@ -53,7 +53,7 @@ import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LocalDataServiceImpl;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImpl;
@@ -120,12 +120,12 @@ public class CapitalLetterInNewWordTest {
         wordTranslationDaoMock = daoHelper.getWordTranslationDao();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        LocalDataServiceImpl localDataService = new LocalDataServiceImpl(mock(TopicDao.class), sentenceDaoMock, wordTranslationDaoMock, mapper);
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getLocalDataService()).thenReturn(localDataService);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
         when(mockServiceFactoryBean.getMapper()).thenReturn(new ObjectMapper());
 
         expAuditDaoMock = daoHelper.getExpAuditDao();
