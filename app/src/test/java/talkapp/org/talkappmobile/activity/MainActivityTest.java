@@ -6,7 +6,7 @@ import android.content.pm.PackageManager;
 import android.support.design.widget.NavigationView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -15,26 +15,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 import java.util.Date;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.UserExpServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -53,13 +49,11 @@ public class MainActivityTest {
     private PackageInfo packageInfo;
     private TextView applicationVersion;
     private TextView userExp;
-    private DaoHelper daoHelper;
+    private ServiceFactoryBean serviceFactory;
+    private ExpAuditMapper expAuditMapper;
 
     @Before
     public void setup() throws SQLException {
-        daoHelper = new DaoHelper();
-        LoggerBean logger = new LoggerBean();
-        ObjectMapper mapper = new ObjectMapper();
         packageManager = mock(PackageManager.class);
         mainActivity = new MainActivity() {
             @Override
@@ -72,21 +66,22 @@ public class MainActivityTest {
         eventBus = mock(EventBus.class);
         Whitebox.setInternalState(mainActivity, "eventBus", eventBus);
 
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", logger);
-        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
+        serviceFactory = new ServiceFactoryBean() {
+            private DatabaseHelper helper;
 
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class)));
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), factory.get());
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
+        serviceFactory.setContext(mock(Context.class));
 
         PresenterFactory presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "backendServerFactory", factory);
-        Whitebox.setInternalState(presenterFactory, "serviceFactory", mockServiceFactoryBean);
-
+        Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(mainActivity, "presenterFactory", presenterFactory);
 
         applicationVersion = mock(TextView.class);
@@ -95,11 +90,13 @@ public class MainActivityTest {
         when(navigationViewMock.getHeaderView(0).findViewById(R.id.applicationVersion)).thenReturn(applicationVersion);
         when(navigationViewMock.getHeaderView(0).findViewById(R.id.userExp)).thenReturn(userExp);
         Whitebox.setInternalState(mainActivity, "navigationView", navigationViewMock);
+
+        expAuditMapper = new ExpAuditMapper();
     }
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
     }
 
     @Test
@@ -111,14 +108,13 @@ public class MainActivityTest {
         ExpAuditMapping mapping = new ExpAuditMapping();
         mapping.setExpScore(10);
         mapping.setDate(new Date(3));
-        mapping.setActivityType("TYPE");
-        daoHelper.getExpAuditDao().save(mapping);
+        mapping.setActivityType("WORD_SET_PRACTICE");
+        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
         mapping = new ExpAuditMapping();
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
-        mapping.setActivityType("TYPE");
-        daoHelper.getExpAuditDao().save(mapping);
-
+        mapping.setActivityType("WORD_SET_PRACTICE");
+        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
         mainActivity.initPresenter();
         verify(applicationVersion).setText("v" + packageInfo.versionName);
         verify(userExp).setText("EXP " + 60.0);
@@ -127,8 +123,8 @@ public class MainActivityTest {
         mapping = new ExpAuditMapping();
         mapping.setExpScore(50);
         mapping.setDate(new Date(3));
-        mapping.setActivityType("TYPE");
-        daoHelper.getExpAuditDao().save(mapping);
+        mapping.setActivityType("WORD_SET_PRACTICE");
+        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
 
         mainActivity.onMessageEvent(new UserExpUpdatedEM(3));
         verify(userExp).setText("EXP " + 110.0);
