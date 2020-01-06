@@ -1,16 +1,16 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,25 +19,18 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
-import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.TopicService;
-import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.M;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -51,45 +44,36 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {M}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class DataServerImplIntegTest {
-    private TopicDao topicDao;
-    private SentenceDao sentenceDao;
-    private WordTranslationDao wordTranslationDao;
     private GitHubRestClient gitHubRestClient;
-    private Logger logger;
     private RequestExecutor requestExecutor;
-    private TopicService topicService;
-    private DataServer server;
-    private ObjectMapper mapper = new ObjectMapper();
-    private WordSetDao wordSetDao;
-    private DaoHelper daoHelper;
     private WordSetService wordSetService;
+    private ServiceFactoryBean serviceFactory;
+    private WordSetMapper wordSetMapper;
 
     @Before
-    public void init() throws SQLException {
-        topicDao = mock(TopicDao.class);
-        sentenceDao = mock(SentenceDao.class);
-        wordTranslationDao = mock(WordTranslationDao.class);
+    public void init() {
         gitHubRestClient = mock(GitHubRestClient.class);
         requestExecutor = mock(RequestExecutor.class);
-        logger = mock(Logger.class);
 
-        daoHelper = new DaoHelper();
-        wordSetDao = daoHelper.getWordSetDao();
-        topicService = new TopicServiceImpl(topicDao, server);
+        serviceFactory = new ServiceFactoryBean() {
+            private DatabaseHelper helper;
 
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", new LoggerBean());
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(topicService);
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
-        server = factory.get();
-        wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper));
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
+        wordSetMapper = new WordSetMapper(new ObjectMapper());
+        wordSetService = serviceFactory.getWordSetExperienceRepository();
     }
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
     }
 
     @Test
@@ -109,8 +93,8 @@ public class DataServerImplIntegTest {
         wordSetMapping2.setTrainingExperience(11);
         wordSetMapping2.setTopicId("22");
         wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
-        wordSetDao.refreshAll(wordSetsMappingsWithProgress);
+        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapper.toDto(wordSetMapping1), wordSetMapper.toDto(wordSetMapping2));
+        serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
         wordSet1.setId(1);
@@ -160,8 +144,8 @@ public class DataServerImplIntegTest {
         wordSetMapping2.setTrainingExperience(11);
         wordSetMapping2.setTopicId("22");
         wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        List<WordSetMapping> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
-        wordSetDao.refreshAll(wordSetsMappingsWithProgress);
+        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapper.toDto(wordSetMapping1), wordSetMapper.toDto(wordSetMapping2));
+        serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
         wordSet1.setId(1);
