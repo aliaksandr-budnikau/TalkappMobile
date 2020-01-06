@@ -40,17 +40,16 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
 
     @Before
     public void setup() {
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        TopicServiceImpl topicService = new TopicServiceImpl(mock(TopicDao.class), server);
 
-        topicsFragmentInteractor = new TopicsFragmentInteractor(server);
+        topicsFragmentInteractor = new TopicsFragmentInteractor(topicService);
     }
 
     @Test

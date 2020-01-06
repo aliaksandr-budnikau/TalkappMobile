@@ -89,7 +89,7 @@ public class PresenterFactory {
     }
 
     public MainActivityPresenter create(MainActivityView view, Context context) {
-        MainActivityInteractor interactor = new MainActivityInteractor(backendServerFactory.get(), serviceFactory.getUserExpService(), context);
+        MainActivityInteractor interactor = new MainActivityInteractor(serviceFactory.getTopicService(), serviceFactory.getUserExpService(), context);
         return new MainActivityPresenter(view, interactor);
     }
 

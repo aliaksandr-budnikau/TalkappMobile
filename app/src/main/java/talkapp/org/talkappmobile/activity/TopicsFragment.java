@@ -12,9 +12,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 
 import java.util.List;
 
@@ -25,6 +22,9 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
+import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 
@@ -32,8 +32,8 @@ import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsL
 public class TopicsFragment extends Fragment implements TopicsFragmentView {
     @Bean
     TopicListAdapter adapter;
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
+    @Bean(ServiceFactoryBean.class)
+    ServiceFactory serviceFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -47,7 +47,7 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
 
     @AfterViews
     public void init() {
-        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(backendServerFactory.get());
+        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
 
         topicsListView.setAdapter(adapter);
 

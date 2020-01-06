@@ -4,25 +4,24 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.UserExpService;
-
 import talkapp.org.talkappmobile.activity.listener.OnMainActivityListener;
+import talkapp.org.talkappmobile.service.TopicService;
+import talkapp.org.talkappmobile.service.UserExpService;
 
 public class MainActivityInteractor {
 
-    private final DataServer server;
     private final UserExpService userExpService;
     private final Context context;
+    private final TopicService topicService;
 
-    public MainActivityInteractor(DataServer server, UserExpService userExpService, Context context) {
-        this.server = server;
+    public MainActivityInteractor(TopicService topicService, UserExpService userExpService, Context context) {
+        this.topicService = topicService;
         this.userExpService = userExpService;
         this.context = context;
     }
 
     public void checkServerAvailability() {
-        server.findAllTopics();
+        topicService.findAllTopics();
     }
 
     public void initAppVersion(OnMainActivityListener listener) {

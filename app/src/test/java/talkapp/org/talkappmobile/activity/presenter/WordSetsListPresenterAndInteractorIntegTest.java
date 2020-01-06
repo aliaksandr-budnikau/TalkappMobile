@@ -20,7 +20,6 @@ import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListIn
 import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
@@ -29,13 +28,14 @@ import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
+import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
@@ -67,17 +67,17 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         WordRepetitionProgressServiceImpl exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), mock(SentenceDao.class), mapper);
         experienceUtils = new WordSetExperienceUtilsImpl();
 
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
-
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), server);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
+
         WordSetService experienceService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper));
-        studyingWordSetsInteractor = new StudyingWordSetsListInteractor(server, experienceService, exerciseService);
+        studyingWordSetsInteractor = new StudyingWordSetsListInteractor(new WordTranslationServiceImpl(server, daoHelper.getWordTranslationDao(), daoHelper.getWordSetDao(), mapper), experienceService, exerciseService);
     }
 
     @After

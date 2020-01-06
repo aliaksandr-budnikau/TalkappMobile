@@ -116,7 +116,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Background
     public void initPresenter() {
-        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(backendServerFactory.get(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
+        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
             RepetitionClass repetitionClass = this.repetitionClass == null ? RepetitionClass.NEW : this.repetitionClass;
             interactor = new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository(), repetitionClass);

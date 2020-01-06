@@ -16,7 +16,6 @@ import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
@@ -26,16 +25,13 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class AddingNewWordSetFragmentController {
 
-    private static final int WORDS_NUMBER = 6;
     private static final String RUSSIAN_LANGUAGE = "russian";
     private final EventBus eventBus;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
-    private final DataServer server;
 
-    public AddingNewWordSetFragmentController(@NonNull EventBus eventBus, @NonNull DataServer server, @NonNull ServiceFactory factory) {
+    public AddingNewWordSetFragmentController(@NonNull EventBus eventBus, @NonNull ServiceFactory factory) {
         this.eventBus = eventBus;
-        this.server = server;
         this.wordTranslationService = factory.getWordTranslationService();
         this.wordSetService = factory.getWordSetExperienceRepository();
     }
@@ -59,7 +55,7 @@ public class AddingNewWordSetFragmentController {
         for (WordTranslation normalizedWord : normalizedWords) {
             WordTranslation result;
             if (isEmpty(normalizedWord.getTranslation())) {
-                result = server.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedWord.getWord());
+                result = wordTranslationService.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedWord.getWord());
                 if (result == null) {
                     continue;
                 }

@@ -10,20 +10,20 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
-    private final DataServer server;
     private final WordSetService wordSetService;
     private final WordRepetitionProgressService exerciseService;
+    private final WordTranslationService wordTranslationService;
 
-    public StudyingWordSetsListInteractor(DataServer server, WordSetService wordSetService, WordRepetitionProgressService exerciseService) {
-        this.server = server;
+    public StudyingWordSetsListInteractor(WordTranslationService wordTranslationService, WordSetService wordSetService, WordRepetitionProgressService exerciseService) {
+        this.wordTranslationService = wordTranslationService;
         this.wordSetService = wordSetService;
         this.exerciseService = exerciseService;
     }
@@ -81,7 +81,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
             return;
         }
         WordSet wordSet = wordSetService.findById(wordSetId);
-        List<WordTranslation> wordTranslations = server.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
+        List<WordTranslation> wordTranslations = wordTranslationService.findWordTranslationsByWordSetIdAndByLanguage(wordSet.getId(), "russian");
         LinkedList<WordAndTranslationQRObject> qrObjects = new LinkedList<>();
         for (WordTranslation wordTranslation : wordTranslations) {
             qrObjects.add(new WordAndTranslationQRObject(wordTranslation.getWord(), wordTranslation.getTranslation()));

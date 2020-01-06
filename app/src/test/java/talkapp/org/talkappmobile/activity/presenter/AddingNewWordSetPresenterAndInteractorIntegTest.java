@@ -70,22 +70,22 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         this.wordTranslationMapper = new WordTranslationMapper(mapper);
         daoHelper = new DaoHelper();
         wordTranslationDao = daoHelper.getWordTranslationDao();
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(mockServiceFactoryBean.getDataServer(), wordTranslationDao, daoHelper.getWordSetDao(), mapper);
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), server);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
+        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(server, wordTranslationDao, daoHelper.getWordSetDao(), mapper);
+        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
         wordSetService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
         when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
 
         eventBus = mock(EventBus.class);
-        controller = new AddingNewWordSetFragmentController(eventBus, server, mockServiceFactoryBean);
+        controller = new AddingNewWordSetFragmentController(eventBus, mockServiceFactoryBean);
     }
 
     @Test

@@ -168,4 +168,9 @@ public class WordTranslationServiceImpl implements WordTranslationService {
         }
         return wordTranslationMapper.toDto(translationMapping);
     }
+
+    @Override
+    public WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word) {
+        return server.findWordTranslationsByWordAndByLanguage(language, word);
+    }
 }

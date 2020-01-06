@@ -5,14 +5,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
+import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
-
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
-import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static org.mockito.Mockito.verify;
 
@@ -23,6 +24,8 @@ public class StudyingWordSetsListInteractorTest {
     @Mock
     private WordSetService experienceRepository;
     @Mock
+    private WordTranslationService wordTranslationService;
+    @Mock
     private WordRepetitionProgressService exerciseRepository;
     @Mock
     private OnWordSetsListListener listener;
@@ -32,7 +35,7 @@ public class StudyingWordSetsListInteractorTest {
     @Before
     public void setUp() {
         interactor = new StudyingWordSetsListInteractor(
-                server,
+                wordTranslationService,
                 experienceRepository,
                 exerciseRepository
         );

@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
@@ -81,7 +80,7 @@ public class MainActivityTest {
 
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         when(mockServiceFactoryBean.getUserExpService()).thenReturn(new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class)));
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class));
+        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), factory.get());
         when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
 
         PresenterFactory presenterFactory = new PresenterFactory();

@@ -38,7 +38,6 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
-import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -164,7 +163,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (topicService != null) {
             return topicService;
         }
-        topicService = new TopicServiceImpl(provideTopicDao());
+        topicService = new TopicServiceImpl(provideTopicDao(), getDataServer());
         return topicService;
     }
 
@@ -335,11 +334,11 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (backendServer != null) {
             return backendServer;
         }
-        backendServer = new CachedDataServerDecorator(new DataServerImpl(
+        backendServer = new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
                 requestExecutor
-        ), getTopicService());
+        );
         return backendServer;
     }
 

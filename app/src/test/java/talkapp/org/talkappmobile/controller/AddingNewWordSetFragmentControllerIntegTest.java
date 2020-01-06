@@ -20,13 +20,11 @@ import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -44,7 +42,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
         eventBusMock = testHelper.getEventBusMock();
         daoHelper = new DaoHelper();
         serviceHelper = new ServiceHelper(daoHelper);
-        controller = new AddingNewWordSetFragmentController(eventBusMock, mock(DataServer.class), serviceHelper.getServiceFactoryBean());
+        controller = new AddingNewWordSetFragmentController(eventBusMock, serviceHelper.getServiceFactoryBean());
     }
 
     @After

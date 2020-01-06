@@ -84,7 +84,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     public void init() {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
-        controller = new AddingNewWordSetFragmentController(eventBus, backendServerFactory.get(), serviceFactory);
+        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
         eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
     }
 

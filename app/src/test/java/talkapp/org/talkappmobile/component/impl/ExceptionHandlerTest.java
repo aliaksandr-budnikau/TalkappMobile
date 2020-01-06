@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.component.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +9,7 @@ import org.powermock.reflect.Whitebox;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
@@ -39,8 +37,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExceptionHandlerTest {
-
-    private CachedDataServerDecorator server;
     private ExceptionHandlerInteractor interactor;
     private GitHubRestClient gitHubRestClient;
 
@@ -50,6 +46,8 @@ public class ExceptionHandlerTest {
     private SentenceDao sentenceDao;
     @Mock
     private WordTranslationDao wordTranslationDao;
+    private DataServer server;
+    private TopicServiceImpl topicService;
 
     @Before
     public void setup() {
@@ -57,15 +55,15 @@ public class ExceptionHandlerTest {
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", loggerBean);
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(new TopicServiceImpl(topicDao));
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
         Whitebox.setInternalState(factory, "requestExecutor", requestExecutor);
-        server = (CachedDataServerDecorator) factory.get();
+        server = factory.get();
+        topicService = new TopicServiceImpl(topicDao, server);
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
         gitHubRestClient = mock(GitHubRestClient.class);
-        Whitebox.setInternalState(server.getServer(), "gitHubRestClient", gitHubRestClient);
+        Whitebox.setInternalState(server, "gitHubRestClient", gitHubRestClient);
     }
 
     @Test
@@ -78,7 +76,7 @@ public class ExceptionHandlerTest {
         when(gitHubRestClient.findAllTopics()).thenReturn(call);
 
         try {
-            server.findAllTopics();
+            topicService.findAllTopics();
         } catch (InternetConnectionLostException e) {
             fail();
         }
@@ -98,7 +96,7 @@ public class ExceptionHandlerTest {
         when(gitHubRestClient.findAllTopics()).thenReturn(call);
 
         try {
-            server.findAllTopics();
+            topicService.findAllTopics();
         } catch (InternetConnectionLostException e) {
             fail();
         }

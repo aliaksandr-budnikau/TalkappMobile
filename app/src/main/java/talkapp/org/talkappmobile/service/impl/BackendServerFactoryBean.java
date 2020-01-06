@@ -12,7 +12,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.service.BackendServerFactory;
-import talkapp.org.talkappmobile.service.CachedDataServerDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.Logger;
@@ -42,11 +41,11 @@ public class BackendServerFactoryBean implements BackendServerFactory {
         if (backendServer != null) {
             return backendServer;
         }
-        backendServer = new CachedDataServerDecorator(new DataServerImpl(
+        backendServer = new DataServerImpl(
                 sentenceRestClient(),
                 gitHubRestClient(),
                 requestExecutor
-        ), serviceFactory.getTopicService());
+        );
         return backendServer;
     }
 

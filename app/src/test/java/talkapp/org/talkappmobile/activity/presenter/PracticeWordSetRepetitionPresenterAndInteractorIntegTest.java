@@ -99,15 +99,15 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         ObjectMapper mapper = new ObjectMapper();
         LoggerBean logger = new LoggerBean();
         daoHelper = new DaoHelper();
-        TopicServiceImpl topicService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(topicService);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
         DataServer server = factory.get();
+        TopicServiceImpl topicService = new TopicServiceImpl(mock(TopicDao.class), server);
+        when(mockServiceFactoryBean.getTopicService()).thenReturn(topicService);
 
         userExpService = new UserExpServiceImpl(daoHelper.getExpAuditDao(), mock(ExpAuditMapper.class));
         exerciseService = new WordRepetitionProgressServiceImpl(daoHelper.getWordRepetitionProgressDao(), daoHelper.getWordSetDao(), daoHelper.getSentenceDao(), mapper);

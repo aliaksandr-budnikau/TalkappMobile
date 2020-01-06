@@ -29,7 +29,6 @@ import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -85,7 +84,6 @@ public class WordSetsListFragmentTest {
         testHelper = new TestHelper();
         wordSetDaoMock = daoHelper.getWordSetDao();
         sentenceDaoMock = daoHelper.getSentenceDao();
-        localDataService = new TopicServiceImpl(mock(TopicDao.class));
 
         BackendServerFactoryBean factory = new BackendServerFactoryBean();
         Whitebox.setInternalState(factory, "logger", new LoggerBean());
@@ -93,6 +91,7 @@ public class WordSetsListFragmentTest {
         ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
         Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
+        localDataService = new TopicServiceImpl(mock(TopicDao.class), factory.get());
 
         wordRepetitionProgressDaoMock = daoHelper.getWordRepetitionProgressDao();
         repetitionProgressService = new WordRepetitionProgressServiceImpl(wordRepetitionProgressDaoMock, wordSetDaoMock, sentenceDaoMock, mapper);

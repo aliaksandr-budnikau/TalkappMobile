@@ -1,21 +1,20 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
-import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.DataServer;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnTopicsFragmentPresenterListener;
+import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.TopicService;
 
 public class TopicsFragmentInteractor {
-    private final DataServer server;
+    private final TopicService topicService;
 
-    public TopicsFragmentInteractor(DataServer server) {
-        this.server = server;
+    public TopicsFragmentInteractor(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     public void loadTopics(OnTopicsFragmentPresenterListener listener) {
-        List<Topic> allTopics = server.findAllTopics();
+        List<Topic> allTopics = topicService.findAllTopics();
         listener.onTopicsCame(allTopics);
     }
 

@@ -6,13 +6,16 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.TopicService;
 
 public class TopicServiceImpl implements TopicService {
 
     private final TopicDao topicDao;
+    private final DataServer server;
 
-    public TopicServiceImpl(TopicDao topicDao) {
+    public TopicServiceImpl(TopicDao topicDao, DataServer server) {
+        this.server = server;
         this.topicDao = topicDao;
     }
 
@@ -27,11 +30,22 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<Topic> findAllTopics() {
-        LinkedList<Topic> result = new LinkedList<>();
-        for (TopicMapping mapping : topicDao.findAll()) {
-            result.add(toDto(mapping));
+        List<Topic> allTopics;
+        try {
+            allTopics = server.findAllTopics();
+        } catch (InternetConnectionLostException e) {
+            LinkedList<Topic> result = new LinkedList<>();
+            for (TopicMapping mapping : topicDao.findAll()) {
+                result.add(toDto(mapping));
+            }
+            return result;
         }
-        return result;
+        if (allTopics == null) {
+            return new LinkedList<>();
+        } else {
+            saveTopics(allTopics);
+        }
+        return allTopics;
     }
 
     private TopicMapping toMapping(Topic topic) {

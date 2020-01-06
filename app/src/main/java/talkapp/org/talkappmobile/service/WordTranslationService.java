@@ -19,4 +19,6 @@ public interface WordTranslationService {
     List<WordTranslation> findWordTranslationsByWordSetIdAndByLanguage(int wordSetId, String language);
 
     WordTranslation findByWordAndLanguage(String word, String language);
+
+    WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word);
 }
