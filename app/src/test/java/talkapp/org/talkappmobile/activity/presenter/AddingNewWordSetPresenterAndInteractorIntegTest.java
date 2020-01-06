@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
@@ -10,8 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
@@ -19,29 +20,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.WordSetServiceImpl;
-import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,43 +42,38 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class AddingNewWordSetPresenterAndInteractorIntegTest {
     private WordSetMapper mapper;
-    private WordSetService wordSetService;
     private EventBus eventBus;
     private AddingNewWordSetFragmentController controller;
-    private DaoHelper daoHelper;
-    private WordTranslationDao wordTranslationDao;
     private WordTranslationMapper wordTranslationMapper;
+    private ServiceFactoryBean serviceFactory;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
         this.wordTranslationMapper = new WordTranslationMapper(mapper);
-        daoHelper = new DaoHelper();
-        wordTranslationDao = daoHelper.getWordTranslationDao();
 
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", new LoggerBean());
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
-        DataServer server = factory.get();
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), server);
-        when(mockServiceFactoryBean.getTopicService()).thenReturn(localDataService);
-        WordTranslationServiceImpl wordTranslationService = new WordTranslationServiceImpl(server, wordTranslationDao, daoHelper.getWordSetDao(), mapper);
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(wordTranslationService);
-        wordSetService = new WordSetServiceImpl(server, daoHelper.getWordSetDao(), daoHelper.getNewWordSetDraftDao(), mapper);
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(wordSetService);
+        serviceFactory = new ServiceFactoryBean() {
+            private DatabaseHelper helper;
+
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
 
         eventBus = mock(EventBus.class);
-        controller = new AddingNewWordSetFragmentController(eventBus, mockServiceFactoryBean);
+        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
     }
 
     @Test
@@ -189,9 +177,10 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(4964), wordSet.getTop());
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -242,6 +231,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
 
         assertEquals(new Integer(1656), wordSet.getTop());
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
         reset(eventBus);
 
@@ -265,7 +255,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSetService.getCustomWordSetsStartsSince() + 1, wordSet.getId());
 
         // already saved first set
-        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -278,7 +268,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
         // already saved second set
-        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince() + 1));
+        wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince() + 1);
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
 
@@ -323,7 +313,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
             wordTranslation.setTranslation(word.getTranslation().trim());
             wordTranslation.setWord(word.getWord().trim());
             wordTranslation.setTokens(word.getWord().trim());
-            wordTranslationDao.save(asList(wordTranslationMapper.toMapping(wordTranslation)));
+            serviceFactory.getWordTranslationService().saveWordTranslations(asList(wordTranslation));
         }
         controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));
 
@@ -358,9 +348,10 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(7900), wordSet.getTop());
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
-        wordSet = mapper.toDto(daoHelper.getWordSetDao().findById(wordSetService.getCustomWordSetsStartsSince()));
+        wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());
         assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -391,6 +382,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
     }
 }
