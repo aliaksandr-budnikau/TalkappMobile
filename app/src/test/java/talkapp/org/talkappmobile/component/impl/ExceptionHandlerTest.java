@@ -6,17 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -25,6 +14,16 @@ import java.net.SocketTimeoutException;
 import retrofit2.Call;
 import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.impl.DataServerImpl;
+import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
+import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.RequestExecutor;
+import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,13 +51,8 @@ public class ExceptionHandlerTest {
     @Before
     public void setup() {
         LoggerBean loggerBean = mock(LoggerBean.class);
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        Whitebox.setInternalState(factory, "logger", loggerBean);
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
         RequestExecutor requestExecutor = new RequestExecutor();
-        Whitebox.setInternalState(factory, "requestExecutor", requestExecutor);
-        server = factory.get();
+        server = new DataServerImpl(null, gitHubRestClient, requestExecutor);
         topicService = new TopicServiceImpl(topicDao, server);
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
