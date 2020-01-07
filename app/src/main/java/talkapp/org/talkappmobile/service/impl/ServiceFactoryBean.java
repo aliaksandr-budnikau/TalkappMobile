@@ -100,8 +100,9 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetService != null) {
             return wordSetService;
         }
-        wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(getDataServer(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper()));
-        return wordSetService;
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
+        this.wordSetService = new CachedWordSetServiceDecorator(wordSetService, provideWordSetDao(), getMapper());
+        return this.wordSetService;
     }
 
     @Override
@@ -343,7 +344,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         return retrofit().create(SentenceRestClient.class);
     }
 
-    private GitHubRestClient gitHubRestClient() {
+    protected GitHubRestClient gitHubRestClient() {
         return gitHubRetrofit().create(GitHubRestClient.class);
     }
 

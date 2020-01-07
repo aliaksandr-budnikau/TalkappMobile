@@ -99,7 +99,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
-        serviceFactory.getWordSetExperienceRepository().findAllWordSets();
+        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
 
         HashMap<String, List<Sentence>> words2Sentences = new HashMap<>();
 

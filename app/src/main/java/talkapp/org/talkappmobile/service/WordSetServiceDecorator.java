@@ -68,28 +68,8 @@ public abstract class WordSetServiceDecorator implements WordSetService {
     }
 
     @Override
-    public List<WordSet> findAllWordSets() {
-        return wordSetService.findAllWordSets();
-    }
-
-    @Override
     public void saveWordSets(List<WordSet> incomingSets) {
         wordSetService.saveWordSets(incomingSets);
-    }
-
-    @Override
-    public List<WordSet> findAllWordSetsLocally() {
-        return wordSetService.findAllWordSetsLocally();
-    }
-
-    @Override
-    public List<WordSet> findWordSetsByTopicId(int topicId) {
-        return wordSetService.findWordSetsByTopicId(topicId);
-    }
-
-    @Override
-    public List<WordSet> findAllWordSetsByTopicId(int topicId) {
-        return wordSetService.findAllWordSetsByTopicId(topicId);
     }
 
     @Override

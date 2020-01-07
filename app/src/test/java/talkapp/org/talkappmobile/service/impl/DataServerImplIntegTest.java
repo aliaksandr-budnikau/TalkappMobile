@@ -68,6 +68,16 @@ public class DataServerImplIntegTest {
                 helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
                 return helper;
             }
+
+            @Override
+            protected GitHubRestClient gitHubRestClient() {
+                return gitHubRestClient;
+            }
+
+            @Override
+            public RequestExecutor getRequestExecutor() {
+                return requestExecutor;
+            }
         };
         serviceFactory.setContext(mock(Context.class));
         wordSetMapper = new WordSetMapper(new ObjectMapper());
@@ -120,7 +130,7 @@ public class DataServerImplIntegTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
 
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then
@@ -171,7 +181,7 @@ public class DataServerImplIntegTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
 
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then

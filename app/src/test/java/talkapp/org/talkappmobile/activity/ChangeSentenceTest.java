@@ -102,7 +102,7 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
-        serviceFactory.getWordSetExperienceRepository().findAllWordSets();
+        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         wordSet = createWordSet(-1, "age");
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);

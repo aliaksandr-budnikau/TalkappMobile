@@ -117,7 +117,7 @@ public class WordSetsListFragmentTest {
         checkWord2Tokens(wordSet, words);
         assertFalse(em.isRepetitionMode());
 
-        List<WordSet> allWordSets = serviceFactory.getWordSetExperienceRepository().findAllWordSets();
+        List<WordSet> allWordSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         for (WordSet set : allWordSets) {
             checkWord2Tokens(set, set.getWords());
         }

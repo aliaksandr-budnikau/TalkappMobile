@@ -95,7 +95,8 @@ public class DataServerImplTest {
         };
         topicService = new TopicServiceImpl(topicDao, server);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor);
-        wordSetService = new CachedWordSetServiceDecorator(new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper));
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper);
+        this.wordSetService = new CachedWordSetServiceDecorator(wordSetService, wordSetDao, mapper);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class DataServerImplTest {
         // when first connection
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then
@@ -130,7 +131,7 @@ public class DataServerImplTest {
         // when second connection
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
-        actualSets = wordSetService.findAllWordSets();
+        actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
@@ -155,7 +156,7 @@ public class DataServerImplTest {
         // when first connection
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenReturn(response);
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then
@@ -172,7 +173,7 @@ public class DataServerImplTest {
         // when second connection
         when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        actualSets = wordSetService.findAllWordSets();
+        actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
@@ -194,7 +195,7 @@ public class DataServerImplTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
@@ -210,7 +211,7 @@ public class DataServerImplTest {
         // when second connection
         when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        actualSets = wordSetService.findAllWordSets();
+        actualSets = wordSetService.getWordSets(null);
 
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
         verify(gitHubRestClient).findAllWordSets();
@@ -236,7 +237,7 @@ public class DataServerImplTest {
         when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
-        List<WordSet> actualSets = wordSetService.findAllWordSets();
+        List<WordSet> actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());

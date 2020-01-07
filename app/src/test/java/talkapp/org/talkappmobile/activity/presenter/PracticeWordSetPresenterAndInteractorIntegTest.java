@@ -82,7 +82,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
-        serviceFactory.getWordSetExperienceRepository().findAllWordSets();
+        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
     }
 
     @After
