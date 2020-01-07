@@ -30,22 +30,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<Topic> findAllTopics() {
-        List<Topic> allTopics;
-        try {
-            allTopics = server.findAllTopics();
-        } catch (InternetConnectionLostException e) {
-            LinkedList<Topic> result = new LinkedList<>();
-            for (TopicMapping mapping : topicDao.findAll()) {
-                result.add(toDto(mapping));
-            }
-            return result;
-        }
-        if (allTopics == null) {
-            return new LinkedList<>();
-        } else {
-            saveTopics(allTopics);
-        }
-        return allTopics;
+        return server.findAllTopics();
     }
 
     private TopicMapping toMapping(Topic topic) {
@@ -53,12 +38,5 @@ public class TopicServiceImpl implements TopicService {
         mapping.setId(topic.getId());
         mapping.setName(topic.getName());
         return mapping;
-    }
-
-    private Topic toDto(TopicMapping mapping) {
-        Topic topic = new Topic();
-        topic.setId(mapping.getId());
-        topic.setName(mapping.getName());
-        return topic;
     }
 }

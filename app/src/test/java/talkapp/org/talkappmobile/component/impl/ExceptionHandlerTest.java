@@ -17,8 +17,10 @@ import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.impl.DataServerImpl;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -46,14 +48,14 @@ public class ExceptionHandlerTest {
     @Mock
     private WordTranslationDao wordTranslationDao;
     private DataServer server;
-    private TopicServiceImpl topicService;
+    private TopicService topicService;
 
     @Before
     public void setup() {
         LoggerBean loggerBean = mock(LoggerBean.class);
         RequestExecutor requestExecutor = new RequestExecutor();
         server = new DataServerImpl(null, gitHubRestClient, requestExecutor);
-        topicService = new TopicServiceImpl(topicDao, server);
+        topicService = new CachedTopicServiceDecorator(new TopicServiceImpl(topicDao, server), topicDao);
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
         gitHubRestClient = mock(GitHubRestClient.class);
