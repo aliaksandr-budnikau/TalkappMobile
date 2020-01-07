@@ -1,37 +1,30 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.HashSet;
 import java.util.List;
 
+import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
-import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl;
 
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,32 +32,35 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
-    @Mock
-    private PracticeWordSetVocabularyView view;
     private PracticeWordSetVocabularyInteractor interactor;
+    private PracticeWordSetVocabularyView view;
 
     @Before
     public void setup() {
-        ObjectMapper mapper = new ObjectMapper();
-        WordSetDao wordSetDao = mock(WordSetDao.class);
+        view = mock(PracticeWordSetVocabularyView.class);
+        ServiceFactoryBean serviceFactory = new ServiceFactoryBean() {
+            private DatabaseHelper helper;
 
-        BackendServerFactoryBean factory = new BackendServerFactoryBean();
-        ServiceFactoryBean mockServiceFactoryBean = mock(ServiceFactoryBean.class);
-        Whitebox.setInternalState(factory, "serviceFactory", mockServiceFactoryBean);
-        Whitebox.setInternalState(factory, "requestExecutor", new RequestExecutor());
-        DataServer server = factory.get();
-        TopicServiceImpl localDataService = new TopicServiceImpl(mock(TopicDao.class), server);
-        Whitebox.setInternalState(factory, "logger", new LoggerBean());
-        WordTranslationServiceImpl translationService = new WordTranslationServiceImpl(server, mock(WordTranslationDao.class), wordSetDao, mapper);
-        when(mockServiceFactoryBean.getWordTranslationService()).thenReturn(translationService);
-        when(mockServiceFactoryBean.getWordSetExperienceRepository()).thenReturn(mock(WordSetService.class));
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
 
-        CurrentPracticeStateService currentPracticeStateService = new CurrentPracticeStateServiceImpl(wordSetDao, mapper);
-        interactor = new PracticeWordSetVocabularyInteractor(mockServiceFactoryBean.getWordSetExperienceRepository(), mockServiceFactoryBean.getWordTranslationService(), mockServiceFactoryBean.getPracticeWordSetExerciseRepository(), currentPracticeStateService);
+        interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        OpenHelperManager.releaseHelper();
     }
 
     @Test
