@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -52,6 +54,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         topicsFragmentInteractor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
     }

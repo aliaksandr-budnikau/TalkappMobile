@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import android.content.Context;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -67,6 +69,7 @@ public class DataServerImplIntegTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
         wordSetMapper = new WordSetMapper(new ObjectMapper());
         wordSetService = serviceFactory.getWordSetExperienceRepository();
     }

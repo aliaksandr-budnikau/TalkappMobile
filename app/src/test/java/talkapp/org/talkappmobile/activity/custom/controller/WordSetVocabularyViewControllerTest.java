@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.custom.controller;
 
+import android.content.Context;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +52,7 @@ public class WordSetVocabularyViewControllerTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
         eventBus = mock(EventBus.class);
         service = new AddingEditingNewWordSetsServiceImpl(eventBus, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
     }

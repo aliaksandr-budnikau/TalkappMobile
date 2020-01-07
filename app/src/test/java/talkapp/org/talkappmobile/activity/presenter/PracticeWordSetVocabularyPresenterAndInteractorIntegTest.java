@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -54,6 +56,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService());
     }

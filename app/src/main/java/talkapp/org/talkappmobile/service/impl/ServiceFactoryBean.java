@@ -5,7 +5,6 @@ import android.content.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
@@ -43,7 +42,6 @@ import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
@@ -63,10 +61,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     public static final String SERVER_URL = "http://192.168.0.101:8080";
     public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
     private final ObjectMapper MAPPER = new ObjectMapper();
-    @Bean(LoggerBean.class)
-    Logger logger;
-    @RootContext
-    Context context;
+    private Context context;
 
     private DatabaseHelper databaseHelper;
     private WordRepetitionProgressDaoImpl exerciseDao;
@@ -352,7 +347,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         return gitHubRetrofit().create(GitHubRestClient.class);
     }
 
-    @Deprecated
+    @RootContext
     public void setContext(Context context) {
         this.context = context;
     }

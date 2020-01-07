@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -87,6 +88,7 @@ public class CapitalLetterInNewWordTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
 

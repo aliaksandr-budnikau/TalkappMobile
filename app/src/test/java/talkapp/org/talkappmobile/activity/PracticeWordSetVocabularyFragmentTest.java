@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -75,6 +76,7 @@ public class PracticeWordSetVocabularyFragmentTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         PresenterFactory presenterFactory = new PresenterFactory();
 

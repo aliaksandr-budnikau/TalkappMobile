@@ -22,8 +22,7 @@ public class ServiceHelper {
     public synchronized ServiceFactoryBean getServiceFactoryBean() throws SQLException {
         if (serviceFactoryBean == null) {
             serviceFactoryBean = new ServiceFactoryBean();
-            Whitebox.setInternalState(serviceFactoryBean, "logger", new LoggerBean());
-            Whitebox.setInternalState(serviceFactoryBean, "context", mock(Context.class));
+            serviceFactoryBean.setContext(mock(Context.class));
             Whitebox.setInternalState(serviceFactoryBean, "wordSetDao", daoHelper.getWordSetDao());
             Whitebox.setInternalState(serviceFactoryBean, "newWordSetDraftDao", daoHelper.getNewWordSetDraftDao());
             Whitebox.setInternalState(serviceFactoryBean, "databaseHelper", daoHelper.getDatabaseHelper());

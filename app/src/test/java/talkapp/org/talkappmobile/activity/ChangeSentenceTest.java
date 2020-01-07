@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
@@ -90,6 +91,7 @@ public class ChangeSentenceTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         PresenterFactory presenterFactory = new PresenterFactory();

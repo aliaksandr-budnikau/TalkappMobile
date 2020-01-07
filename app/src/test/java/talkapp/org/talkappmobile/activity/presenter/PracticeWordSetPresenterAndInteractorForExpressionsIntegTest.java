@@ -86,6 +86,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         wordSetMapper = new WordSetMapper(mapper);

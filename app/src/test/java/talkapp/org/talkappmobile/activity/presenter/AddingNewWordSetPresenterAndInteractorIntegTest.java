@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,6 +72,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
 
         eventBus = mock(EventBus.class);
         controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);

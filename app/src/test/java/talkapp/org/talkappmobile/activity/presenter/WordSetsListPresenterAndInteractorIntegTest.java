@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.activity.presenter;
 
+import android.content.Context;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -67,6 +69,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
                 return helper;
             }
         };
+        serviceFactory.setContext(mock(Context.class));
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
         mapper = new ObjectMapper();
         wordSetMapper = new WordSetMapper(mapper);
