@@ -41,9 +41,7 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.widget.adapter.filterable.AbstractFilter;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
@@ -72,8 +70,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     public static final String FINISHED = "finished";
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @EventBusGreenRobot

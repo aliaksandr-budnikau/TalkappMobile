@@ -40,9 +40,7 @@ import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSucces
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
@@ -53,8 +51,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     Speaker speaker;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
     @Bean
     AddingEditingNewWordSetsController addingEditingNewWordSetsController;
     @Bean

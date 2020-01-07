@@ -26,7 +26,6 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.EqualityScorer;
 import talkapp.org.talkappmobile.service.Logger;
@@ -37,7 +36,6 @@ import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
@@ -47,8 +45,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
     @Bean(EqualityScorerBean.class)

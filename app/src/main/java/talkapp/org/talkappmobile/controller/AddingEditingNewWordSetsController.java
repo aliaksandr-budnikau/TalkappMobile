@@ -9,10 +9,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
-import talkapp.org.talkappmobile.service.BackendServerFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
-import talkapp.org.talkappmobile.service.impl.BackendServerFactoryBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EBean(scope = EBean.Scope.Singleton)
@@ -20,8 +18,6 @@ public class AddingEditingNewWordSetsController {
 
     @Bean(ServiceFactoryBean.class)
     ServiceFactory serviceFactory;
-    @Bean(BackendServerFactoryBean.class)
-    BackendServerFactory backendServerFactory;
     @EventBusGreenRobot
     EventBus eventBus;
     private AddingEditingNewWordSetsService addingEditingNewWordSetsService;
@@ -29,7 +25,7 @@ public class AddingEditingNewWordSetsController {
     @AfterInject
     public void init() {
         addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBus,
-                backendServerFactory.get(),
+                serviceFactory.getDataServer(),
                 serviceFactory.getWordTranslationService());
     }
 
