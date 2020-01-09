@@ -17,7 +17,5 @@ public interface SentenceService {
 
     void saveSentences(Map<String, List<Sentence>> words2Sentences, int wordsNumber);
 
-    void orderByScore(List<Sentence> sentences);
-
     Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);
 }

@@ -221,7 +221,7 @@ public class SentenceServiceImplTest {
         Collections.shuffle(sentences);
 
         // when
-        sentenceService.orderByScore(sentences);
+        wordProgressSentenceProviderDecorator.orderByScore(sentences);
 
         // then
         Iterator<Sentence> iterator = sentences.iterator();

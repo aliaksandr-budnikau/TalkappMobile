@@ -39,13 +39,7 @@ class SentenceServiceDecorator implements SentenceService {
     }
 
     @Override
-    public void orderByScore(List<Sentence> sentences) {
-        sentenceService.orderByScore(sentences);
-    }
-
-    @Override
     public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
         return sentenceService.findSentencesByWordSetId(wordSetId, wordsNumber);
     }
-
 }

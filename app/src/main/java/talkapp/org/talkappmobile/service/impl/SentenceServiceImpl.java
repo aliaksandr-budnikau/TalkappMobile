@@ -10,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -144,27 +142,6 @@ public class SentenceServiceImpl implements SentenceService {
             }
             sentenceDao.save(mappings);
         }
-    }
-
-    @Override
-    public void orderByScore(List<Sentence> sentences) {
-        Collections.sort(sentences, new Comparator<Sentence>() {
-            @Override
-            public int compare(Sentence o1, Sentence o2) {
-                if (o1.getContentScore() == null) {
-                    if (o2.getContentScore() == null) {
-                        return 0;
-                    } else {
-                        return -1;
-                    }
-                } else {
-                    if (o2.getContentScore() == null) {
-                        return 1;
-                    }
-                }
-                return o1.getContentScore().compareTo(o2.getContentScore());
-            }
-        });
     }
 
     @Override
