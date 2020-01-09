@@ -76,7 +76,7 @@ class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
         }
     }
 
-    private void orderByScore(List<Sentence> sentences) {
+    public void orderByScore(List<Sentence> sentences) {
         Collections.sort(sentences, new Comparator<Sentence>() {
             @Override
             public int compare(Sentence o1, Sentence o2) {
@@ -96,7 +96,7 @@ class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
         });
     }
 
-    private List<Sentence> selectSentences(List<Sentence> sentences) {
+    public List<Sentence> selectSentences(List<Sentence> sentences) {
         if (sentences.isEmpty()) {
             throw new IllegalArgumentException("The list of sentences is empty");
         }

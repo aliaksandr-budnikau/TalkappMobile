@@ -5,7 +5,6 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordTranslation;
 
 class SentenceServiceDecorator implements SentenceService {
     private final SentenceService sentenceService;
@@ -32,16 +31,6 @@ class SentenceServiceDecorator implements SentenceService {
     @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
         return sentenceService.findByWordAndWordSetId(word);
-    }
-
-    @Override
-    public List<Sentence> selectSentences(List<Sentence> sentences) {
-        return sentenceService.selectSentences(sentences);
-    }
-
-    @Override
-    public Sentence convertToSentence(WordTranslation wordTranslation) {
-        return sentenceService.convertToSentence(wordTranslation);
     }
 
     @Override

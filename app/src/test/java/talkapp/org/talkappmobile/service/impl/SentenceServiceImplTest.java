@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
 import static java.util.Arrays.asList;
@@ -45,8 +46,11 @@ public class SentenceServiceImplTest {
     @Mock
     private SentenceDao sentenceDao;
     @Mock
+    private SentenceProvider sentenceProvider;
+    @Mock
     private WordRepetitionProgressDao progressDao;
     private SentenceServiceImpl sentenceService;
+    private WordProgressSentenceProviderDecorator wordProgressSentenceProviderDecorator;
     private SentenceMapper sentenceMapper;
 
     @Before
@@ -54,6 +58,7 @@ public class SentenceServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
         sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, progressDao, mapper);
+        wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetDao, progressDao, mapper);
     }
 
     @Test
@@ -163,7 +168,7 @@ public class SentenceServiceImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void getSentence_empty() throws Exception {
-        sentenceService.selectSentences(new ArrayList<Sentence>());
+        wordProgressSentenceProviderDecorator.selectSentences(new ArrayList<Sentence>());
     }
 
     @Test
@@ -174,7 +179,7 @@ public class SentenceServiceImplTest {
         sentences.add(e);
 
         // when
-        List<Sentence> actualSentences = sentenceService.selectSentences(sentences);
+        List<Sentence> actualSentences = wordProgressSentenceProviderDecorator.selectSentences(sentences);
 
         // then
         assertEquals(sentences, actualSentences);
@@ -190,7 +195,7 @@ public class SentenceServiceImplTest {
         sentences.add(e2);
 
         // when
-        List<Sentence> sentence = sentenceService.selectSentences(sentences);
+        List<Sentence> sentence = wordProgressSentenceProviderDecorator.selectSentences(sentences);
 
         // then
         assertTrue(sentence.get(0) == e1 || sentence.get(0) == e2);

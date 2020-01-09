@@ -36,9 +36,7 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
-import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
-import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 public class SentenceServiceImpl implements SentenceService {
     public static final int WORDS_NUMBER = 6;
@@ -135,57 +133,6 @@ public class SentenceServiceImpl implements SentenceService {
             }
         }
         return result;
-    }
-
-
-    @Override
-    public List<Sentence> selectSentences(List<Sentence> sentences) {
-        if (sentences.isEmpty()) {
-            throw new IllegalArgumentException("The list of sentences is empty");
-        }
-        if (sentences.size() == 1) {
-            return sentences;
-        }
-
-        LinkedList<Sentence> badSentences = new LinkedList<>();
-        LinkedList<Sentence> okSentences = new LinkedList<>();
-        LinkedList<Sentence> otherSentences = new LinkedList<>();
-
-        for (Sentence sentence : sentences) {
-            if (sentence.getContentScore() == null) {
-                okSentences.add(sentence);
-            } else if (sentence.getContentScore() == POOR) {
-                otherSentences.add(sentence);
-            } else {
-                badSentences.add(sentence);
-            }
-        }
-        if (!okSentences.isEmpty()) {
-            return okSentences;
-        }
-
-        if (!otherSentences.isEmpty()) {
-            return otherSentences;
-        }
-
-        return badSentences;
-    }
-
-    @Override
-    public Sentence convertToSentence(WordTranslation wordTranslation) {
-        Sentence sentence = new Sentence();
-        SentenceIdMapping sentenceIdMapping = new SentenceIdMapping(valueOf(System.currentTimeMillis()), 6);
-        try {
-            sentence.setId(mapper.writeValueAsString(sentenceIdMapping));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        sentence.setTokens(getTextTokens(wordTranslation));
-        HashMap<String, String> translations = new HashMap<>();
-        translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());
-        sentence.setTranslations(translations);
-        sentence.setText(wordTranslation.getWord());
-        return sentence;
     }
 
     @Override
