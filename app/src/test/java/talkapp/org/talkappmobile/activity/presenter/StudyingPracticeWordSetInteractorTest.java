@@ -208,7 +208,6 @@ public class StudyingPracticeWordSetInteractorTest {
         // when
         when(sentenceProvider.find(word)).thenReturn(asList(selectedSentence));
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(selectedSentence);
-        when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
         interactor.initialiseSentence(word, listener);
 
         // then

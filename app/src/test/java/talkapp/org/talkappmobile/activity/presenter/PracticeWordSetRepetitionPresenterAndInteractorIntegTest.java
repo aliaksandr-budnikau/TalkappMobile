@@ -90,7 +90,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         experienceUtils = new WordSetExperienceUtilsImpl();
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, serviceFactory.getPracticeWordSetExerciseRepository(), experienceUtils, serviceFactory.getWordTranslationService(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
+                logger, serviceFactory.getPracticeWordSetExerciseRepository(), experienceUtils, serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, serviceFactory.getUserExpService(), serviceFactory.getCurrentPracticeStateService(), serviceFactory.getPracticeWordSetExerciseRepository());
         serviceFactory.getSentenceService(null).findSentencesByWordSetId(-1, 6);
     }

@@ -19,11 +19,8 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
-    private final SentenceService sentenceService;
     private final WordRepetitionProgressService exerciseService;
-    private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
-    private final SentenceProvider sentenceProvider;
 
     public StudyingPracticeWordSetInteractor(SentenceService sentenceService,
                                              RefereeService refereeService,
@@ -34,12 +31,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              Context context,
                                              SentenceProvider sentenceProvider,
                                              AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService);
-        this.sentenceService = sentenceService;
+        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, sentenceProvider);
         this.currentPracticeStateService = currentPracticeStateService;
         this.exerciseService = exerciseService;
-        this.sentenceProvider = sentenceProvider;
-        this.wordTranslationService = wordTranslationService;
     }
 
     @Override
@@ -47,14 +41,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         PracticeWordSetInteractorStrategy state = getStrategy();
         state.initialiseExperience(listener);
         listener.onInitialiseExperience(currentPracticeStateService.getWordSet());
-    }
-
-    @Override
-    public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
-        currentPracticeStateService.setCurrentWord(word);
-        List<Sentence> sentences = sentenceProvider.find(word);
-        setCurrentSentence(sentences.get(0));
-        listener.onSentencesFound(getCurrentSentence(), word);
     }
 
     @Override

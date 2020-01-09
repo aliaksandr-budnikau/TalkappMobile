@@ -19,6 +19,7 @@ import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
@@ -35,6 +36,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
     private final CurrentPracticeStateService currentPracticeStateService;
+    private final SentenceProvider sentenceProvider;
     private boolean answerHasBeenSeen;
     private Uri voiceRecordUri;
     private PracticeWordSetInteractorStrategy strategy;
@@ -45,7 +47,8 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
                                              AudioStuffFactory audioStuffFactory,
-                                             CurrentPracticeStateService currentPracticeStateService) {
+                                             CurrentPracticeStateService currentPracticeStateService,
+                                             SentenceProvider sentenceProvider) {
         this.logger = logger;
         this.context = context;
         this.refereeService = refereeService;
@@ -53,6 +56,7 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         this.sentenceService = sentenceService;
         this.audioStuffFactory = audioStuffFactory;
         this.currentPracticeStateService = currentPracticeStateService;
+        this.sentenceProvider = sentenceProvider;
     }
 
     public PracticeWordSetInteractorStrategy getStrategy() {
@@ -83,6 +87,14 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         }
         logger.i(TAG, "accuracy is ok");
         return true;
+    }
+
+    @Override
+    public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
+        currentPracticeStateService.setCurrentWord(word);
+        List<Sentence> sentences = sentenceProvider.find(word);
+        setCurrentSentence(sentences.get(0));
+        listener.onSentencesFound(getCurrentSentence(), word);
     }
 
     @Override
