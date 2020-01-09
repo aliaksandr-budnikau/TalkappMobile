@@ -287,7 +287,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         DataServer dataServer = server == null ? getDataServer() : server;
         sentenceService = new CachedSentenceServiceDecorator(new SentenceServiceImpl(dataServer, provideWordSetDao(),
-                provideSentenceDao(), providePracticeWordSetExerciseDao(), getMapper()));
+                provideSentenceDao(), getMapper()));
         return sentenceService;
     }
 

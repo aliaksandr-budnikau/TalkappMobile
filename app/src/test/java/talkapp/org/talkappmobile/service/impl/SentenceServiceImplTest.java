@@ -57,7 +57,7 @@ public class SentenceServiceImplTest {
     public void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
-        sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, progressDao, mapper);
+        sentenceService = new SentenceServiceImpl(dataServer, wordSetDao, sentenceDao, mapper);
         wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetDao, progressDao, mapper);
     }
 

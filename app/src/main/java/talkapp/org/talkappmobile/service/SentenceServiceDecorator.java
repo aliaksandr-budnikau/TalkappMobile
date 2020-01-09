@@ -24,11 +24,6 @@ class SentenceServiceDecorator implements SentenceService {
     }
 
     @Override
-    public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
-        return sentenceService.findByWordAndWordSetId(word);
-    }
-
-    @Override
     public void saveSentences(Map<String, List<Sentence>> words2Sentences, int wordsNumber) {
         sentenceService.saveSentences(words2Sentences, wordsNumber);
     }

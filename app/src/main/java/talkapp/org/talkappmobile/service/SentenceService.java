@@ -11,8 +11,6 @@ public interface SentenceService {
 
     List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word);
 
-    List<Sentence> findByWordAndWordSetId(Word2Tokens word);
-
     void saveSentences(Map<String, List<Sentence>> words2Sentences, int wordsNumber);
 
     Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);

@@ -6,8 +6,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
@@ -39,16 +36,14 @@ public class SentenceServiceImpl implements SentenceService {
     private final DataServer server;
     private final WordSetDao wordSetDao;
     private final SentenceDao sentenceDao;
-    private final WordRepetitionProgressDao progressDao;
     private final ObjectMapper mapper;
     private final WordSetMapper wordSetMapper;
     private final SentenceMapper sentenceMapper;
 
-    public SentenceServiceImpl(DataServer server, WordSetDao wordSetDao, SentenceDao sentenceDao, WordRepetitionProgressDao progressDao, ObjectMapper mapper) {
+    public SentenceServiceImpl(DataServer server, WordSetDao wordSetDao, SentenceDao sentenceDao, ObjectMapper mapper) {
         this.server = server;
         this.wordSetDao = wordSetDao;
         this.sentenceDao = sentenceDao;
-        this.progressDao = progressDao;
         this.mapper = mapper;
         this.wordSetMapper = new WordSetMapper(mapper);
         this.sentenceMapper = new SentenceMapper(mapper);
@@ -64,21 +59,6 @@ public class SentenceServiceImpl implements SentenceService {
     public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word) {
         List<Sentence> result = new LinkedList<>(findSentencesByWords(word, WORDS_NUMBER));
         return getRidOfDuplicates(result);
-    }
-
-    @Override
-    public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
-        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
-        WordSet wordSet = wordSetMapper.toDto(mapping);
-        List<WordRepetitionProgressMapping> exercises = progressDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId());
-        if (exercises.isEmpty()) {
-            return emptyList();
-        }
-        WordRepetitionProgressMapping exercise = exercises.get(0);
-        if (StringUtils.isEmpty(exercise.getSentenceIds()) || getSentenceIdMappings(exercise.getSentenceIds()).isEmpty()) {
-            return emptyList();
-        }
-        return getSentence(exercise);
     }
 
     private List<Sentence> getSentence(WordRepetitionProgressMapping exercise) {
