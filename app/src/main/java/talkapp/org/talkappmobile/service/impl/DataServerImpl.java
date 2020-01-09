@@ -29,13 +29,7 @@ public class DataServerImpl implements DataServer {
     @Override
     public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
         Call<Map<String, List<Sentence>>> call = gitHubRestClient.findSentencesByWordSetId(wordSetId, wordsNumber);
-        Map<String, List<Sentence>> body = null;
-        try {
-            body = requestExecutor.execute(call).body();
-        } catch (InternetConnectionLostException e) {
-            // do nothing
-        }
-        return body;
+        return requestExecutor.execute(call).body();
     }
 
     @Override

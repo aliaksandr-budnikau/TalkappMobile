@@ -29,4 +29,6 @@ public interface ServiceFactory {
     SentenceService getSentenceService(DataServer server);
 
     DataServer getDataServer();
+
+    SentenceProvider getSentenceProvider();
 }

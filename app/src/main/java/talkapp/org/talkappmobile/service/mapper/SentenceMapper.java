@@ -20,12 +20,14 @@ import talkapp.org.talkappmobile.model.TextToken;
 public class SentenceMapper {
     private final MapType HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE;
     private final CollectionType LINKED_LIST_OF_TOKENS_JAVA_TYPE;
+    private final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
     private final ObjectMapper mapper;
 
     public SentenceMapper(ObjectMapper mapper) {
         this.mapper = mapper;
         HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE = mapper.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
         LINKED_LIST_OF_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, TextToken.class);
+        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
     }
 
     public SentenceMapping toMapping(Sentence sentence, String word, int wordsNumber) {
@@ -71,5 +73,23 @@ public class SentenceMapper {
         }
         sentence.setTokens(tokens);
         return sentence;
+    }
+
+    public List<SentenceIdMapping> toSentenceIdMapping(String sentenceIdsAsString) {
+        List<SentenceIdMapping> ids;
+        try {
+            ids = mapper.readValue(sentenceIdsAsString, LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return ids;
+    }
+
+    public String toSentenceIdMapping(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

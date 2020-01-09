@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,6 +31,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static java.lang.Math.log;
@@ -42,9 +42,9 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
-    private final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
     private final SentenceDao sentenceDao;
     private final WordSetMapper wordSetMapper;
+    private final SentenceMapper sentenceMapper;
     private WordRepetitionProgressDao exerciseDao;
     private WordSetDao wordSetDao;
     private ObjectMapper mapper;
@@ -56,7 +56,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         this.sentenceDao = sentenceDao;
         this.mapper = mapper;
         this.wordSetMapper = new WordSetMapper(mapper);
-        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
+        this.sentenceMapper = new SentenceMapper(mapper);
     }
 
     @Override
@@ -260,17 +260,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     private List<SentenceIdMapping> getSentenceIdMappings(WordRepetitionProgressMapping exercise) {
-        return getSentenceIdMappings(exercise.getSentenceIds());
-    }
-
-    private List<SentenceIdMapping> getSentenceIdMappings(String sentenceIds) {
-        List<SentenceIdMapping> ids;
-        try {
-            ids = mapper.readValue(sentenceIds, LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-        return ids;
+        return sentenceMapper.toSentenceIdMapping(exercise.getSentenceIds());
     }
 
 

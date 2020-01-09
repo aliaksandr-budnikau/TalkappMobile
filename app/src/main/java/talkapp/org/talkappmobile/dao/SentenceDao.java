@@ -14,4 +14,6 @@ public interface SentenceDao {
     List<SentenceMapping> findAll();
 
     int deleteById(String id);
+
+    SentenceMapping findById(String id);
 }

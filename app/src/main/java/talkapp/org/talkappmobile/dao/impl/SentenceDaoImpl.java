@@ -85,4 +85,13 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public SentenceMapping findById(String id) {
+        try {
+            return super.queryForId(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
 }

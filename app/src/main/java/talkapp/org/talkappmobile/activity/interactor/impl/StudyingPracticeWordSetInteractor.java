@@ -9,23 +9,21 @@ import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
-
-import static java.util.Arrays.asList;
 
 public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private final SentenceService sentenceService;
     private final WordRepetitionProgressService exerciseService;
     private final WordTranslationService wordTranslationService;
     private final CurrentPracticeStateService currentPracticeStateService;
+    private final SentenceProvider sentenceProvider;
 
     public StudyingPracticeWordSetInteractor(SentenceService sentenceService,
                                              RefereeService refereeService,
@@ -34,11 +32,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
                                              CurrentPracticeStateService currentPracticeStateService,
                                              WordRepetitionProgressService exerciseService,
                                              Context context,
+                                             SentenceProvider sentenceProvider,
                                              AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService);
         this.sentenceService = sentenceService;
         this.currentPracticeStateService = currentPracticeStateService;
         this.exerciseService = exerciseService;
+        this.sentenceProvider = sentenceProvider;
         this.wordTranslationService = wordTranslationService;
     }
 
@@ -52,24 +52,9 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     @Override
     public void initialiseSentence(Word2Tokens word, final OnPracticeWordSetListener listener) {
         currentPracticeStateService.setCurrentWord(word);
-        List<Sentence> sentences = sentenceService.findByWordAndWordSetId(word);
-        if (sentences.isEmpty()) {
-            try {
-                sentences = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
-            } catch (LocalCacheIsEmptyException e) {
-                WordTranslation wordTranslation = wordTranslationService.findByWordAndLanguage(word.getWord(), "russian");
-                if (wordTranslation == null) {
-                    return;
-                }
-                sentences = asList(sentenceService.convertToSentence(wordTranslation));
-            }
-            sentenceService.orderByScore(sentences);
-            List<Sentence> selectSentences = sentenceService.selectSentences(sentences);
-            replaceSentence(selectSentences, word, listener);
-        } else {
-            setCurrentSentence(sentences.get(0));
-            listener.onSentencesFound(getCurrentSentence(), word);
-        }
+        List<Sentence> sentences = sentenceProvider.find(word);
+        setCurrentSentence(sentences.get(0));
+        listener.onSentencesFound(getCurrentSentence(), word);
     }
 
     @Override

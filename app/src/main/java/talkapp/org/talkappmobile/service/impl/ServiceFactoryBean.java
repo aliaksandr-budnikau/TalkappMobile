@@ -43,6 +43,7 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.MigrationService;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -346,6 +347,15 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     protected GitHubRestClient gitHubRestClient() {
         return gitHubRetrofit().create(GitHubRestClient.class);
+    }
+
+    @Override
+    public SentenceProvider getSentenceProvider() {
+        SentenceProvider sentenceProvider = new SentenceProviderImpl(provideWordSetDao(), providePracticeWordSetExerciseDao(), provideSentenceDao(), getMapper());
+        ServerSentenceProviderDecorator serverSentenceProviderDecorator = new ServerSentenceProviderDecorator(sentenceProvider, getDataServer());
+        CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, provideSentenceDao(), getMapper());
+        WordTranslationSentenceProviderDecorator translationSentenceProviderDecorator = new WordTranslationSentenceProviderDecorator(cachedSentenceProviderDecorator, provideWordTranslationDao(), getMapper());
+        return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, provideWordSetDao(), providePracticeWordSetExerciseDao(), getMapper());
     }
 
     @RootContext

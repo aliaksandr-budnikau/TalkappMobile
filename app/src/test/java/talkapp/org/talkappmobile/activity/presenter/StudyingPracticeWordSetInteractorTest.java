@@ -28,6 +28,7 @@ import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
@@ -68,6 +69,8 @@ public class StudyingPracticeWordSetInteractorTest {
     private WordSetService wordSetService;
     @Mock
     private WordSetExperienceUtils experienceUtils;
+    @Mock
+    private SentenceProvider sentenceProvider;
     @Mock
     private CurrentPracticeStateService currentPracticeStateService;
     @Mock
@@ -175,13 +178,11 @@ public class StudyingPracticeWordSetInteractorTest {
         wordSet.setId(wordSetId);
 
         // when
-        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenReturn(sentences);
-        when(sentenceService.selectSentences(sentences)).thenReturn(singletonList(selectedSentence));
+        when(sentenceProvider.find(word)).thenReturn(sentences);
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(selectedSentence);
         interactor.initialiseSentence(word, listener);
 
         // then
-        verify(exerciseService).save(word, singletonList(selectedSentence));
         verify(listener).onSentencesFound(selectedSentence, word);
     }
 
@@ -205,17 +206,13 @@ public class StudyingPracticeWordSetInteractorTest {
         translation.setTranslation("fdsf");
 
         // when
-        when(sentenceService.fetchSentencesFromServerByWordAndWordSetId(word)).thenThrow(new LocalCacheIsEmptyException(""));
-        when(wordTranslationService.findByWordAndLanguage(word.getWord(), "russian")).thenReturn(translation);
-        when(sentenceService.convertToSentence(translation)).thenReturn(selectedSentence);
+        when(sentenceProvider.find(word)).thenReturn(asList(selectedSentence));
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(selectedSentence);
         when(sentenceService.selectSentences(asList(selectedSentence))).thenReturn(asList(selectedSentence));
         interactor.initialiseSentence(word, listener);
 
         // then
         verify(listener, times(1)).onSentencesFound(selectedSentence, word);
-        verify(exerciseService, times(1)).save(word, singletonList(selectedSentence));
-        verify(sentenceService, times(1)).selectSentences(any(List.class));
     }
 
     @Test
