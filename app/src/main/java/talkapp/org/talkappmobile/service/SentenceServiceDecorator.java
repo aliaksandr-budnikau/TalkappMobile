@@ -24,11 +24,6 @@ class SentenceServiceDecorator implements SentenceService {
     }
 
     @Override
-    public List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word) {
-        return sentenceService.fetchSentencesNotFromServerByWordAndWordSetId(word);
-    }
-
-    @Override
     public List<Sentence> findByWordAndWordSetId(Word2Tokens word) {
         return sentenceService.findByWordAndWordSetId(word);
     }

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,10 +24,8 @@ import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
@@ -67,11 +64,6 @@ public class SentenceServiceImpl implements SentenceService {
     public List<Sentence> fetchSentencesFromServerByWordAndWordSetId(Word2Tokens word) {
         List<Sentence> result = new LinkedList<>(findSentencesByWords(word, WORDS_NUMBER));
         return getRidOfDuplicates(result);
-    }
-
-    @Override
-    public List<Sentence> fetchSentencesNotFromServerByWordAndWordSetId(Word2Tokens word) {
-        return getRidOfDuplicates(new ArrayList<>(findByWordAndWordSetId(word)));
     }
 
     @Override
@@ -147,18 +139,6 @@ public class SentenceServiceImpl implements SentenceService {
     @Override
     public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
         return server.findSentencesByWordSetId(wordSetId, wordsNumber);
-    }
-
-    @NonNull
-    private LinkedList<TextToken> getTextTokens(WordTranslation wordTranslation) {
-        LinkedList<TextToken> textTokens = new LinkedList<>();
-        TextToken textToken = new TextToken();
-        textToken.setToken(wordTranslation.getWord());
-        textToken.setStartOffset(0);
-        textToken.setEndOffset(wordTranslation.getWord().length());
-        textToken.setPosition(0);
-        textTokens.add(textToken);
-        return textTokens;
     }
 
     private List<SentenceIdMapping> getSentenceIdMappings(String sentenceIds) {
