@@ -8,6 +8,14 @@ public class TextToken {
     private int endOffset;
     private int position;
 
+    public TextToken() {
+    }
+
+    public TextToken(String token) {
+        this.token = token;
+        this.endOffset = token.length();
+    }
+
     public String getToken() {
         return token;
     }

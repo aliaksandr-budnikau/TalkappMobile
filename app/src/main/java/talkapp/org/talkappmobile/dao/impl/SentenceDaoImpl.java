@@ -38,7 +38,7 @@ public class SentenceDaoImpl extends BaseDaoImpl<SentenceMapping, String> implem
             mappings = this.query(
                     queryBuilder()
                             .where()
-                            .like(SentenceMapping.ID_FN, new SelectArg("%\"" + word + "\"%" + wordsNumber + "%"))
+                            .like(SentenceMapping.TOKENS_FN, new SelectArg("%" + word + "%"))
                             .prepare()
             );
         } catch (SQLException e) {

@@ -107,6 +107,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         translations1.put("russian", "искать");
         sentence1.setTranslations(translations1);
         sentence1.setTokens(new LinkedList<TextToken>());
+        sentence1.getTokens().add(new TextToken(LOOK_FOR));
         words2Sentences.put(LOOK_FOR, asList(sentence1));
 
         Sentence sentence2 = new Sentence();
@@ -116,6 +117,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         translations2.put("russian", "разглядеть, различить, разбирать");
         sentence2.setTranslations(translations2);
         sentence2.setTokens(new LinkedList<TextToken>());
+        sentence2.getTokens().add(new TextToken(MAKE_OUT));
         words2Sentences.put(MAKE_OUT, asList(sentence2));
 
         Sentence sentence3 = new Sentence();
@@ -125,6 +127,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         translations3.put("russian", "разглядеть, различить, разбирать");
         sentence3.setTranslations(translations3);
         sentence3.setTokens(new LinkedList<TextToken>());
+        sentence3.getTokens().add(new TextToken(IN_FACT));
         words2Sentences.put(IN_FACT, asList(sentence3));
 
         serviceFactory.getSentenceService(null).saveSentences(words2Sentences, 6);
