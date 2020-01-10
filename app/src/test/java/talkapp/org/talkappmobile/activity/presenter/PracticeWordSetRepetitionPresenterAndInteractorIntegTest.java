@@ -92,7 +92,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerBean()),
                 logger, serviceFactory.getPracticeWordSetExerciseRepository(), experienceUtils, serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, serviceFactory.getUserExpService(), serviceFactory.getCurrentPracticeStateService(), serviceFactory.getPracticeWordSetExerciseRepository());
-        serviceFactory.getSentenceService(null).findSentencesByWordSetId(-1, 6);
     }
 
     @After
@@ -111,18 +110,26 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet = new WordSet();
         wordSet.setId(id);
         wordSet.setStatus(WordSetProgressStatus.FINISHED);
+        String name = WordSetProgressStatus.FINISHED.name();
 
         ObjectMapper mapper = new ObjectMapper();
 
         int ageWordSetId = id + 1;
         Word2Tokens age = new Word2Tokens("age", "age", ageWordSetId);
         List<Word2Tokens> ageWordSetWords = asList(age, new Word2Tokens(), new Word2Tokens());
-        WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
+        int wordIndexAge = ageWordSetWords.indexOf(age);
+        List<WordRepetitionProgressMapping> ageProgress = serviceFactory.getExerciseDao().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAge, ageWordSetId, name);
+        WordRepetitionProgressMapping exercise;
+        if (ageProgress.isEmpty()) {
+            exercise = new WordRepetitionProgressMapping();
+        } else {
+            exercise = ageProgress.get(0);
+        }
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgboVdNEXFMlzHK5SR", age.getWord(), 6));
-        exercise.setStatus(WordSetProgressStatus.FINISHED.name());
+        exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
-        exercise.setWordIndex(ageWordSetWords.indexOf(age));
+        exercise.setWordIndex(wordIndexAge);
         serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
 
         WordSet ageWordSet = new WordSet();
@@ -136,12 +143,18 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         int anniversaryWordSetId = id + 2;
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
         List<Word2Tokens> anniversaryWordSetWords = asList(new Word2Tokens(), anniversary, new Word2Tokens());
-        exercise = new WordRepetitionProgressMapping();
+        int wordIndexAnniversary = anniversaryWordSetWords.indexOf(anniversary);
+        List<WordRepetitionProgressMapping> anniversaryProgress = serviceFactory.getExerciseDao().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAnniversary, anniversaryWordSetId, name);
+        if (anniversaryProgress.isEmpty()) {
+            exercise = new WordRepetitionProgressMapping();
+        } else {
+            exercise = anniversaryProgress.get(0);
+        }
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
-        exercise.setStatus(WordSetProgressStatus.FINISHED.name());
+        exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
-        exercise.setWordIndex(anniversaryWordSetWords.indexOf(anniversary));
+        exercise.setWordIndex(wordIndexAnniversary);
         serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
 
         WordSet anniversaryWordSet = new WordSet();
@@ -155,12 +168,18 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         int birthWordSetId = id + 3;
         Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
         List<Word2Tokens> birthWordSetWords = asList(new Word2Tokens(), new Word2Tokens(), birth);
-        exercise = new WordRepetitionProgressMapping();
+        int wordIndexBirth = birthWordSetWords.indexOf(birth);
+        List<WordRepetitionProgressMapping> birthProgress = serviceFactory.getExerciseDao().findByWordIndexAndByWordSetIdAndByStatus(wordIndexBirth, birthWordSetId, name);
+        if (birthProgress.isEmpty()) {
+            exercise = new WordRepetitionProgressMapping();
+        } else {
+            exercise = birthProgress.get(0);
+        }
         exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbsUXNEXFMlzHK5V2", birth.getWord(), 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
-        exercise.setWordIndex(birthWordSetWords.indexOf(birth));
+        exercise.setWordIndex(wordIndexBirth);
         serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
 
         WordSet birthWordSet = new WordSet();

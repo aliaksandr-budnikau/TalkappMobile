@@ -7,4 +7,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 
 public interface SentenceProvider {
     List<Sentence> find(Word2Tokens word);
+
+    List<Sentence> getFromDB(Word2Tokens word);
 }

@@ -11,6 +11,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 public interface DataServer {
     Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber);
 
+    List<Sentence> findSentencesByWord(String word, int wordsNumber);
+
     List<Topic> findAllTopics();
 
     List<WordSet> findAllWordSets();

@@ -17,4 +17,9 @@ class SentenceProviderDecorator implements SentenceProvider {
     public List<Sentence> find(Word2Tokens word) {
         return provider.find(word);
     }
+
+    @Override
+    public List<Sentence> getFromDB(Word2Tokens word) {
+        return provider.getFromDB(word);
+    }
 }

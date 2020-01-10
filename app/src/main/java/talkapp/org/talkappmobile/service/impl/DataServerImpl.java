@@ -33,6 +33,12 @@ public class DataServerImpl implements DataServer {
     }
 
     @Override
+    public List<Sentence> findSentencesByWord(String word, int wordsNumber) {
+        Call<List<Sentence>> call = gitHubRestClient.findSentencesByWord(word, wordsNumber);
+        return requestExecutor.execute(call).body();
+    }
+
+    @Override
     public List<Topic> findAllTopics() {
         Call<List<Topic>> call = gitHubRestClient.findAllTopics();
         return requestExecutor.execute(call).body();

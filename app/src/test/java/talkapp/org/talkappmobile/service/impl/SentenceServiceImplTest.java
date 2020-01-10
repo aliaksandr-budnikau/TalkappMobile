@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
-import static talkapp.org.talkappmobile.service.impl.SentenceServiceImpl.WORDS_NUMBER;
+import static talkapp.org.talkappmobile.service.impl.SentenceProviderImpl.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {
@@ -45,7 +45,6 @@ public class SentenceServiceImplTest {
     private WordSetDao wordSetDao;
     @Mock
     private SentenceDao sentenceDao;
-    @Mock
     private SentenceProvider sentenceProvider;
     @Mock
     private WordRepetitionProgressDao progressDao;
@@ -58,6 +57,7 @@ public class SentenceServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
         sentenceService = new SentenceServiceImpl(dataServer, sentenceDao, mapper);
+        sentenceProvider = new SentenceProviderImpl(wordSetDao, progressDao, sentenceDao, mapper);
         wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetDao, progressDao, mapper);
     }
 
@@ -81,7 +81,7 @@ public class SentenceServiceImplTest {
         // when
 
         when(sentenceDao.findAllByWord(any(String.class), anyInt())).thenReturn(sentences);
-        List<Sentence> result = sentenceService.fetchSentencesFromServerByWordAndWordSetId(new Word2Tokens("sdfsd", "sdfsd", 2));
+        List<Sentence> result = wordProgressSentenceProviderDecorator.getFromDB(new Word2Tokens("sdfsd", "sdfsd", 2));
 
         // then
         assertEquals(2, result.size());
@@ -108,7 +108,7 @@ public class SentenceServiceImplTest {
 
         // when
         when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
+        List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then
         assertEquals(sentenceMapper.toDto(sentence1), sentencesActual.get(0));
@@ -131,25 +131,10 @@ public class SentenceServiceImplTest {
 
         // when
         when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
+        List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then
         sentencesActual.clear();
-    }
-
-    @Test(expected = LocalCacheIsEmptyException.class)
-    public void findByWord_sentenceNotFound() {
-        // setup
-        int wordSetId = 3;
-        Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
-
-
-        // when
-        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(Collections.<SentenceMapping>emptyList());
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
-
-        // then
-        assertTrue(sentencesActual.isEmpty());
     }
 
     @Test(expected = RuntimeException.class)
@@ -160,7 +145,7 @@ public class SentenceServiceImplTest {
 
         // when
         doThrow(RuntimeException.class).when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER));
-        List<Sentence> sentencesActual = sentenceService.fetchSentencesFromServerByWordAndWordSetId(word);
+        List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then
         assertTrue(sentencesActual.isEmpty());

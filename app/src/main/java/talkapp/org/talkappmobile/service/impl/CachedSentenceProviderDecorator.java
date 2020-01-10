@@ -1,10 +1,7 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.support.annotation.NonNull;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.dao.SentenceDao;
@@ -33,10 +30,10 @@ class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
         try {
             sentences = super.find(word);
         } catch (InternetConnectionLostException e) {
-            return getSentencesFromDB(word);
+            return super.getFromDB(word);
         }
-        if (sentences.isEmpty()) {
-            return getSentences(word);
+        if (sentences == null || sentences.isEmpty()) {
+            return super.getFromDB(word);
         }
         for (Sentence sentence : sentences) {
             if (wasAlreadySaved(sentence)) {
@@ -51,24 +48,5 @@ class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
 
     private boolean wasAlreadySaved(Sentence sentence) {
         return sentenceDao.findById(sentence.getId()) != null;
-    }
-
-    @NonNull
-    private List<Sentence> getSentences(Word2Tokens word) {
-        ArrayList<Sentence> result = new ArrayList<>();
-        List<SentenceMapping> mappings = sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER);
-        for (SentenceMapping mapping : mappings) {
-            result.add(sentenceMapper.toDto(mapping));
-        }
-        return result;
-    }
-
-    private List<Sentence> getSentencesFromDB(Word2Tokens word) {
-        List<SentenceMapping> mappings = sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER);
-        ArrayList<Sentence> result = new ArrayList<>();
-        for (SentenceMapping mapping : mappings) {
-            result.add(sentenceMapper.toDto(mapping));
-        }
-        return result;
     }
 }

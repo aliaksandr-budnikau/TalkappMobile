@@ -1,11 +1,16 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import android.support.annotation.NonNull;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
@@ -26,6 +31,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class SentenceProviderImpl implements SentenceProvider {
 
+    public static final int WORDS_NUMBER = 6;
     private final WordSetDao wordSetDao;
     private final WordRepetitionProgressDao progressDao;
     private final WordSetMapper wordSetMapper;
@@ -59,11 +65,21 @@ public class SentenceProviderImpl implements SentenceProvider {
         return getSentence(ids, word.getWord());
     }
 
+    @Override
+    public List<Sentence> getFromDB(Word2Tokens word) {
+        List<SentenceMapping> mappings = sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER);
+        List<Sentence> result = new ArrayList<>();
+        for (SentenceMapping mapping : mappings) {
+            result.add(sentenceMapper.toDto(mapping));
+        }
+        result = getRidOfDuplicates(result);
+        return result;
+    }
+
     private List<Sentence> getSentence(List<SentenceIdMapping> ids, String word) {
         String[] sentenceIds = new String[ids.size()];
         for (int i = 0; i < ids.size(); i++) {
             SentenceIdMapping idMapping = ids.get(i);
-            idMapping.setWord(word);
             sentenceIds[i] = sentenceMapper.toSentenceIdMapping(idMapping);
         }
         List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
@@ -79,6 +95,18 @@ public class SentenceProviderImpl implements SentenceProvider {
             SentenceMapping mapping = hashMap.get(id);
             if (mapping != null) {
                 result.add(sentenceMapper.toDto(mapping));
+            }
+        }
+        return result;
+    }
+
+    @NonNull
+    private LinkedList<Sentence> getRidOfDuplicates(List<Sentence> sentences) {
+        Set<String> texts = new HashSet<>();
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (Sentence sentence : sentences) {
+            if (texts.add(sentence.getTranslations().get("russian"))) {
+                result.add(sentence);
             }
         }
         return result;

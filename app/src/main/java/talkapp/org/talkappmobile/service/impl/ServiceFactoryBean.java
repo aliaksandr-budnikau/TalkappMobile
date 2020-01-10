@@ -37,7 +37,6 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
-import talkapp.org.talkappmobile.service.CachedSentenceServiceDecorator;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -286,8 +285,8 @@ public class ServiceFactoryBean implements ServiceFactory {
             return sentenceService;
         }
         DataServer dataServer = server == null ? getDataServer() : server;
-        sentenceService = new CachedSentenceServiceDecorator(new SentenceServiceImpl(dataServer,
-                provideSentenceDao(), getMapper()));
+        sentenceService = new SentenceServiceImpl(dataServer,
+                provideSentenceDao(), getMapper());
         return sentenceService;
     }
 
