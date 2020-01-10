@@ -43,9 +43,4 @@ public class SentenceServiceImpl implements SentenceService {
             sentenceDao.save(mappings);
         }
     }
-
-    @Override
-    public Map<String, List<Sentence>> findSentencesByWordSetId(int wordSetId, int wordsNumber) {
-        return server.findSentencesByWordSetId(wordSetId, wordsNumber);
-    }
 }

@@ -62,8 +62,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
     private Context context;
     private WordSetExperienceUtilsImpl experienceUtils;
     private PresenterFactory presenterFactory;
-    private WordSetDao wordSetDao;
-    private WordSetMapper wordSetMapper;
     private CurrentPracticeStateService currentPracticeStateService;
     private ServiceFactoryBean serviceFactory;
 
@@ -89,7 +87,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         serviceFactory.setContext(mock(Context.class));
 
         experienceUtils = new WordSetExperienceUtilsImpl();
-        wordSetMapper = new WordSetMapper(mapper);
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
