@@ -1,14 +1,12 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -16,7 +14,6 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
 public class SentenceServiceImpl implements SentenceService {
-    public final CollectionType LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE;
     private final DataServer server;
     private final SentenceDao sentenceDao;
     private final SentenceMapper sentenceMapper;
@@ -25,7 +22,6 @@ public class SentenceServiceImpl implements SentenceService {
         this.server = server;
         this.sentenceDao = sentenceDao;
         this.sentenceMapper = new SentenceMapper(mapper);
-        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
     }
 
     @Override

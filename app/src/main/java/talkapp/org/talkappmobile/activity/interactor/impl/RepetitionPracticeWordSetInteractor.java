@@ -2,9 +2,6 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -56,12 +53,6 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     }
 
     @Override
-    public Word2Tokens peekAnyNewWordByWordSetId() {
-        List<Word2Tokens> allWords = currentPracticeStateService.getAllWords();
-        return peekRandomWordWithoutCurrentWord(allWords, currentPracticeStateService.getCurrentWord());
-    }
-
-    @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
         Sentence sentence = currentPracticeStateService.getCurrentSentence();
         Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();
@@ -84,14 +75,5 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         exerciseService.markAsRepeated(currentWord);
         exerciseService.shiftSentences(currentWord);
         return true;
-    }
-
-    @Override
-    protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
-        LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
-        for (Word2Tokens word2Tokens : currentPracticeStateService.getFinishedWords()) {
-            leftOver.remove(word2Tokens);
-        }
-        return super.peekRandomWordWithoutCurrentWord(leftOver, currentWord);
     }
 }

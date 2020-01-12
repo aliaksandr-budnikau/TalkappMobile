@@ -245,8 +245,11 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void moveCurrentWordToNextState(int wordSetId) {
-        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
+    public void moveCurrentWordToNextState(Word2Tokens word) {
+        WordSetMapping mappingWordSet = wordSetDao.findById(word.getSourceWordSetId());
+        WordSet wordSet = wordSetMapper.toDto(mappingWordSet);
+        List<WordRepetitionProgressMapping> current = exerciseDao.findByWordIndexAndWordSetId(
+                wordSet.getWords().indexOf(word), word.getSourceWordSetId());
         WordRepetitionProgressMapping mapping = current.get(0);
         mapping.setStatus(next(WordSetProgressStatus.valueOf(mapping.getStatus())).name());
         mapping.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());

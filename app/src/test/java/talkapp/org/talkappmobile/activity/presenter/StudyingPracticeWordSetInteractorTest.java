@@ -268,8 +268,11 @@ public class StudyingPracticeWordSetInteractorTest {
         uncheckedAnswer.setExpectedAnswer(sentence.getText());
         uncheckedAnswer.setActualAnswer("fsdf");
 
+        Word2Tokens word2Tokens = new Word2Tokens();
+
         // when
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
+        when(currentPracticeStateService.getCurrentWord()).thenReturn(word2Tokens);
         when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
         when(currentPracticeStateService.getAllWords()).thenReturn(wordSet.getWords());
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
@@ -282,7 +285,7 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseService).moveCurrentWordToNextState(wordSet.getId());
+        verify(exerciseService).moveCurrentWordToNextState(word2Tokens);
     }
 
     @Test
@@ -475,15 +478,12 @@ public class StudyingPracticeWordSetInteractorTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(wordSetId);
         wordSet.setWords(words);
+        when(currentPracticeStateService.getAllWords()).thenReturn(asList(newCurrentWord, currentWord));
         when(currentPracticeStateService.getCurrentWord()).thenReturn(currentWord);
-        when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
-        when(exerciseService.getLeftOverOfWordSetByWordSetId(wordSetId)).thenReturn(asList(currentWord, newCurrentWord));
         Word2Tokens actual = interactor.peekAnyNewWordByWordSetId();
 
         // then
         assertEquals(newCurrentWord, actual);
         assertNotEquals(actual, currentWord);
-        verify(exerciseService).putOffCurrentWord(wordSetId);
-        verify(exerciseService).markNewCurrentWordByWordSetIdAndWord(wordSetId, newCurrentWord);
     }
 }

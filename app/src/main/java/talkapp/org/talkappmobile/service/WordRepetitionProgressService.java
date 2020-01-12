@@ -28,7 +28,7 @@ public interface WordRepetitionProgressService {
 
     void putOffCurrentWord(int wordSetId);
 
-    void moveCurrentWordToNextState(int wordSetId);
+    void moveCurrentWordToNextState(Word2Tokens word);
 
     int markAsRepeated(Word2Tokens word);
 

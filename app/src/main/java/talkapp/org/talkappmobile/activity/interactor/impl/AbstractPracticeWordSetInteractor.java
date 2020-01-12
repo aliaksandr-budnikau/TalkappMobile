@@ -183,7 +183,21 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         listener.onGotSentencesToChange(sentences, alreadyPickedSentences, currentWord);
     }
 
+    @Override
+    public Word2Tokens peekAnyNewWordByWordSetId() {
+        List<Word2Tokens> allWords = currentPracticeStateService.getAllWords();
+        return peekRandomWordWithoutCurrentWord(allWords, currentPracticeStateService.getCurrentWord());
+    }
+
     protected Word2Tokens peekRandomWordWithoutCurrentWord(List<Word2Tokens> words, Word2Tokens currentWord) {
+        LinkedList<Word2Tokens> leftOver = new LinkedList<>(words);
+        for (Word2Tokens word2Tokens : currentPracticeStateService.getFinishedWords()) {
+            leftOver.remove(word2Tokens);
+        }
+        return peekRandomWordWithoutCurrentWord1(leftOver, currentWord);
+    }
+
+    private Word2Tokens peekRandomWordWithoutCurrentWord1(List<Word2Tokens> words, Word2Tokens currentWord) {
         if (words.isEmpty()) {
             return null;
         }
