@@ -125,7 +125,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = ageProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgboVdNEXFMlzHK5SR", age.getWord(), 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbnj1NEXFMlzHK5Rk", null, 6));
         exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
@@ -150,7 +150,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = anniversaryProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoFiKcqDTAu_IiLfhod", null, 6));
         exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
@@ -175,7 +175,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = birthProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbsUXNEXFMlzHK5V2", birth.getWord(), 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoEEi8tDTAu_IiLecuS", null, 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);

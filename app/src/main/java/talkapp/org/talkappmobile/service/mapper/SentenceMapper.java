@@ -30,10 +30,10 @@ public class SentenceMapper {
         LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
     }
 
-    public SentenceMapping toMapping(Sentence sentence, String word, int wordsNumber) {
+    public SentenceMapping toMapping(Sentence sentence, int wordsNumber) {
         SentenceMapping mapping = new SentenceMapping();
         try {
-            mapping.setId(mapper.writeValueAsString(new SentenceIdMapping(sentence.getId(), word, wordsNumber)));
+            mapping.setId(mapper.writeValueAsString(new SentenceIdMapping(sentence.getId(), wordsNumber)));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

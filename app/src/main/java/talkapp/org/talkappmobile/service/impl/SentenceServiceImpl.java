@@ -38,7 +38,7 @@ public class SentenceServiceImpl implements SentenceService {
         for (String word : words2Sentences.keySet()) {
             LinkedList<SentenceMapping> mappings = new LinkedList<>();
             for (Sentence sentence : words2Sentences.get(word)) {
-                mappings.add(sentenceMapper.toMapping(sentence, word, wordsNumber));
+                mappings.add(sentenceMapper.toMapping(sentence, wordsNumber));
             }
             sentenceDao.save(mappings);
         }

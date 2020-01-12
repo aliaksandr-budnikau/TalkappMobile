@@ -14,13 +14,6 @@ public class SentenceIdMapping {
         this.lengthInWords = lengthInWords;
     }
 
-    @Deprecated
-    public SentenceIdMapping(String sentenceId, @Deprecated String word, int lengthInWords) {
-        this.sentenceId = sentenceId;
-        this.word = word;
-        this.lengthInWords = lengthInWords;
-    }
-
     public String getSentenceId() {
         return sentenceId;
     }

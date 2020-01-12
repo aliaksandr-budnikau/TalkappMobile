@@ -39,7 +39,7 @@ class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
             if (wasAlreadySaved(sentence)) {
                 continue;
             }
-            SentenceMapping mapping = sentenceMapper.toMapping(sentence, word.getWord(), WORDS_NUMBER);
+            SentenceMapping mapping = sentenceMapper.toMapping(sentence, WORDS_NUMBER);
             sentence.setId(mapping.getId());
             sentenceDao.save(singletonList(mapping));
         }
