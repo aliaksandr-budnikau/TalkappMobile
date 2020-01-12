@@ -125,7 +125,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = ageProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbnj1NEXFMlzHK5Rk", null, 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbnj1NEXFMlzHK5Rk", 6));
         exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
@@ -150,7 +150,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = anniversaryProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoFiKcqDTAu_IiLfhod", null, 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoFiKcqDTAu_IiLfhod", 6));
         exercise.setStatus(name);
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
@@ -175,7 +175,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         } else {
             exercise = birthProgress.get(0);
         }
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoEEi8tDTAu_IiLecuS", null, 6));
+        exercise.setSentenceIds(getSentenceJSON(mapper, "AWoEEi8tDTAu_IiLecuS", 6));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
@@ -198,7 +198,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, experienceUtils, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
     }
 
-    private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {
+    private String getSentenceJSON(ObjectMapper mapper, String sentenceId, int lengthInWords) throws JsonProcessingException {
         return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, lengthInWords)));
     }
 

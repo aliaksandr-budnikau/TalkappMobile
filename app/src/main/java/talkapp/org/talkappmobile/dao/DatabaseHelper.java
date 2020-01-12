@@ -31,7 +31,7 @@ import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.W
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
-    private static final int DATABASE_VERSION = 47;
+    private static final int DATABASE_VERSION = 52;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
     private MigrationService migrationService;
 
@@ -65,6 +65,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         changes.put(47, singletonList(
                 "CREATE TABLE CurrentWordSet (id VARCHAR NOT NULL PRIMARY KEY, words VARCHAR NOT NULL);"
         ));
+        changes.put(48, Collections.<String>emptyList());
+        changes.put(49, Collections.<String>emptyList());
+        changes.put(51, Collections.<String>emptyList());
+        changes.put(52, Collections.<String>emptyList());
     }
 
     @Override
