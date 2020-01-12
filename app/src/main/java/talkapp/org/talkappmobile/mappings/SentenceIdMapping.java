@@ -1,8 +1,8 @@
 package talkapp.org.talkappmobile.mappings;
 
+@Deprecated
 public class SentenceIdMapping {
     private String sentenceId;
-    @Deprecated
     private String word;
     private int lengthInWords;
 

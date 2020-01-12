@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -14,7 +13,6 @@ import java.util.TimeZone;
 
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -55,20 +53,16 @@ class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
         WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
         WordSet wordSet = wordSetMapper.toDto(mapping);
         WordRepetitionProgressMapping exercise = progressDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
-        List<SentenceIdMapping> ids = new LinkedList<>();
+        List<String> ids = new LinkedList<>();
         for (Sentence sentence : sentences) {
-            try {
-                ids.add(mapper.readValue(sentence.getId(), SentenceIdMapping.class));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            ids.add(sentence.getId());
         }
         setSentencesIds(exercise, ids);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
         progressDao.createNewOrUpdate(exercise);
     }
 
-    private void setSentencesIds(WordRepetitionProgressMapping exercise, List<SentenceIdMapping> ids) {
+    private void setSentencesIds(WordRepetitionProgressMapping exercise, List<String> ids) {
         try {
             exercise.setSentenceIds(mapper.writeValueAsString(ids));
         } catch (JsonProcessingException e) {

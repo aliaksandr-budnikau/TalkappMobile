@@ -127,7 +127,7 @@ public class SentenceServiceImplTest {
         sentence1.setId("fds32ddd");
         Sentence sentence2 = new Sentence();
         sentence2.setId("fds32ddddsas");
-        List<SentenceMapping> sentences = asList(sentenceMapper.toMapping(sentence1, 6), sentenceMapper.toMapping(sentence2, 6));
+        List<SentenceMapping> sentences = asList(sentenceMapper.toMapping(sentence1), sentenceMapper.toMapping(sentence2));
 
         // when
         when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);

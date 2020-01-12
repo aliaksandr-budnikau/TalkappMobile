@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -43,7 +42,6 @@ import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -106,7 +104,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         Word2Tokens age = new Word2Tokens("age", "age", ageWordSetId);
         List<Word2Tokens> ageWordSetWords = asList(age, new Word2Tokens(), new Word2Tokens());
         WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgboVdNEXFMlzHK5SR", age.getWord(), 6));
+        exercise.setSentenceIds("AWbgboVdNEXFMlzHK5SR");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
@@ -125,7 +123,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
         List<Word2Tokens> anniversaryWordSetWords = asList(new Word2Tokens(), anniversary, new Word2Tokens());
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbq6hNEXFMlzHK5Ul", anniversary.getWord(), 6));
+        exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
@@ -144,7 +142,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
         List<Word2Tokens> birthWordSetWords = asList(new Word2Tokens(), new Word2Tokens(), birth);
         exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds(getSentenceJSON(mapper, "AWbgbsUXNEXFMlzHK5V2", birth.getWord(), 6));
+        exercise.setSentenceIds("AWbgbsUXNEXFMlzHK5V2");
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
@@ -169,9 +167,5 @@ public class PracticeWordSetVocabularyFragmentTest {
     @Test
     public void testPracticeWordSetVocabularyFragment_repetitionMode() {
         practiceWordSetVocabularyFragment.init();
-    }
-
-    private String getSentenceJSON(ObjectMapper mapper, String sentenceId, String word, int lengthInWords) throws JsonProcessingException {
-        return mapper.writeValueAsString(singletonList(new SentenceIdMapping(sentenceId, lengthInWords)));
     }
 }

@@ -27,16 +27,12 @@ public class SentenceMapper {
         this.mapper = mapper;
         HASH_MAP_OF_STRING_2_STRING_JAVA_TYPE = mapper.getTypeFactory().constructMapType(HashMap.class, String.class, String.class);
         LINKED_LIST_OF_TOKENS_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, TextToken.class);
-        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, SentenceIdMapping.class);
+        LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE = mapper.getTypeFactory().constructCollectionType(LinkedList.class, String.class);
     }
 
-    public SentenceMapping toMapping(Sentence sentence, int wordsNumber) {
+    public SentenceMapping toMapping(Sentence sentence) {
         SentenceMapping mapping = new SentenceMapping();
-        try {
-            mapping.setId(mapper.writeValueAsString(new SentenceIdMapping(sentence.getId(), wordsNumber)));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        mapping.setId(sentence.getId());
         mapping.setText(sentence.getText());
         mapping.setContentScore(sentence.getContentScore() == null ? null : sentence.getContentScore().name());
         try {
@@ -77,6 +73,16 @@ public class SentenceMapper {
 
     public List<SentenceIdMapping> toSentenceIdMapping(String sentenceIdsAsString) {
         List<SentenceIdMapping> ids;
+        try {
+            ids = mapper.readValue(sentenceIdsAsString, LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE);
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return ids;
+    }
+
+    public List<String> toSentenceId(String sentenceIdsAsString) {
+        List<String> ids;
         try {
             ids = mapper.readValue(sentenceIdsAsString, LINKED_LIST_OF_SENTENCE_ID_JAVA_TYPE);
         } catch (IOException e) {

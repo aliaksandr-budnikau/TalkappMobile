@@ -15,7 +15,6 @@ import java.util.Set;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
@@ -58,11 +57,11 @@ public class SentenceProviderImpl implements SentenceProvider {
         if (isEmpty(exercise.getSentenceIds())) {
             return emptyList();
         }
-        List<SentenceIdMapping> ids = sentenceMapper.toSentenceIdMapping(exercise.getSentenceIds());
+        List<String> ids = sentenceMapper.toSentenceId(exercise.getSentenceIds());
         if (ids.isEmpty()) {
             return emptyList();
         }
-        return getSentence(ids, word.getWord());
+        return getSentence(ids);
     }
 
     @Override
@@ -76,13 +75,8 @@ public class SentenceProviderImpl implements SentenceProvider {
         return result;
     }
 
-    private List<Sentence> getSentence(List<SentenceIdMapping> ids, String word) {
-        String[] sentenceIds = new String[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            SentenceIdMapping idMapping = ids.get(i);
-            sentenceIds[i] = sentenceMapper.toSentenceIdMapping(idMapping);
-        }
-        List<SentenceMapping> sentences = sentenceDao.findAllByIds(sentenceIds);
+    private List<Sentence> getSentence(List<String> ids) {
+        List<SentenceMapping> sentences = sentenceDao.findAllByIds(ids.toArray(new String[0]));
         if (sentences.isEmpty()) {
             return emptyList();
         }
@@ -91,7 +85,7 @@ public class SentenceProviderImpl implements SentenceProvider {
             hashMap.put(sentence.getId(), sentence);
         }
         LinkedList<Sentence> result = new LinkedList<>();
-        for (String id : sentenceIds) {
+        for (String id : ids) {
             SentenceMapping mapping = hashMap.get(id);
             if (mapping != null) {
                 result.add(sentenceMapper.toDto(mapping));

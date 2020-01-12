@@ -2,13 +2,11 @@ package talkapp.org.talkappmobile.service.mapper;
 
 import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
@@ -49,12 +47,7 @@ public class WordTranslationMapper {
 
     public Sentence convertToSentence(WordTranslation wordTranslation) {
         Sentence sentence = new Sentence();
-        SentenceIdMapping sentenceIdMapping = new SentenceIdMapping(valueOf(System.currentTimeMillis()), 6);
-        try {
-            sentence.setId(mapper.writeValueAsString(sentenceIdMapping));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        sentence.setId(valueOf(System.currentTimeMillis()));
         sentence.setTokens(getTextTokens(wordTranslation));
         HashMap<String, String> translations = new HashMap<>();
         translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());
