@@ -201,17 +201,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         return findFinishedWordSetsSortByUpdatedDate(Integer.MAX_VALUE, olderThenInHours);
     }
 
-    @Override
-    public void putOffCurrentWord(int wordSetId) {
-        List<WordRepetitionProgressMapping> current = exerciseDao.findByCurrentAndByWordSetId(wordSetId);
-        if (isNotThereCurrentExercise(current)) {
-            return;
-        }
-        WordRepetitionProgressMapping mapping = current.get(0);
-        mapping.setCurrent(false);
-        exerciseDao.createNewOrUpdate(mapping);
-    }
-
     private Word2Tokens getWord2Tokens(WordRepetitionProgressMapping mapping) {
         WordSetMapping wordSetMapping = wordSetDao.findById(mapping.getWordSetId());
         WordSet wordSet = wordSetMapper.toDto(wordSetMapping);

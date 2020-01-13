@@ -319,7 +319,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -354,7 +353,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
@@ -385,7 +383,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(listener, times(0)).onEnableRepetitionMode();
-        verify(exerciseService, times(0)).putOffCurrentWord(wordSet.getId());
     }
 
     @Test
