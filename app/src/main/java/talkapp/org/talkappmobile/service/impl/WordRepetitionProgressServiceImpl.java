@@ -128,32 +128,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
-    public void markNewCurrentWordByWordSetIdAndWord(int wordSetId, Word2Tokens newCurrentWord) {
-        WordSetMapping exp = wordSetDao.findById(wordSetId);
-        WordSet wordSet = wordSetMapper.toDto(exp);
-        int wordIndex = wordSet.getWords().indexOf(newCurrentWord);
-        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
-        for (WordRepetitionProgressMapping exercise : exercises) {
-            if (wordIndex == exercise.getWordIndex()) {
-                exercise.setCurrent(true);
-                exerciseDao.createNewOrUpdate(exercise);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId) {
-        WordSetMapping exp = wordSetDao.findById(wordSetId);
-        List<WordRepetitionProgressMapping> exercises = exerciseDao.findByStatusAndByWordSetId(exp.getStatus(), wordSetId);
-        LinkedList<Word2Tokens> result = new LinkedList<>();
-        for (WordRepetitionProgressMapping exercise : exercises) {
-            result.add(getWord2Tokens(exercise));
-        }
-        return result;
-    }
-
-    @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         List<WordRepetitionProgressMapping> exercises = exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(limit * wordSetSize, cal.getTime(), FINISHED.name());
