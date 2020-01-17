@@ -35,13 +35,6 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
     }
 
     @Override
-    public void initialiseExperience(OnPracticeWordSetListener listener) {
-        PracticeWordSetInteractorStrategy state = getStrategy();
-        state.initialiseExperience(listener);
-        listener.onInitialiseExperience(currentPracticeStateService.getWordSet());
-    }
-
-    @Override
     public boolean checkAnswer(String answer, final OnPracticeWordSetListener listener) {
         Sentence sentence = currentPracticeStateService.getCurrentSentence();
         Word2Tokens currentWord = currentPracticeStateService.getCurrentWord();

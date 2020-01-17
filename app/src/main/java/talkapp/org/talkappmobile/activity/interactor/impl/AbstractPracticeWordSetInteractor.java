@@ -66,6 +66,13 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         return answerHasBeenSeen;
     }
 
+    @Override
+    public void initialiseExperience(OnPracticeWordSetListener listener) {
+        PracticeWordSetInteractorStrategy state = getStrategy();
+        state.initialiseExperience(listener);
+        listener.onInitialiseExperience(currentPracticeStateService.getWordSet());
+    }
+
     protected boolean checkAccuracyOfAnswer(String answer, Word2Tokens word, Sentence sentence, OnPracticeWordSetListener listener) {
         logger.i(TAG, "check answer {} ", answer);
         if (isEmpty(answer)) {

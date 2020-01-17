@@ -13,6 +13,12 @@ class InsideRepetitionCycleStrategy extends PracticeWordSetInteractorStrategy {
     }
 
     @Override
+    void initialiseExperience(OnPracticeWordSetListener listener) {
+        listener.onEnableRepetitionMode();
+        currentPracticeStateService.setTrainingExperience(0);
+    }
+
+    @Override
     void finishWord(OnPracticeWordSetListener listener) {
         listener.onRightAnswer(currentPracticeStateService.getCurrentSentence());
     }

@@ -25,6 +25,8 @@ public class StrategySwitcherDecorator extends PracticeWordSetInteractorDecorato
         super.changeStrategy(new UnknownState(this));
         if (SECOND_CYCLE.equals(wordSet.getStatus())) {
             super.changeStrategy(new InsideSecondCycleStrategy(this, progressService, currentPracticeStateService));
+        } else if (FINISHED.equals(wordSet.getStatus())) {
+            super.changeStrategy(new InsideRepetitionCycleStrategy(this, currentPracticeStateService));
         }
         super.initialiseExperience(listener);
     }

@@ -17,7 +17,6 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
-    private final Logger logger;
     private final WordRepetitionProgressService exerciseService;
     private final CurrentPracticeStateService currentPracticeStateService;
 
@@ -31,19 +30,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             CurrentPracticeStateService currentPracticeStateService,
             AudioStuffFactory audioStuffFactory) {
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, sentenceProvider);
-        this.logger = logger;
         this.exerciseService = exerciseService;
         this.currentPracticeStateService = currentPracticeStateService;
-    }
-
-    @Override
-    public void initialiseExperience(OnPracticeWordSetListener listener) {
-        WordSet wordSet = currentPracticeStateService.getWordSet();
-        logger.i(TAG, "enable repetition mode");
-        listener.onEnableRepetitionMode();
-        currentPracticeStateService.setTrainingExperience(0);
-        wordSet = currentPracticeStateService.getWordSet();
-        listener.onInitialiseExperience(wordSet);
     }
 
     @Override
