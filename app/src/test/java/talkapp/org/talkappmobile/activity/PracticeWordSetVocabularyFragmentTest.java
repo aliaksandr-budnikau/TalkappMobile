@@ -37,7 +37,6 @@ import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -81,7 +80,6 @@ public class PracticeWordSetVocabularyFragmentTest {
         Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "experienceUtils", new WordSetExperienceUtilsImpl());
         Whitebox.setInternalState(presenterFactory, "logger", new LoggerBean());
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 

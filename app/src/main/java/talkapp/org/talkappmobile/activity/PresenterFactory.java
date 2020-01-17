@@ -34,14 +34,12 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {
@@ -51,8 +49,6 @@ public class PresenterFactory {
     EqualityScorer equalityScorer;
     @Bean(TextUtilsImpl.class)
     TextUtils textUtils;
-    @Bean(WordSetExperienceUtilsImpl.class)
-    WordSetExperienceUtils experienceUtils;
     @Bean(LoggerBean.class)
     Logger logger;
     @Bean(AudioStuffFactoryBean.class)
@@ -62,7 +58,7 @@ public class PresenterFactory {
         WordRepetitionProgressService progressService = serviceFactory.getPracticeWordSetExerciseRepository();
         SentenceService sentenceService = serviceFactory.getSentenceService(null);
         RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
-        PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
+        PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view);
         CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
         StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), stateService, progressService, context, serviceFactory.getSentenceProvider(), audioStuffFactory);
         StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, progressService, stateService);

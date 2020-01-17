@@ -1,19 +1,16 @@
 package talkapp.org.talkappmobile.activity.custom.interactor;
 
 import org.apache.commons.lang3.StringUtils;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.activity.custom.listener.OnWordSetsListItemViewListener;
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordSet;
 
 public class WordSetsListItemViewInteractor {
-    private final WordSetExperienceUtils experienceUtils;
 
-    public WordSetsListItemViewInteractor(WordSetExperienceUtils experienceUtils) {
-        this.experienceUtils = experienceUtils;
+    public WordSetsListItemViewInteractor() {
     }
 
     public void prepareModel(WordSet wordSet, OnWordSetsListItemViewListener listener) {

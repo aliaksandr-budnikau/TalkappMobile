@@ -6,18 +6,12 @@ import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 
 public class PracticeWordSetViewStrategy {
     private final PracticeWordSetView view;
-    private final WordSetExperienceUtils experienceUtils;
-    private final TextUtils textUtils;
 
-    public PracticeWordSetViewStrategy(PracticeWordSetView view, TextUtils textUtils, WordSetExperienceUtils experienceUtils) {
+    public PracticeWordSetViewStrategy(PracticeWordSetView view) {
         this.view = view;
-        this.textUtils = textUtils;
-        this.experienceUtils = experienceUtils;
     }
 
     public void onInitialiseExperience(WordSet wordSet) {

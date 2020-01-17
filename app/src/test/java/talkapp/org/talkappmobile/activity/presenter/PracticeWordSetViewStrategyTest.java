@@ -11,16 +11,12 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PracticeWordSetViewStrategyTest {
-    @Mock
-    WordSetExperienceUtils experienceUtils;
     @Mock
     private PracticeWordSetView view;
     @Mock

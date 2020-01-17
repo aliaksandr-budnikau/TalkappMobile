@@ -38,8 +38,6 @@ import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -190,7 +188,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
-        PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
+        PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view);
         presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
     }
 

@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -32,13 +31,10 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.CurrentPracticeStateServiceImpl;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -60,7 +56,6 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
     private IPracticeWordSetPresenter presenter;
     private WordSet wordSet;
     private Context context;
-    private WordSetExperienceUtilsImpl experienceUtils;
     private PresenterFactory presenterFactory;
     private CurrentPracticeStateService currentPracticeStateService;
     private ServiceFactoryBean serviceFactory;
@@ -86,13 +81,11 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         };
         serviceFactory.setContext(mock(Context.class));
 
-        experienceUtils = new WordSetExperienceUtilsImpl();
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "experienceUtils", experienceUtils);
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 

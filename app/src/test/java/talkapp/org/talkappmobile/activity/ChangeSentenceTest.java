@@ -47,7 +47,6 @@ import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-import talkapp.org.talkappmobile.service.impl.WordSetExperienceUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
@@ -66,7 +65,6 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class ChangeSentenceTest {
-    private WordSetExperienceUtilsImpl experienceUtils;
     private WordSet wordSet;
     private PracticeWordSetFragment practiceWordSetFragment;
     private OriginalTextTextViewPresenter originalTextTextViewPresenter;
@@ -93,12 +91,10 @@ public class ChangeSentenceTest {
         };
         serviceFactory.setContext(mock(Context.class));
 
-        experienceUtils = new WordSetExperienceUtilsImpl();
         PresenterFactory presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "experienceUtils", experienceUtils);
         Whitebox.setInternalState(presenterFactory, "logger", logger);
         Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
