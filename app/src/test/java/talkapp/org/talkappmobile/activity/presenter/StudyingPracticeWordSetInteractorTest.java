@@ -227,7 +227,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
-        verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
+        verify(listener).onUpdateProgress(wordSet);
         verify(listener, times(0)).onTrainingFinished();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(listener, times(0)).onAnswerEmpty();
@@ -261,12 +261,11 @@ public class StudyingPracticeWordSetInteractorTest {
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(currentPracticeStateService.getCurrentWord()).thenReturn(word2Tokens);
         when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
-        when(currentPracticeStateService.getAllWords()).thenReturn(wordSet.getWords());
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
-        verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
+        verify(listener).onUpdateProgress(wordSet);
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);

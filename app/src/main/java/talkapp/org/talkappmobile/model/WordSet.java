@@ -50,6 +50,10 @@ public class WordSet implements Serializable {
         return words.size();
     }
 
+    public int getTrainingExperienceInPercentages() {
+        return (trainingExperience * 100) / getMaxTrainingExperience();
+    }
+
     public int getId() {
         return id;
     }

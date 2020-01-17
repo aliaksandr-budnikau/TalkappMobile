@@ -9,8 +9,4 @@ import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
  */
 @EBean(scope = EBean.Scope.Singleton)
 public class WordSetExperienceUtilsImpl implements WordSetExperienceUtils {
-    @Override
-    public int getProgress(double experience, double maxTrainingExperience) {
-        return (int) (experience / maxTrainingExperience * 100);
-    }
 }

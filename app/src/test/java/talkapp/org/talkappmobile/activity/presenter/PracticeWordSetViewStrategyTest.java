@@ -31,7 +31,7 @@ public class PracticeWordSetViewStrategyTest {
     @Test
     public void onInitialiseExperience() {
         // setup
-        int progress = 32;
+        int progress = 583300;
 
         WordSet wordSet = new WordSet();
         wordSet.setTrainingExperience(23332);
@@ -39,7 +39,6 @@ public class PracticeWordSetViewStrategyTest {
 
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
         strategy.onInitialiseExperience(wordSet);
 
         // then
@@ -72,14 +71,13 @@ public class PracticeWordSetViewStrategyTest {
     @Test
     public void onUpdateProgress() {
         // setup
-        int progress = 232;
+        int progress = 583300;
 
         WordSet wordSet = new WordSet();
         wordSet.setWords(asList(new Word2Tokens("sds", "sds", wordSet.getId()), new Word2Tokens("sds", "sds", wordSet.getId())));
         wordSet.setTrainingExperience(23332);
 
         // when
-        when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
         strategy.onUpdateProgress(wordSet);
 
         // then

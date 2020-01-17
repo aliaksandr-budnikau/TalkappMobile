@@ -65,7 +65,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         currentPracticeStateService.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         currentPracticeStateService.addFinishedWord(currentPracticeStateService.getCurrentWord());
         wordSet = currentPracticeStateService.getWordSet();
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
+        listener.onUpdateProgress(wordSet);
         exerciseService.markAsRepeated(currentWord);
         exerciseService.shiftSentences(currentWord);
         return true;

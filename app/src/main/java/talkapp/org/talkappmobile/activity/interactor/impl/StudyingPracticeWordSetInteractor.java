@@ -62,7 +62,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         currentPracticeStateService.persistWordSet();
         wordSet = currentPracticeStateService.getWordSet();
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
+        listener.onUpdateProgress(wordSet);
         exerciseService.moveCurrentWordToNextState(currentWord);
         return true;
     }

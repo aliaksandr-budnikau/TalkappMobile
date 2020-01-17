@@ -21,8 +21,7 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onInitialiseExperience(WordSet wordSet) {
-        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
-        view.setProgress(progress);
+        view.setProgress(wordSet.getTrainingExperienceInPercentages());
     }
 
     public void onSentencesFound() {
@@ -40,13 +39,7 @@ public class PracticeWordSetViewStrategy {
     }
 
     public void onUpdateProgress(WordSet wordSet) {
-        int progress = experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
-        view.setProgress(progress);
-    }
-
-    public void onUpdateProgress(int trainingExperience, int maxTrainingProgress) {
-        int progress = experienceUtils.getProgress(trainingExperience, maxTrainingProgress);
-        view.setProgress(progress);
+        view.setProgress(wordSet.getTrainingExperienceInPercentages());
     }
 
     public void onTrainingFinished() {
