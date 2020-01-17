@@ -60,7 +60,6 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
     private Context context;
-    private WordSetExperienceUtilsImpl experienceUtils;
     private RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
     private ServiceFactoryBean serviceFactory;
 
@@ -86,9 +85,8 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         };
         serviceFactory.setContext(mock(Context.class));
 
-        experienceUtils = new WordSetExperienceUtilsImpl();
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, serviceFactory.getPracticeWordSetExerciseRepository(), experienceUtils, serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
+                logger, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, serviceFactory.getUserExpService(), serviceFactory.getCurrentPracticeStateService(), serviceFactory.getPracticeWordSetExerciseRepository());
     }
 
@@ -193,7 +191,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view, new TextUtilsImpl(), new WordSetExperienceUtilsImpl());
-        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, experienceUtils, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
+        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
     }
 
     @Test

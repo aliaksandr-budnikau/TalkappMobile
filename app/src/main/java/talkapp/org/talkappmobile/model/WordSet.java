@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 /**
@@ -40,6 +41,13 @@ public class WordSet implements Serializable {
         this.status = wordSet.getStatus();
         this.repetitionClass = wordSet.getRepetitionClass();
         this.availableInHours = wordSet.getAvailableInHours();
+    }
+
+    public int getMaxTrainingExperience() {
+        if (status != FINISHED) {
+            return words.size() * 2;
+        }
+        return words.size();
     }
 
     public int getId() {

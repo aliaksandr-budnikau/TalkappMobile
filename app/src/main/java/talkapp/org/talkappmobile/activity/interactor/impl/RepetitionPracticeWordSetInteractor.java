@@ -14,22 +14,18 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
     private final Logger logger;
     private final WordRepetitionProgressService exerciseService;
-    private final WordSetExperienceUtils experienceUtils;
     private final CurrentPracticeStateService currentPracticeStateService;
-    private int maxTrainingProgress;
 
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
             RefereeService refereeService,
             Logger logger,
             WordRepetitionProgressService exerciseService,
-            WordSetExperienceUtils experienceUtils,
             SentenceProvider sentenceProvider,
             Context context,
             CurrentPracticeStateService currentPracticeStateService,
@@ -37,14 +33,12 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, sentenceProvider);
         this.logger = logger;
         this.exerciseService = exerciseService;
-        this.experienceUtils = experienceUtils;
         this.currentPracticeStateService = currentPracticeStateService;
     }
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {
         WordSet wordSet = currentPracticeStateService.getWordSet();
-        maxTrainingProgress = experienceUtils.getMaxTrainingProgress(wordSet) / 2;
         logger.i(TAG, "enable repetition mode");
         listener.onEnableRepetitionMode();
         currentPracticeStateService.setTrainingExperience(0);
@@ -71,7 +65,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         currentPracticeStateService.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         currentPracticeStateService.addFinishedWord(currentPracticeStateService.getCurrentWord());
         wordSet = currentPracticeStateService.getWordSet();
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), maxTrainingProgress);
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
         exerciseService.markAsRepeated(currentWord);
         exerciseService.shiftSentences(currentWord);
         return true;

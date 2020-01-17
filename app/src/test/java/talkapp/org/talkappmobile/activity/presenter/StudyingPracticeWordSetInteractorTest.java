@@ -29,18 +29,12 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -58,17 +52,11 @@ public class StudyingPracticeWordSetInteractorTest {
     @Mock
     WordRepetitionProgressService exerciseService;
     @Mock
-    private SentenceService sentenceService;
-    @Mock
-    private WordTranslationService wordTranslationService;
-    @Mock
     private RefereeService refereeService;
     @Mock
     private OnPracticeWordSetListener listener;
     @Mock
     private WordSetService wordSetService;
-    @Mock
-    private WordSetExperienceUtils experienceUtils;
     @Mock
     private SentenceProvider sentenceProvider;
     @Mock
@@ -84,7 +72,7 @@ public class StudyingPracticeWordSetInteractorTest {
 
     @Before
     public void setUp() throws Exception {
-        interactor = new StrategySwitcherDecorator(origInteractor, experienceUtils, exerciseService, currentPracticeStateService);
+        interactor = new StrategySwitcherDecorator(origInteractor, exerciseService, currentPracticeStateService);
     }
 
     @Test
@@ -236,7 +224,6 @@ public class StudyingPracticeWordSetInteractorTest {
         when(currentPracticeStateService.getCurrentSentence()).thenReturn(sentence);
         when(refereeService.checkAnswer(uncheckedAnswer)).thenReturn(true);
         when(currentPracticeStateService.getWordSet()).thenReturn(wordSet);
-        when(currentPracticeStateService.getAllWords()).thenReturn(wordSet.getWords());
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
@@ -279,7 +266,7 @@ public class StudyingPracticeWordSetInteractorTest {
         interactor.checkAnswer(uncheckedAnswer.getActualAnswer(), listener);
 
         // then
-        verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2);
+        verify(listener).onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
         verify(listener, times(0)).onRightAnswer(sentence);
         verify(listener, times(0)).onAnswerEmpty();
         verify(listener, times(0)).onTrainingHalfFinished(sentence);

@@ -54,7 +54,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return false;
         }
         WordSet wordSet = currentPracticeStateService.getWordSet();
-        int maxTrainingProgress = getMaxTrainingProgress(wordSet);
+        int maxTrainingProgress = wordSet.getMaxTrainingExperience();
         if (wordSet.getTrainingExperience() > maxTrainingProgress) {
             currentPracticeStateService.setTrainingExperience(maxTrainingProgress);
         } else {
@@ -62,12 +62,8 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         currentPracticeStateService.persistWordSet();
         wordSet = currentPracticeStateService.getWordSet();
-        listener.onUpdateProgress(wordSet.getTrainingExperience(), currentPracticeStateService.getAllWords().size() * 2);
+        listener.onUpdateProgress(wordSet.getTrainingExperience(), wordSet.getMaxTrainingExperience());
         exerciseService.moveCurrentWordToNextState(currentWord);
         return true;
-    }
-
-    private int getMaxTrainingProgress(WordSet wordSet) {
-        return wordSet.getWords().size() * 2;
     }
 }

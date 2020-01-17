@@ -65,11 +65,11 @@ public class PresenterFactory {
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view, textUtils, experienceUtils);
         CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
         StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, logger, serviceFactory.getWordTranslationService(), stateService, progressService, context, serviceFactory.getSentenceProvider(), audioStuffFactory);
-        StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, experienceUtils, progressService, stateService);
+        StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, progressService, stateService);
         PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getPracticeWordSetExerciseRepository());
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, experienceUtils, serviceFactory.getSentenceProvider(), context, stateService, audioStuffFactory);
-            strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, experienceUtils, progressService, stateService);
+            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, serviceFactory.getSentenceProvider(), context, stateService, audioStuffFactory);
+            strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, progressService, stateService);
             interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getPracticeWordSetExerciseRepository());
         }
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(interactor, viewStrategy);

@@ -5,13 +5,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordSetExperienceUtils;
-
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.verify;
@@ -40,7 +40,6 @@ public class PracticeWordSetViewStrategyTest {
 
         // when
         when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
-        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         strategy.onInitialiseExperience(wordSet);
 
         // then
@@ -81,7 +80,6 @@ public class PracticeWordSetViewStrategyTest {
 
         // when
         when(experienceUtils.getProgress(wordSet.getTrainingExperience(), wordSet.getWords().size() * 2)).thenReturn(progress);
-        when(experienceUtils.getMaxTrainingProgress(wordSet)).thenReturn(wordSet.getWords().size() * 2);
         strategy.onUpdateProgress(wordSet);
 
         // then
