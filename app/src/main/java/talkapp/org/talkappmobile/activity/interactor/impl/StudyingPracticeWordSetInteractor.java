@@ -43,6 +43,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
 
         if (isAnswerHasBeenSeen()) {
+            exerciseService.markAsForgottenAgain(currentWord);
             listener.onRightAnswer(sentence);
             return false;
         }

@@ -43,8 +43,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
         }
 
         if (isAnswerHasBeenSeen()) {
-            int counter = exerciseService.markAsForgottenAgain(currentWord);
-            listener.onForgottenAgain(counter);
+            exerciseService.markAsForgottenAgain(currentWord);
             listener.onRightAnswer(sentence);
             return false;
         }
