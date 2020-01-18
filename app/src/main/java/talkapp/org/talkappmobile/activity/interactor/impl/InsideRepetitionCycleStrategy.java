@@ -21,5 +21,6 @@ class InsideRepetitionCycleStrategy extends PracticeWordSetInteractorStrategy {
     @Override
     void finishWord(OnPracticeWordSetListener listener) {
         listener.onRightAnswer(currentPracticeStateService.getCurrentSentence());
+        currentPracticeStateService.addFinishedWord(currentPracticeStateService.getCurrentWord());
     }
 }
