@@ -47,12 +47,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
             return false;
         }
         WordSet wordSet = currentPracticeStateService.getWordSet();
-        int maxTrainingProgress = wordSet.getMaxTrainingExperience();
-        if (wordSet.getTrainingExperience() > maxTrainingProgress) {
-            currentPracticeStateService.setTrainingExperience(maxTrainingProgress);
-        } else {
-            currentPracticeStateService.setTrainingExperience(wordSet.getTrainingExperience() + 1);
-        }
+        currentPracticeStateService.setTrainingExperience(wordSet.getTrainingExperience() + 1);
         currentPracticeStateService.persistWordSet();
         wordSet = currentPracticeStateService.getWordSet();
         listener.onUpdateProgress(wordSet);
