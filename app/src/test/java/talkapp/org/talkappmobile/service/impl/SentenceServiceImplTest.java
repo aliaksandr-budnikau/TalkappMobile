@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
@@ -48,7 +50,6 @@ public class SentenceServiceImplTest {
     private SentenceProvider sentenceProvider;
     @Mock
     private WordRepetitionProgressDao progressDao;
-    private SentenceServiceImpl sentenceService;
     private WordProgressSentenceProviderDecorator wordProgressSentenceProviderDecorator;
     private SentenceMapper sentenceMapper;
 
@@ -56,8 +57,7 @@ public class SentenceServiceImplTest {
     public void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
-        sentenceService = new SentenceServiceImpl(dataServer, sentenceDao, mapper);
-        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mapper);
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         sentenceProvider = new SentenceProviderImpl(wordSetRepository, progressDao, sentenceDao, mapper);
         wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetRepository, progressDao, mapper);
     }

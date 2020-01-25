@@ -15,6 +15,7 @@ import java.util.TimeZone;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
+import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
@@ -49,7 +50,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
         WordSetDao wordSetDao = daoHelper.getWordSetDao();
         exerciseDao = daoHelper.getWordRepetitionProgressDao();
         mapper = new ObjectMapper();
-        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mapper);
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetRepository, sentenceDao, mapper);
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));

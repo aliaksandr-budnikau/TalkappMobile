@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public interface WordSetRepository {
@@ -16,4 +17,10 @@ public interface WordSetRepository {
     void createNewOrUpdate(List<WordSet> wordSets);
 
     void removeById(int wordSetId);
+
+    Integer getTheLastCustomWordSetsId();
+
+    NewWordSetDraft getNewWordSetDraft();
+
+    void createNewOrUpdate(NewWordSetDraft draft);
 }

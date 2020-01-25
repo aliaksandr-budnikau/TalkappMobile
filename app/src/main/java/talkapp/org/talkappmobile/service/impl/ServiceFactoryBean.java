@@ -100,7 +100,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetService != null) {
             return wordSetService;
         }
-        WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), getWordSetRepository(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), getWordSetRepository());
         this.wordSetService = new CachedWordSetServiceDecorator(getWordSetRepository(), wordSetService);
         return this.wordSetService;
     }
@@ -354,7 +354,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetRepository != null) {
             return wordSetRepository;
         }
-        wordSetRepository = new WordSetRepositoryImpl(provideWordSetDao(), getMapper());
+        wordSetRepository = new WordSetRepositoryImpl(provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetRepository;
     }
 
