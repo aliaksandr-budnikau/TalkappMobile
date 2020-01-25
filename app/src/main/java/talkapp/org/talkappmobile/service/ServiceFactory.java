@@ -31,4 +31,6 @@ public interface ServiceFactory {
     DataServer getDataServer();
 
     SentenceProvider getSentenceProvider();
+
+    WordSetRepository getWordSetRepository();
 }

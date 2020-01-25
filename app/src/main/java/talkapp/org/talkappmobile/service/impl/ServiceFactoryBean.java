@@ -49,6 +49,7 @@ import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
@@ -83,6 +84,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private Retrofit retrofit;
     private Retrofit gitHubRetrofit;
     private DataServer backendServer;
+    private WordSetRepository wordSetRepository;
 
     @Override
     public RequestExecutor getRequestExecutor() {
@@ -99,7 +101,7 @@ public class ServiceFactoryBean implements ServiceFactory {
             return wordSetService;
         }
         WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
-        this.wordSetService = new CachedWordSetServiceDecorator(wordSetService, provideWordSetDao(), getMapper());
+        this.wordSetService = new CachedWordSetServiceDecorator(getWordSetRepository(), wordSetService);
         return this.wordSetService;
     }
 
@@ -140,7 +142,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordTranslationService != null) {
             return wordTranslationService;
         }
-        wordTranslationService = new WordTranslationServiceImpl(getDataServer(), provideWordTranslationDao(), provideWordSetDao(), getMapper());
+        wordTranslationService = new WordTranslationServiceImpl(getDataServer(), provideWordTranslationDao(), getWordSetRepository(), getMapper());
         return wordTranslationService;
     }
 
@@ -345,6 +347,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, provideSentenceDao(), getMapper());
         WordTranslationSentenceProviderDecorator translationSentenceProviderDecorator = new WordTranslationSentenceProviderDecorator(cachedSentenceProviderDecorator, provideWordTranslationDao(), getMapper());
         return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, provideWordSetDao(), providePracticeWordSetExerciseDao(), getMapper());
+    }
+
+    @Override
+    public WordSetRepository getWordSetRepository() {
+        if (wordSetRepository != null) {
+            return wordSetRepository;
+        }
+        wordSetRepository = new WordSetRepositoryImpl(provideWordSetDao(), getMapper());
+        return wordSetRepository;
     }
 
     @RootContext
