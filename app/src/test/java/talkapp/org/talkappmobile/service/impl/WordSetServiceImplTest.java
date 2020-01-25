@@ -32,7 +32,9 @@ public class WordSetServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        wordSetService = new WordSetServiceImpl(dataServer, wordSetDao, newWordSetDraftDao, new ObjectMapper());
+        ObjectMapper mapper = new ObjectMapper();
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mapper);
+        wordSetService = new WordSetServiceImpl(dataServer, wordSetRepository, wordSetDao, newWordSetDraftDao, mapper);
     }
 
     @Test

@@ -22,6 +22,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
 
@@ -30,6 +31,8 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 public class WordSetServiceImpl implements WordSetService {
     private static final int DEFAULT_TOP_SUM = 20000;
     private final int CUSTOM_WORD_SETS_STARTS_SINCE = 1000000;
+    private final WordSetRepository wordSetRepository;
+
     @NonNull
     private final WordSetDao wordSetDao;
     @NonNull
@@ -39,8 +42,9 @@ public class WordSetServiceImpl implements WordSetService {
     private final DataServer server;
     private int wordSetSize = 12;
 
-    public WordSetServiceImpl(@NonNull DataServer server, @NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
+    public WordSetServiceImpl(@NonNull DataServer server, @NonNull WordSetRepository wordSetRepository, @NonNull WordSetDao wordSetDao, @NonNull NewWordSetDraftDao newWordSetDraftDao, @NonNull ObjectMapper mapper) {
         this.server = server;
+        this.wordSetRepository = wordSetRepository;
         this.wordSetDao = wordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;
         this.wordSetMapper = new WordSetMapper(mapper);
@@ -48,17 +52,17 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void resetProgress(WordSet wordSet) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(wordSet.getId());
-        wordSetMapping.setTrainingExperience(0);
-        wordSetMapping.setStatus(FIRST_CYCLE.name());
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        WordSet set = wordSetRepository.findById(wordSet.getId());
+        set.setTrainingExperience(0);
+        set.setStatus(FIRST_CYCLE);
+        wordSetRepository.createNewOrUpdate(set);
     }
 
     @Override
     public void moveToAnotherState(int id, WordSetProgressStatus value) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(id);
-        wordSetMapping.setStatus(value.name());
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        WordSet wordSet = wordSetRepository.findById(id);
+        wordSet.setStatus(value);
+        wordSetRepository.createNewOrUpdate(wordSet);
     }
 
     @Override
@@ -90,15 +94,12 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void updateWord2Tokens(Word2Tokens newWord2Tokens, Word2Tokens oldWord2Tokens) {
-        WordSetMapping wordSetMapping = wordSetDao.findById(newWord2Tokens.getSourceWordSetId());
-        WordSet wordSetDto = wordSetMapper.toDto(wordSetMapping);
+        WordSet wordSetDto = wordSetRepository.findById(newWord2Tokens.getSourceWordSetId());
 
         int position = wordSetDto.getWords().indexOf(oldWord2Tokens);
         wordSetDto.getWords().set(position, newWord2Tokens);
 
-        wordSetMapping = wordSetMapper.toMapping(wordSetDto);
-
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        wordSetRepository.createNewOrUpdate(wordSetDto);
     }
 
     @NonNull
@@ -158,8 +159,7 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public WordSet findById(int wordSetId) {
-        WordSetMapping mapping = wordSetDao.findById(wordSetId);
-        return wordSetMapper.toDto(mapping);
+        return wordSetRepository.findById(wordSetId);
     }
 
     @Override
@@ -180,19 +180,18 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void saveWordSets(final List<WordSet> incomingSets) {
-        LinkedList<WordSetMapping> mappingsForSaving = new LinkedList<>();
-        for (WordSet wordSet : incomingSets) {
-            HashSet<Word2Tokens> setOfWords = new HashSet<>(wordSet.getWords());
-            wordSet.setWords(new LinkedList<>(setOfWords));
-            WordSetMapping newSet = wordSetMapper.toMapping(wordSet);
-            WordSetMapping old = wordSetDao.findById(wordSet.getId());
+        LinkedList<WordSet> wordSets = new LinkedList<>();
+        for (WordSet newSet : incomingSets) {
+            HashSet<Word2Tokens> setOfWords = new HashSet<>(newSet.getWords());
+            newSet.setWords(new LinkedList<>(setOfWords));
+            WordSet old = wordSetRepository.findById(newSet.getId());
             if (old != null) {
                 newSet.setStatus(old.getStatus());
                 newSet.setTrainingExperience(old.getTrainingExperience());
             }
-            mappingsForSaving.add(newSet);
+            wordSets.add(newSet);
         }
-        wordSetDao.refreshAll(mappingsForSaving);
+        wordSetRepository.createNewOrUpdate(wordSets);
     }
 
     @Override

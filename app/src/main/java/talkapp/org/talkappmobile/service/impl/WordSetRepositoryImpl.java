@@ -33,6 +33,29 @@ public class WordSetRepositoryImpl implements WordSetRepository {
         return toDtos(wordSetDao.findAllByTopicId(String.valueOf(topicId)));
     }
 
+    @Override
+    public WordSet findById(int wordSetId) {
+        WordSetMapping mapping = wordSetDao.findById(wordSetId);
+        if (mapping == null) {
+            return null;
+        }
+        return wordSetMapper.toDto(mapping);
+    }
+
+    @Override
+    public void createNewOrUpdate(WordSet wordSet) {
+        wordSetDao.createNewOrUpdate(wordSetMapper.toMapping(wordSet));
+    }
+
+    @Override
+    public void createNewOrUpdate(List<WordSet> wordSets) {
+        LinkedList<WordSetMapping> mappings = new LinkedList<>();
+        for (WordSet set : wordSets) {
+            mappings.add(wordSetMapper.toMapping(set));
+        }
+        wordSetDao.refreshAll(mappings);
+    }
+
     @NonNull
     private List<WordSet> toDtos(List<WordSetMapping> allMappings) {
         List<WordSet> result = new LinkedList<>();

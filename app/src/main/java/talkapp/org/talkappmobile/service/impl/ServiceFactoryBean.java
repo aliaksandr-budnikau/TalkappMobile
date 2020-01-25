@@ -100,7 +100,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordSetService != null) {
             return wordSetService;
         }
-        WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(getDataServer(), getWordSetRepository(), provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         this.wordSetService = new CachedWordSetServiceDecorator(getWordSetRepository(), wordSetService);
         return this.wordSetService;
     }
@@ -121,7 +121,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         practiceWordSetExerciseService = new WordRepetitionProgressServiceImpl(
                 providePracticeWordSetExerciseDao(),
-                provideWordSetDao(),
+                getWordSetRepository(),
                 provideSentenceDao(),
                 new ObjectMapper()
         );
@@ -267,7 +267,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (currentPracticeStateService != null) {
             return currentPracticeStateService;
         }
-        currentPracticeStateService = new CurrentPracticeStateServiceImpl(provideWordSetDao(), getMapper());
+        currentPracticeStateService = new CurrentPracticeStateServiceImpl(getWordSetRepository());
         return currentPracticeStateService;
     }
 
@@ -342,11 +342,11 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     @Override
     public SentenceProvider getSentenceProvider() {
-        SentenceProvider sentenceProvider = new SentenceProviderImpl(provideWordSetDao(), providePracticeWordSetExerciseDao(), provideSentenceDao(), getMapper());
+        SentenceProvider sentenceProvider = new SentenceProviderImpl(getWordSetRepository(), providePracticeWordSetExerciseDao(), provideSentenceDao(), getMapper());
         ServerSentenceProviderDecorator serverSentenceProviderDecorator = new ServerSentenceProviderDecorator(sentenceProvider, getDataServer());
         CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, provideSentenceDao(), getMapper());
         WordTranslationSentenceProviderDecorator translationSentenceProviderDecorator = new WordTranslationSentenceProviderDecorator(cachedSentenceProviderDecorator, provideWordTranslationDao(), getMapper());
-        return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, provideWordSetDao(), providePracticeWordSetExerciseDao(), getMapper());
+        return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, getWordSetRepository(), providePracticeWordSetExerciseDao(), getMapper());
     }
 
     @Override

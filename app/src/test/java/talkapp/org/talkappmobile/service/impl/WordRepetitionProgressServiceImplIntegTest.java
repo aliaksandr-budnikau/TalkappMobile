@@ -49,7 +49,8 @@ public class WordRepetitionProgressServiceImplIntegTest {
         WordSetDao wordSetDao = daoHelper.getWordSetDao();
         exerciseDao = daoHelper.getWordRepetitionProgressDao();
         mapper = new ObjectMapper();
-        service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetDao, sentenceDao, mapper);
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mapper);
+        service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetRepository, sentenceDao, mapper);
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 

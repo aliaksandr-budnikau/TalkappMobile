@@ -95,8 +95,8 @@ public class DataServerImplTest {
         };
         topicService = new TopicServiceImpl(topicDao, server);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor);
-        WordSetServiceImpl wordSetService = new WordSetServiceImpl(server, wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mapper);
+        WordSetServiceImpl wordSetService = new WordSetServiceImpl(server, wordSetRepository, wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         this.wordSetService = new CachedWordSetServiceDecorator(wordSetRepository, wordSetService);
     }
 

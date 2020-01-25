@@ -12,29 +12,25 @@ import java.util.List;
 import java.util.TimeZone;
 
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.service.WordSetRepository;
 
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
     private final WordRepetitionProgressDao progressDao;
-    private final WordSetDao wordSetDao;
-    private final WordSetMapper wordSetMapper;
+    private final WordSetRepository wordSetRepository;
     private final ObjectMapper mapper;
 
-    public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetDao wordSetDao, WordRepetitionProgressDao progressDao, ObjectMapper mapper) {
+    public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetRepository wordSetRepository, WordRepetitionProgressDao progressDao, ObjectMapper mapper) {
         super(provider);
-        this.wordSetDao = wordSetDao;
+        this.wordSetRepository = wordSetRepository;
         this.mapper = mapper;
-        this.wordSetMapper = new WordSetMapper(mapper);
         this.progressDao = progressDao;
     }
 
@@ -50,8 +46,7 @@ class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
     public void save(Word2Tokens word, List<Sentence> sentences) {
         List<Sentence> shuffledSentences = new ArrayList<>(sentences);
         shuffle(shuffledSentences);
-        WordSetMapping mapping = wordSetDao.findById(word.getSourceWordSetId());
-        WordSet wordSet = wordSetMapper.toDto(mapping);
+        WordSet wordSet = wordSetRepository.findById(word.getSourceWordSetId());
         WordRepetitionProgressMapping exercise = progressDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         List<String> ids = new LinkedList<>();
         for (Sentence sentence : sentences) {

@@ -164,6 +164,7 @@ public class DataServerImplIntegTest {
         wordSet1.setId(1);
         wordSet1.setTrainingExperience(0);
         wordSet1.setStatus(FIRST_CYCLE);
+        wordSet1.setTopicId("22");
         Word2Tokens word1 = new Word2Tokens("age", "age", wordSet1.getId());
         Word2Tokens word2 = new Word2Tokens("age", "age", wordSet1.getId());
         wordSet1.setWords(asList(word1, word2));
@@ -171,6 +172,7 @@ public class DataServerImplIntegTest {
         wordSet2.setId(2);
         wordSet2.setTrainingExperience(0);
         wordSet2.setStatus(FIRST_CYCLE);
+        wordSet2.setTopicId("22");
         word1 = new Word2Tokens("age", "age", wordSet2.getId());
         word2 = new Word2Tokens("age", "age", wordSet2.getId());
         wordSet2.setWords(asList(word1, word2));
