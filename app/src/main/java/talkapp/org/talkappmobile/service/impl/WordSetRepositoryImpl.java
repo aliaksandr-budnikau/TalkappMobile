@@ -56,6 +56,11 @@ public class WordSetRepositoryImpl implements WordSetRepository {
         wordSetDao.refreshAll(mappings);
     }
 
+    @Override
+    public void removeById(int wordSetId) {
+        wordSetDao.removeById(wordSetId);
+    }
+
     @NonNull
     private List<WordSet> toDtos(List<WordSetMapping> allMappings) {
         List<WordSet> result = new LinkedList<>();

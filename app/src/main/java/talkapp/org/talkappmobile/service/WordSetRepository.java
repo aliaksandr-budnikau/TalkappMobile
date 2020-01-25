@@ -14,4 +14,6 @@ public interface WordSetRepository {
     void createNewOrUpdate(WordSet wordSet);
 
     void createNewOrUpdate(List<WordSet> wordSets);
+
+    void removeById(int wordSetId);
 }

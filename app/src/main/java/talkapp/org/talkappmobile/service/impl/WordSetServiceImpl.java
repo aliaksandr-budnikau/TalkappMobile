@@ -14,7 +14,6 @@ import talkapp.org.talkappmobile.activity.interactor.impl.WordSetComparator;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -67,7 +66,7 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void remove(WordSet wordSet) {
-        wordSetDao.removeById(wordSet.getId());
+        wordSetRepository.removeById(wordSet.getId());
     }
 
     @Override
@@ -87,9 +86,8 @@ public class WordSetServiceImpl implements WordSetService {
         wordSet.setWords(word2Tokens);
         wordSet.setTopicId("43");
 
-        WordSetMapping mapping = wordSetMapper.toMapping(wordSet);
-        wordSetDao.createNewOrUpdate(mapping);
-        return wordSetMapper.toDto(mapping);
+        wordSetRepository.createNewOrUpdate(wordSet);
+        return wordSet;
     }
 
     @Override
@@ -164,8 +162,7 @@ public class WordSetServiceImpl implements WordSetService {
 
     @Override
     public void save(WordSet wordSet) {
-        WordSetMapping wordSetMapping = wordSetMapper.toMapping(wordSet);
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        wordSetRepository.createNewOrUpdate(wordSet);
     }
 
     private void initWordSetIdsOfWord2Tokens(List<WordSet> wordSets) {
