@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Calendar;
@@ -14,10 +13,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
+import talkapp.org.talkappmobile.service.ExpAuditRepository;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -28,9 +25,7 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 @RunWith(MockitoJUnitRunner.class)
 public class UserExpServiceImplTest {
     @Mock
-    private ExpAuditDao expAuditDao;
-    @Spy
-    private ExpAuditMapper expAuditMapper;
+    private ExpAuditRepository expAuditRepository;
     @InjectMocks
     private UserExpServiceImpl userExpService;
 
@@ -46,8 +41,8 @@ public class UserExpServiceImplTest {
         }
 
         // when
-        when(expAuditDao.findAllByType(WORD_SET_PRACTICE.name()))
-                .thenReturn(Collections.<ExpAuditMapping>emptyList());
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+                .thenReturn(Collections.<ExpAudit>emptyList());
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
         // then
@@ -76,14 +71,10 @@ public class UserExpServiceImplTest {
         LinkedList<ExpAudit> actual = new LinkedList<>();
         actual.add(new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE));
 
-        ExpAuditMapping mapping = new ExpAuditMapping();
-        mapping.setId(1);
-        mapping.setExpScore(10);
-        mapping.setDate(calendar.getTime());
-        mapping.setActivityType(WORD_SET_PRACTICE.name());
+        ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditDao.findAllByType(WORD_SET_PRACTICE.name()))
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -107,14 +98,10 @@ public class UserExpServiceImplTest {
         actual.add(new ExpAudit(calendar.getTime(), 0, WORD_SET_PRACTICE));
 
         calendar.add(Calendar.DATE, -1);
-        ExpAuditMapping mapping = new ExpAuditMapping();
-        mapping.setId(1);
-        mapping.setExpScore(10);
-        mapping.setDate(calendar.getTime());
-        mapping.setActivityType(WORD_SET_PRACTICE.name());
+        ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditDao.findAllByType(WORD_SET_PRACTICE.name()))
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -156,14 +143,10 @@ public class UserExpServiceImplTest {
         actual.add(new ExpAudit(calendar.getTime(), 0, WORD_SET_PRACTICE));
 
         calendar.add(Calendar.DATE, -10);
-        ExpAuditMapping mapping = new ExpAuditMapping();
-        mapping.setId(1);
-        mapping.setExpScore(10);
-        mapping.setDate(calendar.getTime());
-        mapping.setActivityType(WORD_SET_PRACTICE.name());
+        ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditDao.findAllByType(WORD_SET_PRACTICE.name()))
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -205,22 +188,13 @@ public class UserExpServiceImplTest {
         actual.add(new ExpAudit(calendar.getTime(), 0, WORD_SET_PRACTICE));
 
         calendar.add(Calendar.DATE, -10);
-        ExpAuditMapping mapping10 = new ExpAuditMapping();
-        mapping10.setId(1);
-        mapping10.setExpScore(10);
-        mapping10.setDate(calendar.getTime());
-        mapping10.setActivityType(WORD_SET_PRACTICE.name());
+        ExpAudit mapping10 = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         calendar.add(Calendar.DATE, 5);
-        ExpAuditMapping mapping5 = new ExpAuditMapping();
-        mapping5.setId(1);
-        mapping5.setExpScore(15);
-        mapping5.setDate(calendar.getTime());
-        mapping5.setActivityType(WORD_SET_PRACTICE.name());
+        ExpAudit mapping5 = new ExpAudit(calendar.getTime(), 15, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditDao.findAllByType(WORD_SET_PRACTICE.name()))
-                .thenReturn(asList(mapping10, mapping5));
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE)).thenReturn(asList(mapping10, mapping5));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
         // then

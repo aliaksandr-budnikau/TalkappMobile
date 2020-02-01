@@ -40,6 +40,7 @@ import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.ExpAuditRepository;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
@@ -85,6 +86,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private Retrofit gitHubRetrofit;
     private DataServer backendServer;
     private WordSetRepository wordSetRepository;
+    private ExpAuditRepository expAuditRepository;
 
     @Override
     public RequestExecutor getRequestExecutor() {
@@ -133,7 +135,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (userExpService != null) {
             return userExpService;
         }
-        userExpService = new UserExpServiceImpl(provideExpAuditDao(), getExpAuditMapper());
+        userExpService = new UserExpServiceImpl(getExpAuditRepository());
         return userExpService;
     }
 
@@ -356,6 +358,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         wordSetRepository = new WordSetRepositoryImpl(provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetRepository;
+    }
+
+    @Override
+    public ExpAuditRepository getExpAuditRepository() {
+        if (expAuditRepository != null) {
+            return expAuditRepository;
+        }
+        expAuditRepository = new ExpAuditRepositoryImpl(provideExpAuditDao());
+        return expAuditRepository;
     }
 
     @RootContext

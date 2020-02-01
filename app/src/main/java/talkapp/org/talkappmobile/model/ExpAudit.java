@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class ExpAudit {
     private final Date date;
-    private final double expScore;
     private final ExpActivityType activityType;
+    private double expScore;
 
     public ExpAudit(@NonNull Date date, double expScore, @NonNull ExpActivityType activityType) {
         this.date = date;
@@ -41,5 +41,9 @@ public class ExpAudit {
     @Override
     public int hashCode() {
         return Objects.hash(date, expScore, activityType);
+    }
+
+    public void increaseExpScore(int extraValue) {
+        this.expScore += extraValue;
     }
 }

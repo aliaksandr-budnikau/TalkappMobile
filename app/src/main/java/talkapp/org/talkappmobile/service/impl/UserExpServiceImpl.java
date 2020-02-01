@@ -7,73 +7,62 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.ExpAuditDao;
-import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
+import talkapp.org.talkappmobile.service.ExpAuditRepository;
 import talkapp.org.talkappmobile.service.UserExpService;
-import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 
 public class UserExpServiceImpl implements UserExpService {
     public static final int AMOUNT = 10;
-    private final ExpAuditDao expAuditDao;
-    private final ExpAuditMapper expAuditMapper;
+    private final ExpAuditRepository expAuditRepository;
 
-    public UserExpServiceImpl(@NonNull ExpAuditDao expAuditDao, @NonNull ExpAuditMapper expAuditMapper) {
-        this.expAuditDao = expAuditDao;
-        this.expAuditMapper = expAuditMapper;
+    public UserExpServiceImpl(ExpAuditRepository expAuditRepository) {
+        this.expAuditRepository = expAuditRepository;
     }
 
     @Override
     public double getOverallExp() {
-        double sum = 0;
-        for (ExpAuditMapping exp : expAuditDao.findAll()) {
-            sum += exp.getExpScore();
-        }
-        return sum;
+        return expAuditRepository.getOverallExp();
     }
 
     @Override
     public double increaseForRepetition(int repetitionCounter, ExpActivityType type) {
         Date today = new Date();
-        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(today, type.name());
-        if (mapping == null) {
-            mapping = new ExpAuditMapping();
-            mapping.setActivityType(type.name());
-            mapping.setDate(today);
-            mapping.setExpScore(repetitionCounter);
+        ExpAudit expAudit = expAuditRepository.findByDateAndActivityType(today, type);
+        if (expAudit == null) {
+            expAudit = new ExpAudit(today, repetitionCounter, type);
         } else {
-            mapping.setExpScore(mapping.getExpScore() + repetitionCounter);
+            expAudit.increaseExpScore(repetitionCounter);
         }
-        expAuditDao.save(mapping);
+        expAuditRepository.createNewOrUpdate(expAudit);
         return repetitionCounter;
     }
 
     @Override
     public List<ExpAudit> findAllByTypeOrderedByDate(ExpActivityType type) {
         LinkedList<ExpAudit> result = new LinkedList<>();
-        List<ExpAuditMapping> mappings = expAuditDao.findAllByType(type.name());
+        List<ExpAudit> all = expAuditRepository.findAllByType(type);
 
-        if (mappings.isEmpty()) {
+        if (all.isEmpty()) {
             return getListOfLast10Days(type);
         }
 
         Calendar calendar = getCalendarWithoutTime();
-        calendar.setTime(mappings.get(0).getDate());
+        calendar.setTime(all.get(0).getDate());
 
-        for (ExpAuditMapping mapping : mappings) {
+        for (ExpAudit item : all) {
             ExpAudit expAudit;
-            if (calendar.getTime().equals(mapping.getDate())) {
-                expAudit = expAuditMapper.toDto(mapping);
+            if (calendar.getTime().equals(item.getDate())) {
+                expAudit = item;
                 result.add(expAudit);
                 calendar.add(Calendar.DATE, 1);
             } else {
                 do {
-                    expAudit = getLazyExpAudit(type, calendar);
+                    expAudit = new ExpAudit(calendar.getTime(), 0, type);
                     result.add(expAudit);
                     calendar.add(Calendar.DATE, 1);
-                } while (!calendar.getTime().equals(mapping.getDate()));
-                expAudit = expAuditMapper.toDto(mapping);
+                } while (!calendar.getTime().equals(item.getDate()));
+                expAudit = item;
                 result.add(expAudit);
                 calendar.add(Calendar.DATE, 1);
             }
@@ -98,7 +87,7 @@ public class UserExpServiceImpl implements UserExpService {
 
     @Override
     public void save(ExpAudit expAudit) {
-        expAuditDao.save(expAuditMapper.toMapping(expAudit));
+        expAuditRepository.createNewOrUpdate(expAudit);
     }
 
     @NonNull
@@ -121,15 +110,5 @@ public class UserExpServiceImpl implements UserExpService {
             result.add(new ExpAudit(calendar.getTime(), 0, type));
         }
         return result;
-    }
-
-    private ExpAudit getLazyExpAudit(ExpActivityType type, Calendar calendar) {
-        ExpAudit expAudit;
-        ExpAuditMapping lazyDay = new ExpAuditMapping();
-        lazyDay.setActivityType(type.name());
-        lazyDay.setDate(calendar.getTime());
-        lazyDay.setExpScore(0);
-        expAudit = expAuditMapper.toDto(lazyDay);
-        return expAudit;
     }
 }
