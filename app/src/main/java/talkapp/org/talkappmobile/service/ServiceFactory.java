@@ -35,4 +35,6 @@ public interface ServiceFactory {
     WordSetRepository getWordSetRepository();
 
     ExpAuditRepository getExpAuditRepository();
+
+    SentenceRepository getSentenceRepository();
 }

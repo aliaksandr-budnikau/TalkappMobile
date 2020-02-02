@@ -44,6 +44,7 @@ import talkapp.org.talkappmobile.service.ExpAuditRepository;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
+import talkapp.org.talkappmobile.service.SentenceRepository;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -87,6 +88,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private DataServer backendServer;
     private WordSetRepository wordSetRepository;
     private ExpAuditRepository expAuditRepository;
+    private SentenceRepository sentenceRepository;
 
     @Override
     public RequestExecutor getRequestExecutor() {
@@ -346,7 +348,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     public SentenceProvider getSentenceProvider() {
         SentenceProvider sentenceProvider = new SentenceProviderImpl(getWordSetRepository(), providePracticeWordSetExerciseDao(), provideSentenceDao(), getMapper());
         ServerSentenceProviderDecorator serverSentenceProviderDecorator = new ServerSentenceProviderDecorator(sentenceProvider, getDataServer());
-        CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, provideSentenceDao(), getMapper());
+        CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, getSentenceRepository());
         WordTranslationSentenceProviderDecorator translationSentenceProviderDecorator = new WordTranslationSentenceProviderDecorator(cachedSentenceProviderDecorator, provideWordTranslationDao(), getMapper());
         return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, getWordSetRepository(), providePracticeWordSetExerciseDao(), getMapper());
     }
@@ -367,6 +369,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         expAuditRepository = new ExpAuditRepositoryImpl(provideExpAuditDao());
         return expAuditRepository;
+    }
+
+    @Override
+    public SentenceRepository getSentenceRepository() {
+        if (sentenceRepository != null) {
+            return sentenceRepository;
+        }
+        sentenceRepository = new SentenceRepositoryImpl(provideSentenceDao(), getMapper());
+        return sentenceRepository;
     }
 
     @RootContext
