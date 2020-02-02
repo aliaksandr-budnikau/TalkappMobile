@@ -52,7 +52,8 @@ public class WordRepetitionProgressServiceImplTest {
     @Before
     public void setup() {
         mapper = new ObjectMapper();
-        service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetRepository, null, mapper);
+        WordRepetitionProgressRepositoryImpl progressRepository = new WordRepetitionProgressRepositoryImpl(exerciseDao, mapper);
+        service = new WordRepetitionProgressServiceImpl(progressRepository, wordSetRepository, null);
     }
 
     @Test
@@ -102,7 +103,6 @@ public class WordRepetitionProgressServiceImplTest {
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
-        Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
@@ -144,7 +144,6 @@ public class WordRepetitionProgressServiceImplTest {
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
-        Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
@@ -191,7 +190,6 @@ public class WordRepetitionProgressServiceImplTest {
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
-        Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
@@ -243,7 +241,6 @@ public class WordRepetitionProgressServiceImplTest {
         wordSet.setWords(asList(value1, value2, value3));
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class))).thenReturn(new ArrayList<>(expectedWordSets));
-        Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
@@ -286,7 +283,6 @@ public class WordRepetitionProgressServiceImplTest {
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
         when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
                 .thenReturn(expectedWordSets);
-        Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then

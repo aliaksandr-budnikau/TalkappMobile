@@ -52,7 +52,8 @@ public class WordRepetitionProgressServiceImplIntegTest {
         mapper = new ObjectMapper();
         WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         SentenceRepositoryImpl sentenceRepository = new SentenceRepositoryImpl(sentenceDao, mapper);
-        service = new WordRepetitionProgressServiceImpl(exerciseDao, wordSetRepository, sentenceRepository, mapper);
+        WordRepetitionProgressRepositoryImpl progressRepository = new WordRepetitionProgressRepositoryImpl(exerciseDao, mapper);
+        service = new WordRepetitionProgressServiceImpl(progressRepository, wordSetRepository, sentenceRepository);
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
@@ -66,7 +67,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
         for (int c = 0; c < 12; c++) {
             for (int i = 2; i <= 13; i++) {
                 WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-                exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul");
+                exercise.setSentenceIds("[\"AWbgbq6hNEXFMlzHK5Ul\"]");
                 exercise.setStatus(WordSetProgressStatus.FINISHED.name());
                 cal.add(Calendar.HOUR, -2 * 24 * i);
                 exercise.setUpdatedDate(cal.getTime());

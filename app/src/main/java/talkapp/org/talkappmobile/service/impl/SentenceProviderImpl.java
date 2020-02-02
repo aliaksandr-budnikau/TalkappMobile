@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 
 import static java.util.Collections.emptyList;
+import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 
 public class SentenceProviderImpl implements SentenceProvider {
 
@@ -43,7 +44,7 @@ public class SentenceProviderImpl implements SentenceProvider {
             return emptyList();
         }
         WordRepetitionProgress exercise = exercises.get(0);
-        if (exercise.getSentenceIds().isEmpty()) {
+        if (isEmpty(exercise.getSentenceIds())) {
             return emptyList();
         }
         List<String> ids = exercise.getSentenceIds();

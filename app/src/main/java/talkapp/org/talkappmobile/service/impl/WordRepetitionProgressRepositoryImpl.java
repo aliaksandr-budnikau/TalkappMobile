@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +40,38 @@ public class WordRepetitionProgressRepositoryImpl implements WordRepetitionProgr
     @Override
     public void createNewOrUpdate(WordRepetitionProgress progress) {
         progressDao.createNewOrUpdate(toMapping(progress));
+    }
+
+    @Override
+    public void cleanByWordSetId(int wordSetId) {
+        progressDao.cleanByWordSetId(wordSetId);
+    }
+
+    @Override
+    public void createAll(List<WordRepetitionProgress> wordsEx) {
+        for (WordRepetitionProgress ex : wordsEx) {
+            progressDao.createNewOrUpdate(toMapping(ex));
+        }
+    }
+
+    @Override
+    public List<WordRepetitionProgress> findWordSetsSortByUpdatedDateAndByStatus(long l, Date time, String name) {
+        List<WordRepetitionProgressMapping> mappings = progressDao.findWordSetsSortByUpdatedDateAndByStatus(l, time, name);
+        LinkedList<WordRepetitionProgress> result = new LinkedList<>();
+        for (WordRepetitionProgressMapping mapping : mappings) {
+            result.add(toDto(mapping));
+        }
+        return result;
+    }
+
+    @Override
+    public List<WordRepetitionProgress> findByWordIndexAndByWordSetIdAndByStatus(int index, int wordSetId, String name) {
+        List<WordRepetitionProgressMapping> mappings = progressDao.findByWordIndexAndByWordSetIdAndByStatus(index, wordSetId, name);
+        LinkedList<WordRepetitionProgress> result = new LinkedList<>();
+        for (WordRepetitionProgressMapping mapping : mappings) {
+            result.add(toDto(mapping));
+        }
+        return result;
     }
 
     private WordRepetitionProgressMapping toMapping(WordRepetitionProgress progress) {

@@ -128,10 +128,9 @@ public class ServiceFactoryBean implements ServiceFactory {
             return practiceWordSetExerciseService;
         }
         practiceWordSetExerciseService = new WordRepetitionProgressServiceImpl(
-                providePracticeWordSetExerciseDao(),
+                getWordRepetitionProgressRepository(),
                 getWordSetRepository(),
-                getSentenceRepository(),
-                new ObjectMapper()
+                getSentenceRepository()
         );
         return practiceWordSetExerciseService;
     }
