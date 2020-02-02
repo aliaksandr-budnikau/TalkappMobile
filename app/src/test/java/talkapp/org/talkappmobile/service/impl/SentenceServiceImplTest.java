@@ -61,7 +61,7 @@ public class SentenceServiceImplTest {
         SentenceRepositoryImpl sentenceRepository = new SentenceRepositoryImpl(sentenceDao, mapper);
         WordRepetitionProgressRepositoryImpl progressRepository = new WordRepetitionProgressRepositoryImpl(progressDao, mapper);
         sentenceProvider = new SentenceProviderImpl(wordSetRepository, progressRepository, sentenceRepository, mapper);
-        wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetRepository, progressDao, mapper);
+        wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetRepository, progressRepository);
     }
 
     @Test

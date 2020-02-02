@@ -6,4 +6,6 @@ import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 
 public interface WordRepetitionProgressRepository {
     List<WordRepetitionProgress> findByWordIndexAndWordSetId(int index, Integer sourceWordSetId);
+
+    void createNewOrUpdate(WordRepetitionProgress progress);
 }

@@ -363,7 +363,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, getSentenceRepository());
         WordTranslationRepositoryImpl wordTranslationRepository = new WordTranslationRepositoryImpl(provideWordTranslationDao());
         WordTranslationSentenceProviderDecorator translationSentenceProviderDecorator = new WordTranslationSentenceProviderDecorator(cachedSentenceProviderDecorator, wordTranslationRepository);
-        return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, getWordSetRepository(), providePracticeWordSetExerciseDao(), getMapper());
+        return new WordProgressSentenceProviderDecorator(translationSentenceProviderDecorator, getWordSetRepository(), getWordRepetitionProgressRepository());
     }
 
     @Override

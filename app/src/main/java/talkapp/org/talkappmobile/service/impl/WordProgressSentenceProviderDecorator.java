@@ -1,8 +1,5 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -11,27 +8,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.SentenceProvider;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
 class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
-    private final WordRepetitionProgressDao progressDao;
+    private final WordRepetitionProgressRepository progressRepository;
     private final WordSetRepository wordSetRepository;
-    private final ObjectMapper mapper;
 
-    public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetRepository wordSetRepository, WordRepetitionProgressDao progressDao, ObjectMapper mapper) {
+    public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetRepository wordSetRepository, WordRepetitionProgressRepository progressRepository) {
         super(provider);
         this.wordSetRepository = wordSetRepository;
-        this.mapper = mapper;
-        this.progressDao = progressDao;
+        this.progressRepository = progressRepository;
     }
 
     @Override
@@ -47,22 +42,14 @@ class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
         List<Sentence> shuffledSentences = new ArrayList<>(sentences);
         shuffle(shuffledSentences);
         WordSet wordSet = wordSetRepository.findById(word.getSourceWordSetId());
-        WordRepetitionProgressMapping exercise = progressDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
+        WordRepetitionProgress exercise = progressRepository.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId()).get(0);
         List<String> ids = new LinkedList<>();
         for (Sentence sentence : sentences) {
             ids.add(sentence.getId());
         }
-        setSentencesIds(exercise, ids);
+        exercise.setSentenceIds(ids);
         exercise.setUpdatedDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
-        progressDao.createNewOrUpdate(exercise);
-    }
-
-    private void setSentencesIds(WordRepetitionProgressMapping exercise, List<String> ids) {
-        try {
-            exercise.setSentenceIds(mapper.writeValueAsString(ids));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        progressRepository.createNewOrUpdate(exercise);
     }
 
     public void orderByScore(List<Sentence> sentences) {

@@ -45,6 +45,7 @@ public class WordRepetitionProgressMapping {
     @DatabaseField(canBeNull = false, columnName = STATUS_FN)
     private String status;
 
+    @Deprecated
     @DatabaseField(canBeNull = false, columnName = CURRENT_FN)
     private boolean current;
 
@@ -116,10 +117,12 @@ public class WordRepetitionProgressMapping {
         this.status = status;
     }
 
+    @Deprecated
     public boolean isCurrent() {
         return current;
     }
 
+    @Deprecated
     public void setCurrent(boolean current) {
         this.current = current;
     }
