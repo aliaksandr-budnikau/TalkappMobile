@@ -53,6 +53,7 @@ import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
 
@@ -89,6 +90,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private WordSetRepository wordSetRepository;
     private ExpAuditRepository expAuditRepository;
     private SentenceRepository sentenceRepository;
+    private WordTranslationRepository wordTranslationRepository;
 
     @Override
     public RequestExecutor getRequestExecutor() {
@@ -146,7 +148,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         if (wordTranslationService != null) {
             return wordTranslationService;
         }
-        wordTranslationService = new WordTranslationServiceImpl(getDataServer(), provideWordTranslationDao(), getWordSetRepository(), getMapper());
+        wordTranslationService = new WordTranslationServiceImpl(getDataServer(), getWordTranslationRepository(), getWordSetRepository());
         return wordTranslationService;
     }
 
@@ -360,6 +362,15 @@ public class ServiceFactoryBean implements ServiceFactory {
         }
         wordSetRepository = new WordSetRepositoryImpl(provideWordSetDao(), provideNewWordSetDraftDao(), getMapper());
         return wordSetRepository;
+    }
+
+    @Override
+    public WordTranslationRepository getWordTranslationRepository() {
+        if (wordTranslationRepository != null) {
+            return wordTranslationRepository;
+        }
+        wordTranslationRepository = new WordTranslationRepositoryImpl(provideWordTranslationDao());
+        return wordTranslationRepository;
     }
 
     @Override

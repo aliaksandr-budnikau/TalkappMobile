@@ -2,52 +2,35 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.service.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
 
-import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 
 public class WordTranslationServiceImpl implements WordTranslationService {
     public static final String RUSSIAN_LANGUAGE = "russian";
     private final DataServer server;
-    private final WordTranslationDao wordTranslationDao;
+    private final WordTranslationRepository wordTranslationRepository;
     private final WordSetRepository wordSetRepository;
-    private final WordTranslationMapper wordTranslationMapper;
 
-    public WordTranslationServiceImpl(DataServer server, WordTranslationDao wordTranslationDao, WordSetRepository wordSetRepository, ObjectMapper mapper) {
+    public WordTranslationServiceImpl(DataServer server, WordTranslationRepository wordTranslationRepository, WordSetRepository wordSetRepository) {
         this.server = server;
-        this.wordTranslationDao = wordTranslationDao;
+        this.wordTranslationRepository = wordTranslationRepository;
         this.wordSetRepository = wordSetRepository;
-        this.wordTranslationMapper = new WordTranslationMapper();
     }
 
     @Override
     public void saveWordTranslations(List<WordTranslation> wordTranslations) {
-        List<WordTranslationMapping> mappings = new LinkedList<>();
-        for (WordTranslation wordTranslation : wordTranslations) {
-            WordTranslationMapping mapping = wordTranslationMapper.toMapping(wordTranslation);
-            if (StringUtils.isEmpty(mapping.getId())) {
-                mapping.setId(valueOf(System.currentTimeMillis()));
-            }
-            mappings.add(mapping);
-        }
-        wordTranslationDao.save(mappings);
+        wordTranslationRepository.createNewOrUpdate(wordTranslations);
     }
 
     @Override
@@ -115,11 +98,11 @@ public class WordTranslationServiceImpl implements WordTranslationService {
     public List<WordTranslation> findWordTranslationsByWordsAndByLanguage(List<String> words, String language) {
         LinkedList<WordTranslation> result = new LinkedList<>();
         for (String word : words) {
-            WordTranslationMapping mapping = wordTranslationDao.findByWordAndByLanguage(word, language);
-            if (mapping == null) {
+            WordTranslation translation = wordTranslationRepository.findByWordAndByLanguage(word, language);
+            if (translation == null) {
                 throw new LocalCacheIsEmptyException("Local cache is empty. You need internet connection to fill it.");
             }
-            result.add(wordTranslationMapper.toDto(mapping));
+            result.add(translation);
         }
         return result;
     }
@@ -150,11 +133,7 @@ public class WordTranslationServiceImpl implements WordTranslationService {
 
     @Override
     public WordTranslation findByWordAndLanguage(String word, String language) {
-        WordTranslationMapping translationMapping = wordTranslationDao.findByWordAndByLanguage(word, language);
-        if (translationMapping == null) {
-            return null;
-        }
-        return wordTranslationMapper.toDto(translationMapping);
+        return wordTranslationRepository.findByWordAndByLanguage(word, language);
     }
 
     @Override
