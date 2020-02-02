@@ -23,6 +23,7 @@ import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.SentenceRepository;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 
 import static java.util.Arrays.asList;
@@ -43,6 +44,8 @@ public class WordRepetitionProgressServiceImplTest {
     private WordRepetitionProgressDao exerciseDao;
     @Mock
     private WordSetRepository wordSetRepository;
+    @Mock
+    private SentenceRepository sentenceRepository;
     private WordRepetitionProgressServiceImpl service;
     private ObjectMapper mapper;
 
@@ -239,8 +242,7 @@ public class WordRepetitionProgressServiceImplTest {
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value1, value2, value3));
         when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
-                .thenReturn(new ArrayList<>(expectedWordSets));
+        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class))).thenReturn(new ArrayList<>(expectedWordSets));
         Whitebox.setInternalState(service, "mapper", mapper);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 

@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.service;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.model.Sentence;
 
 public interface SentenceRepository {
@@ -7,4 +9,6 @@ public interface SentenceRepository {
     void createNewOrUpdate(Sentence sentence);
 
     Sentence findById(String id);
+
+    List<Sentence> findAllByWord(String word, int wordsNumber);
 }

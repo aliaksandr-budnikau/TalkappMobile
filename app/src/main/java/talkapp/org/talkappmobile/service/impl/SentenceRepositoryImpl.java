@@ -2,6 +2,9 @@ package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -33,5 +36,15 @@ public class SentenceRepositoryImpl implements SentenceRepository {
             return null;
         }
         return sentenceMapper.toDto(mapping);
+    }
+
+    @Override
+    public List<Sentence> findAllByWord(String word, int wordsNumber) {
+        List<SentenceMapping> allByWord = sentenceDao.findAllByWord(word, wordsNumber);
+        List<Sentence> result = new LinkedList<>();
+        for (SentenceMapping mapping : allByWord) {
+            result.add(sentenceMapper.toDto(mapping));
+        }
+        return result;
     }
 }

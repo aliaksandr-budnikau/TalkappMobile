@@ -17,15 +17,14 @@ import java.util.NavigableMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.service.SentenceRepository;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
@@ -38,17 +37,17 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.next;
 
 public class WordRepetitionProgressServiceImpl implements WordRepetitionProgressService {
-    private final SentenceDao sentenceDao;
-    private final SentenceMapper sentenceMapper;
-    private WordRepetitionProgressDao exerciseDao;
-    private WordSetRepository wordSetRepository;
+    private final SentenceRepository sentenceRepository;
+    private final WordSetRepository wordSetRepository;
+    private final WordRepetitionProgressDao exerciseDao;
     private ObjectMapper mapper;
     private int wordSetSize = 12;
+    private final SentenceMapper sentenceMapper;
 
-    public WordRepetitionProgressServiceImpl(WordRepetitionProgressDao exerciseDao, WordSetRepository wordSetRepository, SentenceDao sentenceDao, ObjectMapper mapper) {
+    public WordRepetitionProgressServiceImpl(WordRepetitionProgressDao exerciseDao, WordSetRepository wordSetRepository, SentenceRepository sentenceRepository, ObjectMapper mapper) {
         this.exerciseDao = exerciseDao;
         this.wordSetRepository = wordSetRepository;
-        this.sentenceDao = sentenceDao;
+        this.sentenceRepository = sentenceRepository;
         this.mapper = mapper;
         this.sentenceMapper = new SentenceMapper(mapper);
     }
@@ -273,9 +272,9 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         WordRepetitionProgressMapping exercise = exercises.get(0);
         int wordsNumber = 6;
-        List<SentenceMapping> sentences = sentenceDao.findAllByWord(newWord2Token.getWord(), wordsNumber);
+        List<Sentence> sentences = sentenceRepository.findAllByWord(newWord2Token.getWord(), wordsNumber);
         LinkedList<String> sentenceIds = new LinkedList<>();
-        for (SentenceMapping sentence : sentences) {
+        for (Sentence sentence : sentences) {
             sentenceIds.add(sentence.getId());
         }
         try {
