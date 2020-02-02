@@ -1,27 +1,20 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.SentenceRepository;
 import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
 public class SentenceServiceImpl implements SentenceService {
     private final DataServer server;
-    private final SentenceDao sentenceDao;
-    private final SentenceMapper sentenceMapper;
+    private final SentenceRepository sentenceRepository;
 
-    public SentenceServiceImpl(DataServer server, SentenceDao sentenceDao, ObjectMapper mapper) {
+    public SentenceServiceImpl(DataServer server, SentenceRepository sentenceRepository) {
         this.server = server;
-        this.sentenceDao = sentenceDao;
-        this.sentenceMapper = new SentenceMapper(mapper);
+        this.sentenceRepository = sentenceRepository;
     }
 
     @Override
@@ -32,11 +25,9 @@ public class SentenceServiceImpl implements SentenceService {
     @Override
     public void saveSentences(final Map<String, List<Sentence>> words2Sentences, final int wordsNumber) {
         for (String word : words2Sentences.keySet()) {
-            LinkedList<SentenceMapping> mappings = new LinkedList<>();
             for (Sentence sentence : words2Sentences.get(word)) {
-                mappings.add(sentenceMapper.toMapping(sentence));
+                sentenceRepository.createNewOrUpdate(sentence);
             }
-            sentenceDao.save(mappings);
         }
     }
 }

@@ -281,8 +281,7 @@ public class ServiceFactoryBean implements ServiceFactory {
             return sentenceService;
         }
         DataServer dataServer = server == null ? getDataServer() : server;
-        sentenceService = new SentenceServiceImpl(dataServer,
-                provideSentenceDao(), getMapper());
+        sentenceService = new SentenceServiceImpl(dataServer, getSentenceRepository());
         return sentenceService;
     }
 
