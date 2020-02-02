@@ -11,46 +11,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceRepository;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordSetRepository;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
 import static java.util.Collections.emptyList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class SentenceProviderImpl implements SentenceProvider {
 
     public static final int WORDS_NUMBER = 6;
     private final WordSetRepository wordSetRepository;
-    private final WordRepetitionProgressDao progressDao;
-    private final SentenceMapper sentenceMapper;
+    private final WordRepetitionProgressRepository progressRepository;
     private final SentenceRepository sentenceRepository;
 
-    public SentenceProviderImpl(WordSetRepository wordSetRepository, WordRepetitionProgressDao progressDao, SentenceRepository sentenceRepository, ObjectMapper mapper) {
+    public SentenceProviderImpl(WordSetRepository wordSetRepository, WordRepetitionProgressRepository progressRepository, SentenceRepository sentenceRepository, ObjectMapper mapper) {
         this.wordSetRepository = wordSetRepository;
-        this.progressDao = progressDao;
+        this.progressRepository = progressRepository;
         this.sentenceRepository = sentenceRepository;
-        this.sentenceMapper = new SentenceMapper(mapper);
     }
 
     @Override
     public List<Sentence> find(Word2Tokens word) {
         WordSet wordSet = wordSetRepository.findById(word.getSourceWordSetId());
-        List<WordRepetitionProgressMapping> exercises = progressDao.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId());
+        List<WordRepetitionProgress> exercises = progressRepository.findByWordIndexAndWordSetId(wordSet.getWords().indexOf(word), word.getSourceWordSetId());
         if (exercises.isEmpty()) {
             return emptyList();
         }
-        WordRepetitionProgressMapping exercise = exercises.get(0);
-        if (isEmpty(exercise.getSentenceIds())) {
+        WordRepetitionProgress exercise = exercises.get(0);
+        if (exercise.getSentenceIds().isEmpty()) {
             return emptyList();
         }
-        List<String> ids = sentenceMapper.toSentenceId(exercise.getSentenceIds());
+        List<String> ids = exercise.getSentenceIds();
         if (ids.isEmpty()) {
             return emptyList();
         }

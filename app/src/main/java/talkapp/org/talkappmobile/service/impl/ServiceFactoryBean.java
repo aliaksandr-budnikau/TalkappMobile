@@ -50,6 +50,7 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -91,6 +92,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     private ExpAuditRepository expAuditRepository;
     private SentenceRepository sentenceRepository;
     private WordTranslationRepository wordTranslationRepository;
+    private WordRepetitionProgressRepository wordRepetitionProgressRepository;
 
     @Override
     public RequestExecutor getRequestExecutor() {
@@ -132,6 +134,15 @@ public class ServiceFactoryBean implements ServiceFactory {
                 new ObjectMapper()
         );
         return practiceWordSetExerciseService;
+    }
+
+    @Override
+    public WordRepetitionProgressRepository getWordRepetitionProgressRepository() {
+        if (wordRepetitionProgressRepository != null) {
+            return wordRepetitionProgressRepository;
+        }
+        wordRepetitionProgressRepository = new WordRepetitionProgressRepositoryImpl(providePracticeWordSetExerciseDao(), getMapper());
+        return wordRepetitionProgressRepository;
     }
 
     @Override
@@ -347,7 +358,7 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     @Override
     public SentenceProvider getSentenceProvider() {
-        SentenceProvider sentenceProvider = new SentenceProviderImpl(getWordSetRepository(), providePracticeWordSetExerciseDao(), getSentenceRepository(), getMapper());
+        SentenceProvider sentenceProvider = new SentenceProviderImpl(getWordSetRepository(), getWordRepetitionProgressRepository(), getSentenceRepository(), getMapper());
         ServerSentenceProviderDecorator serverSentenceProviderDecorator = new ServerSentenceProviderDecorator(sentenceProvider, getDataServer());
         CachedSentenceProviderDecorator cachedSentenceProviderDecorator = new CachedSentenceProviderDecorator(serverSentenceProviderDecorator, getSentenceRepository());
         WordTranslationRepositoryImpl wordTranslationRepository = new WordTranslationRepositoryImpl(provideWordTranslationDao());

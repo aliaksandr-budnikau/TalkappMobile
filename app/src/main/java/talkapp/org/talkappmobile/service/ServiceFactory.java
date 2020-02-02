@@ -14,6 +14,8 @@ public interface ServiceFactory {
 
     WordRepetitionProgressService getPracticeWordSetExerciseRepository();
 
+    WordRepetitionProgressRepository getWordRepetitionProgressRepository();
+
     UserExpService getUserExpService();
 
     TopicService getTopicService();
