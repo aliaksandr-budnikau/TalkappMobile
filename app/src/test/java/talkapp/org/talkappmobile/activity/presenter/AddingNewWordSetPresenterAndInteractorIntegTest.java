@@ -58,7 +58,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     public void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         this.mapper = new WordSetMapper(mapper);
-        this.wordTranslationMapper = new WordTranslationMapper(mapper);
+        this.wordTranslationMapper = new WordTranslationMapper();
 
         serviceFactory = new ServiceFactoryBean() {
             private DatabaseHelper helper;

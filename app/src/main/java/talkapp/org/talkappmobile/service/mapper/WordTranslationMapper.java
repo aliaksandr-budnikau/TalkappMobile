@@ -1,27 +1,11 @@
 package talkapp.org.talkappmobile.service.mapper;
 
-import android.support.annotation.NonNull;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
-import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.WordTranslation;
-
-import static java.lang.String.valueOf;
 
 public class WordTranslationMapper {
 
     public static final String DELIMITER = "_";
-    private final ObjectMapper mapper;
-
-    public WordTranslationMapper(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     public WordTranslation toDto(WordTranslationMapping mapping) {
         WordTranslation dto = new WordTranslation();
@@ -43,28 +27,5 @@ public class WordTranslationMapper {
         mapping.setLanguage(translation.getLanguage());
         mapping.setTop(translation.getTop());
         return mapping;
-    }
-
-    public Sentence convertToSentence(WordTranslation wordTranslation) {
-        Sentence sentence = new Sentence();
-        sentence.setId(valueOf(System.currentTimeMillis()));
-        sentence.setTokens(getTextTokens(wordTranslation));
-        HashMap<String, String> translations = new HashMap<>();
-        translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());
-        sentence.setTranslations(translations);
-        sentence.setText(wordTranslation.getWord());
-        return sentence;
-    }
-
-    @NonNull
-    private LinkedList<TextToken> getTextTokens(WordTranslation wordTranslation) {
-        LinkedList<TextToken> textTokens = new LinkedList<>();
-        TextToken textToken = new TextToken();
-        textToken.setToken(wordTranslation.getWord());
-        textToken.setStartOffset(0);
-        textToken.setEndOffset(wordTranslation.getWord().length());
-        textToken.setPosition(0);
-        textTokens.add(textToken);
-        return textTokens;
     }
 }

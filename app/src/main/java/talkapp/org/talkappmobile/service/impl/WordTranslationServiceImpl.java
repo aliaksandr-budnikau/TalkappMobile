@@ -34,7 +34,7 @@ public class WordTranslationServiceImpl implements WordTranslationService {
         this.server = server;
         this.wordTranslationDao = wordTranslationDao;
         this.wordSetRepository = wordSetRepository;
-        this.wordTranslationMapper = new WordTranslationMapper(mapper);
+        this.wordTranslationMapper = new WordTranslationMapper();
     }
 
     @Override

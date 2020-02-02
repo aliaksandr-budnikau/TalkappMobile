@@ -1,28 +1,28 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import android.support.annotation.NonNull;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.Sentence;
+import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
+import talkapp.org.talkappmobile.service.WordTranslationRepository;
 
+import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 
 class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator {
-    private final WordTranslationDao wordTranslationDao;
-    private final WordTranslationMapper wordTranslationMapper;
+    private final WordTranslationRepository wordTranslationRepository;
 
-    public WordTranslationSentenceProviderDecorator(SentenceProvider provider, WordTranslationDao wordTranslationDao, ObjectMapper mapper) {
+    public WordTranslationSentenceProviderDecorator(SentenceProvider provider, WordTranslationRepository wordTranslationRepository) {
         super(provider);
-        this.wordTranslationDao = wordTranslationDao;
-        this.wordTranslationMapper = new WordTranslationMapper(mapper);
+        this.wordTranslationRepository = wordTranslationRepository;
     }
 
     @Override
@@ -35,14 +35,33 @@ class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator
         if (wordTranslation == null) {
             return emptyList();
         }
-        return Collections.singletonList(wordTranslationMapper.convertToSentence(wordTranslation));
+        return Collections.singletonList(convertToSentence(wordTranslation));
     }
 
     private WordTranslation findByWordAndLanguage(String word) {
-        WordTranslationMapping translationMapping = wordTranslationDao.findByWordAndByLanguage(word, "russian");
-        if (translationMapping == null) {
-            return null;
-        }
-        return wordTranslationMapper.toDto(translationMapping);
+        return wordTranslationRepository.findByWordAndByLanguage(word, "russian");
+    }
+
+    public Sentence convertToSentence(WordTranslation wordTranslation) {
+        Sentence sentence = new Sentence();
+        sentence.setId(valueOf(System.currentTimeMillis()));
+        sentence.setTokens(getTextTokens(wordTranslation));
+        HashMap<String, String> translations = new HashMap<>();
+        translations.put(wordTranslation.getLanguage(), wordTranslation.getTranslation());
+        sentence.setTranslations(translations);
+        sentence.setText(wordTranslation.getWord());
+        return sentence;
+    }
+
+    @NonNull
+    private LinkedList<TextToken> getTextTokens(WordTranslation wordTranslation) {
+        LinkedList<TextToken> textTokens = new LinkedList<>();
+        TextToken textToken = new TextToken();
+        textToken.setToken(wordTranslation.getWord());
+        textToken.setStartOffset(0);
+        textToken.setEndOffset(wordTranslation.getWord().length());
+        textToken.setPosition(0);
+        textTokens.add(textToken);
+        return textTokens;
     }
 }
