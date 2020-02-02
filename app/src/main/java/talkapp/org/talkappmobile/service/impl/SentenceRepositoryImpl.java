@@ -47,4 +47,14 @@ public class SentenceRepositoryImpl implements SentenceRepository {
         }
         return result;
     }
+
+    @Override
+    public List<Sentence> findAllByIds(String[] ids) {
+        List<SentenceMapping> mappings = sentenceDao.findAllByIds(ids);
+        LinkedList<Sentence> result = new LinkedList<>();
+        for (SentenceMapping mapping : mappings) {
+            result.add(sentenceMapper.toDto(mapping));
+        }
+        return result;
+    }
 }

@@ -58,7 +58,8 @@ public class SentenceServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
         WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
-        sentenceProvider = new SentenceProviderImpl(wordSetRepository, progressDao, sentenceDao, mapper);
+        SentenceRepositoryImpl sentenceRepository = new SentenceRepositoryImpl(sentenceDao, mapper);
+        sentenceProvider = new SentenceProviderImpl(wordSetRepository, progressDao, sentenceRepository, mapper);
         wordProgressSentenceProviderDecorator = new WordProgressSentenceProviderDecorator(sentenceProvider, wordSetRepository, progressDao, mapper);
     }
 

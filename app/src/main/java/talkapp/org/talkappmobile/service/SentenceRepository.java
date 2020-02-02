@@ -11,4 +11,6 @@ public interface SentenceRepository {
     Sentence findById(String id);
 
     List<Sentence> findAllByWord(String word, int wordsNumber);
+
+    List<Sentence> findAllByIds(String[] ids);
 }

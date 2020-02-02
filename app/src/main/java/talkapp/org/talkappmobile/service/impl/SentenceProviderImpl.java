@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,14 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.SentenceProvider;
+import talkapp.org.talkappmobile.service.SentenceRepository;
 import talkapp.org.talkappmobile.service.WordSetRepository;
 import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
 
@@ -32,12 +30,12 @@ public class SentenceProviderImpl implements SentenceProvider {
     private final WordSetRepository wordSetRepository;
     private final WordRepetitionProgressDao progressDao;
     private final SentenceMapper sentenceMapper;
-    private final SentenceDao sentenceDao;
+    private final SentenceRepository sentenceRepository;
 
-    public SentenceProviderImpl(WordSetRepository wordSetRepository, WordRepetitionProgressDao progressDao, SentenceDao sentenceDao, ObjectMapper mapper) {
+    public SentenceProviderImpl(WordSetRepository wordSetRepository, WordRepetitionProgressDao progressDao, SentenceRepository sentenceRepository, ObjectMapper mapper) {
         this.wordSetRepository = wordSetRepository;
         this.progressDao = progressDao;
-        this.sentenceDao = sentenceDao;
+        this.sentenceRepository = sentenceRepository;
         this.sentenceMapper = new SentenceMapper(mapper);
     }
 
@@ -61,29 +59,24 @@ public class SentenceProviderImpl implements SentenceProvider {
 
     @Override
     public List<Sentence> getFromDB(Word2Tokens word) {
-        List<SentenceMapping> mappings = sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER);
-        List<Sentence> result = new ArrayList<>();
-        for (SentenceMapping mapping : mappings) {
-            result.add(sentenceMapper.toDto(mapping));
-        }
-        result = getRidOfDuplicates(result);
-        return result;
+        List<Sentence> sentences = sentenceRepository.findAllByWord(word.getWord(), WORDS_NUMBER);
+        return getRidOfDuplicates(sentences);
     }
 
     private List<Sentence> getSentence(List<String> ids) {
-        List<SentenceMapping> sentences = sentenceDao.findAllByIds(ids.toArray(new String[0]));
+        List<Sentence> sentences = sentenceRepository.findAllByIds(ids.toArray(new String[0]));
         if (sentences.isEmpty()) {
             return emptyList();
         }
-        Map<String, SentenceMapping> hashMap = new HashMap<>();
-        for (SentenceMapping sentence : sentences) {
+        Map<String, Sentence> hashMap = new HashMap<>();
+        for (Sentence sentence : sentences) {
             hashMap.put(sentence.getId(), sentence);
         }
         LinkedList<Sentence> result = new LinkedList<>();
         for (String id : ids) {
-            SentenceMapping mapping = hashMap.get(id);
+            Sentence mapping = hashMap.get(id);
             if (mapping != null) {
-                result.add(sentenceMapper.toDto(mapping));
+                result.add(mapping);
             }
         }
         return result;
