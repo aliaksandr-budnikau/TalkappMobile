@@ -21,10 +21,10 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.service.SentenceRepository;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;

@@ -2,8 +2,13 @@ package talkapp.org.talkappmobile.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import talkapp.org.talkappmobile.repository.ExpAuditRepository;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
+import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
+import talkapp.org.talkappmobile.repository.impl.ExpAuditMapper;
 
 public interface ServiceFactory {
     RequestExecutor getRequestExecutor();

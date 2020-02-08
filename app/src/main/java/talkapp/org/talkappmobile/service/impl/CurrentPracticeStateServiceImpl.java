@@ -12,7 +12,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateService {
     private final WordSetRepository wordSetRepository;

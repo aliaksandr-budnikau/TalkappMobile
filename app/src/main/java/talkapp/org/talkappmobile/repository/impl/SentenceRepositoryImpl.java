@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,8 +8,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.service.SentenceRepository;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
 
 import static java.util.Collections.singletonList;
 

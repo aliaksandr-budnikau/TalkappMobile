@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service;
+package talkapp.org.talkappmobile.repository;
 
 import java.util.Date;
 import java.util.List;

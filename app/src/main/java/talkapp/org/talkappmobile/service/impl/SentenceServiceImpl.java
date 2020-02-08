@@ -5,7 +5,7 @@ import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.SentenceRepository;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
 import talkapp.org.talkappmobile.service.SentenceService;
 
 public class SentenceServiceImpl implements SentenceService {

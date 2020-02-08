@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 

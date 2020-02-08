@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -8,8 +8,7 @@ import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.service.ExpAuditRepository;
-import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
+import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 
 public class ExpAuditRepositoryImpl implements ExpAuditRepository {
     private final ExpAuditDao expAuditDao;

@@ -15,8 +15,8 @@ import talkapp.org.talkappmobile.mappings.SentenceIdMapping;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.service.MigrationService;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.repository.impl.SentenceMapper;
+import talkapp.org.talkappmobile.repository.impl.WordSetMapper;
 
 import static java.util.Arrays.asList;
 

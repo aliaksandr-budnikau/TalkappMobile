@@ -9,7 +9,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.service.ExpAuditRepository;
+import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 import talkapp.org.talkappmobile.service.UserExpService;
 
 public class UserExpServiceImpl implements UserExpService {

@@ -23,8 +23,9 @@ import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.SentenceRepository;
-import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
+import talkapp.org.talkappmobile.repository.impl.WordRepetitionProgressRepositoryImpl;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;

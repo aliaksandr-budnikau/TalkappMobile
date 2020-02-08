@@ -13,8 +13,8 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
-import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;

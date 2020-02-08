@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import android.support.annotation.NonNull;
 
@@ -13,8 +13,7 @@ import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.WordSetRepository;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 public class WordSetRepositoryImpl implements WordSetRepository {
 

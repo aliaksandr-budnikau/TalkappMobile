@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.TopicRepository;
+import talkapp.org.talkappmobile.repository.TopicRepository;
 
 public class TopicRepositoryImpl implements TopicRepository {
     private final TopicDao topicDao;

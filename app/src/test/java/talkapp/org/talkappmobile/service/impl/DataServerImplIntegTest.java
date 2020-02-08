@@ -29,7 +29,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
+import talkapp.org.talkappmobile.repository.impl.WordSetMapper;
 
 import static android.os.Build.VERSION_CODES.M;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.mapper;
+package talkapp.org.talkappmobile.repository.impl;
 
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.WordTranslation;

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.repository.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,8 +8,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.WordTranslationRepository;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
+import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 
 import static java.lang.String.valueOf;
 

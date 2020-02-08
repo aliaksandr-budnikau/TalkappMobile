@@ -12,7 +12,7 @@ import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.WordTranslationRepository;
+import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;

@@ -31,8 +31,8 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.mapper.WordSetMapper;
-import talkapp.org.talkappmobile.service.mapper.WordTranslationMapper;
+import talkapp.org.talkappmobile.repository.impl.WordSetMapper;
+import talkapp.org.talkappmobile.repository.impl.WordTranslationMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;

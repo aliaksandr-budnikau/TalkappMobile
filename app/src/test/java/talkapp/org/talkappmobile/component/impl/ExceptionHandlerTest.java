@@ -25,7 +25,7 @@ import talkapp.org.talkappmobile.service.impl.DataServerImpl;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-import talkapp.org.talkappmobile.service.impl.TopicRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 
 import static org.junit.Assert.fail;

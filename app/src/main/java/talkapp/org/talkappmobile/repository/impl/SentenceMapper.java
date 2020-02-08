@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.mapper;
+package talkapp.org.talkappmobile.repository.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

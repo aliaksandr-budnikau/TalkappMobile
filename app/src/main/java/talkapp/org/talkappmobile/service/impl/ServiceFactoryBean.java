@@ -37,26 +37,31 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
+import talkapp.org.talkappmobile.repository.impl.ExpAuditRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.SentenceRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.WordRepetitionProgressRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.WordTranslationRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.ExpAuditRepository;
+import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.MigrationService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.SentenceRepository;
+import talkapp.org.talkappmobile.repository.SentenceRepository;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressRepository;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordTranslationRepository;
+import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.mapper.ExpAuditMapper;
+import talkapp.org.talkappmobile.repository.impl.ExpAuditMapper;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class ServiceFactoryBean implements ServiceFactory {

@@ -22,9 +22,12 @@ import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.repository.impl.SentenceRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.WordRepetitionProgressRepositoryImpl;
+import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.mapper.SentenceMapper;
+import talkapp.org.talkappmobile.repository.impl.SentenceMapper;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
