@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.mappings;
 
-import android.support.annotation.NonNull;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -26,7 +24,6 @@ public class NewWordSetDraftMapping {
         this.id = id;
     }
 
-    @NonNull
     public String getWords() {
         return words;
     }

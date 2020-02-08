@@ -1,0 +1,9 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.j256.ormlite:ormlite-android:5.1'
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
