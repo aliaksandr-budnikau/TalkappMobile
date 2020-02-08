@@ -23,16 +23,19 @@ import java.util.List;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.repository.impl.WordSetMapper;
 import talkapp.org.talkappmobile.repository.impl.WordTranslationMapper;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -52,7 +55,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     private EventBus eventBus;
     private AddingNewWordSetFragmentController controller;
     private WordTranslationMapper wordTranslationMapper;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setUp() {
@@ -60,7 +64,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         this.mapper = new WordSetMapper(mapper);
         this.wordTranslationMapper = new WordTranslationMapper();
 
-        serviceFactory = new ServiceFactoryBean() {
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -72,7 +76,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         eventBus = mock(EventBus.class);
         controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
@@ -385,5 +389,6 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 }

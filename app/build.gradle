@@ -47,7 +47,7 @@ dependencies {
     api 'com.squareup.retrofit2:converter-jackson:2.3.0'
     api 'com.squareup.retrofit2:converter-scalars:2.3.0'
     api 'com.j256.ormlite:ormlite-android:5.1'
-    implementation project(path: ":entity")
+    implementation project(path: ":repository")
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -55,7 +55,6 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.support:design:28.0.0'
-    implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'org.apache.commons:commons-collections4:4.0'
     implementation 'org.androidannotations:androidannotations-api:4.6.0'
     implementation 'com.tmtron:green-annotations-api:1.0.2'
@@ -64,6 +63,8 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.12'
+    testImplementation project(path: ":entity")
+    testImplementation project(path: ":repository")
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.powermock:powermock-reflect:1.6.1'
     testImplementation 'org.robolectric:robolectric:3.5'

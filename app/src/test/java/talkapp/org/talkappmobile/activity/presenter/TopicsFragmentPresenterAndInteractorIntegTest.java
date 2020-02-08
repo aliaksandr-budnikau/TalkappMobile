@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -21,7 +19,10 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -29,7 +30,6 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
@@ -38,11 +38,14 @@ import static org.mockito.Mockito.verify;
 public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private TopicsFragmentView view;
     private TopicsFragmentInteractor topicsFragmentInteractor;
+    private ServiceFactory serviceFactory;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
         view = mock(TopicsFragmentView.class);
-        ServiceFactoryBean serviceFactory = new ServiceFactoryBean() {
+
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -54,7 +57,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         topicsFragmentInteractor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
     }
@@ -62,6 +65,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test

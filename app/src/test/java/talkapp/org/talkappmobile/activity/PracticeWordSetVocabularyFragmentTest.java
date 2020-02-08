@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,7 +16,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,10 +25,13 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -55,13 +55,12 @@ public class PracticeWordSetVocabularyFragmentTest {
     @After
     public void tearDown() throws Exception {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Before
-    public void setUp() throws JsonProcessingException, SQLException {
-        ObjectMapper mapper = new ObjectMapper();
-
-        ServiceFactoryBean serviceFactory = new ServiceFactoryBean() {
+    public void setUp() {
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -73,7 +72,7 @@ public class PracticeWordSetVocabularyFragmentTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         PresenterFactory presenterFactory = new PresenterFactory();
 
@@ -101,13 +100,13 @@ public class PracticeWordSetVocabularyFragmentTest {
         int ageWordSetId = id + 1;
         Word2Tokens age = new Word2Tokens("age", "age", ageWordSetId);
         List<Word2Tokens> ageWordSetWords = asList(age, new Word2Tokens(), new Word2Tokens());
-        WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgboVdNEXFMlzHK5SR");
+        WordRepetitionProgress exercise = new WordRepetitionProgress();
+        exercise.setSentenceIds(asList("AWbgboVdNEXFMlzHK5SR"));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
         exercise.setWordIndex(ageWordSetWords.indexOf(age));
-        serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
+        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
 
         WordSet ageWordSet = new WordSet();
         ageWordSet.setId(ageWordSetId);
@@ -120,13 +119,13 @@ public class PracticeWordSetVocabularyFragmentTest {
         int anniversaryWordSetId = id + 2;
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
         List<Word2Tokens> anniversaryWordSetWords = asList(new Word2Tokens(), anniversary, new Word2Tokens());
-        exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgbq6hNEXFMlzHK5Ul");
+        exercise = new WordRepetitionProgress();
+        exercise.setSentenceIds(asList("AWbgbq6hNEXFMlzHK5Ul"));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
         exercise.setWordIndex(anniversaryWordSetWords.indexOf(anniversary));
-        serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
+        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
 
         WordSet anniversaryWordSet = new WordSet();
         anniversaryWordSet.setId(anniversaryWordSetId);
@@ -139,13 +138,13 @@ public class PracticeWordSetVocabularyFragmentTest {
         int birthWordSetId = id + 3;
         Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
         List<Word2Tokens> birthWordSetWords = asList(new Word2Tokens(), new Word2Tokens(), birth);
-        exercise = new WordRepetitionProgressMapping();
-        exercise.setSentenceIds("AWbgbsUXNEXFMlzHK5V2");
+        exercise = new WordRepetitionProgress();
+        exercise.setSentenceIds(asList("AWbgbsUXNEXFMlzHK5V2"));
         exercise.setStatus(WordSetProgressStatus.FINISHED.name());
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
         exercise.setWordIndex(birthWordSetWords.indexOf(birth));
-        serviceFactory.getExerciseDao().createNewOrUpdate(exercise);
+        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
 
         WordSet birthWordSet = new WordSet();
         birthWordSet.setId(birthWordSetId);

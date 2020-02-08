@@ -31,11 +31,14 @@ import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialo
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
@@ -69,13 +72,14 @@ public class CapitalLetterInNewWordTest {
     private TextView answerTextMock;
     private EventBus eventBusMock = mock(EventBus.class);
     private WordSetVocabularyView wordSetVocabularyView;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
     private AddingEditingNewWordSetsServiceImpl addingEditingNewWordSetsService;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
         LoggerBean logger = new LoggerBean();
-        serviceFactory = new ServiceFactoryBean() {
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -87,12 +91,11 @@ public class CapitalLetterInNewWordTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
 
         presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
         Whitebox.setInternalState(presenterFactory, "logger", logger);
@@ -122,7 +125,6 @@ public class CapitalLetterInNewWordTest {
 
         addingNewWordSetFragment = new AddingNewWordSetFragment();
         Whitebox.setInternalState(addingNewWordSetFragment, "eventBus", eventBusMock);
-        Whitebox.setInternalState(addingNewWordSetFragment, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(addingNewWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
@@ -161,6 +163,7 @@ public class CapitalLetterInNewWordTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test

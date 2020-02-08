@@ -24,10 +24,11 @@ import java.util.Date;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
-import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
+import talkapp.org.talkappmobile.model.ExpAudit;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.repository.impl.ExpAuditMapper;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -49,8 +51,7 @@ public class MainActivityTest {
     private PackageInfo packageInfo;
     private TextView applicationVersion;
     private TextView userExp;
-    private ServiceFactoryBean serviceFactory;
-    private ExpAuditMapper expAuditMapper;
+    private ServiceFactory serviceFactory;
 
     @Before
     public void setup() throws SQLException {
@@ -66,7 +67,7 @@ public class MainActivityTest {
         eventBus = mock(EventBus.class);
         Whitebox.setInternalState(mainActivity, "eventBus", eventBus);
 
-        serviceFactory = new ServiceFactoryBean() {
+        RepositoryFactoryImpl repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -78,10 +79,10 @@ public class MainActivityTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         PresenterFactory presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(mainActivity, "presenterFactory", presenterFactory);
 
         applicationVersion = mock(TextView.class);
@@ -90,13 +91,12 @@ public class MainActivityTest {
         when(navigationViewMock.getHeaderView(0).findViewById(R.id.applicationVersion)).thenReturn(applicationVersion);
         when(navigationViewMock.getHeaderView(0).findViewById(R.id.userExp)).thenReturn(userExp);
         Whitebox.setInternalState(mainActivity, "navigationView", navigationViewMock);
-
-        expAuditMapper = new ExpAuditMapper();
     }
 
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test
@@ -105,26 +105,17 @@ public class MainActivityTest {
         packageInfo.versionName = "1.3";
         when(packageManager.getPackageInfo(anyString(), anyInt())).thenReturn(packageInfo);
 
-        ExpAuditMapping mapping = new ExpAuditMapping();
-        mapping.setExpScore(10);
-        mapping.setDate(new Date(3));
-        mapping.setActivityType("WORD_SET_PRACTICE");
-        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
-        mapping = new ExpAuditMapping();
-        mapping.setExpScore(50);
-        mapping.setDate(new Date(3));
-        mapping.setActivityType("WORD_SET_PRACTICE");
-        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
+        ExpAudit mapping = new ExpAudit(new Date(3), 10, WORD_SET_PRACTICE);
+        serviceFactory.getUserExpService().save(mapping);
+        mapping = new ExpAudit(new Date(3), 50, WORD_SET_PRACTICE);
+        serviceFactory.getUserExpService().save(mapping);
         mainActivity.initPresenter();
         verify(applicationVersion).setText("v" + packageInfo.versionName);
         verify(userExp).setText("EXP " + 60.0);
         reset(userExp);
 
-        mapping = new ExpAuditMapping();
-        mapping.setExpScore(50);
-        mapping.setDate(new Date(3));
-        mapping.setActivityType("WORD_SET_PRACTICE");
-        serviceFactory.getUserExpService().save(expAuditMapper.toDto(mapping));
+        mapping = new ExpAudit(new Date(3), 50, WORD_SET_PRACTICE);
+        serviceFactory.getUserExpService().save(mapping);
 
         mainActivity.onMessageEvent(new UserExpUpdatedEM(3));
         verify(userExp).setText("EXP " + 110.0);

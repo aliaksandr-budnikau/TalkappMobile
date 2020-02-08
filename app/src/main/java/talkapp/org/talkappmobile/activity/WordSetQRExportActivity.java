@@ -14,7 +14,6 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
@@ -24,15 +23,12 @@ import java.util.HashMap;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EActivity(R.layout.activity_word_set_qr_export)
 public class WordSetQRExportActivity extends BaseActivity {
 
     public static final String WORD_SET_MAPPING = "wordSet";
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
 
     @ViewById(R.id.qrCode)
     ImageView qrCode;
@@ -47,7 +43,7 @@ public class WordSetQRExportActivity extends BaseActivity {
 
     @Background
     public void generateQR() {
-        ObjectMapper mapper = serviceFactory.getMapper();
+        ObjectMapper mapper = ServiceFactoryBean.getInstance(getApplication()).getMapper();
         String text = null;
         try {
             text = mapper.writeValueAsString(qrObject);

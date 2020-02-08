@@ -17,10 +17,13 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
@@ -36,11 +39,12 @@ import static org.mockito.Mockito.verify;
 public class WordSetVocabularyViewControllerTest {
     private EventBus eventBus;
     private AddingEditingNewWordSetsService service;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setUp() throws Exception {
-        serviceFactory = new ServiceFactoryBean() {
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -52,7 +56,7 @@ public class WordSetVocabularyViewControllerTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
         eventBus = mock(EventBus.class);
         service = new AddingEditingNewWordSetsServiceImpl(eventBus, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
     }
@@ -95,5 +99,6 @@ public class WordSetVocabularyViewControllerTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 }

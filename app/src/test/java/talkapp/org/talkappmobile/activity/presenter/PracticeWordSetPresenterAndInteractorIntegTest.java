@@ -18,11 +18,14 @@ import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -48,14 +51,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private Context context;
     private CurrentPracticeStateService currentPracticeStateService;
     private PresenterFactory presenterFactory;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
         view = mock(PracticeWordSetView.class);
         context = mock(Context.class);
         LoggerBean logger = new LoggerBean();
-        serviceFactory = new ServiceFactoryBean() {
+
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -67,12 +72,10 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
-        Whitebox.setInternalState(serviceFactory, "context", context);
 
         presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
         Whitebox.setInternalState(presenterFactory, "logger", logger);
@@ -84,6 +87,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     private void createPresenter() {

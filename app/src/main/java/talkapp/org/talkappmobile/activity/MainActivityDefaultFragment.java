@@ -35,7 +35,6 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.WordSetQRImporterBean;
@@ -51,8 +50,6 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     EventBus eventBus;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
 
@@ -92,7 +89,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getPracticeWordSetExerciseRepository(),
+        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(ServiceFactoryBean.getInstance(getActivity()).getWordRepetitionProgressService(),
                 wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,

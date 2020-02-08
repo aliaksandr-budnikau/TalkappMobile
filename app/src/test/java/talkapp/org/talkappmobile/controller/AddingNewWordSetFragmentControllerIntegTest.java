@@ -1,30 +1,39 @@
 package talkapp.org.talkappmobile.controller;
 
+import android.content.Context;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
-import talkapp.org.talkappmobile.ServiceHelper;
 import talkapp.org.talkappmobile.TestHelper;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -33,21 +42,34 @@ public class AddingNewWordSetFragmentControllerIntegTest {
     private EventBus eventBusMock;
     private AddingNewWordSetFragmentController controller;
     private TestHelper testHelper;
-    private DaoHelper daoHelper;
-    private ServiceHelper serviceHelper;
+    private RepositoryFactoryImpl repositoryFactory;
+    private ServiceFactory serviceFactory;
 
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         eventBusMock = testHelper.getEventBusMock();
-        daoHelper = new DaoHelper();
-        serviceHelper = new ServiceHelper(daoHelper);
-        controller = new AddingNewWordSetFragmentController(eventBusMock, serviceHelper.getServiceFactoryBean());
+
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
+            private DatabaseHelper helper;
+
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+        };
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        controller = new AddingNewWordSetFragmentController(eventBusMock, serviceFactory);
     }
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test
@@ -65,7 +87,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
-        WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
+        WordSetService wordSetService = ServiceFactoryBean.getInstance(mock(Context.class)).getWordSetExperienceRepository();
         LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
             words.add(new WordTranslation());
@@ -93,7 +115,7 @@ public class AddingNewWordSetFragmentControllerIntegTest {
             words.add(new WordTranslation());
         }
 
-        WordSetService wordSetService = serviceHelper.getServiceFactoryBean().getWordSetExperienceRepository();
+        WordSetService wordSetService = ServiceFactoryBean.getInstance(mock(Context.class)).getWordSetExperienceRepository();
         wordSetService.save(new NewWordSetDraft(words));
 
         // when

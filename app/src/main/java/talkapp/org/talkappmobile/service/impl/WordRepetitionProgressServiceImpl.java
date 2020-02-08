@@ -14,7 +14,6 @@ import java.util.NavigableMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -23,8 +22,8 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;
@@ -288,10 +287,6 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
                 FINISHED.name()
         );
         return exercises.get(0);
-    }
-
-    private boolean isNotThereCurrentExercise(List<WordRepetitionProgressMapping> current) {
-        return current.isEmpty();
     }
 
     private int getDifferenceInHours(Date startDate, Date endDate) {

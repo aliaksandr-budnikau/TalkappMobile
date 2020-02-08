@@ -23,7 +23,6 @@ import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
@@ -32,8 +31,6 @@ import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsL
 public class TopicsFragment extends Fragment implements TopicsFragmentView {
     @Bean
     TopicListAdapter adapter;
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
@@ -47,7 +44,7 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
 
     @AfterViews
     public void init() {
-        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
+        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(ServiceFactoryBean.getInstance(getActivity()).getTopicService());
 
         topicsListView.setAdapter(adapter);
 

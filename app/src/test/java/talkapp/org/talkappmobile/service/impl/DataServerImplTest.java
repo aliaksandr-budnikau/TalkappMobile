@@ -25,12 +25,12 @@ import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.repository.TopicRepository;
 import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -58,7 +58,7 @@ public class DataServerImplTest {
     @Mock
     private WordSetDaoImpl wordSetDaoMock;
     @Mock
-    private TopicDao topicDao;
+    private TopicRepository topicRepository;
     @Mock
     private SentenceDao sentenceDao;
     @Mock
@@ -94,7 +94,7 @@ public class DataServerImplTest {
                 return wordSetDaoMock.createOrUpdate(data);
             }
         };
-        topicService = new TopicServiceImpl(topicDao, server);
+        topicService = new TopicServiceImpl(topicRepository, server);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor);
         WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
         WordSetServiceImpl wordSetService = new WordSetServiceImpl(server, wordSetRepository);

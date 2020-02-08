@@ -1,14 +1,15 @@
 package talkapp.org.talkappmobile.service.impl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.res.StringRes;
 
 import java.io.IOException;
@@ -20,7 +21,6 @@ import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
@@ -30,8 +30,8 @@ import static android.app.Activity.RESULT_OK;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class WordSetQRImporterBean implements WordSetQRImporter {
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
+    @RootContext
+    Context context;
     @StringRes(R.string.adding_new_word_set_by_qrc_finished_successfully)
     String addingFinishedSuccessfullyMessage;
     @StringRes(R.string.adding_new_word_set_by_qrc_failed_json_format)
@@ -59,7 +59,7 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                 String wordSetJson = data.getStringExtra("SCAN_RESULT");
                 NewWordSetDraftQRObject draft = null;
                 try {
-                    draft = serviceFactory.getMapper().readValue(wordSetJson, NewWordSetDraftQRObject.class);
+                    draft = ServiceFactoryBean.getInstance(context).getMapper().readValue(wordSetJson, NewWordSetDraftQRObject.class);
                 } catch (JsonMappingException e) {
                     Toast.makeText(activity, addingFailedMessageMappingError, Toast.LENGTH_LONG).show();
                     return;
@@ -69,8 +69,8 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                 }
                 NewWordSetDraft wordSetDraft = assembleDraft(draft);
 
-                WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
-                WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
+                WordSetService wordSetService = ServiceFactoryBean.getInstance(context).getWordSetExperienceRepository();
+                WordTranslationService wordTranslationService = ServiceFactoryBean.getInstance(context).getWordTranslationService();
 
                 wordSetService.save(wordSetDraft);
                 wordTranslationService.saveWordTranslations(wordSetDraft);

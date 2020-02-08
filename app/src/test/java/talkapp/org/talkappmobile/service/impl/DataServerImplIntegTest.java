@@ -22,14 +22,16 @@ import retrofit2.Call;
 import retrofit2.Response;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.repository.impl.WordSetMapper;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.M;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -49,15 +51,16 @@ public class DataServerImplIntegTest {
     private GitHubRestClient gitHubRestClient;
     private RequestExecutor requestExecutor;
     private WordSetService wordSetService;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
     private WordSetMapper wordSetMapper;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void init() {
         gitHubRestClient = mock(GitHubRestClient.class);
         requestExecutor = mock(RequestExecutor.class);
 
-        serviceFactory = new ServiceFactoryBean() {
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -69,17 +72,11 @@ public class DataServerImplIntegTest {
                 return helper;
             }
 
-            @Override
-            protected GitHubRestClient gitHubRestClient() {
-                return gitHubRestClient;
-            }
-
-            @Override
-            public RequestExecutor getRequestExecutor() {
-                return requestExecutor;
-            }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        ServiceFactoryBean bean = (ServiceFactoryBean) serviceFactory;
+        bean.setGitHubRestClient(gitHubRestClient);
+        bean.setRequestExecutor(requestExecutor);
         wordSetMapper = new WordSetMapper(new ObjectMapper());
         wordSetService = serviceFactory.getWordSetExperienceRepository();
     }
@@ -87,6 +84,7 @@ public class DataServerImplIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test
@@ -94,19 +92,19 @@ public class DataServerImplIntegTest {
         // setup
         Call mockCall = mock(Call.class);
 
-        WordSetMapping wordSetMapping1 = new WordSetMapping();
-        wordSetMapping1.setId("1");
-        wordSetMapping1.setStatus(FINISHED.name());
+        WordSet wordSetMapping1 = new WordSet();
+        wordSetMapping1.setId(1);
+        wordSetMapping1.setStatus(FINISHED);
         wordSetMapping1.setTrainingExperience(10);
         wordSetMapping1.setTopicId("22");
-        wordSetMapping1.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        WordSetMapping wordSetMapping2 = new WordSetMapping();
-        wordSetMapping2.setId("2");
-        wordSetMapping2.setStatus(SECOND_CYCLE.name());
+        wordSetMapping1.setWords(asList(new Word2Tokens("22", "22", null)));
+        WordSet wordSetMapping2 = new WordSet();
+        wordSetMapping2.setId(2);
+        wordSetMapping2.setStatus(SECOND_CYCLE);
         wordSetMapping2.setTrainingExperience(11);
         wordSetMapping2.setTopicId("22");
-        wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapper.toDto(wordSetMapping1), wordSetMapper.toDto(wordSetMapping2));
+        wordSetMapping2.setWords(asList(new Word2Tokens("22", "22", null)));
+        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
         serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
@@ -145,19 +143,19 @@ public class DataServerImplIntegTest {
         // setup
         Call mockCall = mock(Call.class);
 
-        WordSetMapping wordSetMapping1 = new WordSetMapping();
-        wordSetMapping1.setId("1");
-        wordSetMapping1.setStatus(FINISHED.name());
+        WordSet wordSetMapping1 = new WordSet();
+        wordSetMapping1.setId(1);
+        wordSetMapping1.setStatus(FINISHED);
         wordSetMapping1.setTrainingExperience(10);
         wordSetMapping1.setTopicId("22");
-        wordSetMapping1.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        WordSetMapping wordSetMapping2 = new WordSetMapping();
-        wordSetMapping2.setId("2");
-        wordSetMapping2.setStatus(SECOND_CYCLE.name());
+        wordSetMapping1.setWords(asList(new Word2Tokens("22", "22", null)));
+        WordSet wordSetMapping2 = new WordSet();
+        wordSetMapping2.setId(2);
+        wordSetMapping2.setStatus(SECOND_CYCLE);
         wordSetMapping2.setTrainingExperience(11);
         wordSetMapping2.setTopicId("22");
-        wordSetMapping2.setWords("[{\"word\":\"22\", \"tokens\":\"22\"}]");
-        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapper.toDto(wordSetMapping1), wordSetMapper.toDto(wordSetMapping2));
+        wordSetMapping2.setWords(asList(new Word2Tokens("22", "22", null)));
+        List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
         serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();

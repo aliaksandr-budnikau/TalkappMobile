@@ -84,6 +84,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
     @After
     public void tearDown() {
         daoHelper.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test

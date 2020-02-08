@@ -20,9 +20,12 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -40,11 +43,14 @@ import static org.mockito.Mockito.verify;
 public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private PracticeWordSetVocabularyInteractor interactor;
     private PracticeWordSetVocabularyView view;
+    private RepositoryFactory repositoryFactory;
+    private ServiceFactory serviceFactory;
 
     @Before
     public void setup() {
         view = mock(PracticeWordSetVocabularyView.class);
-        ServiceFactoryBean serviceFactory = new ServiceFactoryBean() {
+
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -56,14 +62,15 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
-        interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getPracticeWordSetExerciseRepository(), serviceFactory.getCurrentPracticeStateService());
+        interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
     }
 
     @After
     public void tearDown() throws Exception {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     @Test

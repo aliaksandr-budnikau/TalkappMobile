@@ -40,7 +40,6 @@ import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSucces
 import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
@@ -49,8 +48,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(SpeakerBean.class)
     Speaker speaker;
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
     @Bean
     AddingEditingNewWordSetsController addingEditingNewWordSetsController;
     @Bean
@@ -80,7 +77,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     public void init() {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
-        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
+        controller = new AddingNewWordSetFragmentController(eventBus, ServiceFactoryBean.getInstance(getActivity()));
         eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
     }
 

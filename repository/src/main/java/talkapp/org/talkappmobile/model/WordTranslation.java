@@ -1,0 +1,105 @@
+package talkapp.org.talkappmobile.model;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+/**
+ * @author Budnikau Aliaksandr
+ */
+public class WordTranslation {
+    private String id;
+
+    private String word;
+
+    private String language;
+
+    private String translation;
+
+    private Integer top;
+
+    private String tokens;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getTranslation() {
+        return translation;
+    }
+
+    public void setTranslation(String translation) {
+        this.translation = translation;
+    }
+
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
+    }
+
+    public String getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(String tokens) {
+        this.tokens = tokens;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WordTranslation that = (WordTranslation) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(word, that.word)
+                .append(language, that.language)
+                .append(translation, that.translation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(word)
+                .append(language)
+                .append(translation)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "WordTranslation{" +
+                "id='" + id + '\'' +
+                ", word='" + word + '\'' +
+                ", language='" + language + '\'' +
+                ", translation='" + translation + '\'' +
+                '}';
+    }
+}

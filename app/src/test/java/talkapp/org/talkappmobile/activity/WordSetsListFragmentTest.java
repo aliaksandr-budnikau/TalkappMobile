@@ -26,10 +26,13 @@ import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.RepositoryFactory;
+import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 
@@ -57,13 +60,14 @@ public class WordSetsListFragmentTest {
     private TestHelper testHelper;
     private EventBus eventBus;
     private FilterableAdapter adapter;
-    private ServiceFactoryBean serviceFactory;
+    private ServiceFactory serviceFactory;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() throws SQLException {
         testHelper = new TestHelper();
 
-        serviceFactory = new ServiceFactoryBean() {
+        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -75,13 +79,12 @@ public class WordSetsListFragmentTest {
                 return helper;
             }
         };
-        serviceFactory.setContext(mock(Context.class));
+        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsRecyclerView.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         eventBus = testHelper.getEventBusMock();
 
         wordSetsListFragment = new WordSetsListFragment();
-        Whitebox.setInternalState(wordSetsListFragment, "serviceFactory", serviceFactory);
         TabHost tabHost = mock(TabHost.class);
         when(tabHost.newTabSpec(anyString())).thenReturn(mock(TabHost.TabSpec.class));
         Whitebox.setInternalState(wordSetsListFragment, "tabHost", tabHost);
@@ -145,6 +148,7 @@ public class WordSetsListFragmentTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
+        ServiceFactoryBean.removeInstance();
     }
 
     private void checkWord2Tokens(WordSet wordSet, List<Word2Tokens> words) {

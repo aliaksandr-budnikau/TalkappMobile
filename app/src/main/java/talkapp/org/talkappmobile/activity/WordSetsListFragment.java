@@ -68,8 +68,6 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     public static final String NEW = "new";
     public static final String STARTED = "started";
     public static final String FINISHED = "finished";
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @EventBusGreenRobot
@@ -112,10 +110,11 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Background
     public void initPresenter() {
-        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getPracticeWordSetExerciseRepository());
+        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(getActivity());
+        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordRepetitionProgressService());
         if (repetitionMode) {
             RepetitionClass repetitionClass = this.repetitionClass == null ? RepetitionClass.NEW : this.repetitionClass;
-            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getPracticeWordSetExerciseRepository(), repetitionClass);
+            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getWordRepetitionProgressService(), repetitionClass);
         }
         presenter = new WordSetsListPresenter(topic, this, interactor);
         presenter.initialize();

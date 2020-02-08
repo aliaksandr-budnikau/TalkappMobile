@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.repository.impl.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
@@ -25,7 +26,6 @@ import talkapp.org.talkappmobile.service.impl.DataServerImpl;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-import talkapp.org.talkappmobile.repository.impl.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 
 import static org.junit.Assert.fail;
@@ -57,7 +57,7 @@ public class ExceptionHandlerTest {
         RequestExecutor requestExecutor = new RequestExecutor();
         server = new DataServerImpl(null, gitHubRestClient, requestExecutor);
         TopicRepositoryImpl topicRepository = new TopicRepositoryImpl(topicDao);
-        topicService = new CachedTopicServiceDecorator(new TopicServiceImpl(topicDao, server), topicRepository);
+        topicService = new CachedTopicServiceDecorator(new TopicServiceImpl(topicRepository, server), topicRepository);
 
         interactor = new ExceptionHandlerInteractor(loggerBean);
         gitHubRestClient = mock(GitHubRestClient.class);

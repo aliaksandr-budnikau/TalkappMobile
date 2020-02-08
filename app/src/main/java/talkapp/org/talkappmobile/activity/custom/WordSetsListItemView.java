@@ -7,7 +7,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -18,14 +17,9 @@ import talkapp.org.talkappmobile.activity.custom.interactor.WordSetsListItemView
 import talkapp.org.talkappmobile.activity.custom.presenter.WordSetsListItemViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.WordSetsListItemViewView;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {
-
-    @Bean(ServiceFactoryBean.class)
-    ServiceFactory serviceFactory;
 
     @ViewById(R.id.wordSetRow)
     TextView wordSetRow;
