@@ -1,13 +1,8 @@
 package talkapp.org.talkappmobile.dao.impl;
 
-import android.support.annotation.NonNull;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
-
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -15,6 +10,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.mappings.WordSetMapping;
 
 public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implements WordSetDao {
 
@@ -105,7 +104,6 @@ public class WordSetDaoImpl extends BaseDaoImpl<WordSetMapping, String> implemen
         wordSets = new HashMap<>();
     }
 
-    @NonNull
     private List<WordSetMapping> getAllWordSets(Map<String, List<WordSetMapping>> all) {
         LinkedList<WordSetMapping> result = new LinkedList<>();
         for (List<WordSetMapping> wordSets : all.values()) {

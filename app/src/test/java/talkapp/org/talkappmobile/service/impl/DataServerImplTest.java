@@ -31,7 +31,7 @@ import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.TopicRepository;
-import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;

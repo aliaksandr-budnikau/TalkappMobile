@@ -1,9 +1,8 @@
 apply plugin: 'java-library'
 
 dependencies {
-    api 'com.j256.ormlite:ormlite-android:5.1'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.j256.ormlite:ormlite-android:5.1'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 sourceCompatibility = "7"

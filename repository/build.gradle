@@ -25,15 +25,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    api 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'com.android.support:appcompat-v7:28.+'
+    implementation project(path: ":repository_api")
     implementation project(path: ":entity")
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
+    implementation 'org.apache.commons:commons-lang3:3.5'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.5'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

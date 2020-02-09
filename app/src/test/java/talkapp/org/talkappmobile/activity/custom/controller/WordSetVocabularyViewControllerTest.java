@@ -17,8 +17,8 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.RepositoryFactory;
-import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;

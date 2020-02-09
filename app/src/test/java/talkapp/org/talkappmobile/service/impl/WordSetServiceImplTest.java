@@ -14,7 +14,7 @@ import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
 
 import static org.junit.Assert.assertEquals;

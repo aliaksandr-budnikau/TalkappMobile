@@ -24,9 +24,9 @@ import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.repository.impl.SentenceRepositoryImpl;
-import talkapp.org.talkappmobile.repository.impl.WordRepetitionProgressRepositoryImpl;
-import talkapp.org.talkappmobile.repository.impl.WordSetRepositoryImpl;
+import talkapp.org.talkappmobile.repository.SentenceRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;

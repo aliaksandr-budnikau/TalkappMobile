@@ -24,10 +24,6 @@ import talkapp.org.talkappmobile.repository.MigrationService;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.ID_FN;
-import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.NEW_WORD_SET_DRAFT_MAPPING_TABLE;
-import static talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping.WORDS_FN;
-import static talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping.WORD_INDEX_FN;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";

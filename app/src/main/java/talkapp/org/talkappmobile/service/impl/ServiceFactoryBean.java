@@ -10,8 +10,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import talkapp.org.talkappmobile.dao.RepositoryFactory;
-import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
@@ -53,7 +53,7 @@ public class ServiceFactoryBean implements ServiceFactory {
     }
 
     private ServiceFactoryBean(Context context) {
-        this.repositoryFactory = new RepositoryFactoryImpl(context);
+        this.repositoryFactory = RepositoryFactoryProvider.get(context);
     }
 
     public static ServiceFactory getInstance(Context context) {

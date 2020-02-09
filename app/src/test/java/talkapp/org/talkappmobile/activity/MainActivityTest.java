@@ -24,7 +24,7 @@ import java.util.Date;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.service.ServiceFactory;

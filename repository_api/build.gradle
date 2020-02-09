@@ -1,0 +1,7 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.j256.ormlite:ormlite-android:5.1'
+}

@@ -1,1 +1,1 @@
-include ':app', ':entity', ':repository'
+include ':app', ':entity', ':repository', ':repository_api'

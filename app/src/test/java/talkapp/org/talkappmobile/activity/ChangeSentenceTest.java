@@ -32,8 +32,8 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.RepositoryFactory;
-import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;

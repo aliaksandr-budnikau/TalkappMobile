@@ -17,7 +17,7 @@ import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
-import talkapp.org.talkappmobile.repository.impl.TopicRepositoryImpl;
+import talkapp.org.talkappmobile.repository.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;

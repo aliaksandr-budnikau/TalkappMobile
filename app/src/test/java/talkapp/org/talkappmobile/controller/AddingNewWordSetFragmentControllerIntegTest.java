@@ -19,7 +19,7 @@ import java.util.LinkedList;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.dao.impl.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
