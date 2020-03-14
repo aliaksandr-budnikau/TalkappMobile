@@ -56,7 +56,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         this.repositoryFactory = RepositoryFactoryProvider.get(context);
     }
 
-    public static ServiceFactory getInstance(Context context) {
+    public synchronized static ServiceFactory getInstance(Context context) {
         if (instance != null) {
             return instance;
         }
