@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -56,6 +57,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 import static android.app.Activity.RESULT_OK;
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
 @EFragment(value = R.layout.word_set_practice_activity_fragment)
@@ -202,9 +204,11 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, PracticeWordSetFragment.class.getPackage().getName());
-        intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR");
-        intent.putExtra("android.speech.extra.GET_AUDIO", true);
-        startActivityForResult(intent, 3000);
+        try {
+            startActivityForResult(intent, REQUEST_CODE);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getActivity(), "Sorry your device not supported", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
