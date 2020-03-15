@@ -35,6 +35,7 @@ import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -578,6 +579,25 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.checkAnswerButtonClick(sentence.getText());
 
         verify(view).onExerciseGotAnswered();
+    }
+
+    @Test
+    public void testPracticeWordSet_notSavingToDBBug() {
+        createPresenter();
+        presenter.initialise(wordSet);
+        presenter.nextButtonClick();
+        presenter.changeSentence();
+        for (int i = 0; i < 6; i++) {
+            Sentence sentence = presenter.getCurrentSentence();
+            presenter.checkAnswerButtonClick(sentence.getText());
+            presenter.nextButtonClick();
+            presenter.changeSentence();
+            WordSet wordSetFromDB = repositoryFactory.getWordSetRepository().findById(this.wordSet.getId());
+            assertEquals(wordSet.getRepetitionClass(), wordSetFromDB.getRepetitionClass());
+            assertEquals(wordSet.getStatus(), wordSetFromDB.getStatus());
+            assertEquals(wordSet.getId(), wordSetFromDB.getId());
+            assertEquals(wordSet.getTrainingExperience(), wordSetFromDB.getTrainingExperience());
+        }
     }
 
     @Test

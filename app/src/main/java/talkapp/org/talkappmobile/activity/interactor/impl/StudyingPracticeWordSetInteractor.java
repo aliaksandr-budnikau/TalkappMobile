@@ -49,6 +49,7 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         }
         WordSet wordSet = currentPracticeStateService.getWordSet();
         currentPracticeStateService.setTrainingExperience(wordSet.getTrainingExperience() + 1);
+        currentPracticeStateService.persistWordSet();
         wordSet = currentPracticeStateService.getWordSet();
         listener.onUpdateProgress(wordSet);
         exerciseService.moveCurrentWordToNextState(currentWord);
