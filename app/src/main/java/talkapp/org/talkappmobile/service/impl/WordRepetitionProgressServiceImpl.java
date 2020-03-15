@@ -281,11 +281,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         WordSet wordSet = wordSetRepository.findById(wordSetId);
         int index = wordSet.getWords().indexOf(word);
         List<WordRepetitionProgress> exercises;
-        exercises = progressRepository.findByWordIndexAndByWordSetIdAndByStatus(
-                index,
-                wordSetId,
-                FINISHED.name()
-        );
+        exercises = progressRepository.findByWordIndexAndWordSetId(index, wordSetId);
         return exercises.get(0);
     }
 

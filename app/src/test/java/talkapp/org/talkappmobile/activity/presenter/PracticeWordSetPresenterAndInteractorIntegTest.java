@@ -18,12 +18,12 @@ import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
@@ -578,5 +578,18 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.checkAnswerButtonClick(sentence.getText());
 
         verify(view).onExerciseGotAnswered();
+    }
+
+    @Test
+    public void testPracticeWordSet_completeOneSetWithPeepingBug() {
+        createPresenter();
+        presenter.initialise(wordSet);
+        presenter.nextButtonClick();
+        presenter.changeSentence();
+        presenter.markAnswerHasBeenSeen();
+        Sentence sentence = presenter.getCurrentSentence();
+        presenter.checkAnswerButtonClick(sentence.getText());
+        presenter.nextButtonClick();
+        presenter.changeSentence();
     }
 }
