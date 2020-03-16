@@ -114,6 +114,23 @@ public class UserExpServiceImplTest {
     }
 
     @Test
+    public void testFindAllByTypeOrderedByDate_notEmptyReturn1ButForYesterdayWithDuplicatesOomBug() {
+        // setup
+        Calendar calendar = getCalendarWithoutTime();
+        calendar.add(Calendar.DATE, -1);
+
+        calendar.add(Calendar.DATE, -1);
+        List<ExpAudit> fromDB = asList(new ExpAudit(calendar.getTime(), 11, WORD_SET_PRACTICE),
+                new ExpAudit(calendar.getTime(), 12, WORD_SET_PRACTICE),
+                new ExpAudit(calendar.getTime(), 13, WORD_SET_PRACTICE));
+
+        // when
+        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+                .thenReturn(fromDB);
+        userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
+    }
+
+    @Test
     public void testFindAllByTypeOrderedByDate_notEmptyReturn1ButFor10DaysAgo() {
         // setup
         Calendar calendar = getCalendarWithoutTime();

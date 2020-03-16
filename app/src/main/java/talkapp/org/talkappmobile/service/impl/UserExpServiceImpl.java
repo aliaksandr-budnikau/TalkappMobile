@@ -48,6 +48,7 @@ public class UserExpServiceImpl implements UserExpService {
         }
 
         Calendar calendar = getCalendarWithoutTime();
+        Date today = calendar.getTime();
         calendar.setTime(all.get(0).getDate());
 
         for (ExpAudit item : all) {
@@ -57,19 +58,18 @@ public class UserExpServiceImpl implements UserExpService {
                 result.add(expAudit);
                 calendar.add(Calendar.DATE, 1);
             } else {
+                Date calendarTime;
                 do {
                     expAudit = new ExpAudit(calendar.getTime(), 0, type);
                     result.add(expAudit);
                     calendar.add(Calendar.DATE, 1);
-                } while (!calendar.getTime().equals(item.getDate()));
+                    calendarTime = calendar.getTime();
+                } while (!calendarTime.equals(item.getDate()) && !calendarTime.after(today));
                 expAudit = item;
                 result.add(expAudit);
                 calendar.add(Calendar.DATE, 1);
             }
         }
-
-        calendar = getCalendarWithoutTime();
-        Date today = calendar.getTime();
 
         if (result.getLast().getDate().equals(today)) {
             return result;

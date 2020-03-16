@@ -37,7 +37,6 @@ public class ExpAudit {
         ExpAudit expAudit = (ExpAudit) o;
 
         return new EqualsBuilder()
-                .append(expScore, expAudit.expScore)
                 .append(date, expAudit.date)
                 .append(activityType, expAudit.activityType)
                 .isEquals();
@@ -48,7 +47,6 @@ public class ExpAudit {
         return new HashCodeBuilder(17, 37)
                 .append(date)
                 .append(activityType)
-                .append(expScore)
                 .toHashCode();
     }
 
