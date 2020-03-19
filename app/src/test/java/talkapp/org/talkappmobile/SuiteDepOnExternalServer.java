@@ -16,6 +16,7 @@ import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPre
 import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterAndInteractorIntegTest;
 import talkapp.org.talkappmobile.service.impl.DataServerImplIntegTest;
+import talkapp.org.talkappmobile.service.impl.UserExpServiceImplIntegTest;
 import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplIntegTest;
 
 @Suite.SuiteClasses({
@@ -31,6 +32,7 @@ import talkapp.org.talkappmobile.service.impl.WordRepetitionProgressServiceImplI
         ChangeSentenceTest.class,
         DataServerImplIntegTest.class,
         MainActivityTest.class,
+        UserExpServiceImplIntegTest.class,
         WordSetVocabularyViewControllerTest.class,
         WordRepetitionProgressServiceImplIntegTest.class
 })

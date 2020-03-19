@@ -11,6 +11,4 @@ public interface UserExpService {
     double increaseForRepetition(int repetitionCounter, ExpActivityType type);
 
     List<ExpAudit> findAllByTypeOrderedByDate(ExpActivityType type);
-
-    void save(ExpAudit expAudit);
 }

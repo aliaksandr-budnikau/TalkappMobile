@@ -19,14 +19,12 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
-import talkapp.org.talkappmobile.model.ExpAudit;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
@@ -105,17 +103,13 @@ public class MainActivityTest {
         packageInfo.versionName = "1.3";
         when(packageManager.getPackageInfo(anyString(), anyInt())).thenReturn(packageInfo);
 
-        ExpAudit mapping = new ExpAudit(new Date(3), 10, WORD_SET_PRACTICE);
-        serviceFactory.getUserExpService().save(mapping);
-        mapping = new ExpAudit(new Date(3), 50, WORD_SET_PRACTICE);
-        serviceFactory.getUserExpService().save(mapping);
+        serviceFactory.getUserExpService().increaseForRepetition(10, WORD_SET_PRACTICE);
+        serviceFactory.getUserExpService().increaseForRepetition(50, WORD_SET_PRACTICE);
         mainActivity.initPresenter();
         verify(applicationVersion).setText("v" + packageInfo.versionName);
         verify(userExp).setText("EXP " + 60.0);
         reset(userExp);
-
-        mapping = new ExpAudit(new Date(3), 50, WORD_SET_PRACTICE);
-        serviceFactory.getUserExpService().save(mapping);
+        serviceFactory.getUserExpService().increaseForRepetition(50, WORD_SET_PRACTICE);
 
         mainActivity.onMessageEvent(new UserExpUpdatedEM(3));
         verify(userExp).setText("EXP " + 110.0);

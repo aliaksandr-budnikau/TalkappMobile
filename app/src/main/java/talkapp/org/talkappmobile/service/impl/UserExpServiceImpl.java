@@ -85,11 +85,6 @@ public class UserExpServiceImpl implements UserExpService {
         return result;
     }
 
-    @Override
-    public void save(ExpAudit expAudit) {
-        expAuditRepository.createNewOrUpdate(expAudit);
-    }
-
     @NonNull
     private Calendar getCalendarWithoutTime() {
         Calendar calendar = Calendar.getInstance();

@@ -8,7 +8,6 @@ import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 
 public class ExpAuditRepositoryImpl implements ExpAuditRepository {
     private final ExpAuditDao expAuditDao;
@@ -39,7 +38,13 @@ public class ExpAuditRepositoryImpl implements ExpAuditRepository {
 
     @Override
     public void createNewOrUpdate(ExpAudit expAudit) {
-        expAuditDao.save(expAuditMapper.toMapping(expAudit));
+        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(expAudit.getDate(), expAudit.getActivityType().name());
+        if (mapping == null) {
+            expAuditDao.save(expAuditMapper.toMapping(expAudit));
+            return;
+        }
+        mapping.setExpScore(expAudit.getExpScore());
+        expAuditDao.save(mapping);
     }
 
     @Override
