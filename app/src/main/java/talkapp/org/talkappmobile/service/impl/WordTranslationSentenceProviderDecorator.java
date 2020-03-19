@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.support.annotation.NonNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,10 +11,11 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
+import talkapp.org.talkappmobile.service.SentenceProvider;
 
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator {
@@ -35,7 +36,7 @@ class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator
         if (wordTranslation == null) {
             return emptyList();
         }
-        return Collections.singletonList(convertToSentence(wordTranslation));
+        return new ArrayList<>(asList(convertToSentence(wordTranslation)));
     }
 
     private WordTranslation findByWordAndLanguage(String word) {
