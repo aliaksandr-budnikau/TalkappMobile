@@ -105,6 +105,17 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     }
 
     @Override
+    public List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId) {
+        WordSet wordSet = wordSetRepository.findById(wordSetId);
+        List<WordRepetitionProgress> exercises = progressRepository.findByStatusAndByWordSetId(wordSet.getStatus(), wordSetId);
+        LinkedList<Word2Tokens> result = new LinkedList<>();
+        for (WordRepetitionProgress exercise : exercises) {
+            result.add(getWord2Tokens(exercise));
+        }
+        return result;
+    }
+
+    @Override
     public List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         List<WordRepetitionProgress> exercises = progressRepository.findWordSetsSortByUpdatedDateAndByStatus(limit * wordSetSize, cal.getTime(), FINISHED.name());

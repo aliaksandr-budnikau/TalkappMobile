@@ -8,10 +8,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import java.util.HashSet;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.PresenterFactory;
@@ -36,6 +39,7 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -119,19 +123,27 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_completeOneSet() {
         createPresenter();
+        HashSet<Word2Tokens> historyOfWords = new HashSet<>();
 
         presenter.initialise(wordSet);
         verify(view).setProgress(0);
         reset(view);
 
         // sentence 1
+        ArgumentCaptor<Word2Tokens> captor = ArgumentCaptor.forClass(Word2Tokens.class);
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        Word2Tokens currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.changeSentence();
 
@@ -162,10 +174,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.changeSentence();
 
@@ -196,10 +214,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.changeSentence();
 
@@ -225,14 +249,22 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onUpdateUserExp(1);
         reset(view);
 
+        historyOfWords.clear();
+
         // sentence 4
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
@@ -256,10 +288,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
@@ -283,10 +321,16 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+        historyOfWords.add(currentWord);
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
@@ -309,19 +353,26 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     @Test
     public void testPracticeWordSet_completeOneSetAndRestartAfterEacheStep() {
         createPresenter();
+        HashSet<Word2Tokens> historyOfWords = new HashSet<>();
 
         presenter.initialise(wordSet);
         verify(view).setProgress(0);
         reset(view);
 
         // sentence 1
+        ArgumentCaptor<Word2Tokens> captor = ArgumentCaptor.forClass(Word2Tokens.class);
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        Word2Tokens currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.changeSentence();
 
@@ -348,14 +399,21 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onUpdateUserExp(1);
         reset(view);
 
+        historyOfWords.add(currentWord);
+
         // sentence 2
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         createPresenter();
 
@@ -366,10 +424,15 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.changeSentence();
 
@@ -394,15 +457,23 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).hideCheckButton();
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        historyOfWords.add(currentWord);
 
         // sentence 3
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
+
 
         createPresenter();
 
@@ -413,10 +484,15 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.changeSentence();
 
@@ -442,14 +518,22 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onUpdateUserExp(1);
         reset(view);
 
+        historyOfWords.add(currentWord);
+        historyOfWords.clear();
+
         // sentence 4
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         createPresenter();
 
@@ -460,10 +544,15 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
@@ -482,15 +571,22 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).hideCheckButton();
         verify(view).onUpdateUserExp(1);
         reset(view);
+
+        historyOfWords.add(currentWord);
 
         // sentence 5
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         createPresenter();
 
@@ -501,10 +597,15 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();
@@ -524,14 +625,21 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         verify(view).onUpdateUserExp(1);
         reset(view);
 
+        historyOfWords.add(currentWord);
+
         // sentence 6
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         createPresenter();
 
@@ -542,10 +650,15 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         presenter.nextButtonClick();
         verify(view).setEnableRightAnswerTextView(false);
         verify(view).setEnablePronounceRightAnswerButton(false);
-        verify(view).onSentencesFound(any(Sentence.class), any(Word2Tokens.class));
+        verify(view).onSentencesFound(any(Sentence.class), captor.capture());
         verify(view).setEnableRightAnswerTextView(true);
         verify(view).setEnablePronounceRightAnswerButton(true);
         reset(view);
+
+        currentWord = captor.getValue();
+        if (historyOfWords.contains(currentWord)) {
+            fail();
+        }
 
         presenter.checkAnswerButtonClick("");
         verify(view).showMessageAnswerEmpty();

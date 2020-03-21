@@ -2,6 +2,8 @@ package talkapp.org.talkappmobile.activity.interactor.impl;
 
 import android.content.Context;
 
+import java.util.List;
+
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -32,6 +34,13 @@ public class StudyingPracticeWordSetInteractor extends AbstractPracticeWordSetIn
         super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, sentenceProvider);
         this.currentPracticeStateService = currentPracticeStateService;
         this.exerciseService = exerciseService;
+    }
+
+    @Override
+    public Word2Tokens peekAnyNewWordByWordSetId() {
+        WordSet wordSet = currentPracticeStateService.getWordSet();
+        List<Word2Tokens> leftOver = exerciseService.getLeftOverOfWordSetByWordSetId(wordSet.getId());
+        return peekRandomWordWithoutCurrentWord(leftOver, currentPracticeStateService.getCurrentWord());
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 public interface WordRepetitionProgressRepository {
     List<WordRepetitionProgress> findByWordIndexAndWordSetId(int index, Integer sourceWordSetId);
@@ -19,4 +20,6 @@ public interface WordRepetitionProgressRepository {
     List<WordRepetitionProgress> findByWordIndexAndByWordSetIdAndByStatus(int index, int wordSetId, String name);
 
     List<WordRepetitionProgress> findAll();
+
+    List<WordRepetitionProgress> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId);
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
+import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -75,6 +76,16 @@ public class WordRepetitionProgressRepositoryImpl implements WordRepetitionProgr
     @Override
     public List<WordRepetitionProgress> findAll() {
         List<WordRepetitionProgressMapping> mappings = progressDao.findAll();
+        LinkedList<WordRepetitionProgress> result = new LinkedList<>();
+        for (WordRepetitionProgressMapping mapping : mappings) {
+            result.add(toDto(mapping));
+        }
+        return result;
+    }
+
+    @Override
+    public List<WordRepetitionProgress> findByStatusAndByWordSetId(WordSetProgressStatus status, int wordSetId) {
+        List<WordRepetitionProgressMapping> mappings = progressDao.findByStatusAndByWordSetId(status.name(), wordSetId);
         LinkedList<WordRepetitionProgress> result = new LinkedList<>();
         for (WordRepetitionProgressMapping mapping : mappings) {
             result.add(toDto(mapping));

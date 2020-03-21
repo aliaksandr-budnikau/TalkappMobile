@@ -16,6 +16,8 @@ public interface WordRepetitionProgressService {
 
     void createSomeIfNecessary(List<Word2Tokens> words);
 
+    List<Word2Tokens> getLeftOverOfWordSetByWordSetId(int wordSetId);
+
     List<WordSet> findFinishedWordSetsSortByUpdatedDate(long limit, int olderThenInHours);
 
     int getMaxWordSetSize();
