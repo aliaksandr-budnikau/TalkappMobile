@@ -7,8 +7,8 @@ android {
         applicationId "talkapp.org.talkappmobile"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 35
-        versionName "1.14.5"
+        versionCode 36
+        versionName "1.14.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
