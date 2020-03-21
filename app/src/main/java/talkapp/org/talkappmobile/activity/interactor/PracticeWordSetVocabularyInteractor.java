@@ -60,6 +60,8 @@ public class PracticeWordSetVocabularyInteractor {
         }
         Word2Tokens newWord2Token = new Word2Tokens(wordTranslation.getWord(), wordTranslation.getWord(), oldWord2Token.getSourceWordSetId());
         wordSetService.updateWord2Tokens(newWord2Token, oldWord2Token);
+        int index = currentPracticeStateService.getWordSet().getWords().indexOf(oldWord2Token);
+        currentPracticeStateService.getWordSet().getWords().set(index, newWord2Token);
         wordTranslationService.saveWordTranslations(asList(wordTranslation));
         wordRepetitionProgressService.updateSentenceIds(newWord2Token, oldWord2Token);
 
