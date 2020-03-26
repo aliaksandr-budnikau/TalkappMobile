@@ -26,6 +26,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
@@ -37,6 +38,8 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -44,9 +47,15 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
+    public static final String RUSSIAN = "russian";
+    public static final String AGE = "age";
+    public static final String ANNIVERSARY = "anniversary";
+    public static final String BIRTH = "birth";
+    public static final String ACE = "ace";
     private IPracticeWordSetPresenter practiceWordSetPresenter;
     private PracticeWordSetVocabularyPresenter practiceWordSetVocabularyPresenter;
     private WordSet wordSet;
+    private WordTranslationRepository wordTranslationRepository;
 
     @Before
     public void setUp() {
@@ -62,14 +71,15 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
                 return helper;
             }
         };
+        wordTranslationRepository = repositoryFactory.getWordTranslationRepository();
         ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         wordSet = new WordSet();
-        wordSet.setId(1000000 + 1);
+        wordSet.setId(-1);
 
-        Word2Tokens age = new Word2Tokens("ace", "ace", wordSet.getId());
-        Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", wordSet.getId());
-        Word2Tokens birth = new Word2Tokens("birth", "birth", wordSet.getId());
+        Word2Tokens age = new Word2Tokens(AGE, AGE, wordSet.getId());
+        Word2Tokens anniversary = new Word2Tokens(ANNIVERSARY, ANNIVERSARY, wordSet.getId());
+        Word2Tokens birth = new Word2Tokens(BIRTH, BIRTH, wordSet.getId());
 
         wordSet.setWords(asList(age, anniversary, birth));
         wordSet.setTopicId("topicId");
@@ -94,27 +104,42 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         practiceWordSetPresenter.initialise(wordSet);
         practiceWordSetPresenter.nextButtonClick();
         practiceWordSetVocabularyPresenter.initialise(wordSet);
-        WordTranslation wordTranslation = new WordTranslation();
-        String age = "age";
-        wordTranslation.setWord(age);
-        wordTranslation.setTokens(age);
-        wordTranslation.setLanguage("russian");
-        wordTranslation.setTranslation("возраст");
+
+        WordTranslation wordTranslation = getWordTranslation(AGE, RUSSIAN, ACE, "Туз");
         practiceWordSetVocabularyPresenter.updateCustomWordSet(0, wordTranslation);
         practiceWordSetPresenter.checkRightAnswerCommandRecognized();
         practiceWordSetPresenter.nextButtonClick();
+
+        wordTranslation = getWordTranslation(ANNIVERSARY, RUSSIAN, ACE, "Туз");
         practiceWordSetVocabularyPresenter.updateCustomWordSet(1, wordTranslation);
         practiceWordSetPresenter.checkRightAnswerCommandRecognized();
         practiceWordSetPresenter.nextButtonClick();
+
+        wordTranslation = getWordTranslation(BIRTH, RUSSIAN, ACE, "Туз");
         practiceWordSetVocabularyPresenter.updateCustomWordSet(2, wordTranslation);
         practiceWordSetPresenter.checkRightAnswerCommandRecognized();
         practiceWordSetPresenter.nextButtonClick();
+
         HashSet<String> words = new HashSet<>();
         for (Word2Tokens word : wordSet.getWords()) {
             words.add(word.getWord());
         }
-        assertTrue(words.contains(age));
+        assertTrue(words.contains(ACE));
         assertEquals(1, words.size());
+
+        assertNull(wordTranslationRepository.findByWordAndByLanguage(AGE, RUSSIAN));
+        assertNull(wordTranslationRepository.findByWordAndByLanguage(ANNIVERSARY, RUSSIAN));
+        assertNull(wordTranslationRepository.findByWordAndByLanguage(BIRTH, RUSSIAN));
+        assertNotNull(wordTranslationRepository.findByWordAndByLanguage(ACE, RUSSIAN));
+    }
+
+    private WordTranslation getWordTranslation(String word, String language, String newWord, String translation) {
+        WordTranslation wordTranslation = wordTranslationRepository.findByWordAndByLanguage(word, language);
+        wordTranslation.setWord(newWord);
+        wordTranslation.setTokens(newWord);
+        wordTranslation.setLanguage(RUSSIAN);
+        wordTranslation.setTranslation("возраст");
+        return wordTranslation;
     }
 
     @After

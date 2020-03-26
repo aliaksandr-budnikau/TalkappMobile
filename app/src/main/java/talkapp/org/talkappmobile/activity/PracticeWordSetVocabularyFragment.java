@@ -178,14 +178,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
             return;
         }
-
-        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
-        if (hasDuplicates(vocabulary, newPhrase) && !newPhrase.equals(origPhrase)) {
-            editVocabularyItemAlertDialog.setPhraseBoxError(warningDuplicateField);
-            editVocabularyItemAlertDialog.setTranslationBoxError(null);
-            return;
-        }
-
         eventBus.post(new PhraseTranslationInputPopupOkClickedEM(newPhrase, newTranslation));
     }
 
@@ -214,7 +206,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
         for (WordTranslation word : words) {
-            if (word.getWord().toLowerCase().equals(phrase.toLowerCase())) {
+            if (word.getWord().equals(phrase.toLowerCase())) {
                 return true;
             }
         }

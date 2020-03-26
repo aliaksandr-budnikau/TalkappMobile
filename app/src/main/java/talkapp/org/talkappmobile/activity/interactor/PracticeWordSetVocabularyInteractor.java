@@ -54,7 +54,7 @@ public class PracticeWordSetVocabularyInteractor {
 
     public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation, OnPracticeWordSetVocabularyListener listener) {
         Word2Tokens oldWord2Token = currentPracticeStateService.getAllWords().get(editedItemPosition);
-        if (oldWord2Token.getSourceWordSetId() < wordSetService.getCustomWordSetsStartsSince()) {
+        if (oldWord2Token.getSourceWordSetId() >= 0 && oldWord2Token.getSourceWordSetId() < wordSetService.getCustomWordSetsStartsSince()) {
             listener.onUpdateNotCustomWordSet();
             return;
         }

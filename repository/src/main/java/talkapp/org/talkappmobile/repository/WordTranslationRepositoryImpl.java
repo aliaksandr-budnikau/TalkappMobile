@@ -35,7 +35,7 @@ public class WordTranslationRepositoryImpl implements WordTranslationRepository 
         for (WordTranslation wordTranslation : wordTranslations) {
             WordTranslationMapping mapping = wordTranslationMapper.toMapping(wordTranslation);
             if (StringUtils.isEmpty(mapping.getId())) {
-                mapping.setId(valueOf(System.currentTimeMillis()));
+                mapping.setId(valueOf(System.nanoTime()));
             }
             mappings.add(mapping);
         }
