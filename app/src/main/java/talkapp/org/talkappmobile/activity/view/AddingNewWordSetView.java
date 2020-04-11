@@ -9,4 +9,8 @@ public interface AddingNewWordSetView {
     void onNewWordSuccessfullySubmitted(WordSet wordSet);
 
     void onSomeWordIsEmpty();
+
+    void onNewWordTranslationWasNotFound();
+
+    void onPhraseTranslationInputWasValidatedSuccessfully(String newPhrase, String newTranslation);
 }

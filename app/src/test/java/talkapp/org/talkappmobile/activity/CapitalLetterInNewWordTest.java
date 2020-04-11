@@ -38,7 +38,6 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -56,7 +55,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -70,7 +69,6 @@ public class CapitalLetterInNewWordTest {
     private EventBus eventBusMock = mock(EventBus.class);
     private WordSetVocabularyView wordSetVocabularyView;
     private ServiceFactory serviceFactory;
-    private AddingEditingNewWordSetsServiceImpl addingEditingNewWordSetsService;
     private RepositoryFactory repositoryFactory;
 
     @Before
@@ -89,8 +87,6 @@ public class CapitalLetterInNewWordTest {
             }
         };
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
-
-        addingEditingNewWordSetsService = new AddingEditingNewWordSetsServiceImpl(eventBusMock, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
 
         presenterFactory = new PresenterFactory();
         Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
@@ -189,7 +185,7 @@ public class CapitalLetterInNewWordTest {
         for (Word2Tokens word : words) {
             String[] split = word.getWord().split("\\|");
             if (split.length != 2) {
-                addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), null);
+                addingNewWordSetFragment.savePhraseTranslation(split[0].trim(), null);
                 continue;
             }
             WordTranslation wordTranslation = new WordTranslation();
@@ -199,7 +195,7 @@ public class CapitalLetterInNewWordTest {
             wordTranslation.setWord(split[0].trim());
             wordTranslation.setTokens(split[0].trim());
             serviceFactory.getWordTranslationService().saveWordTranslations(asList(wordTranslation));
-            addingEditingNewWordSetsService.saveNewWordTranslation(split[0].trim(), split[1].trim());
+            addingNewWordSetFragment.savePhraseTranslation(split[0].trim(), split[1].trim());
         }
 
         reset(eventBusMock);

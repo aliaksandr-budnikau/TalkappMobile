@@ -1,15 +1,20 @@
 package talkapp.org.talkappmobile.activity.interactor;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
+import talkapp.org.talkappmobile.model.NewWordWithTranslation;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
+import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -17,10 +22,12 @@ public class AddingNewWordSetInteractor {
     private static final String RUSSIAN_LANGUAGE = "russian";
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
+    private final DataServer dataServer;
 
-    public AddingNewWordSetInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService) {
+    public AddingNewWordSetInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService, DataServer dataServer) {
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;
+        this.dataServer = dataServer;
     }
 
     public void initialize(OnAddingNewWordSetListener listener) {
@@ -85,4 +92,22 @@ public class AddingNewWordSetInteractor {
     public void saveChangedDraft(List<WordTranslation> vocabulary) {
         wordSetService.save(new NewWordSetDraft(vocabulary));
     }
+
+    public void savePhraseTranslationInputOnPopup(String newPhrase, String newTranslation, OnAddingNewWordSetListener listener) {
+        NewWordWithTranslation normalizedPhrase = new NewWordWithTranslation(newPhrase, newTranslation);
+
+        WordTranslation result;
+        if (StringUtils.isEmpty(normalizedPhrase.getTranslation())) {
+            result = dataServer.findWordTranslationsByWordAndByLanguage(RUSSIAN_LANGUAGE, normalizedPhrase.getWord());
+            if (result == null) {
+                listener.onNewWordTranslationWasNotFound();
+                return;
+            }
+            wordTranslationService.saveWordTranslations(asList(result));
+        } else {
+            wordTranslationService.saveWordTranslations(normalizedPhrase.getWord(), normalizedPhrase.getTranslation());
+        }
+        listener.onPhraseTranslationInputWasValidatedSuccessfully(newPhrase, newTranslation);
+    }
+
 }

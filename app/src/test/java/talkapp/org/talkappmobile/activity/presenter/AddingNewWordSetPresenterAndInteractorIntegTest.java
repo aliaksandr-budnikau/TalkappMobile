@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.activity.PresenterFactory;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
@@ -42,7 +41,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -83,7 +82,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         verify(addingNewWordSetViewMock).onSomeWordIsEmpty();
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(addingNewWordSetViewMock, times(0)).onNewWordTranslationWasNotFound();
     }
 
     @NonNull
@@ -127,7 +126,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         verify(addingNewWordSetViewMock).onSomeWordIsEmpty();
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(addingNewWordSetViewMock, times(0)).onNewWordTranslationWasNotFound();
     }
 
     @Test
@@ -145,7 +144,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word10 = "fog";
         addingNewWordSetPresenter.submitNewWordSet(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false));
 
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(addingNewWordSetViewMock, times(0)).onNewWordTranslationWasNotFound();
 
         ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());
@@ -319,7 +318,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         }
         addingNewWordSetPresenter.submitNewWordSet(words);
 
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(addingNewWordSetViewMock, times(0)).onNewWordTranslationWasNotFound();
 
         ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
         verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());

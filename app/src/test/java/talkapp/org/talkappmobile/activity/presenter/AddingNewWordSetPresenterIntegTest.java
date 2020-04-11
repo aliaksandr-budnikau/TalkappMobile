@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.controller;
+package talkapp.org.talkappmobile.activity.presenter;
 
 import android.content.Context;
 
@@ -18,7 +18,6 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.PresenterFactory;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;

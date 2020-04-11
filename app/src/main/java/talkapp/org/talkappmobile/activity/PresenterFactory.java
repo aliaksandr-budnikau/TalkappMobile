@@ -100,7 +100,7 @@ public class PresenterFactory {
         ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(context);
         WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
-        AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService);
+        AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService, serviceFactory.getDataServer());
         return new AddingNewWordSetPresenter(view, addingNewWordSetInteractor);
     }
 }

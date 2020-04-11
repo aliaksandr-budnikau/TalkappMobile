@@ -1,10 +1,9 @@
-package talkapp.org.talkappmobile.activity.custom.controller;
+package talkapp.org.talkappmobile.activity.interactor;
 
 import android.content.Context;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import org.greenrobot.eventbus.EventBus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,29 +15,27 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
-import talkapp.org.talkappmobile.service.AddingEditingNewWordSetsService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
-public class WordSetVocabularyViewControllerTest {
-    private EventBus eventBus;
-    private AddingEditingNewWordSetsService service;
+public class AddingNewWordSetInteractorTest {
+    private AddingNewWordSetInteractor interactor;
     private ServiceFactory serviceFactory;
     private RepositoryFactory repositoryFactory;
 
@@ -57,43 +54,46 @@ public class WordSetVocabularyViewControllerTest {
             }
         };
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
-        eventBus = mock(EventBus.class);
-        service = new AddingEditingNewWordSetsServiceImpl(eventBus, serviceFactory.getDataServer(), serviceFactory.getWordTranslationService());
+        interactor = new AddingNewWordSetInteractor(null, serviceFactory.getWordTranslationService(), serviceFactory.getDataServer());
     }
 
     @Test
     public void submit_noSentencesForAnyWord() {
-        service.saveNewWordTranslation("  sdfds ", null);
+        OnAddingNewWordSetListener mock = mock(OnAddingNewWordSetListener.class);
+        interactor.savePhraseTranslationInputOnPopup("  sdfds ", null, mock);
 
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(1)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(mock, times(0)).onNewWordSuccessfullySubmitted(any(WordSet.class));
+        verify(mock, times(1)).onNewWordTranslationWasNotFound();
     }
 
     @Test
     public void submit_noSentencesForFewWord() {
-        service.saveNewWordTranslation("house", null);
+        OnAddingNewWordSetListener mock = mock(OnAddingNewWordSetListener.class);
+        interactor.savePhraseTranslationInputOnPopup("house", null, mock);
 
-        verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(mock, times(0)).onNewWordSuccessfullySubmitted(any(WordSet.class));
+        verify(mock, times(0)).onNewWordTranslationWasNotFound();
     }
 
     @Test
     public void submit_allSentencesWereFound() throws SQLException {
+        OnAddingNewWordSetListener mock = mock(OnAddingNewWordSetListener.class);
         String word0 = "house";
-        service.saveNewWordTranslation(word0, null);
+        interactor.savePhraseTranslationInputOnPopup(word0, null, mock);
 
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
-        verify(eventBus, times(1)).post(any(PhraseTranslationInputWasValidatedSuccessfullyEM.class));
+        verify(mock, times(0)).onNewWordTranslationWasNotFound();
+        verify(mock, times(1)).onPhraseTranslationInputWasValidatedSuccessfully(anyString(), nullable(String.class));
     }
 
 
     @Test
     public void submit_allSentencesWereFoundButThereFewExpressions() throws SQLException {
+        OnAddingNewWordSetListener mock = mock(OnAddingNewWordSetListener.class);
         String word = "make out";
         String translation = "разглядеть, различить, разбирать";
-        service.saveNewWordTranslation("  " + word + " ", "  " + translation + " ");
+        interactor.savePhraseTranslationInputOnPopup("  " + word + " ", "  " + translation + " ", mock);
 
-        verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
+        verify(mock, times(0)).onNewWordTranslationWasNotFound();
     }
 
     @After

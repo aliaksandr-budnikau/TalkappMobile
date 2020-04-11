@@ -18,8 +18,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -32,11 +30,7 @@ import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
-import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -46,8 +40,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(SpeakerBean.class)
     Speaker speaker;
-    @Bean
-    AddingEditingNewWordSetsController addingEditingNewWordSetsController;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
     @Bean
@@ -133,6 +125,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     }
 
     @Override
+    @UiThread
     public void onOkButtonClicked(String newPhrase, String newTranslation, String origPhrase, String origTranslation) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
@@ -154,29 +147,12 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
             return;
         }
-
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(newPhrase, newTranslation));
+        savePhraseTranslation(newPhrase, newTranslation);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(warningTranslationNotFound);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
-        editVocabularyItemAlertDialog.setPhraseBoxError(null);
-        editVocabularyItemAlertDialog.setTranslationBoxError(null);
-        wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
-        editVocabularyItemAlertDialog.cancel();
-        editVocabularyItemAlertDialog.dismiss();
-        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
-        addingEditingNewWordSetsController.onMessageEvent(event);
+    @Background
+    public void savePhraseTranslation(String newPhrase, String newTranslation) {
+        presenter.savePhraseTranslationInputOnPopup(newPhrase, newTranslation);
     }
 
     private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
@@ -214,5 +190,23 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     @UiThread
     public void onSomeWordIsEmpty() {
         Toast.makeText(getActivity(), warningEmptyFields, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    @UiThread
+    public void onNewWordTranslationWasNotFound() {
+        editVocabularyItemAlertDialog.setPhraseBoxError(null);
+        editVocabularyItemAlertDialog.setTranslationBoxError(warningTranslationNotFound);
+    }
+
+    @Override
+    @UiThread
+    public void onPhraseTranslationInputWasValidatedSuccessfully(String newPhrase, String newTranslation) {
+        editVocabularyItemAlertDialog.setPhraseBoxError(null);
+        editVocabularyItemAlertDialog.setTranslationBoxError(null);
+        wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
+        editVocabularyItemAlertDialog.cancel();
+        editVocabularyItemAlertDialog.dismiss();
+        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
     }
 }

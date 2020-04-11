@@ -18,7 +18,7 @@ import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenterTest;
 import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenterTest;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandlerTest;
 import talkapp.org.talkappmobile.component.impl.SpeakerBeanTest;
-import talkapp.org.talkappmobile.controller.AddingNewWordSetPresenterIntegTest;
+import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterIntegTest;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProviderTest;
 import talkapp.org.talkappmobile.service.impl.DataServerImplTest;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBeanTest;

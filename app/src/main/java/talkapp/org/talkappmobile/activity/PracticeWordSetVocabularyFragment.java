@@ -19,8 +19,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -29,14 +27,12 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
+import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
+import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
-import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
-import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
-import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
 import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -46,14 +42,12 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 
 @EFragment(value = R.layout.word_translations_layout)
 public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, WordSetVocabularyView.OnItemViewInteractionListener,
-        WordSetVocabularyItemAlertDialog.OnDialogInteractionListener {
+        WordSetVocabularyItemAlertDialog.OnDialogInteractionListener, AddingNewWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
     @Bean
     PresenterFactory presenterFactory;
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-    @Bean
-    AddingEditingNewWordSetsController addingEditingNewWordSetsController;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
     @EventBusGreenRobot
@@ -82,6 +76,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     private WaitingForProgressBarManager waitingForProgressBarManager;
     private PracticeWordSetVocabularyPresenter presenter;
+    private AddingNewWordSetPresenter addingNewWordSetPresenter;
 
     public static PracticeWordSetVocabularyFragment newInstance(WordSet wordSet) {
         PracticeWordSetVocabularyFragment fragment = new PracticeWordSetVocabularyFragment_();
@@ -101,8 +96,9 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create(this);
+        presenter = presenterFactory.create((PracticeWordSetVocabularyView) this);
         presenter.initialise(wordSet);
+        addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this);
     }
 
     @Override
@@ -164,6 +160,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     }
 
     @Override
+    @UiThread
     public void onOkButtonClicked(String newPhrase, String newTranslation, String origPhrase, String origTranslation) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
@@ -178,17 +175,40 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
             editVocabularyItemAlertDialog.setTranslationBoxError(null);
             return;
         }
-        eventBus.post(new PhraseTranslationInputPopupOkClickedEM(newPhrase, newTranslation));
+
+        savePhraseTranslation(newPhrase, newTranslation);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordTranslationWasNotFoundEM event) {
+    @Background
+    public void savePhraseTranslation(String newPhrase, String newTranslation) {
+        addingNewWordSetPresenter.savePhraseTranslationInputOnPopup(newPhrase, newTranslation);
+    }
+
+    @Override
+    public void onNewWordSetDraftLoaded(WordTranslation[] words) {
+
+    }
+
+    @Override
+    public void onNewWordSuccessfullySubmitted(WordSet wordSet) {
+
+    }
+
+    @Override
+    public void onSomeWordIsEmpty() {
+
+    }
+
+    @Override
+    @UiThread
+    public void onNewWordTranslationWasNotFound() {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(warningTranslationNotFound);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(PhraseTranslationInputWasValidatedSuccessfullyEM event) {
+    @Override
+    @UiThread
+    public void onPhraseTranslationInputWasValidatedSuccessfully(String newPhrase, String newTranslation) {
         editVocabularyItemAlertDialog.setPhraseBoxError(null);
         editVocabularyItemAlertDialog.setTranslationBoxError(null);
         int editedItemPosition = wordSetVocabularyView.getEditedItemPosition();
@@ -197,19 +217,5 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
         presenter.updateCustomWordSet(editedItemPosition, editedItem);
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(PhraseTranslationInputPopupOkClickedEM event) {
-        addingEditingNewWordSetsController.onMessageEvent(event);
-    }
-
-    private boolean hasDuplicates(List<WordTranslation> words, String phrase) {
-        for (WordTranslation word : words) {
-            if (word.getWord().equals(phrase.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
     }
 }
