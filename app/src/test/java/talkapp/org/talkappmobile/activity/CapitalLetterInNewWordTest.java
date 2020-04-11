@@ -14,7 +14,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -31,13 +30,12 @@ import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialo
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl;
@@ -57,7 +55,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsServiceImpl.RUSSIAN_LANGUAGE;
 
@@ -129,6 +126,7 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "mainForm", mock(View.class));
+        Whitebox.setInternalState(addingNewWordSetFragment, "presenterFactory", presenterFactory);
         wordSetVocabularyView = mock(WordSetVocabularyView.class);
         Whitebox.setInternalState(addingNewWordSetFragment, "wordSetVocabularyView", wordSetVocabularyView);
 
@@ -209,9 +207,6 @@ public class CapitalLetterInNewWordTest {
             addingNewWordSetFragment.onButtonSubmitClick();
         } catch (NullPointerException e) {
         }
-        ArgumentCaptor<AddNewWordSetButtonSubmitClickedEM> objectArgumentCaptor = ArgumentCaptor.forClass(AddNewWordSetButtonSubmitClickedEM.class);
-        verify(eventBusMock).post(objectArgumentCaptor.capture());
-        addingNewWordSetFragment.onMessageEvent(objectArgumentCaptor.getValue());
 
         WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());

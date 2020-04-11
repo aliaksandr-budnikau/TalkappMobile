@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,18 +20,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
+import talkapp.org.talkappmobile.activity.PresenterFactory;
+import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
 import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
-import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.repository.WordSetMapper;
-import talkapp.org.talkappmobile.repository.WordTranslationMapper;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
@@ -51,19 +47,14 @@ import static talkapp.org.talkappmobile.service.impl.AddingEditingNewWordSetsSer
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class AddingNewWordSetPresenterAndInteractorIntegTest {
-    private WordSetMapper mapper;
     private EventBus eventBus;
-    private AddingNewWordSetFragmentController controller;
-    private WordTranslationMapper wordTranslationMapper;
     private ServiceFactory serviceFactory;
     private RepositoryFactory repositoryFactory;
+    private AddingNewWordSetView addingNewWordSetViewMock;
+    private AddingNewWordSetPresenter addingNewWordSetPresenter;
 
     @Before
     public void setUp() {
-        ObjectMapper mapper = new ObjectMapper();
-        this.mapper = new WordSetMapper(mapper);
-        this.wordTranslationMapper = new WordTranslationMapper();
-
         repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
@@ -79,15 +70,17 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         eventBus = mock(EventBus.class);
-        controller = new AddingNewWordSetFragmentController(eventBus, serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactory();
+        addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
+        addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }
 
     @Test
     public void submit_empty12() {
         LinkedList<WordTranslation> wordTranslations = getWordTranslations(asList("", "", "", "", "", "", "", "", "", "", "", ""), false);
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(wordTranslations));
+        addingNewWordSetPresenter.submitNewWordSet(wordTranslations);
 
-        verify(eventBus).post(any(SomeWordIsEmptyEM.class));
+        verify(addingNewWordSetViewMock).onSomeWordIsEmpty();
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -129,9 +122,9 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     @Test
     public void submit_spaces12() {
         LinkedList<WordTranslation> wordTranslations = getWordTranslations(asList("   ", "  ", "   ", "  ", "    ", "    ", "    ", "   ", "  ", "    ", "   ", " "), false);
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(wordTranslations));
+        addingNewWordSetPresenter.submitNewWordSet(wordTranslations);
 
-        verify(eventBus).post(any(SomeWordIsEmptyEM.class));
+        verify(addingNewWordSetViewMock).onSomeWordIsEmpty();
 
         verify(eventBus, times(0)).post(any(NewWordSuccessfullySubmittedEM.class));
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
@@ -150,14 +143,15 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word8 = "fork";
         String word9 = "pillow";
         String word10 = "fog";
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false)));
+        addingNewWordSetPresenter.submitNewWordSet(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  ", word3 + "  ", "  " + word4 + " ", "   " + word5 + " ", " " + word6 + "   ", "  " + word7 + "  ", " " + word8 + "  ", "  " + word9 + "  ", "  " + word10 + " "), false));
 
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
-        ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(1)).post(wordSetCaptor.capture());
+        ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
+        verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());
+        WordSet wordSet = wordSetCaptor.getValue();
+        reset(addingNewWordSetViewMock);
 
-        WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -222,12 +216,13 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word1 = "fox";
         String word2 = "door";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false)));
+        addingNewWordSetPresenter.submitNewWordSet(getWordTranslations(asList("  " + word0 + " ", "  " + word1, " " + word2 + "  "), false));
 
 
-        ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(1)).post(wordSetCaptor.capture());
-        WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
+        ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
+        verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());
+        WordSet wordSet = wordSetCaptor.getValue();
+        reset(addingNewWordSetViewMock);
         assertEquals(word0, wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());
@@ -246,11 +241,12 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         String word3 = "earthly";
         String word4 = "book";
 
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false)));
+        addingNewWordSetPresenter.submitNewWordSet(getWordTranslations(asList("  " + word3 + " ", "  " + word4), false));
 
-        wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(1)).post(wordSetCaptor.capture());
-        wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
+        wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
+        verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());
+        wordSet = wordSetCaptor.getValue();
+        reset(addingNewWordSetViewMock);
         assertEquals(word3, wordSet.getWords().get(0).getWord());
         assertEquals(word4, wordSet.getWords().get(1).getWord());
 
@@ -321,14 +317,15 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
             wordTranslation.setTokens(word.getWord().trim());
             serviceFactory.getWordTranslationService().saveWordTranslations(asList(wordTranslation));
         }
-        controller.handle(new AddNewWordSetButtonSubmitClickedEM(words));
+        addingNewWordSetPresenter.submitNewWordSet(words);
 
         verify(eventBus, times(0)).post(any(NewWordTranslationWasNotFoundEM.class));
 
-        ArgumentCaptor<NewWordSuccessfullySubmittedEM> wordSetCaptor = ArgumentCaptor.forClass(NewWordSuccessfullySubmittedEM.class);
-        verify(eventBus, times(1)).post(wordSetCaptor.capture());
+        ArgumentCaptor<WordSet> wordSetCaptor = ArgumentCaptor.forClass(WordSet.class);
+        verify(addingNewWordSetViewMock).onNewWordSuccessfullySubmitted(wordSetCaptor.capture());
+        WordSet wordSet = wordSetCaptor.getValue();
+        reset(addingNewWordSetViewMock);
 
-        WordSet wordSet = getClass(wordSetCaptor, NewWordSuccessfullySubmittedEM.class).getWordSet();
         assertEquals(word0.split("\\|")[0], wordSet.getWords().get(0).getWord());
         assertEquals(word1, wordSet.getWords().get(1).getWord());
         assertEquals(word2, wordSet.getWords().get(2).getWord());

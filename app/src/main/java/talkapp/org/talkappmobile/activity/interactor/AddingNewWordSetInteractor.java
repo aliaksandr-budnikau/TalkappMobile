@@ -1,54 +1,37 @@
-package talkapp.org.talkappmobile.controller;
-
-import android.support.annotation.NonNull;
-
-import org.greenrobot.eventbus.EventBus;
+package talkapp.org.talkappmobile.activity.interactor;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
-import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
-import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
-import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
+import talkapp.org.talkappmobile.activity.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class AddingNewWordSetFragmentController {
-
+public class AddingNewWordSetInteractor {
     private static final String RUSSIAN_LANGUAGE = "russian";
-    private final EventBus eventBus;
     private final WordSetService wordSetService;
     private final WordTranslationService wordTranslationService;
 
-    public AddingNewWordSetFragmentController(@NonNull EventBus eventBus, @NonNull ServiceFactory factory) {
-        this.eventBus = eventBus;
-        this.wordTranslationService = factory.getWordTranslationService();
-        this.wordSetService = factory.getWordSetExperienceRepository();
+    public AddingNewWordSetInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService) {
+        this.wordSetService = wordSetService;
+        this.wordTranslationService = wordTranslationService;
     }
 
-    public void handle(AddingNewWordSetFragmentGotReadyEM event) {
+    public void initialize(OnAddingNewWordSetListener listener) {
         NewWordSetDraft newWordSetDraft = wordSetService.getNewWordSetDraft();
-        eventBus.post(new NewWordSetDraftLoadedEM(newWordSetDraft));
+        WordTranslation[] words = newWordSetDraft.getWordTranslations().toArray(new WordTranslation[0]);
+        listener.onNewWordSetDraftLoaded(words);
     }
 
-    public void handle(NewWordSetDraftWasChangedEM event) {
-        wordSetService.save(new NewWordSetDraft(event.getWordTranslations()));
-    }
-
-    public void handle(AddNewWordSetButtonSubmitClickedEM event) {
-        List<WordTranslation> words = event.getWordTranslations();
+    public void submitNewWordSet(List<WordTranslation> words, OnAddingNewWordSetListener listener) {
         List<WordTranslation> normalizedWords = normalizeAll(words);
-        if (isAnyEmpty(normalizedWords)) {
+        if (isAnyEmpty(normalizedWords, listener)) {
             return;
         }
         List<WordTranslation> translations = new LinkedList<>();
@@ -69,17 +52,7 @@ public class AddingNewWordSetFragmentController {
         }
 
         WordSet wordSet = wordSetService.createNewCustomWordSet(translations);
-        eventBus.post(new NewWordSuccessfullySubmittedEM(wordSet));
-    }
-
-    private boolean isAnyEmpty(List<WordTranslation> words) {
-        for (int i = 0; i < words.size(); i++) {
-            if (isEmpty(words.get(i).getWord())) {
-                eventBus.post(new SomeWordIsEmptyEM());
-                return true;
-            }
-        }
-        return false;
+        listener.onNewWordSuccessfullySubmitted(wordSet);
     }
 
     private List<WordTranslation> normalizeAll(List<WordTranslation> inputs) {
@@ -97,5 +70,19 @@ public class AddingNewWordSetFragmentController {
             }
         }
         return inputs;
+    }
+
+    private boolean isAnyEmpty(List<WordTranslation> words, OnAddingNewWordSetListener listener) {
+        for (int i = 0; i < words.size(); i++) {
+            if (isEmpty(words.get(i).getWord())) {
+                listener.onSomeWordIsEmpty();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void saveChangedDraft(List<WordTranslation> vocabulary) {
+        wordSetService.save(new NewWordSetDraft(vocabulary));
     }
 }

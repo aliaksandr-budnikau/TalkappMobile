@@ -13,7 +13,6 @@ import java.util.List;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
-import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -36,7 +35,7 @@ public class AddingNewWordSetFragmentTest {
         Whitebox.setInternalState(addingNewWordSetFragment, "wordSetVocabularyView", wordSetVocabularyView);
         Whitebox.setInternalState(addingNewWordSetFragment, "eventBus", testHelper.getEventBusMock());
 
-        addingNewWordSetFragment.onMessageEvent(new NewWordSuccessfullySubmittedEM(new WordSet()));
+        addingNewWordSetFragment.onNewWordSuccessfullySubmitted(mock(WordSet.class));
 
         ArgumentCaptor<WordSetVocabularyView.VocabularyAdapter> captor = ArgumentCaptor.forClass(WordSetVocabularyView.VocabularyAdapter.class);
         verify(wordSetVocabularyView).setAdapter(captor.capture());

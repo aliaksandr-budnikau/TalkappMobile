@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.view.View;
@@ -8,9 +9,11 @@ import android.widget.Toast;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 import org.apache.commons.lang3.StringUtils;
@@ -25,25 +28,20 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
+import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
+import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.controller.AddingEditingNewWordSetsController;
-import talkapp.org.talkappmobile.controller.AddingNewWordSetFragmentController;
-import talkapp.org.talkappmobile.events.AddNewWordSetButtonSubmitClickedEM;
-import talkapp.org.talkappmobile.events.AddingNewWordSetFragmentGotReadyEM;
-import talkapp.org.talkappmobile.events.NewWordSetDraftLoadedEM;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
-import talkapp.org.talkappmobile.events.NewWordSuccessfullySubmittedEM;
 import talkapp.org.talkappmobile.events.NewWordTranslationWasNotFoundEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputPopupOkClickedEM;
 import talkapp.org.talkappmobile.events.PhraseTranslationInputWasValidatedSuccessfullyEM;
-import talkapp.org.talkappmobile.events.SomeWordIsEmptyEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
-public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener, WordSetVocabularyItemAlertDialog.OnDialogInteractionListener {
+public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener, WordSetVocabularyItemAlertDialog.OnDialogInteractionListener, AddingNewWordSetView {
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(SpeakerBean.class)
@@ -52,6 +50,8 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     AddingEditingNewWordSetsController addingEditingNewWordSetsController;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
+    @Bean
+    PresenterFactory presenterFactory;
     @ViewById(R.id.wordSetVocabularyView)
     WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -70,50 +70,27 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
     String warningSentencesNotFound;
+    AddingNewWordSetPresenter presenter;
     private WaitingForProgressBarManager waitingForProgressBarManager;
-    private AddingNewWordSetFragmentController controller;
 
     @AfterViews
     public void init() {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
-        controller = new AddingNewWordSetFragmentController(eventBus, ServiceFactoryBean.getInstance(getActivity()));
-        eventBus.post(new AddingNewWordSetFragmentGotReadyEM());
+        initPresenter();
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(AddingNewWordSetFragmentGotReadyEM event) {
-        controller.handle(event);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSetDraftLoadedEM event) {
-        WordTranslation[] words = event.getNewWordSetDraft().getWordTranslations().toArray(new WordTranslation[0]);
-        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
-        wordSetVocabularyView.setOnItemViewInteractionListener(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(SomeWordIsEmptyEM event) {
-        Toast.makeText(getActivity(), warningEmptyFields, Toast.LENGTH_LONG).show();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NewWordSuccessfullySubmittedEM event) {
-        wordSetVocabularyView.resetVocabulary();
-        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
-        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
-        eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
-
-        this.getActivity().recreate();
-        startWordSetActivity(event.getWordSet());
+    @Background
+    public void initPresenter() {
+        presenter = presenterFactory.create(this);
+        presenter.initialize();
     }
 
     @Click(R.id.buttonSubmit)
     public void onButtonSubmitClick() {
         try {
             waitingForProgressBarManager.showProgressBar();
-            eventBus.post(new AddNewWordSetButtonSubmitClickedEM(wordSetVocabularyView.getVocabulary()));
+            presenter.submitNewWordSet(wordSetVocabularyView.getVocabulary());
         } finally {
             waitingForProgressBarManager.hideProgressBar();
         }
@@ -136,19 +113,9 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     public void onDestroyView() {
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
         if (vocabulary != null) {
-            eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
+            presenter.saveChangedDraft(vocabulary);
         }
         super.onDestroyView();
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(NewWordSetDraftWasChangedEM event) {
-        controller.handle(event);
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(AddNewWordSetButtonSubmitClickedEM event) {
-        controller.handle(event);
     }
 
     @Override
@@ -220,5 +187,32 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
             }
         }
         return false;
+    }
+
+    @UiThread
+    public void onNewWordSetDraftLoaded(WordTranslation[] words) {
+        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
+        wordSetVocabularyView.setOnItemViewInteractionListener(this);
+    }
+
+    @Override
+    @UiThread
+    public void onNewWordSuccessfullySubmitted(WordSet wordSet) {
+        wordSetVocabularyView.resetVocabulary();
+        List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
+        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
+        eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
+
+        Activity activity = this.getActivity();
+        if (activity != null) {
+            activity.recreate();
+        }
+        startWordSetActivity(wordSet);
+    }
+
+    @Override
+    @UiThread
+    public void onSomeWordIsEmpty() {
+        Toast.makeText(getActivity(), warningEmptyFields, Toast.LENGTH_LONG).show();
     }
 }

@@ -6,6 +6,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import talkapp.org.talkappmobile.activity.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.PracticeWordSetVocabularyInteractor;
@@ -14,6 +15,7 @@ import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionPracticeWord
 import talkapp.org.talkappmobile.activity.interactor.impl.StrategySwitcherDecorator;
 import talkapp.org.talkappmobile.activity.interactor.impl.StudyingPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.activity.interactor.impl.UserExperienceDecorator;
+import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetViewStrategy;
@@ -22,6 +24,7 @@ import talkapp.org.talkappmobile.activity.presenter.StatisticActivityPresenter;
 import talkapp.org.talkappmobile.activity.presenter.decorator.ButtonsDisablingDecorator;
 import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.activity.presenter.decorator.PleaseWaitProgressBarDecorator;
+import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
@@ -35,6 +38,8 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
+import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
 import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
 import talkapp.org.talkappmobile.service.impl.LoggerBean;
@@ -89,5 +94,13 @@ public class PresenterFactory {
     public StatisticActivityPresenter create(StatisticActivityView view) {
         StatisticActivityInteractor interactor = new StatisticActivityInteractor(ServiceFactoryBean.getInstance(context).getUserExpService());
         return new StatisticActivityPresenter(view, interactor);
+    }
+
+    public AddingNewWordSetPresenter create(AddingNewWordSetView view) {
+        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(context);
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
+        AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService);
+        return new AddingNewWordSetPresenter(view, addingNewWordSetInteractor);
     }
 }
