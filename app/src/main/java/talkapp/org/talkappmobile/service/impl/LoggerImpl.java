@@ -2,13 +2,11 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.util.Log;
 
-import org.androidannotations.annotations.EBean;
 import talkapp.org.talkappmobile.service.Logger;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-@EBean
-public class LoggerBean implements Logger {
+public class LoggerImpl implements Logger {
 
     @Override
     public void i(String tag, String message, Object... args) {

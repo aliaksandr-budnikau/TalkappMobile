@@ -1,12 +1,13 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -32,8 +33,6 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
@@ -44,12 +43,11 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
@@ -78,7 +76,7 @@ public class ChangeSentenceTest {
 
     @Before
     public void setup() {
-        LoggerBean logger = new LoggerBean();
+        LoggerImpl logger = new LoggerImpl();
         ObjectMapper mapper = new ObjectMapper();
         testHelper = new TestHelper();
         repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
@@ -96,10 +94,6 @@ public class ChangeSentenceTest {
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         PresenterFactory presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
-        Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "logger", logger);
-        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         wordSet = createWordSet(-1, "age");

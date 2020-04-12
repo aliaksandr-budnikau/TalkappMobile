@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.activity.interactor.impl;
+package talkapp.org.talkappmobile.service.impl;
 
 import java.util.Comparator;
 

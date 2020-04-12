@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.activity.interactor.impl.WordSetComparator;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;

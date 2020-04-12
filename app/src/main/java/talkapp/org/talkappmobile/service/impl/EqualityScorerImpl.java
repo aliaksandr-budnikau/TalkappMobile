@@ -2,17 +2,16 @@ package talkapp.org.talkappmobile.service.impl;
 
 import androidx.annotation.Nullable;
 
-import org.androidannotations.annotations.EBean;
 import org.apache.commons.lang3.StringUtils;
-import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.EqualityScorer;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-@EBean(scope = EBean.Scope.Singleton)
-public class EqualityScorerBean implements EqualityScorer {
+import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.service.EqualityScorer;
+
+public class EqualityScorerImpl implements EqualityScorer {
 
     public static final String REPLACEMENT = " ";
     public static final String REGEX = "[^A-Za-z0-9 ]";

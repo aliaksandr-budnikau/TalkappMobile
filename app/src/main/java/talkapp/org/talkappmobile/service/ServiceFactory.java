@@ -7,6 +7,14 @@ import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 public interface ServiceFactory {
     RequestExecutor getRequestExecutor();
 
+    AudioStuffFactory getAudioStuffFactory();
+
+    TextUtils getTextUtils();
+
+    EqualityScorer getEqualityScorer();
+
+    Logger getLogger();
+
     WordSetService getWordSetExperienceRepository();
 
     WordRepetitionProgressService getWordRepetitionProgressService();

@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import org.androidannotations.annotations.EBean;
-
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -12,7 +10,6 @@ import javax.net.ssl.SSLException;
 import retrofit2.Call;
 import retrofit2.Response;
 
-@EBean(scope = EBean.Scope.Singleton)
 public class RequestExecutor {
 
     public <T> Response<T> execute(Call<T> call) {

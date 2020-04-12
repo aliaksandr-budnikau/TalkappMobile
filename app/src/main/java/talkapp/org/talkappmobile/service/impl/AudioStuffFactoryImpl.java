@@ -2,14 +2,12 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.media.MediaPlayer;
 
-import org.androidannotations.annotations.EBean;
 import talkapp.org.talkappmobile.service.AudioStuffFactory;
 
 /**
  * @author Budnikau Aliaksandr
  */
-@EBean(scope = EBean.Scope.Singleton)
-public class AudioStuffFactoryBean implements AudioStuffFactory {
+public class AudioStuffFactoryImpl implements AudioStuffFactory {
 
     @Override
     public MediaPlayer createMediaPlayer() {

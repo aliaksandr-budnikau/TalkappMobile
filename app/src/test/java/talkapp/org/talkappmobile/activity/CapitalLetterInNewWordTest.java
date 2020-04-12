@@ -38,11 +38,8 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.text.TextUtils.isEmpty;
@@ -73,7 +70,7 @@ public class CapitalLetterInNewWordTest {
 
     @Before
     public void setup() {
-        LoggerBean logger = new LoggerBean();
+        LoggerImpl logger = new LoggerImpl();
         repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
             private DatabaseHelper helper;
 
@@ -89,10 +86,6 @@ public class CapitalLetterInNewWordTest {
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
         presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
-        Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "logger", logger);
-        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         practiceWordSetFragment = new PracticeWordSetFragment();

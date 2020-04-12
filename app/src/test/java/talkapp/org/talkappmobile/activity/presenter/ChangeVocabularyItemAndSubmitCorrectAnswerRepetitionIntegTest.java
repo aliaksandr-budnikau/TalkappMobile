@@ -32,9 +32,9 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
+import talkapp.org.talkappmobile.service.impl.EqualityScorerImpl;
+import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
@@ -137,10 +137,10 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
         wordSet.setStatus(WordSetProgressStatus.FINISHED);
         PresenterFactory presenterFactory = new PresenterFactory();
 
-        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerBean());
+        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerImpl());
         Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "logger", new LoggerBean());
-        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryBean());
+        Whitebox.setInternalState(presenterFactory, "logger", new LoggerImpl());
+        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryImpl());
 
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), mock(Context.class), true);
         practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));

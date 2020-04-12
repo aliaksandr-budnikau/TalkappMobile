@@ -3,37 +3,35 @@ package talkapp.org.talkappmobile.activity.custom;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.UiThread;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
+import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
+import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.PracticeHalfFinishedEM;
 import talkapp.org.talkappmobile.events.RightAnswerTouchedEM;
 import talkapp.org.talkappmobile.events.RightAnswerUntouchedEM;
-import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
-
-import talkapp.org.talkappmobile.activity.custom.interactor.RightAnswerTextViewInteractor;
-import talkapp.org.talkappmobile.activity.custom.presenter.RightAnswerTextViewPresenter;
-import talkapp.org.talkappmobile.activity.custom.view.RightAnswerTextViewView;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EView
 public class RightAnswerTextView extends AppCompatTextView implements RightAnswerTextViewView {
-    @Bean(TextUtilsImpl.class)
-    TextUtils textUtils;
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -54,7 +52,8 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
 
     @AfterInject
     public void init() {
-        RightAnswerTextViewInteractor interacto = new RightAnswerTextViewInteractor(textUtils);
+        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(getContext());
+        RightAnswerTextViewInteractor interacto = new RightAnswerTextViewInteractor(serviceFactory.getTextUtils());
         presenter = new RightAnswerTextViewPresenter(interacto, this);
     }
 

@@ -1,8 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import org.androidannotations.annotations.EBean;
 import org.apache.commons.lang3.StringUtils;
-import talkapp.org.talkappmobile.service.TextUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,12 +9,13 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import talkapp.org.talkappmobile.service.TextUtils;
+
 import static java.util.Arrays.asList;
 
 /**
  * @author Budnikau Aliaksandr
  */
-@EBean
 public class TextUtilsImpl implements TextUtils {
 
     public static final String[] WORDS = new String[]{"a", "an", "the", "um", "uh", "hey", "yeah",

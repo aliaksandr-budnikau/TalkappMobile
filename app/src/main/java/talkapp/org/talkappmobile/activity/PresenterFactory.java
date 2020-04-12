@@ -2,7 +2,6 @@ package talkapp.org.talkappmobile.activity;
 
 import android.content.Context;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
@@ -29,50 +28,35 @@ import talkapp.org.talkappmobile.activity.view.MainActivityView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.activity.view.StatisticActivityView;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.EqualityScorer;
-import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class PresenterFactory {
-    @Bean(EqualityScorerBean.class)
-    EqualityScorer equalityScorer;
-    @Bean(TextUtilsImpl.class)
-    TextUtils textUtils;
-    @Bean(LoggerBean.class)
-    Logger logger;
-    @Bean(AudioStuffFactoryBean.class)
-    AudioStuffFactory audioStuffFactory;
     @RootContext
     Context context;
 
     public IPracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
-        WordRepetitionProgressService progressService = ServiceFactoryBean.getInstance(context).getWordRepetitionProgressService();
-        SentenceService sentenceService = ServiceFactoryBean.getInstance(context).getSentenceService(null);
-        RefereeService refereeService = new RefereeServiceImpl(equalityScorer);
+        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(context);
+        WordRepetitionProgressService progressService = serviceFactory.getWordRepetitionProgressService();
+        SentenceService sentenceService = serviceFactory.getSentenceService(null);
+        RefereeService refereeService = new RefereeServiceImpl(serviceFactory.getEqualityScorer());
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view);
-        CurrentPracticeStateService stateService = ServiceFactoryBean.getInstance(context).getCurrentPracticeStateService();
-        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, logger, ServiceFactoryBean.getInstance(context).getWordTranslationService(), stateService, progressService, context, ServiceFactoryBean.getInstance(context).getSentenceProvider(), audioStuffFactory);
+        CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
+        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), serviceFactory.getWordTranslationService(), stateService, progressService, context, serviceFactory.getSentenceProvider(), serviceFactory.getAudioStuffFactory());
         StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, progressService, stateService);
-        PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, ServiceFactoryBean.getInstance(context).getUserExpService(), stateService, ServiceFactoryBean.getInstance(context).getWordRepetitionProgressService());
+        PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, logger, progressService, ServiceFactoryBean.getInstance(context).getSentenceProvider(), context, stateService, audioStuffFactory);
+            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), progressService, serviceFactory.getSentenceProvider(), context, stateService, serviceFactory.getAudioStuffFactory());
             strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, progressService, stateService);
-            interactor = new UserExperienceDecorator(strategySwitcherDecorator, ServiceFactoryBean.getInstance(context).getUserExpService(), stateService, ServiceFactoryBean.getInstance(context).getWordRepetitionProgressService());
+            interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
         }
         PracticeWordSetPresenter presenter = new PracticeWordSetPresenter(interactor, viewStrategy);
 

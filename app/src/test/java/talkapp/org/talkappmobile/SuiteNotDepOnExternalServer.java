@@ -21,7 +21,7 @@ import talkapp.org.talkappmobile.component.impl.SpeakerBeanTest;
 import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenterIntegTest;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProviderTest;
 import talkapp.org.talkappmobile.service.impl.DataServerImplTest;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBeanTest;
+import talkapp.org.talkappmobile.service.impl.EqualityScorerImplTest;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImplTest;
 import talkapp.org.talkappmobile.service.impl.RequestExecutorTest;
 import talkapp.org.talkappmobile.service.impl.SentenceServiceImplTest;
@@ -46,7 +46,7 @@ import talkapp.org.talkappmobile.service.impl.WordSetServiceImplTest;
         MainActivityDefaultFragmentInteractorTest.class,
         RefereeServiceImplTest.class,
         SentenceServiceImplTest.class,
-        EqualityScorerBeanTest.class,
+        EqualityScorerImplTest.class,
         TextUtilsImplTest.class,
         WordRepetitionProgressServiceImplTest.class,
         WordSetServiceImplTest.class,

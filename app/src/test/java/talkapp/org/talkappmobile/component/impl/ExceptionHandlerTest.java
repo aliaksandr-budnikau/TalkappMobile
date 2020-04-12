@@ -24,7 +24,7 @@ import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.impl.DataServerImpl;
 import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.RequestExecutor;
 import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
 
@@ -53,13 +53,13 @@ public class ExceptionHandlerTest {
 
     @Before
     public void setup() {
-        LoggerBean loggerBean = mock(LoggerBean.class);
+        LoggerImpl loggerImpl = mock(LoggerImpl.class);
         RequestExecutor requestExecutor = new RequestExecutor();
         server = new DataServerImpl(null, gitHubRestClient, requestExecutor);
         TopicRepositoryImpl topicRepository = new TopicRepositoryImpl(topicDao);
         topicService = new CachedTopicServiceDecorator(new TopicServiceImpl(topicRepository, server), topicRepository);
 
-        interactor = new ExceptionHandlerInteractor(loggerBean);
+        interactor = new ExceptionHandlerInteractor(loggerImpl);
         gitHubRestClient = mock(GitHubRestClient.class);
         Whitebox.setInternalState(server, "gitHubRestClient", gitHubRestClient);
     }

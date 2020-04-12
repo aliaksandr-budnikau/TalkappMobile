@@ -8,9 +8,9 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static org.junit.Assert.assertEquals;
 
-public class EqualityScorerBeanTest {
+public class EqualityScorerImplTest {
 
-    private EqualityScorerBean scorer = new EqualityScorerBean();
+    private EqualityScorerImpl scorer = new EqualityScorerImpl();
     private Word2Tokens abandon;
     private Word2Tokens indigenous;
     private Word2Tokens specie;

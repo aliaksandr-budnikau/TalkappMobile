@@ -38,9 +38,9 @@ import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryBean;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerBean;
-import talkapp.org.talkappmobile.service.impl.LoggerBean;
+import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
+import talkapp.org.talkappmobile.service.impl.EqualityScorerImpl;
+import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
@@ -73,7 +73,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         view = mock(PracticeWordSetView.class);
         context = mock(Context.class);
 
-        LoggerBean logger = new LoggerBean();
+        LoggerImpl logger = new LoggerImpl();
 
         repositoryFactory = new RepositoryFactoryImpl(context) {
             private DatabaseHelper helper;
@@ -89,8 +89,8 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         };
         serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
 
-        repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerBean()),
-                logger, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryBean());
+        repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerImpl()),
+                logger, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryImpl());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, serviceFactory.getUserExpService(), serviceFactory.getCurrentPracticeStateService(), serviceFactory.getWordRepetitionProgressService());
     }
 

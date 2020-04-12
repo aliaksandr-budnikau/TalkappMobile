@@ -13,14 +13,18 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
+import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.EqualityScorer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -47,6 +51,10 @@ public class ServiceFactoryBean implements ServiceFactory {
     private Retrofit gitHubRetrofit;
     private DataServer backendServer;
     private GitHubRestClient gitHubRestClient;
+    private AudioStuffFactory audioStuffFactory;
+    private EqualityScorer equalityScorer;
+    private Logger logger;
+    private TextUtils textUtils;
 
     private ServiceFactoryBean(RepositoryFactory repositoryFactory) {
         this.repositoryFactory = repositoryFactory;
@@ -91,6 +99,42 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     public void setRequestExecutor(RequestExecutor requestExecutor) {
         this.requestExecutor = requestExecutor;
+    }
+
+    @Override
+    public AudioStuffFactory getAudioStuffFactory() {
+        if (audioStuffFactory != null) {
+            return audioStuffFactory;
+        }
+        audioStuffFactory = new AudioStuffFactoryImpl();
+        return audioStuffFactory;
+    }
+
+    @Override
+    public TextUtils getTextUtils() {
+        if (textUtils != null) {
+            return textUtils;
+        }
+        textUtils = new TextUtilsImpl();
+        return textUtils;
+    }
+
+    @Override
+    public EqualityScorer getEqualityScorer() {
+        if (equalityScorer != null) {
+            return equalityScorer;
+        }
+        equalityScorer = new EqualityScorerImpl();
+        return equalityScorer;
+    }
+
+    @Override
+    public Logger getLogger() {
+        if (logger != null) {
+            return logger;
+        }
+        logger = new LoggerImpl();
+        return logger;
     }
 
     @Override
