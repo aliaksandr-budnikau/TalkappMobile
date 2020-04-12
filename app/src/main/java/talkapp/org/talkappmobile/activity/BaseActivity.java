@@ -1,8 +1,8 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;

@@ -27,7 +27,7 @@ import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 
 @EView
-public class PronounceRightAnswerButton extends android.support.v7.widget.AppCompatButton implements PronounceRightAnswerButtonView {
+public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCompatButton implements PronounceRightAnswerButtonView {
     @Bean(SpeakerBean.class)
     Speaker speaker;
     @EventBusGreenRobot

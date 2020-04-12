@@ -3,7 +3,7 @@ package talkapp.org.talkappmobile.activity.custom;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.Toast;

@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.events;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;

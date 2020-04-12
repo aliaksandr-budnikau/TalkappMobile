@@ -2,8 +2,8 @@ package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;

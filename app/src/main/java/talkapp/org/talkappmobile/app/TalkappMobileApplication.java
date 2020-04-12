@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.app;
 
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 /**
  * @author Budnikau Aliaksandr

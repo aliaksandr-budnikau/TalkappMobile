@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.androidannotations.annotations.EBean;
 import org.apache.commons.lang3.StringUtils;

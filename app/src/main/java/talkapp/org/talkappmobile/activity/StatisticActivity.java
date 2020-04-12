@@ -2,7 +2,7 @@ package talkapp.org.talkappmobile.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TabHost;
 import android.widget.Toast;
 

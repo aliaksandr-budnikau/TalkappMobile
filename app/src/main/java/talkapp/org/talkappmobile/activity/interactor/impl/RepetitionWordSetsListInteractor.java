@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.activity.interactor.impl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.activity.listener.OnWordSetsListListener;

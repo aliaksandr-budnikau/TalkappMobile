@@ -1,10 +1,10 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.content.DialogInterface;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerTabStrip;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerTabStrip;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 

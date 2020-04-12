@@ -1,6 +1,6 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Date;
