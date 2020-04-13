@@ -43,12 +43,9 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    api 'com.squareup.retrofit2:retrofit:2.3.0'
-    api 'com.squareup.retrofit2:converter-jackson:2.3.0'
-    api 'com.squareup.retrofit2:converter-scalars:2.3.0'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation project(path: ":repository_api")
-    runtimeOnly project(path: ":repository")
+    implementation project(path: ":service")
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
