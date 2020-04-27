@@ -1,37 +1,40 @@
 package talkapp.org.talkappmobile.service.impl;
 
+import android.content.Context;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.DaoHelper;
-import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
-import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
-import talkapp.org.talkappmobile.dao.WordSetDao;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.repository.SentenceRepositoryImpl;
-import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepositoryImpl;
-import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
+import talkapp.org.talkappmobile.service.BuildConfig;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
 import static talkapp.org.talkappmobile.model.RepetitionClass.NEW;
 import static talkapp.org.talkappmobile.model.RepetitionClass.REPEATED;
@@ -42,48 +45,57 @@ import static talkapp.org.talkappmobile.model.RepetitionClass.SEEN;
 public class WordRepetitionProgressServiceImplIntegTest {
 
     private WordRepetitionProgressServiceImpl service;
-    private WordRepetitionProgressDao exerciseDao;
     private ObjectMapper mapper;
-    private DaoHelper daoHelper;
+    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setUp() throws Exception {
-        daoHelper = new DaoHelper();
-        SentenceDao sentenceDao = mock(SentenceDao.class);
-        WordSetDao wordSetDao = daoHelper.getWordSetDao();
-        exerciseDao = daoHelper.getWordRepetitionProgressDao();
+        repositoryFactory = new RepositoryFactoryImpl(Mockito.mock(Context.class)) {
+            private DatabaseHelper helper;
+
+            @Override
+            protected DatabaseHelper databaseHelper() {
+                if (helper != null) {
+                    return helper;
+                }
+                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
+                return helper;
+            }
+
+        };
+        SentenceDao sentenceDao = Mockito.mock(SentenceDao.class);
         mapper = new ObjectMapper();
-        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
+        WordSetRepository wordSetRepository = repositoryFactory.getWordSetRepository();
         SentenceRepositoryImpl sentenceRepository = new SentenceRepositoryImpl(sentenceDao, mapper);
-        WordRepetitionProgressRepositoryImpl progressRepository = new WordRepetitionProgressRepositoryImpl(exerciseDao, mapper);
+        WordRepetitionProgressRepository progressRepository = repositoryFactory.getWordRepetitionProgressRepository();
         service = new WordRepetitionProgressServiceImpl(progressRepository, wordSetRepository, sentenceRepository);
 
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         int sourceWordSetId = 3;
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", sourceWordSetId);
-        WordSetMapping wordSetMapping = new WordSetMapping();
-        wordSetMapping.setTopicId("" + sourceWordSetId);
-        wordSetMapping.setId("" + sourceWordSetId);
-        wordSetMapping.setWords(mapper.writeValueAsString(asList(anniversary)));
-        wordSetDao.createNewOrUpdate(wordSetMapping);
+        WordSet wordSet = new WordSet();
+        wordSet.setTopicId("" + sourceWordSetId);
+        wordSet.setId(sourceWordSetId);
+        wordSet.setWords(asList(anniversary));
+        wordSetRepository.createNewOrUpdate(wordSet);
         for (int c = 0; c < 12; c++) {
             for (int i = 2; i <= 13; i++) {
-                WordRepetitionProgressMapping exercise = new WordRepetitionProgressMapping();
-                exercise.setSentenceIds("[\"AWbgbq6hNEXFMlzHK5Ul\"]");
-                exercise.setStatus(WordSetProgressStatus.FINISHED.name());
+                WordRepetitionProgress progress = new WordRepetitionProgress();
+                progress.setSentenceIds(asList("AWbgbq6hNEXFMlzHK5Ul"));
+                progress.setStatus(WordSetProgressStatus.FINISHED.name());
                 cal.add(Calendar.HOUR, -2 * 24 * i);
-                exercise.setUpdatedDate(cal.getTime());
-                exercise.setRepetitionCounter(c);
-                exercise.setWordSetId(sourceWordSetId);
-                exerciseDao.createNewOrUpdate(exercise);
+                progress.setUpdatedDate(cal.getTime());
+                progress.setRepetitionCounter(c);
+                progress.setWordSetId(sourceWordSetId);
+                progressRepository.createNewOrUpdate(progress);
             }
         }
     }
 
     @After
     public void tearDown() {
-        daoHelper.releaseHelper();
+        OpenHelperManager.releaseHelper();
         ServiceFactoryBean.removeInstance();
     }
 

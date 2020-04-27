@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service;
+package talkapp.org.talkappmobile.component;
 
 import android.app.Activity;
 import android.content.Intent;

@@ -13,11 +13,11 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
+import talkapp.org.talkappmobile.repository.BuildConfig;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;

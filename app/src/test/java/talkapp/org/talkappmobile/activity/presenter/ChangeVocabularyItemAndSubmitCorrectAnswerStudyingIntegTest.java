@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.reflect.Whitebox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -28,11 +27,7 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -88,11 +83,6 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
 
         serviceFactory.getWordSetExperienceRepository().save(wordSet);
         PresenterFactory presenterFactory = new PresenterFactory();
-
-        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerImpl());
-        Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "logger", new LoggerImpl());
-        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryImpl());
 
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), mock(Context.class), false);
         practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));

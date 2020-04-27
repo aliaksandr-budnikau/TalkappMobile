@@ -2,8 +2,10 @@ package talkapp.org.talkappmobile.service.impl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -15,9 +17,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordTranslationSentenceProviderDecoratorTest {
@@ -33,7 +32,7 @@ public class WordTranslationSentenceProviderDecoratorTest {
     public void find_unsupportedOperationException() {
         WordTranslation wordTranslation = new WordTranslation();
         wordTranslation.setWord("dfds");
-        when(wordTranslationRepository.findByWordAndByLanguage(anyString(), anyString())).thenReturn(wordTranslation);
+        Mockito.when(wordTranslationRepository.findByWordAndByLanguage(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(wordTranslation);
         List<Sentence> sentences = decorator.find(new Word2Tokens("", null, null));
         Collections.sort(sentences, new Comparator<Sentence>() {
             @Override

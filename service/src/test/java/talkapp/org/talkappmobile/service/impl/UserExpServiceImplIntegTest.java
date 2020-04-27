@@ -8,24 +8,24 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.UserExpService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @RunWith(RobolectricTestRunner.class)
@@ -36,7 +36,7 @@ public class UserExpServiceImplIntegTest {
 
     @Before
     public void setUp() throws Exception {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(Mockito.mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override

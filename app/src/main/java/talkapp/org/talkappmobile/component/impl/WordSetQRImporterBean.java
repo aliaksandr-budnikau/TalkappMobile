@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.component.impl;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,9 +21,10 @@ import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.WordSetQRImporter;
+import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
+import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;

@@ -2,10 +2,13 @@ package talkapp.org.talkappmobile.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -22,21 +25,16 @@ import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.repository.SentenceMapper;
 import talkapp.org.talkappmobile.repository.SentenceRepositoryImpl;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepositoryImpl;
 import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.repository.SentenceMapper;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
@@ -60,7 +58,7 @@ public class SentenceServiceImplTest {
     public void setUp() {
         ObjectMapper mapper = new ObjectMapper();
         sentenceMapper = new SentenceMapper(mapper);
-        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, Mockito.mock(NewWordSetDraftDao.class), mapper);
         SentenceRepositoryImpl sentenceRepository = new SentenceRepositoryImpl(sentenceDao, mapper);
         WordRepetitionProgressRepositoryImpl progressRepository = new WordRepetitionProgressRepositoryImpl(progressDao, mapper);
         sentenceProvider = new SentenceProviderImpl(wordSetRepository, progressRepository, sentenceRepository, mapper);
@@ -86,7 +84,7 @@ public class SentenceServiceImplTest {
 
         // when
 
-        when(sentenceDao.findAllByWord(any(String.class), anyInt())).thenReturn(sentences);
+        Mockito.when(sentenceDao.findAllByWord(ArgumentMatchers.any(String.class), ArgumentMatchers.anyInt())).thenReturn(sentences);
         List<Sentence> result = wordProgressSentenceProviderDecorator.getFromDB(new Word2Tokens("sdfsd", "sdfsd", 2));
 
         // then
@@ -113,13 +111,13 @@ public class SentenceServiceImplTest {
         List<SentenceMapping> sentences = asList(sentence1, sentence2);
 
         // when
-        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
+        Mockito.when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then
-        assertEquals(sentenceMapper.toDto(sentence1), sentencesActual.get(0));
+        Assert.assertEquals(sentenceMapper.toDto(sentence1), sentencesActual.get(0));
         assertEquals("fds32ddd", sentencesActual.get(0).getId());
-        assertEquals(sentenceMapper.toDto(sentence2), sentencesActual.get(1));
+        Assert.assertEquals(sentenceMapper.toDto(sentence2), sentencesActual.get(1));
         assertEquals("fds32ddddsas", sentencesActual.get(1).getId());
     }
 
@@ -136,7 +134,7 @@ public class SentenceServiceImplTest {
         List<SentenceMapping> sentences = asList(sentenceMapper.toMapping(sentence1), sentenceMapper.toMapping(sentence2));
 
         // when
-        when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
+        Mockito.when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER)).thenReturn(sentences);
         List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then
@@ -150,7 +148,7 @@ public class SentenceServiceImplTest {
         Word2Tokens word = new Word2Tokens("word", "word", wordSetId);
 
         // when
-        doThrow(RuntimeException.class).when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER));
+        Mockito.doThrow(RuntimeException.class).when(sentenceDao.findAllByWord(word.getWord(), WORDS_NUMBER));
         List<Sentence> sentencesActual = wordProgressSentenceProviderDecorator.getFromDB(word);
 
         // then

@@ -16,11 +16,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
-import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
+import talkapp.org.talkappmobile.repository.BuildConfig;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;

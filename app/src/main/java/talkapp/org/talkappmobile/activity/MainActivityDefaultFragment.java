@@ -35,9 +35,9 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.WordSetQRImporter;
+import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.WordSetQRImporterBean;
+import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;

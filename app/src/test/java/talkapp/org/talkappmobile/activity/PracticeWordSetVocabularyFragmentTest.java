@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -24,19 +23,17 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
+import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -76,12 +73,6 @@ public class PracticeWordSetVocabularyFragmentTest {
 
         PresenterFactory presenterFactory = new PresenterFactory();
 
-        Whitebox.setInternalState(presenterFactory, "serviceFactory", serviceFactory);
-        Whitebox.setInternalState(presenterFactory, "equalityScorer", new EqualityScorerImpl());
-        Whitebox.setInternalState(presenterFactory, "textUtils", new TextUtilsImpl());
-        Whitebox.setInternalState(presenterFactory, "logger", new LoggerImpl());
-        Whitebox.setInternalState(presenterFactory, "audioStuffFactory", new AudioStuffFactoryImpl());
-
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         practiceWordSetVocabularyFragment = new PracticeWordSetVocabularyFragment();
@@ -90,7 +81,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(RecyclerView.class));
+        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(WordSetVocabularyView.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
 
         int id = 0;
@@ -159,6 +150,15 @@ public class PracticeWordSetVocabularyFragmentTest {
         wordSet.setTrainingExperience(1);
         wordSet.setStatus(WordSetProgressStatus.FINISHED);
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSet", wordSet);
+
+        List<Word2Tokens> words = wordSet.getWords();
+        for (Word2Tokens word : words) {
+            WordTranslation wordTranslation = new WordTranslation();
+            wordTranslation.setWord(word.getWord());
+            wordTranslation.setTranslation(word.getWord());
+            wordTranslation.setLanguage("russian");
+            repositoryFactory.getWordTranslationRepository().createNewOrUpdate(asList(wordTranslation));
+        }
     }
 
     @Test

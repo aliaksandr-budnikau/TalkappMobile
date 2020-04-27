@@ -2,13 +2,13 @@ package talkapp.org.talkappmobile.service.impl;
 
 import android.content.Context;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -20,15 +20,14 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.repository.WordSetMapper;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -38,8 +37,6 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FINISHED;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
@@ -52,15 +49,14 @@ public class DataServerImplIntegTest {
     private RequestExecutor requestExecutor;
     private WordSetService wordSetService;
     private ServiceFactory serviceFactory;
-    private WordSetMapper wordSetMapper;
     private RepositoryFactory repositoryFactory;
 
     @Before
     public void init() {
-        gitHubRestClient = mock(GitHubRestClient.class);
-        requestExecutor = mock(RequestExecutor.class);
+        gitHubRestClient = Mockito.mock(GitHubRestClient.class);
+        requestExecutor = Mockito.mock(RequestExecutor.class);
 
-        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
+        repositoryFactory = new RepositoryFactoryImpl(Mockito.mock(Context.class)) {
             private DatabaseHelper helper;
 
             @Override
@@ -77,7 +73,6 @@ public class DataServerImplIntegTest {
         ServiceFactoryBean bean = (ServiceFactoryBean) serviceFactory;
         bean.setGitHubRestClient(gitHubRestClient);
         bean.setRequestExecutor(requestExecutor);
-        wordSetMapper = new WordSetMapper(new ObjectMapper());
         wordSetService = serviceFactory.getWordSetExperienceRepository();
     }
 
@@ -90,7 +85,7 @@ public class DataServerImplIntegTest {
     @Test
     public void findAllWordSets_losingOfProgressForWordSets() throws InterruptedException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
 
         WordSet wordSetMapping1 = new WordSet();
         wordSetMapping1.setId(1);
@@ -125,8 +120,8 @@ public class DataServerImplIntegTest {
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         expectedSets.put(1, wordSets);
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
 
         List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
@@ -141,7 +136,7 @@ public class DataServerImplIntegTest {
     @Test
     public void findAllWordSets_savingCopiesInWordSet() throws InterruptedException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
 
         WordSet wordSetMapping1 = new WordSet();
         wordSetMapping1.setId(1);
@@ -178,8 +173,8 @@ public class DataServerImplIntegTest {
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         expectedSets.put(1, wordSets);
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
 
         List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);

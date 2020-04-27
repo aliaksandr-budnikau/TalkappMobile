@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Calendar;
@@ -19,7 +20,6 @@ import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +41,7 @@ public class UserExpServiceImplTest {
         }
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(Collections.<ExpAudit>emptyList());
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -74,7 +74,7 @@ public class UserExpServiceImplTest {
         ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -101,7 +101,7 @@ public class UserExpServiceImplTest {
         ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -125,7 +125,7 @@ public class UserExpServiceImplTest {
                 new ExpAudit(calendar.getTime(), 13, WORD_SET_PRACTICE));
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(fromDB);
         userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
     }
@@ -163,7 +163,7 @@ public class UserExpServiceImplTest {
         ExpAudit mapping = new ExpAudit(calendar.getTime(), 10, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE))
                 .thenReturn(singletonList(mapping));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
@@ -211,7 +211,7 @@ public class UserExpServiceImplTest {
         ExpAudit mapping5 = new ExpAudit(calendar.getTime(), 15, WORD_SET_PRACTICE);
 
         // when
-        when(expAuditRepository.findAllByType(WORD_SET_PRACTICE)).thenReturn(asList(mapping10, mapping5));
+        Mockito.when(expAuditRepository.findAllByType(WORD_SET_PRACTICE)).thenReturn(asList(mapping10, mapping5));
         List<ExpAudit> result = userExpService.findAllByTypeOrderedByDate(WORD_SET_PRACTICE);
 
         // then

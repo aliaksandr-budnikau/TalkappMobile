@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.LinkedList;
@@ -18,7 +19,6 @@ import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +54,7 @@ public class WordSetServiceImplTest {
         translations.getLast().setTranslation("слово");
         translations.getLast().setWord(word);
 
-        when(wordSetDao.getTheLastCustomWordSetsId()).thenReturn(lastId);
+        Mockito.when(wordSetDao.getTheLastCustomWordSetsId()).thenReturn(lastId);
         WordSet actualWordSet = wordSetService.createNewCustomWordSet(translations);
 
         assertEquals(actualWordSet.getWords().get(0).getWord(), word);
@@ -85,7 +85,7 @@ public class WordSetServiceImplTest {
         translations.getLast().setTranslation("слово");
         translations.getLast().setWord(word);
 
-        when(wordSetDao.getTheLastCustomWordSetsId()).thenReturn(lastId);
+        Mockito.when(wordSetDao.getTheLastCustomWordSetsId()).thenReturn(lastId);
         WordSet actualWordSet = wordSetService.createNewCustomWordSet(translations);
 
         assertEquals(actualWordSet.getWords().get(0).getWord(), word);

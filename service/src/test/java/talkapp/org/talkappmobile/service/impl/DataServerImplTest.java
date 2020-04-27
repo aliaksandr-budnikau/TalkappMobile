@@ -1,16 +1,18 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.AndroidConnectionSource;
+import com.j256.ormlite.dao.Dao;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.SQLException;
@@ -44,12 +46,6 @@ import talkapp.org.talkappmobile.service.WordTranslationService;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DataServerImplTest {
@@ -82,7 +78,7 @@ public class DataServerImplTest {
 
     @Before
     public void init() throws SQLException {
-        AndroidConnectionSource source = new AndroidConnectionSource(new DatabaseHelper(mock(Context.class)));
+        AndroidConnectionSource source = new AndroidConnectionSource(Mockito.mock(DatabaseHelper.class));
         WordSetDaoImpl wordSetDao = new WordSetDaoImpl(source, WordSetMapping.class) {
             @Override
             public List<WordSetMapping> queryForAll() throws SQLException {
@@ -90,13 +86,13 @@ public class DataServerImplTest {
             }
 
             @Override
-            public synchronized CreateOrUpdateStatus createOrUpdate(WordSetMapping data) throws SQLException {
+            public synchronized Dao.CreateOrUpdateStatus createOrUpdate(WordSetMapping data) throws SQLException {
                 return wordSetDaoMock.createOrUpdate(data);
             }
         };
         topicService = new TopicServiceImpl(topicRepository, server);
         server = new DataServerImpl(sentenceRestClient, gitHubRestClient, requestExecutor);
-        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, mock(NewWordSetDraftDao.class), mapper);
+        WordSetRepositoryImpl wordSetRepository = new WordSetRepositoryImpl(wordSetDao, Mockito.mock(NewWordSetDraftDao.class), mapper);
         WordSetServiceImpl wordSetService = new WordSetServiceImpl(server, wordSetRepository);
         this.wordSetService = new CachedWordSetServiceDecorator(wordSetRepository, wordSetService);
     }
@@ -104,7 +100,7 @@ public class DataServerImplTest {
     @Test
     public void findAllWordSets_internetExistsEachTime() throws InterruptedException, SQLException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         WordSet wordSet1 = new WordSet();
         wordSet1.setWords(new LinkedList<Word2Tokens>());
@@ -114,39 +110,39 @@ public class DataServerImplTest {
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
         List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(2)).queryForAll();
-        verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(2)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(2)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
 
-        reset(wordSetDaoMock);
-        reset(requestExecutor);
-        reset(gitHubRestClient);
+        Mockito.reset(wordSetDaoMock);
+        Mockito.reset(requestExecutor);
+        Mockito.reset(gitHubRestClient);
 
         // when second connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
         actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
     }
 
     @Test
     public void findAllWordSets_internetExistsFirstTimeOnly() throws InterruptedException, SQLException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         WordSet wordSet1 = new WordSet();
         wordSet1.setWords(new LinkedList<Word2Tokens>());
@@ -156,76 +152,76 @@ public class DataServerImplTest {
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
         List<WordSet> actualSets = wordSetService.getWordSets(null);
         Thread.sleep(1000);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(2)).queryForAll();
-        verify(wordSetDaoMock, times(2)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(2)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(2)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
 
-        reset(wordSetDaoMock);
-        reset(requestExecutor);
-        reset(gitHubRestClient);
+        Mockito.reset(wordSetDaoMock);
+        Mockito.reset(requestExecutor);
+        Mockito.reset(gitHubRestClient);
 
         // when second connection
-        when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
     }
 
     @Test
     public void findAllWordSets_internetExistsNever() throws JsonProcessingException, SQLException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         expectedSets.put(KEY, asList(new WordSet(), new WordSet()));
         List<WordSetMapping> wordSetMappings = getWordSetMappings();
 
         // when first connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
+        Mockito.when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
         List<WordSet> actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
 
-        reset(wordSetDaoMock);
-        reset(requestExecutor);
-        reset(gitHubRestClient);
+        Mockito.reset(wordSetDaoMock);
+        Mockito.reset(requestExecutor);
+        Mockito.reset(gitHubRestClient);
 
         // when second connection
-        when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         actualSets = wordSetService.getWordSets(null);
 
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
     }
 
     @Test
     public void findAllWordSets_internetExistsOnlySecondTime() throws JsonProcessingException, SQLException {
         // setup
-        Call mockCall = mock(Call.class);
+        Call mockCall = Mockito.mock(Call.class);
         Map<Integer, List<WordSet>> expectedSets = new HashMap<>();
         WordSet wordSet1 = new WordSet();
         wordSet1.setWords(new LinkedList<Word2Tokens>());
@@ -236,33 +232,33 @@ public class DataServerImplTest {
         List<WordSetMapping> wordSetMappings = getWordSetMappings();
 
         // when first connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
+        Mockito.when(wordSetDaoMock.queryForAll()).thenReturn(wordSetMappings);
         List<WordSet> actualSets = wordSetService.getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
 
-        reset(wordSetDaoMock);
-        reset(requestExecutor);
-        reset(gitHubRestClient);
+        Mockito.reset(wordSetDaoMock);
+        Mockito.reset(requestExecutor);
+        Mockito.reset(gitHubRestClient);
 
         // when second connection
-        when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        when(requestExecutor.execute(mockCall)).thenReturn(response);
+        Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
+        Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
         actualSets = server.findAllWordSets();
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        verify(gitHubRestClient).findAllWordSets();
-        verify(requestExecutor).execute(mockCall);
-        verify(wordSetDaoMock, times(0)).queryForAll();
-        verify(wordSetDaoMock, times(0)).createOrUpdate(any(WordSetMapping.class));
+        Mockito.verify(gitHubRestClient).findAllWordSets();
+        Mockito.verify(requestExecutor).execute(mockCall);
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).queryForAll();
+        Mockito.verify(wordSetDaoMock, Mockito.times(0)).createOrUpdate(ArgumentMatchers.any(WordSetMapping.class));
     }
 
     @NonNull

@@ -1,11 +1,12 @@
 package talkapp.org.talkappmobile.repository;
 
-import org.junit.Test;
+import android.content.Context;
 
-import talkapp.org.talkappmobile.app.TalkappMobileApplication;
+import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 public class RepositoryFactoryProviderTest {
 
@@ -22,6 +23,6 @@ public class RepositoryFactoryProviderTest {
 
     @Test
     public void testTalkappMobileApplicationClass() {
-        RepositoryFactoryProvider.get(new TalkappMobileApplication());
+        RepositoryFactoryProvider.get(mock(Context.class));
     }
 }

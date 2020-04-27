@@ -2,8 +2,6 @@ package talkapp.org.talkappmobile.dao.impl;
 
 import android.database.Cursor;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +11,11 @@ import org.robolectric.annotation.Config;
 
 import java.sql.SQLException;
 
-import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
+import talkapp.org.talkappmobile.repository.BuildConfig;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.lang.String.format;

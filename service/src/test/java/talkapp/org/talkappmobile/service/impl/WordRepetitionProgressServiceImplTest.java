@@ -3,11 +3,14 @@ package talkapp.org.talkappmobile.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.reflect.Whitebox;
 
@@ -24,19 +27,12 @@ import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
-import talkapp.org.talkappmobile.repository.WordSetRepository;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepositoryImpl;
+import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentCaptor.forClass;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordRepetitionProgressServiceImplTest {
@@ -66,15 +62,15 @@ public class WordRepetitionProgressServiceImplTest {
 
         // when
         int wordSetSize = 12;
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(Collections.<WordRepetitionProgressMapping>emptyList());
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
         assertEquals(0, wordSets.size());
-        ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
-        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+        ArgumentCaptor<Date> captor = ArgumentCaptor.forClass(Date.class);
+        Mockito.verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), captor.capture(), ArgumentMatchers.any(String.class));
+        Assert.assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
     @Test
@@ -101,18 +97,18 @@ public class WordRepetitionProgressServiceImplTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value));
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(expectedWordSets);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
         assertEquals(1, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
+        Assert.assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
 
-        ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
-        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+        ArgumentCaptor<Date> captor = ArgumentCaptor.forClass(Date.class);
+        Mockito.verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), captor.capture(), ArgumentMatchers.any(String.class));
+        Assert.assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
     @Test
@@ -142,8 +138,8 @@ public class WordRepetitionProgressServiceImplTest {
 
         int wordSetSize = 1;
         Whitebox.setInternalState(service, "wordSetSize", wordSetSize);
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(expectedWordSets);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
@@ -188,8 +184,8 @@ public class WordRepetitionProgressServiceImplTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value1, value2, value3));
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(expectedWordSets);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
@@ -197,9 +193,9 @@ public class WordRepetitionProgressServiceImplTest {
         assertEquals(2, wordSets.size());
         assertEquals(1, wordSets.get(1).getWords().size());
 
-        ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
-        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+        ArgumentCaptor<Date> captor = ArgumentCaptor.forClass(Date.class);
+        Mockito.verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), captor.capture(), ArgumentMatchers.any(String.class));
+        Assert.assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
     @Test
@@ -240,17 +236,17 @@ public class WordRepetitionProgressServiceImplTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value1, value2, value3));
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class))).thenReturn(new ArrayList<>(expectedWordSets));
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class))).thenReturn(new ArrayList<>(expectedWordSets));
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
         assertEquals(2, wordSets.size());
         assertEquals(1, wordSets.get(1).getWords().size());
 
-        ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
-        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 1000_000);
+        ArgumentCaptor<Date> captor = ArgumentCaptor.forClass(Date.class);
+        Mockito.verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), captor.capture(), ArgumentMatchers.any(String.class));
+        Assert.assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 1000_000);
     }
 
     @Test
@@ -281,19 +277,19 @@ public class WordRepetitionProgressServiceImplTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value1, value2));
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), any(Date.class), any(String.class)))
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), ArgumentMatchers.any(Date.class), ArgumentMatchers.any(String.class)))
                 .thenReturn(expectedWordSets);
         List<WordSet> wordSets = service.findFinishedWordSetsSortByUpdatedDate((int) limit, olderThenInHours);
 
         // then
         assertEquals(1, wordSets.size());
-        assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
-        assertEquals(expectedWordSets.get(1).getWordIndex(), 1);
+        Assert.assertEquals(expectedWordSets.get(0).getWordIndex(), 0);
+        Assert.assertEquals(expectedWordSets.get(1).getWordIndex(), 1);
 
-        ArgumentCaptor<Date> captor = forClass(Date.class);
-        verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(eq(limit * wordSetSize), captor.capture(), any(String.class));
-        assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
+        ArgumentCaptor<Date> captor = ArgumentCaptor.forClass(Date.class);
+        Mockito.verify(exerciseDao).findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.eq(limit * wordSetSize), captor.capture(), ArgumentMatchers.any(String.class));
+        Assert.assertEquals(captor.getValue().getTime(), cal.getTime().getTime(), 100);
     }
 
     @Test
@@ -309,8 +305,8 @@ public class WordRepetitionProgressServiceImplTest {
         WordSet wordSet = new WordSet();
         wordSet.setId(sourceWordSetId);
         wordSet.setWords(asList(value1, value2));
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(asList(word1, word2));
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Date.class), ArgumentMatchers.anyString())).thenReturn(asList(word1, word2));
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertTrue(sets.isEmpty());
     }
@@ -332,8 +328,8 @@ public class WordRepetitionProgressServiceImplTest {
         }
         wordSet.setWords(words);
 
-        when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
-        when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(anyLong(), any(Date.class), anyString())).thenReturn(list);
+        Mockito.when(wordSetRepository.findById(sourceWordSetId)).thenReturn(wordSet);
+        Mockito.when(exerciseDao.findWordSetsSortByUpdatedDateAndByStatus(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Date.class), ArgumentMatchers.anyString())).thenReturn(list);
         List<WordSet> sets = service.findWordSetOfDifficultWords();
         assertEquals(1, sets.size());
         assertEquals(12, sets.get(0).getWords().size());

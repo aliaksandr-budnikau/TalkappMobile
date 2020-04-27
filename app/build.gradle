@@ -63,6 +63,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation project(path: ":entity")
     testImplementation project(path: ":repository")
+    testImplementation project(path: ":service")
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.powermock:powermock-reflect:1.6.1'
     testImplementation 'org.robolectric:robolectric:3.5'

@@ -40,7 +40,7 @@ public class WordSetsListFragmentMockTest {
     @Before
     public void init() {
         when(wordSetsListView.getAdapter()).thenReturn(adapter);
-        Whitebox.setInternalState(wordSetsListFragment, "phraseSetsListView", wordSetsListView);
+        Whitebox.setInternalState(wordSetsListFragment, "phraseSetsRecyclerView", wordSetsListView);
         Whitebox.setInternalState(wordSetsListFragment, "tabHost", tabHost);
         Whitebox.setInternalState(wordSetsListFragment, "eventBus", eventBus);
     }
@@ -49,7 +49,6 @@ public class WordSetsListFragmentMockTest {
     public void testOnWordSetsRefreshed_repetitionClassNull() {
         LinkedList<WordSet> wordSets = new LinkedList<>();
         wordSetsListFragment.onWordSetsRefreshed(wordSets, null);
-        verify(adapter).addAll(wordSets);
         verify(adapter).filterOut(ONLY_NEW_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(NEW);
     }
@@ -59,7 +58,6 @@ public class WordSetsListFragmentMockTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, RepetitionClass.NEW);
-        verify(adapter).addAll(wordSets);
         verify(adapter).filterOut(ONLY_NEW_REP_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(RepetitionClass.NEW.name());
     }
@@ -69,7 +67,6 @@ public class WordSetsListFragmentMockTest {
         LinkedList<WordSet> wordSets = new LinkedList<>();
 
         wordSetsListFragment.onWordSetsRefreshed(wordSets, SEEN);
-        verify(adapter).addAll(wordSets);
         verify(adapter).filterOut(ONLY_SEEN_REP_WORD_SETS.getFilter());
         verify(tabHost).setCurrentTabByTag(SEEN.name());
     }
