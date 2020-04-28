@@ -10,10 +10,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.EqualityScorer;
+import talkapp.org.talkappmobile.service.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.SentenceService;
 
 import static org.junit.Assert.assertTrue;
-import static talkapp.org.talkappmobile.service.impl.RefereeServiceImpl.EQUALITY_THRESHOLD;
+import static talkapp.org.talkappmobile.service.RefereeServiceImpl.EQUALITY_THRESHOLD;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RefereeServiceImplTest {

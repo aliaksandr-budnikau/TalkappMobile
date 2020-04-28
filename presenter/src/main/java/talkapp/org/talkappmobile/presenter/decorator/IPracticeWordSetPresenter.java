@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter.decorator;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.Sentence;
@@ -17,8 +15,6 @@ public interface IPracticeWordSetPresenter {
 
     void prepareOriginalTextClickEM();
 
-    void playVoiceButtonClick();
-
     void disableButtonsDuringPronunciation();
 
     void refreshCurrentWord();
@@ -30,8 +26,6 @@ public interface IPracticeWordSetPresenter {
     void checkAnswerButtonClick(String answer);
 
     void gotRecognitionResult(List<String> suggestedWords);
-
-    void voiceRecorded(Uri data);
 
     void scoreSentence(SentenceContentScore score, Sentence sentence);
 

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +10,6 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.SentenceRestClient;
 
 import static java.util.Collections.emptyList;
 

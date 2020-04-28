@@ -1,12 +1,10 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 import java.util.Map;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.SentenceProvider;
 
 import static java.util.Collections.emptyList;
 

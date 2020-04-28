@@ -25,6 +25,7 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
@@ -34,7 +35,7 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -53,7 +54,6 @@ public class PracticeWordSetVocabularyFragmentTest {
     @After
     public void tearDown() throws Exception {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Before
@@ -70,15 +70,16 @@ public class PracticeWordSetVocabularyFragmentTest {
                 return helper;
             }
         };
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory();
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+
+        new BeanFactory(serviceFactory, presenterFactory);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         practiceWordSetVocabularyFragment = new PracticeWordSetVocabularyFragment();
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));

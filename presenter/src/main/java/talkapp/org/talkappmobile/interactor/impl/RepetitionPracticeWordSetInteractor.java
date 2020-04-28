@@ -1,13 +1,10 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
-import android.content.Context;
-
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -16,7 +13,6 @@ import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
 public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
-    private static final String TAG = RepetitionPracticeWordSetInteractor.class.getSimpleName();
     private final WordRepetitionProgressService exerciseService;
     private final CurrentPracticeStateService currentPracticeStateService;
 
@@ -26,10 +22,8 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
             Logger logger,
             WordRepetitionProgressService exerciseService,
             SentenceProvider sentenceProvider,
-            Context context,
-            CurrentPracticeStateService currentPracticeStateService,
-            AudioStuffFactory audioStuffFactory) {
-        super(logger, context, refereeService, exerciseService, sentenceService, audioStuffFactory, currentPracticeStateService, sentenceProvider);
+            CurrentPracticeStateService currentPracticeStateService) {
+        super(logger, refereeService, exerciseService, sentenceService, currentPracticeStateService, sentenceProvider);
         this.exerciseService = exerciseService;
         this.currentPracticeStateService = currentPracticeStateService;
     }

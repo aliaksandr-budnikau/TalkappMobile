@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
@@ -36,7 +37,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -47,7 +48,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         WordSetVocabularyItemAlertDialog.OnDialogInteractionListener, AddingNewWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
 
-    PresenterFactory presenterFactory = new PresenterFactory();
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean
@@ -96,11 +96,13 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         initPresenter();
     }
 
+
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create((PracticeWordSetVocabularyView) this, getContext());
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        presenter = presenterFactory.create((PracticeWordSetVocabularyView) this);
         presenter.initialise(wordSet);
-        addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this, getContext());
+        addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this);
     }
 
     @Override

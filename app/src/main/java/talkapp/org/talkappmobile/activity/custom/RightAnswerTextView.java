@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -27,7 +28,6 @@ import talkapp.org.talkappmobile.events.RightAnswerUntouchedEM;
 import talkapp.org.talkappmobile.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.presenter.RightAnswerTextViewPresenter;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.RightAnswerTextViewView;
 
 @EView
@@ -52,7 +52,7 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
 
     @AfterInject
     public void init() {
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(getContext());
+        ServiceFactory serviceFactory = BeanFactory.serviceFactory(getContext());
         RightAnswerTextViewInteractor interacto = new RightAnswerTextViewInteractor(serviceFactory.getTextUtils());
         presenter = new RightAnswerTextViewPresenter(interacto, this);
     }

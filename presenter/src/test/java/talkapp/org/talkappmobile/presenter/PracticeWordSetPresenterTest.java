@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.net.Uri;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -155,17 +153,5 @@ public class PracticeWordSetPresenterTest {
     public void onStopPlaying() {
         presenter.onStopPlaying();
         verify(viewStrategy).onStopPlaying();
-    }
-
-    @Test
-    public void onPlayVoiceButtonClick() {
-        // setup
-        Uri empty = Uri.EMPTY;
-
-        // when
-        presenter.playVoiceButtonClick();
-
-        // then
-        verify(interactor).playVoice(presenter);
     }
 }

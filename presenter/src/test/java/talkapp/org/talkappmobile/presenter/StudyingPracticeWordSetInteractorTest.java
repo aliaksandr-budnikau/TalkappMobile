@@ -1,8 +1,6 @@
 package talkapp.org.talkappmobile.presenter;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,6 @@ import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -35,8 +31,6 @@ import talkapp.org.talkappmobile.service.WordSetService;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,8 +41,6 @@ import static talkapp.org.talkappmobile.model.WordSetProgressStatus.SECOND_CYCLE
 @RunWith(MockitoJUnitRunner.class)
 public class StudyingPracticeWordSetInteractorTest {
 
-    @Mock
-    AudioStuffFactory audioStuffFactory;
     @Mock
     WordRepetitionProgressService exerciseService;
     @Mock
@@ -369,83 +361,6 @@ public class StudyingPracticeWordSetInteractorTest {
         verify(listener, times(0)).onTrainingHalfFinished(sentence);
         verify(wordSetService, times(0)).moveToAnotherState(wordSet.getId(), SECOND_CYCLE);
         verify(listener, times(0)).onEnableRepetitionMode();
-    }
-
-    @Test
-    public void playVoice_bufferIsEmpty() {
-        // when
-        interactor.playVoice(listener);
-
-        // then
-        verify(listener, times(0)).onStartPlaying();
-        verify(listener, times(0)).onStopPlaying();
-        verify(audioStuffFactory, times(0)).createMediaPlayer();
-    }
-
-    @Test
-    public void playVoice_bufferIsNotEmpty() throws IOException {
-        // setup
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-        Uri empty = mock(Uri.class);
-        interactor.saveVoice(empty, listener);
-
-        // when
-        when(audioStuffFactory.createMediaPlayer()).thenReturn(mediaPlayer);
-        when(mediaPlayer.isPlaying()).thenReturn(true).thenReturn(false);
-        interactor.playVoice(listener);
-
-        // then
-        verify(listener).onStartPlaying();
-        verify(listener).onStopPlaying();
-        verify(mediaPlayer).setDataSource(context, empty);
-        verify(mediaPlayer).prepare();
-        verify(mediaPlayer).start();
-    }
-
-    @Test
-    public void playVoice_bufferIsNotEmptyButExceptionOnStartPlaying() throws IOException {
-        // setup
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-        Uri empty = mock(Uri.class);
-        interactor.saveVoice(empty, listener);
-
-        // when
-        doThrow(RuntimeException.class).when(listener).onStartPlaying();
-        try {
-            interactor.playVoice(listener);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(listener).onStopPlaying();
-        verify(mediaPlayer, times(0)).setDataSource(context, empty);
-        verify(mediaPlayer, times(0)).prepare();
-        verify(mediaPlayer, times(0)).start();
-        verify(mediaPlayer, times(0)).isPlaying();
-    }
-
-
-    @Test
-    public void playVoice_bufferIsNotEmptyButExceptionOnPlay() throws IOException {
-        // setup
-        MediaPlayer mediaPlayer = mock(MediaPlayer.class);
-        Uri empty = mock(Uri.class);
-        interactor.saveVoice(empty, listener);
-
-        // when
-        doThrow(RuntimeException.class).when(mediaPlayer).start();
-        when(audioStuffFactory.createMediaPlayer()).thenReturn(mediaPlayer);
-        try {
-            interactor.playVoice(listener);
-        } catch (Exception e) {
-        }
-
-        // then
-        verify(listener).onStartPlaying();
-        verify(listener).onStopPlaying();
-        verify(mediaPlayer).setDataSource(context, empty);
-        verify(mediaPlayer).prepare();
-        verify(mediaPlayer, times(0)).isPlaying();
     }
 
     @Test

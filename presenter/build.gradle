@@ -27,7 +27,8 @@ android {
 dependencies {
     implementation project(path: ":model")
     implementation project(path: ":repository_api")
-    implementation project(path: ":service")
+    implementation project(path: ":service_api")
+    runtimeOnly project(path: ":service")
 
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -38,7 +39,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.powermock:powermock-reflect:1.6.1'
     testImplementation 'org.robolectric:robolectric:3.5'
+
     testImplementation project(path: ":service")
+    testImplementation project(path: ":service_api")
     testImplementation project(path: ":repository")
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

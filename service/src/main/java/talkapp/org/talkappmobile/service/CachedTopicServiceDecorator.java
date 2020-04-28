@@ -5,7 +5,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.repository.TopicRepository;
-import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
+import talkapp.org.talkappmobile.service.TopicService;
 
 public class CachedTopicServiceDecorator extends TopicServiceDecorator {
     private final TopicRepository topicRepository;

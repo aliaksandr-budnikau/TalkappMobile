@@ -21,6 +21,7 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.UserExpService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -49,13 +50,12 @@ public class UserExpServiceImplIntegTest {
             }
 
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
     }
 
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

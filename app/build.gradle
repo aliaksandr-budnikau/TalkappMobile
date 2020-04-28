@@ -43,6 +43,7 @@ dependencies {
     implementation project(path: ":model")
     implementation project(path: ":repository_api")
     implementation project(path: ":service")
+    implementation project(path: ":service_api")
     implementation project(path: ":presenter")
 
 

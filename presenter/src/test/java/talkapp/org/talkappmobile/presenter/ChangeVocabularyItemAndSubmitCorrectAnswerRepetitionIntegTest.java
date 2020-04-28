@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -61,7 +61,7 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
                 return helper;
             }
         };
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         wordSet = new WordSet();
         wordSet.setId(1000000 + 1);
@@ -130,10 +130,10 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(0);
         wordSet.setStatus(WordSetProgressStatus.FINISHED);
-        PresenterFactory presenterFactory = new PresenterFactory();
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
 
-        practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), context, true);
-        practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class), context);
+        practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), true);
+        practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));
 
     }
 
@@ -168,6 +168,5 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 }

@@ -31,8 +31,7 @@ import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
-import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -44,11 +43,13 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
@@ -92,9 +93,11 @@ public class ChangeSentenceTest {
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory();
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+
+        new BeanFactory(serviceFactory, presenterFactory);
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         wordSet = createWordSet(-1, "age");
@@ -103,7 +106,6 @@ public class ChangeSentenceTest {
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         Whitebox.setInternalState(practiceWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
-        Whitebox.setInternalState(practiceWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
         answerTextMock = mock(TextView.class);
@@ -150,7 +152,6 @@ public class ChangeSentenceTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

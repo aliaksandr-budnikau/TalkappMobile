@@ -36,11 +36,16 @@ import talkapp.org.talkappmobile.repository.TopicRepository;
 import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.DataServerImpl;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.Logger;
+import talkapp.org.talkappmobile.service.RequestExecutor;
 import talkapp.org.talkappmobile.service.SentenceRestClient;
 import talkapp.org.talkappmobile.service.TopicService;
+import talkapp.org.talkappmobile.service.TopicServiceImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
+import talkapp.org.talkappmobile.service.WordSetServiceImpl;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static java.util.Arrays.asList;

@@ -31,6 +31,8 @@ import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepositoryImpl
 import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.SentenceProvider;
+import talkapp.org.talkappmobile.service.SentenceProviderImpl;
+import talkapp.org.talkappmobile.service.WordProgressSentenceProviderDecorator;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -38,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.CORRUPTED;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.INSULT;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
-import static talkapp.org.talkappmobile.service.impl.SentenceProviderImpl.WORDS_NUMBER;
+import static talkapp.org.talkappmobile.service.SentenceProviderImpl.WORDS_NUMBER;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SentenceServiceImplTest {

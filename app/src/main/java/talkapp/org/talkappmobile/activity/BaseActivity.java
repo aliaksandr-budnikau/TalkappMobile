@@ -9,10 +9,10 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import talkapp.org.talkappmobile.activity.view.impl.ExceptionHandlerViewBean;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandler;
 import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 
 @EBean
@@ -23,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(getApplicationContext());
+        ServiceFactory serviceFactory = BeanFactory.serviceFactory(getApplicationContext());
         ExceptionHandlerInteractor interactor = new ExceptionHandlerInteractor(serviceFactory.getLogger());
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(exceptionHandlerView, interactor));
     }

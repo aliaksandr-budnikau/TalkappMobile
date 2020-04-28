@@ -27,8 +27,6 @@ import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.view.MainActivityView;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
@@ -36,19 +34,23 @@ import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.view.StatisticActivityView;
 
 public class PresenterFactory {
+    private final ServiceFactory serviceFactory;
 
-    public IPracticeWordSetPresenter create(PracticeWordSetView view, Context context, boolean repetitionMode) {
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(context);
+    public PresenterFactory(ServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
+    }
+
+    public IPracticeWordSetPresenter create(PracticeWordSetView view, boolean repetitionMode) {
         WordRepetitionProgressService progressService = serviceFactory.getWordRepetitionProgressService();
-        SentenceService sentenceService = serviceFactory.getSentenceService(null);
-        RefereeService refereeService = new RefereeServiceImpl(serviceFactory.getEqualityScorer());
+        SentenceService sentenceService = serviceFactory.getSentenceService();
+        RefereeService refereeService = serviceFactory.getRefereeService();
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view);
         CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
-        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), serviceFactory.getWordTranslationService(), stateService, progressService, context, serviceFactory.getSentenceProvider(), serviceFactory.getAudioStuffFactory());
+        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), stateService, progressService, serviceFactory.getSentenceProvider());
         StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, progressService, stateService);
         PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), progressService, serviceFactory.getSentenceProvider(), context, stateService, serviceFactory.getAudioStuffFactory());
+            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), progressService, serviceFactory.getSentenceProvider(), stateService);
             strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, progressService, stateService);
             interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
         }
@@ -59,23 +61,22 @@ public class PresenterFactory {
         return progressBarDecorator;
     }
 
-    public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view, Context context) {
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(ServiceFactoryBean.getInstance(context).getWordSetExperienceRepository(), ServiceFactoryBean.getInstance(context).getWordTranslationService(), ServiceFactoryBean.getInstance(context).getWordRepetitionProgressService(), ServiceFactoryBean.getInstance(context).getCurrentPracticeStateService());
+    public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {
+        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
         return new PracticeWordSetVocabularyPresenter(view, interactor);
     }
 
     public MainActivityPresenter create(MainActivityView view, Context context) {
-        MainActivityInteractor interactor = new MainActivityInteractor(ServiceFactoryBean.getInstance(context).getTopicService(), ServiceFactoryBean.getInstance(context).getUserExpService(), context);
+        MainActivityInteractor interactor = new MainActivityInteractor(serviceFactory.getTopicService(), serviceFactory.getUserExpService(), context);
         return new MainActivityPresenter(view, interactor);
     }
 
-    public StatisticActivityPresenter create(StatisticActivityView view, Context context) {
-        StatisticActivityInteractor interactor = new StatisticActivityInteractor(ServiceFactoryBean.getInstance(context).getUserExpService());
+    public StatisticActivityPresenter create(StatisticActivityView view) {
+        StatisticActivityInteractor interactor = new StatisticActivityInteractor(serviceFactory.getUserExpService());
         return new StatisticActivityPresenter(view, interactor);
     }
 
-    public AddingNewWordSetPresenter create(AddingNewWordSetView view, Context context) {
-        ServiceFactory serviceFactory = ServiceFactoryBean.getInstance(context);
+    public AddingNewWordSetPresenter create(AddingNewWordSetView view) {
         WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
         AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService, serviceFactory.getDataServer());

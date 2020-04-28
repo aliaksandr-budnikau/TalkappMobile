@@ -1,9 +1,5 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -17,7 +13,6 @@ import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.Logger;
 import talkapp.org.talkappmobile.service.RefereeService;
@@ -30,31 +25,24 @@ import static java.util.Collections.shuffle;
 public abstract class AbstractPracticeWordSetInteractor implements PracticeWordSetInteractor {
     private static final String TAG = AbstractPracticeWordSetInteractor.class.getSimpleName();
     private final Logger logger;
-    private final Context context;
     private final RefereeService refereeService;
-    private final AudioStuffFactory audioStuffFactory;
     private final WordRepetitionProgressService exerciseService;
     private final SentenceService sentenceService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private final SentenceProvider sentenceProvider;
     private boolean answerHasBeenSeen;
-    private Uri voiceRecordUri;
     private PracticeWordSetInteractorStrategy strategy;
 
     public AbstractPracticeWordSetInteractor(Logger logger,
-                                             Context context,
                                              RefereeService refereeService,
                                              WordRepetitionProgressService exerciseService,
                                              SentenceService sentenceService,
-                                             AudioStuffFactory audioStuffFactory,
                                              CurrentPracticeStateService currentPracticeStateService,
                                              SentenceProvider sentenceProvider) {
         this.logger = logger;
-        this.context = context;
         this.refereeService = refereeService;
         this.exerciseService = exerciseService;
         this.sentenceService = sentenceService;
-        this.audioStuffFactory = audioStuffFactory;
         this.currentPracticeStateService = currentPracticeStateService;
         this.sentenceProvider = sentenceProvider;
     }
@@ -102,34 +90,6 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
         List<Sentence> sentences = sentenceProvider.find(word);
         setCurrentSentence(sentences.get(0));
         listener.onSentencesFound(getCurrentSentence(), word);
-    }
-
-    @Override
-    public void playVoice(OnPracticeWordSetListener listener) {
-        if (voiceRecordUri == null) {
-            logger.i(TAG, "voice record uri is empty");
-            return;
-        }
-        MediaPlayer mp = null;
-        try {
-            listener.onStartPlaying();
-            try {
-                mp = audioStuffFactory.createMediaPlayer();
-                mp.setDataSource(context, voiceRecordUri);
-                mp.prepare();
-                mp.start();
-                logger.i(TAG, "start playing {}", voiceRecordUri);
-                while (mp.isPlaying()) {
-                    logger.i(TAG, "playing...");
-                    Thread.sleep(500);
-                }
-                logger.i(TAG, "stop playing");
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        } finally {
-            listener.onStopPlaying();
-        }
     }
 
     @Override
@@ -236,11 +196,6 @@ public abstract class AbstractPracticeWordSetInteractor implements PracticeWordS
     @Override
     public void markAnswerHasBeenSeen() {
         this.answerHasBeenSeen = true;
-    }
-
-    @Override
-    public void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
-        this.voiceRecordUri = voiceRecordUri;
     }
 
     @Override

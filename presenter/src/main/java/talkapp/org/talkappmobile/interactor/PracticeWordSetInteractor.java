@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.interactor;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.impl.PracticeWordSetInteractorStrategy;
@@ -24,8 +22,6 @@ public interface PracticeWordSetInteractor {
 
     boolean checkAnswer(String answer, OnPracticeWordSetListener listener);
 
-    void playVoice(OnPracticeWordSetListener listener);
-
     void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener);
 
     void changeSentence(OnPracticeWordSetListener listener);
@@ -43,8 +39,6 @@ public interface PracticeWordSetInteractor {
     void resetSentenceState(OnPracticeWordSetListener listener);
 
     void markAnswerHasBeenSeen();
-
-    void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener);
 
     void changeStrategy(PracticeWordSetInteractorStrategy strategy);
 

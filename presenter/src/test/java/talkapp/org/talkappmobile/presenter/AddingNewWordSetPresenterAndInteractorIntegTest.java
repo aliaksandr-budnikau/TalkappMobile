@@ -27,8 +27,8 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
@@ -65,12 +65,12 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         eventBus = mock(EventBus.class);
-        PresenterFactory presenterFactory = new PresenterFactory();
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
-        addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock, context);
+        addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }
 
     @Test
@@ -382,6 +382,5 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 }

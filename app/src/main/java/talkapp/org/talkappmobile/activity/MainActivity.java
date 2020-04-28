@@ -30,8 +30,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
@@ -46,7 +46,7 @@ import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
-    PresenterFactory presenterFactory = new PresenterFactory();
+
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
     @ViewById(R.id.toolbar)
@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create(this, getApplicationContext());
+        presenter = BeanFactory.presenterFactory(getApplicationContext()).create(this, getApplicationContext());
         presenter.checkServerAvailability();
         presenter.initAppVersion();
         presenter.initYourExp();

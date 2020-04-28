@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import androidx.annotation.NonNull;
 
@@ -12,13 +12,12 @@ import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
-import talkapp.org.talkappmobile.service.SentenceProvider;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator {
+public class WordTranslationSentenceProviderDecorator extends SentenceProviderDecorator {
     private final WordTranslationRepository wordTranslationRepository;
 
     public WordTranslationSentenceProviderDecorator(SentenceProvider provider, WordTranslationRepository wordTranslationRepository) {

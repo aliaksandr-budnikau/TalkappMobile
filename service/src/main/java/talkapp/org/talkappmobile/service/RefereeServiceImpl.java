@@ -1,8 +1,6 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import talkapp.org.talkappmobile.model.UncheckedAnswer;
-import talkapp.org.talkappmobile.service.EqualityScorer;
-import talkapp.org.talkappmobile.service.RefereeService;
 
 public class RefereeServiceImpl implements RefereeService {
     public static final int EQUALITY_THRESHOLD = 80;

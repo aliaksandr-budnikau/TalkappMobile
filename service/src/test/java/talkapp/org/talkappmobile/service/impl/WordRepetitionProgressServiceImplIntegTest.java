@@ -30,6 +30,7 @@ import talkapp.org.talkappmobile.repository.SentenceRepositoryImpl;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
 import talkapp.org.talkappmobile.service.BuildConfig;
+import talkapp.org.talkappmobile.service.WordRepetitionProgressServiceImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -96,7 +97,6 @@ public class WordRepetitionProgressServiceImplIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

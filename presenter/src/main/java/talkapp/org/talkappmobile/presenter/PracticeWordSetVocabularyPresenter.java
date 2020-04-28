@@ -4,10 +4,10 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetVocabularyListener;
-import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
+import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
 public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
 

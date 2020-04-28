@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter.decorator;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.Sentence;
@@ -32,11 +30,6 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     }
 
     @Override
-    public void playVoiceButtonClick() {
-        presenter.playVoiceButtonClick();
-    }
-
-    @Override
     public void disableButtonsDuringPronunciation() {
         presenter.disableButtonsDuringPronunciation();
     }
@@ -64,11 +57,6 @@ class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     @Override
     public void gotRecognitionResult(List<String> suggestedWords) {
         presenter.gotRecognitionResult(suggestedWords);
-    }
-
-    @Override
-    public void voiceRecorded(Uri data) {
-        presenter.voiceRecorded(data);
     }
 
     @Override

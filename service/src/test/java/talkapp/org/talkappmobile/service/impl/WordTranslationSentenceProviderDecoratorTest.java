@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.SentenceProvider;
+import talkapp.org.talkappmobile.service.WordTranslationSentenceProviderDecorator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WordTranslationSentenceProviderDecoratorTest {

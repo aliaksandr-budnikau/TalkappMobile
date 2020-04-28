@@ -28,6 +28,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
@@ -37,7 +38,6 @@ import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.MainActivityDefaultFragmentPresenter;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -53,7 +53,6 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
-
     @ViewById(R.id.tasksListView)
     TasksListView tasksListView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -90,7 +89,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(ServiceFactoryBean.getInstance(getActivity()).getWordRepetitionProgressService(),
+        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(BeanFactory.serviceFactory(getActivity()).getWordRepetitionProgressService(),
                 wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,

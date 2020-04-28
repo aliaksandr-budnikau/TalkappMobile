@@ -29,9 +29,9 @@ import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
+import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -78,10 +78,10 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
-        presenterFactory = new PresenterFactory();
+        presenterFactory = new PresenterFactory(serviceFactory);
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
 
@@ -117,13 +117,12 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         sentence3.getTokens().add(new TextToken(IN_FACT));
         words2Sentences.put(IN_FACT, asList(sentence3));
 
-        serviceFactory.getSentenceService(null).saveSentences(words2Sentences, 6);
+        serviceFactory.getSentenceService().saveSentences(words2Sentences, 6);
     }
 
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     private void createPresenter() {
@@ -147,7 +146,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
         serviceFactory.getWordSetExperienceRepository().save(wordSet);
-        presenter = presenterFactory.create(view, context, false);
+        presenter = presenterFactory.create(view, false);
     }
 
     @Test

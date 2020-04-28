@@ -1,16 +1,14 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 
 public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
     private final PracticeWordSetInteractor interactor;
@@ -155,14 +153,6 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         if (result) {
             interactor.finishWord(this);
         }
-    }
-
-    public void playVoiceButtonClick() {
-        interactor.playVoice(this);
-    }
-
-    public void voiceRecorded(Uri voiceRecordUri) {
-        interactor.saveVoice(voiceRecordUri, this);
     }
 
     public void checkRightAnswerCommandRecognized() {

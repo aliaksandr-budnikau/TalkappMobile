@@ -17,6 +17,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.WordSetRepositoryImpl;
 import talkapp.org.talkappmobile.service.DataServer;
+import talkapp.org.talkappmobile.service.WordSetServiceImpl;
 
 import static org.junit.Assert.assertEquals;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;

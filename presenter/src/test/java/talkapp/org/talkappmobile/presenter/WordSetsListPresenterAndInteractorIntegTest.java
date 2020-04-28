@@ -29,7 +29,7 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.repository.WordSetMapper;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.WordSetsListView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -72,7 +72,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordRepetitionProgressService());
         mapper = new ObjectMapper();
         wordSetMapper = new WordSetMapper(mapper);
@@ -81,7 +81,6 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

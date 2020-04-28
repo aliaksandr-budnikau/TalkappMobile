@@ -24,7 +24,7 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -61,7 +61,7 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
     }
@@ -69,7 +69,6 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     @After
     public void tearDown() throws Exception {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

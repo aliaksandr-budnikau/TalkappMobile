@@ -29,18 +29,19 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static android.text.TextUtils.isEmpty;
@@ -53,12 +54,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
-import static talkapp.org.talkappmobile.service.impl.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
+import static talkapp.org.talkappmobile.service.WordTranslationServiceImpl.RUSSIAN_LANGUAGE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class CapitalLetterInNewWordTest {
-    private PresenterFactory presenterFactory;
     private WordSet wordSet;
     private PracticeWordSetFragment practiceWordSetFragment;
     private AddingNewWordSetFragment addingNewWordSetFragment;
@@ -68,6 +68,7 @@ public class CapitalLetterInNewWordTest {
     private WordSetVocabularyView wordSetVocabularyView;
     private ServiceFactory serviceFactory;
     private RepositoryFactory repositoryFactory;
+    private PresenterFactory presenterFactory;
 
     @Before
     public void setup() {
@@ -84,16 +85,16 @@ public class CapitalLetterInNewWordTest {
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        presenterFactory = new PresenterFactory();
+        presenterFactory = new PresenterFactory(serviceFactory);
 
+        new BeanFactory(serviceFactory, presenterFactory);
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         Whitebox.setInternalState(practiceWordSetFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
-        Whitebox.setInternalState(practiceWordSetFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
         answerTextMock = mock(TextView.class);
@@ -116,14 +117,12 @@ public class CapitalLetterInNewWordTest {
         Whitebox.setInternalState(addingNewWordSetFragment, "pleaseWaitProgressBar", mock(View.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
         Whitebox.setInternalState(addingNewWordSetFragment, "mainForm", mock(View.class));
-        Whitebox.setInternalState(addingNewWordSetFragment, "presenterFactory", presenterFactory);
         wordSetVocabularyView = mock(WordSetVocabularyView.class);
         Whitebox.setInternalState(addingNewWordSetFragment, "wordSetVocabularyView", wordSetVocabularyView);
 
 
         practiceWordSetVocabularyFragment = new PracticeWordSetVocabularyFragment();
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "waitingForProgressBarManagerFactory", waitingForProgressBarManagerFactory);
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactory", presenterFactory);
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "eventBus", mock(EventBus.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
@@ -151,7 +150,6 @@ public class CapitalLetterInNewWordTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

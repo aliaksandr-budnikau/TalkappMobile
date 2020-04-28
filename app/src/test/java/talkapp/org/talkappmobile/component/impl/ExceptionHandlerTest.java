@@ -22,11 +22,11 @@ import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.TopicService;
-import talkapp.org.talkappmobile.service.impl.DataServerImpl;
-import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-import talkapp.org.talkappmobile.service.impl.TopicServiceImpl;
+import talkapp.org.talkappmobile.service.DataServerImpl;
+import talkapp.org.talkappmobile.service.InternetConnectionLostException;
+import talkapp.org.talkappmobile.service.LoggerImpl;
+import talkapp.org.talkappmobile.service.RequestExecutor;
+import talkapp.org.talkappmobile.service.TopicServiceImpl;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;

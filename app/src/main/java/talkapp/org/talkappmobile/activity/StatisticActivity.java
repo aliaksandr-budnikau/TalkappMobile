@@ -34,8 +34,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 import talkapp.org.talkappmobile.presenter.StatisticActivityPresenter;
@@ -53,8 +53,6 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 @EActivity(R.layout.activity_statistic)
 public class StatisticActivity extends AppCompatActivity implements StatisticActivityView {
 
-
-    PresenterFactory presenterFactory = new PresenterFactory();
 
     @EventBusGreenRobot
     EventBus eventBus;
@@ -83,7 +81,7 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
 
     @AfterViews
     public void init() {
-        presenter = presenterFactory.create(this, getApplicationContext());
+        presenter = BeanFactory.presenterFactory(getApplicationContext()).create(this);
         formBarChart();
         tabHost.setup();
         //Tab 1

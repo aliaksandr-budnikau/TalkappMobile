@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 @EActivity(R.layout.activity_word_set_qr_export)
 public class WordSetQRExportActivity extends BaseActivity {
@@ -43,7 +42,7 @@ public class WordSetQRExportActivity extends BaseActivity {
 
     @Background
     public void generateQR() {
-        ObjectMapper mapper = ServiceFactoryBean.getInstance(getApplication()).getMapper();
+        ObjectMapper mapper = new ObjectMapper();
         String text = null;
         try {
             text = mapper.writeValueAsString(qrObject);

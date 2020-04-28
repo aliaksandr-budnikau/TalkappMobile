@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
-import android.net.Uri;
-
 import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
@@ -49,11 +47,6 @@ class PracticeWordSetInteractorDecorator implements PracticeWordSetInteractor {
     }
 
     @Override
-    public void playVoice(OnPracticeWordSetListener listener) {
-        interactor.playVoice(listener);
-    }
-
-    @Override
     public void scoreSentence(Sentence sentence, SentenceContentScore score, OnPracticeWordSetListener listener) {
         interactor.scoreSentence(sentence, score, listener);
     }
@@ -96,11 +89,6 @@ class PracticeWordSetInteractorDecorator implements PracticeWordSetInteractor {
     @Override
     public void markAnswerHasBeenSeen() {
         interactor.markAnswerHasBeenSeen();
-    }
-
-    @Override
-    public void saveVoice(Uri voiceRecordUri, OnPracticeWordSetListener listener) {
-        interactor.saveVoice(voiceRecordUri, listener);
     }
 
     @Override

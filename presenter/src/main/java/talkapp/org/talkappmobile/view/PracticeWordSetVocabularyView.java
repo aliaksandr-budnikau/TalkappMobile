@@ -1,9 +1,9 @@
 package talkapp.org.talkappmobile.view;
 
-import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
-
 import java.util.List;
+
+import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
 
 public interface PracticeWordSetVocabularyView {
     void setWordSetVocabularyList(List<WordTranslation> wordTranslations);

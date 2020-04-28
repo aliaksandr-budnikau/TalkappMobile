@@ -16,6 +16,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.repository.ExpAuditRepository;
+import talkapp.org.talkappmobile.service.UserExpServiceImpl;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

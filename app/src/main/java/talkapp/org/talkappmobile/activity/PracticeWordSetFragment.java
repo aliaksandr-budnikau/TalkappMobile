@@ -32,10 +32,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
@@ -70,7 +70,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
 
-    PresenterFactory presenterFactory = new PresenterFactory();
     @ViewById(R.id.originalText)
     TextView originalText;
     @ViewById(R.id.rightAnswer)
@@ -132,7 +131,7 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create(this, getContext(), repetitionMode);
+        presenter = BeanFactory.presenterFactory(getActivity()).create(this, repetitionMode);
         presenter.initialise(wordSet);
         presenter.nextButtonClick();
     }
@@ -166,12 +165,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     @Background
     public void onCloseButtonClick() {
         eventBus.post(new WordSetPracticeFinishedEM());
-    }
-
-    @Click(R.id.playButton)
-    @Background
-    public void onPlayVoiceButtonClick() {
-        presenter.playVoiceButtonClick();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -231,7 +224,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
         }
 
         presenter.gotRecognitionResult(suggestedWords);
-        presenter.voiceRecorded(data.getData());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import java.io.IOException;
 import java.net.SocketException;

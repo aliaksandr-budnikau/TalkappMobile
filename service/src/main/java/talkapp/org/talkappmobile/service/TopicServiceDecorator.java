@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.service;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.service.TopicService;
 
 class TopicServiceDecorator implements TopicService {
 

@@ -21,7 +21,7 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.TopicsFragmentView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -56,7 +56,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         topicsFragmentInteractor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
     }
@@ -64,7 +64,6 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

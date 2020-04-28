@@ -5,7 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
-import talkapp.org.talkappmobile.service.impl.InternetConnectionLostException;
+import talkapp.org.talkappmobile.service.WordSetService;
 
 public class CachedWordSetServiceDecorator extends WordSetServiceDecorator {
     private final WordSetRepository wordSetRepository;

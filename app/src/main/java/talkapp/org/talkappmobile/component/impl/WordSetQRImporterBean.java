@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -17,14 +18,14 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.AddingNewWordSetFragment_;
+import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -60,7 +61,7 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                 String wordSetJson = data.getStringExtra("SCAN_RESULT");
                 NewWordSetDraftQRObject draft = null;
                 try {
-                    draft = ServiceFactoryBean.getInstance(context).getMapper().readValue(wordSetJson, NewWordSetDraftQRObject.class);
+                    draft = new ObjectMapper().readValue(wordSetJson, NewWordSetDraftQRObject.class);
                 } catch (JsonMappingException e) {
                     Toast.makeText(activity, addingFailedMessageMappingError, Toast.LENGTH_LONG).show();
                     return;
@@ -70,8 +71,8 @@ public class WordSetQRImporterBean implements WordSetQRImporter {
                 }
                 NewWordSetDraft wordSetDraft = assembleDraft(draft);
 
-                WordSetService wordSetService = ServiceFactoryBean.getInstance(context).getWordSetExperienceRepository();
-                WordTranslationService wordTranslationService = ServiceFactoryBean.getInstance(context).getWordTranslationService();
+                WordSetService wordSetService = BeanFactory.serviceFactory(context).getWordSetExperienceRepository();
+                WordTranslationService wordTranslationService = BeanFactory.serviceFactory(context).getWordTranslationService();
 
                 wordSetService.save(wordSetDraft);
                 wordTranslationService.saveWordTranslations(wordSetDraft);

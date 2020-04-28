@@ -29,7 +29,9 @@ import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
+import talkapp.org.talkappmobile.service.RequestExecutor;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.M;
@@ -69,8 +71,8 @@ public class DataServerImplIntegTest {
             }
 
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
-        ServiceFactoryBean bean = (ServiceFactoryBean) serviceFactory;
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        ServiceFactoryImpl bean = (ServiceFactoryImpl) serviceFactory;
         bean.setGitHubRestClient(gitHubRestClient);
         bean.setRequestExecutor(requestExecutor);
         wordSetService = serviceFactory.getWordSetExperienceRepository();
@@ -79,7 +81,6 @@ public class DataServerImplIntegTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

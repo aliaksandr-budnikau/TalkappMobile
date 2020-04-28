@@ -4,11 +4,13 @@ import org.junit.Test;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.service.TextUtilsImpl;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static talkapp.org.talkappmobile.service.impl.TextUtilsImpl.PLACEHOLDER;
+import static talkapp.org.talkappmobile.service.TextUtilsImpl.PLACEHOLDER;
 
 /**
  * @author Budnikau Aliaksandr

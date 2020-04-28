@@ -3,9 +3,9 @@ package talkapp.org.talkappmobile.activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import com.google.android.material.navigation.NavigationView;
 import android.widget.TextView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,11 +23,12 @@ import java.sql.SQLException;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -79,10 +80,11 @@ public class MainActivityTest {
             }
         };
 
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory();
-        Whitebox.setInternalState(mainActivity, "presenterFactory", presenterFactory);
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+
+        new BeanFactory(serviceFactory, presenterFactory);
 
         applicationVersion = mock(TextView.class);
         userExp = mock(TextView.class);
@@ -95,7 +97,6 @@ public class MainActivityTest {
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test

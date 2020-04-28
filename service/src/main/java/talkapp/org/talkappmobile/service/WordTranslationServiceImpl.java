@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import androidx.annotation.NonNull;
 
@@ -9,10 +9,8 @@ import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
-import talkapp.org.talkappmobile.service.WordTranslationService;
 
 import static java.util.Arrays.asList;
 

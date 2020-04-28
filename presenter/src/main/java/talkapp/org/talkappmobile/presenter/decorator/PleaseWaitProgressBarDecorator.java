@@ -1,14 +1,12 @@
 package talkapp.org.talkappmobile.presenter.decorator;
 
-import android.net.Uri;
-
 import java.util.List;
 
-import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDecorator {
     private final PracticeWordSetView view;
@@ -44,16 +42,6 @@ public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDeco
             @Override
             void doSuperMethod() {
                 PleaseWaitProgressBarDecorator.super.prepareOriginalTextClickEM();
-            }
-        }.execute();
-    }
-
-    @Override
-    public void playVoiceButtonClick() {
-        new SuperClassWrapper(view) {
-            @Override
-            void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.playVoiceButtonClick();
             }
         }.execute();
     }
@@ -118,15 +106,6 @@ public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDeco
         }.execute();
     }
 
-    @Override
-    public void voiceRecorded(final Uri data) {
-        new SuperClassWrapper(view) {
-            @Override
-            void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.voiceRecorded(data);
-            }
-        }.execute();
-    }
 
     @Override
     public void scoreSentence(final SentenceContentScore score, final Sentence sentence) {

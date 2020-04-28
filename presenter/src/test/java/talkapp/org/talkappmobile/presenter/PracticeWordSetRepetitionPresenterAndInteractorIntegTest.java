@@ -35,12 +35,11 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.EqualityScorerImpl;
+import talkapp.org.talkappmobile.service.LoggerImpl;
+import talkapp.org.talkappmobile.service.RefereeServiceImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.impl.AudioStuffFactoryImpl;
-import talkapp.org.talkappmobile.service.impl.EqualityScorerImpl;
-import talkapp.org.talkappmobile.service.impl.LoggerImpl;
-import talkapp.org.talkappmobile.service.impl.RefereeServiceImpl;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -86,17 +85,16 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
                 return helper;
             }
         };
-        serviceFactory = ServiceFactoryBean.getInstance(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(null), new RefereeServiceImpl(new EqualityScorerImpl()),
-                logger, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getSentenceProvider(), context, serviceFactory.getCurrentPracticeStateService(), new AudioStuffFactoryImpl());
+        repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(), new RefereeServiceImpl(new EqualityScorerImpl()),
+                logger, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getSentenceProvider(), serviceFactory.getCurrentPracticeStateService());
         this.interactor = new UserExperienceDecorator(repetitionPracticeWordSetInteractor, serviceFactory.getUserExpService(), serviceFactory.getCurrentPracticeStateService(), serviceFactory.getWordRepetitionProgressService());
     }
 
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     private void createPresenter(PracticeWordSetInteractor interactor) throws JsonProcessingException, SQLException {

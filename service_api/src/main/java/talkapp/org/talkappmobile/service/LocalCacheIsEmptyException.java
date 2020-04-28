@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 public class LocalCacheIsEmptyException extends RuntimeException {
     public LocalCacheIsEmptyException(String message) {

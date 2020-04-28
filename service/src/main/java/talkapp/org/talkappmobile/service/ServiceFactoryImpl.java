@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import android.content.Context;
 
@@ -13,30 +13,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
-import talkapp.org.talkappmobile.service.AudioStuffFactory;
-import talkapp.org.talkappmobile.service.CachedWordSetServiceDecorator;
-import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.EqualityScorer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.Logger;
-import talkapp.org.talkappmobile.service.SentenceProvider;
-import talkapp.org.talkappmobile.service.SentenceRestClient;
-import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.TextUtils;
-import talkapp.org.talkappmobile.service.TopicService;
-import talkapp.org.talkappmobile.service.UserExpService;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordTranslationService;
 
-public class ServiceFactoryBean implements ServiceFactory {
+public class ServiceFactoryImpl implements ServiceFactory {
 
     public static final int TIMEOUT = 50;
     public static final String SERVER_URL = "http://192.168.0.101:8080";
     public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
-    private static ServiceFactory instance;
     private final ObjectMapper MAPPER = new ObjectMapper();
     private final RepositoryFactory repositoryFactory;
     private WordRepetitionProgressServiceImpl practiceWordSetExerciseService;
@@ -51,45 +33,23 @@ public class ServiceFactoryBean implements ServiceFactory {
     private Retrofit gitHubRetrofit;
     private DataServer backendServer;
     private GitHubRestClient gitHubRestClient;
-    private AudioStuffFactory audioStuffFactory;
     private EqualityScorer equalityScorer;
     private Logger logger;
     private TextUtils textUtils;
 
-    private ServiceFactoryBean(RepositoryFactory repositoryFactory) {
+    public ServiceFactoryImpl(RepositoryFactory repositoryFactory) {
         this.repositoryFactory = repositoryFactory;
     }
 
-    private ServiceFactoryBean(Context context) {
+    public ServiceFactoryImpl(Context context) {
         this.repositoryFactory = RepositoryFactoryProvider.get(context);
-    }
-
-    public synchronized static ServiceFactory getInstance(Context context) {
-        if (instance != null) {
-            return instance;
-        }
-        instance = new ServiceFactoryBean(context);
-        return instance;
-    }
-
-    public static ServiceFactory getInstance(RepositoryFactory repositoryFactory) {
-        if (instance != null) {
-            return instance;
-        }
-        instance = new ServiceFactoryBean(repositoryFactory);
-        return instance;
-    }
-
-    public static void removeInstance() {
-        instance = null;
     }
 
     private RepositoryFactory getRepositoryFactory() {
         return repositoryFactory;
     }
 
-    @Override
-    public RequestExecutor getRequestExecutor() {
+    private RequestExecutor getRequestExecutor() {
         if (requestExecutor != null) {
             return requestExecutor;
         }
@@ -99,15 +59,6 @@ public class ServiceFactoryBean implements ServiceFactory {
 
     public void setRequestExecutor(RequestExecutor requestExecutor) {
         this.requestExecutor = requestExecutor;
-    }
-
-    @Override
-    public AudioStuffFactory getAudioStuffFactory() {
-        if (audioStuffFactory != null) {
-            return audioStuffFactory;
-        }
-        audioStuffFactory = new AudioStuffFactoryImpl();
-        return audioStuffFactory;
     }
 
     @Override
@@ -187,8 +138,7 @@ public class ServiceFactoryBean implements ServiceFactory {
         return topicService;
     }
 
-    @Override
-    public ObjectMapper getMapper() {
+    private ObjectMapper getMapper() {
         return MAPPER;
     }
 
@@ -202,13 +152,18 @@ public class ServiceFactoryBean implements ServiceFactory {
     }
 
     @Override
-    public SentenceService getSentenceService(DataServer server) {
+    public SentenceService getSentenceService() {
         if (sentenceService != null) {
             return sentenceService;
         }
-        DataServer dataServer = server == null ? getDataServer() : server;
+        DataServer dataServer = getDataServer();
         sentenceService = new SentenceServiceImpl(dataServer, getRepositoryFactory().getSentenceRepository());
         return sentenceService;
+    }
+
+    @Override
+    public RefereeService getRefereeService() {
+        return new RefereeServiceImpl(getEqualityScorer());
     }
 
     private Retrofit retrofit() {

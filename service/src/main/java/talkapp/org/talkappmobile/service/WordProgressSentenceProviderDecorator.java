@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.service.impl;
+package talkapp.org.talkappmobile.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,14 +12,13 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
-class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
+public class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
     private final WordRepetitionProgressRepository progressRepository;
     private final WordSetRepository wordSetRepository;
 

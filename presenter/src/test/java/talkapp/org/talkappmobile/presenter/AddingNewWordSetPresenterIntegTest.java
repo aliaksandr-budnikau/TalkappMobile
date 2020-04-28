@@ -21,8 +21,9 @@ import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -40,6 +41,7 @@ public class AddingNewWordSetPresenterIntegTest {
     private RepositoryFactoryImpl repositoryFactory;
     private AddingNewWordSetPresenter addingNewWordSetPresenter;
     private AddingNewWordSetView addingNewWordSetViewMock;
+    private ServiceFactory serviceFactory;
 
     @Before
     public void setUp() throws Exception {
@@ -56,16 +58,15 @@ public class AddingNewWordSetPresenterIntegTest {
                 return helper;
             }
         };
-        ServiceFactoryBean.getInstance(repositoryFactory);
-        PresenterFactory presenterFactory = new PresenterFactory();
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
-        addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock, context);
+        addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }
 
     @After
     public void tearDown() {
         OpenHelperManager.releaseHelper();
-        ServiceFactoryBean.removeInstance();
     }
 
     @Test
@@ -83,7 +84,7 @@ public class AddingNewWordSetPresenterIntegTest {
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
-        WordSetService wordSetService = ServiceFactoryBean.getInstance(mock(Context.class)).getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
             words.add(new WordTranslation());
@@ -111,7 +112,7 @@ public class AddingNewWordSetPresenterIntegTest {
             words.add(new WordTranslation());
         }
 
-        WordSetService wordSetService = ServiceFactoryBean.getInstance(mock(Context.class)).getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
         wordSetService.save(new NewWordSetDraft(words));
 
         // when

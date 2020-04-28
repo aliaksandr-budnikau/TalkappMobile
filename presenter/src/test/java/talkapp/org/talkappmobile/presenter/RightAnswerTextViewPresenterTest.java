@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import talkapp.org.talkappmobile.interactor.RightAnswerTextViewInteractor;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.impl.TextUtilsImpl;
+import talkapp.org.talkappmobile.service.TextUtilsImpl;
 import talkapp.org.talkappmobile.view.RightAnswerTextViewView;
 
 import static org.mockito.ArgumentMatchers.anyString;

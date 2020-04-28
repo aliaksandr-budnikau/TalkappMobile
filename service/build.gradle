@@ -27,6 +27,7 @@ android {
 dependencies {
     implementation project(path: ":model")
     implementation project(path: ":repository_api")
+    implementation project(path: ":service_api")
     runtimeOnly project(path: ":repository")
 
 

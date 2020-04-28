@@ -8,6 +8,8 @@ import java.io.IOException;
 import javax.net.ssl.SSLException;
 
 import retrofit2.Call;
+import talkapp.org.talkappmobile.service.InternetConnectionLostException;
+import talkapp.org.talkappmobile.service.RequestExecutor;
 
 public class RequestExecutorTest {
 

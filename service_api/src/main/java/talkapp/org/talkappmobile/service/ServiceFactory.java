@@ -1,16 +1,6 @@
 package talkapp.org.talkappmobile.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import talkapp.org.talkappmobile.service.impl.RequestExecutor;
-
 public interface ServiceFactory {
-    RequestExecutor getRequestExecutor();
-
-    AudioStuffFactory getAudioStuffFactory();
-
-    TextUtils getTextUtils();
-
     EqualityScorer getEqualityScorer();
 
     Logger getLogger();
@@ -25,13 +15,15 @@ public interface ServiceFactory {
 
     WordTranslationService getWordTranslationService();
 
-    ObjectMapper getMapper();
-
     CurrentPracticeStateService getCurrentPracticeStateService();
 
-    SentenceService getSentenceService(DataServer server);
+    SentenceService getSentenceService();
+
+    RefereeService getRefereeService();
 
     DataServer getDataServer();
 
     SentenceProvider getSentenceProvider();
+
+    TextUtils getTextUtils();
 }
