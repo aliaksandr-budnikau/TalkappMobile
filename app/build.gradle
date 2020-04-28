@@ -42,7 +42,6 @@ android {
 dependencies {
     implementation project(path: ":model")
     implementation project(path: ":presenter_api")
-    implementation project(path: ":service_api")
     runtimeOnly project(path: ":presenter")
 
 
@@ -71,6 +70,7 @@ dependencies {
     testImplementation project(path: ":repository")
     testImplementation project(path: ":repository_api")
     testImplementation project(path: ":service")
+    testImplementation project(path: ":service_api")
     testImplementation project(path: ":presenter")
     testImplementation 'org.mockito:mockito-core:2.21.0'
     testImplementation 'org.powermock:powermock-reflect:1.6.1'
