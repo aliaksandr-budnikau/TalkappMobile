@@ -4,7 +4,6 @@ import android.content.Context;
 
 import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 
 public class BeanFactory {
     private static ServiceFactory serviceFactory;
@@ -13,13 +12,6 @@ public class BeanFactory {
     public BeanFactory(ServiceFactory serviceFactory, PresenterFactory presenterFactory) {
         BeanFactory.serviceFactory = serviceFactory;
         BeanFactory.presenterFactory = presenterFactory;
-    }
-
-    public static ServiceFactory serviceFactory(Context context) {
-        if (serviceFactory == null) {
-            serviceFactory = ServiceFactoryProvider.get(context);
-        }
-        return serviceFactory;
     }
 
     public static PresenterFactory presenterFactory(Context context) {

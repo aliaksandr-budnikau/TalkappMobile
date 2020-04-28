@@ -12,21 +12,22 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.Call;
-import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
-import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
+import talkapp.org.talkappmobile.presenter.ExceptionHandlerPresenter;
 import talkapp.org.talkappmobile.repository.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
-import talkapp.org.talkappmobile.service.GitHubRestClient;
-import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.DataServerImpl;
+import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.RequestExecutor;
+import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.TopicServiceImpl;
+import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,7 +68,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_ConnectException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
@@ -87,7 +88,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_SocketTimeoutException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
@@ -108,7 +109,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_RuntimeException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(view, interactor);
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);

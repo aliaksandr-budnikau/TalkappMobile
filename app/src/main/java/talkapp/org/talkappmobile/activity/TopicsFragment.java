@@ -15,12 +15,12 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.component.BeanFactory;
-import talkapp.org.talkappmobile.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.view.TopicsFragmentView;
@@ -44,14 +44,11 @@ public class TopicsFragment extends Fragment implements TopicsFragmentView {
 
     @AfterViews
     public void init() {
-        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(BeanFactory.serviceFactory(getActivity()).getTopicService());
-
+        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, topicsListView);
         topicsListView.setAdapter(adapter);
 
-        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, topicsListView);
-
-        presenter = new TopicsFragmentPresenter(this, interactor);
-
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        presenter = presenterFactory.create(this);
         initPresenter();
     }
 

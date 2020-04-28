@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
@@ -33,16 +34,12 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
-import talkapp.org.talkappmobile.interactor.WordSetsListInteractor;
-import talkapp.org.talkappmobile.interactor.impl.RepetitionWordSetsListInteractor;
-import talkapp.org.talkappmobile.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.presenter.WordSetsListPresenter;
-import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.view.WordSetsListView;
 import talkapp.org.talkappmobile.widget.adapter.filterable.AbstractFilter;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
@@ -111,13 +108,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Background
     public void initPresenter() {
-        ServiceFactory serviceFactory = BeanFactory.serviceFactory(getActivity());
-        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordRepetitionProgressService());
-        if (repetitionMode) {
-            RepetitionClass repetitionClass = this.repetitionClass == null ? RepetitionClass.NEW : this.repetitionClass;
-            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getWordRepetitionProgressService(), repetitionClass);
-        }
-        presenter = new WordSetsListPresenter(topic, this, interactor);
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        presenter = presenterFactory.create(this, repetitionMode, repetitionClass, topic);
         presenter.initialize();
     }
 

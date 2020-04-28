@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
@@ -32,7 +33,6 @@ import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
-import talkapp.org.talkappmobile.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
@@ -89,13 +89,11 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(BeanFactory.serviceFactory(getActivity()).getWordRepetitionProgressService(),
-                wordSetsRepetitionTitle, wordSetsRepetitionDescription,
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        presenter = presenterFactory.create(this, wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,
-                wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription
-        );
-        presenter = new MainActivityDefaultFragmentPresenter(this, interactor);
+                wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription);
         presenter.init();
         findTasks();
     }
