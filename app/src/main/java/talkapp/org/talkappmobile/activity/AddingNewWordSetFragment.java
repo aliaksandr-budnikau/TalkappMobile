@@ -21,18 +21,19 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
+import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
 @EFragment(value = R.layout.adding_new_word_set_layout)
 public class AddingNewWordSetFragment extends Fragment implements WordSetVocabularyView.OnItemViewInteractionListener, WordSetVocabularyItemAlertDialog.OnDialogInteractionListener, AddingNewWordSetView {
@@ -42,8 +43,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     Speaker speaker;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
-    @Bean
-    PresenterFactory presenterFactory;
+    PresenterFactory presenterFactory = new PresenterFactory();
     @ViewById(R.id.wordSetVocabularyView)
     WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -74,7 +74,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create(this);
+        presenter = presenterFactory.create(this, this.getActivity());
         presenter.initialize();
     }
 

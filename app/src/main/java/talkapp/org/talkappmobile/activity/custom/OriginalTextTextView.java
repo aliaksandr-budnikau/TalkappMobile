@@ -2,12 +2,13 @@ package talkapp.org.talkappmobile.activity.custom;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -23,8 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
-import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -35,6 +34,8 @@ import talkapp.org.talkappmobile.events.SentencesWereFoundForChangeEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
+import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 

@@ -9,7 +9,7 @@ import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.UiThread;
 
 import talkapp.org.talkappmobile.activity.CrashActivity_;
-import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 
 import static talkapp.org.talkappmobile.activity.CrashActivity.STACK_TRACE;
 

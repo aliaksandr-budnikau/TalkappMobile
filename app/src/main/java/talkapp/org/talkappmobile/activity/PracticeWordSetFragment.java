@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import androidx.fragment.app.Fragment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -31,11 +32,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.presenter.decorator.IPracticeWordSetPresenter;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
@@ -55,6 +55,8 @@ import talkapp.org.talkappmobile.events.WordSetPracticeFinishedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
@@ -67,8 +69,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-    @Bean
-    PresenterFactory presenterFactory;
+
+    PresenterFactory presenterFactory = new PresenterFactory();
     @ViewById(R.id.originalText)
     TextView originalText;
     @ViewById(R.id.rightAnswer)

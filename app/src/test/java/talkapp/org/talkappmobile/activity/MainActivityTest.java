@@ -21,6 +21,7 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;

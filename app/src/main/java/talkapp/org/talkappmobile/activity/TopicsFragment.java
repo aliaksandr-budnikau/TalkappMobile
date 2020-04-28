@@ -19,11 +19,11 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TopicListAdapter;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.interactor.TopicsFragmentInteractor;
-import talkapp.org.talkappmobile.activity.presenter.TopicsFragmentPresenter;
-import talkapp.org.talkappmobile.activity.view.TopicsFragmentView;
+import talkapp.org.talkappmobile.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.presenter.TopicsFragmentPresenter;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.view.TopicsFragmentView;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 

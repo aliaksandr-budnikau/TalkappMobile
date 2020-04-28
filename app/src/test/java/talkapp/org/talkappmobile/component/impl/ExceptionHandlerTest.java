@@ -12,8 +12,8 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import retrofit2.Call;
-import talkapp.org.talkappmobile.activity.interactor.ExceptionHandlerInteractor;
-import talkapp.org.talkappmobile.activity.view.ExceptionHandlerView;
+import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
+import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;

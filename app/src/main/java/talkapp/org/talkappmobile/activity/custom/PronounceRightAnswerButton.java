@@ -10,21 +10,22 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EView;
+import org.androidannotations.annotations.UiThread;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.Speaker;
+import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
-
-import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.custom.interactor.PronounceRightAnswerButtonInteractor;
-import talkapp.org.talkappmobile.activity.custom.presenter.PronounceRightAnswerButtonPresenter;
-import talkapp.org.talkappmobile.activity.custom.view.PronounceRightAnswerButtonView;
-import talkapp.org.talkappmobile.component.Speaker;
-import talkapp.org.talkappmobile.component.impl.SpeakerBean;
+import talkapp.org.talkappmobile.interactor.PronounceRightAnswerButtonInteractor;
+import talkapp.org.talkappmobile.presenter.PronounceRightAnswerButtonPresenter;
+import talkapp.org.talkappmobile.view.PronounceRightAnswerButtonView;
 
 @EView
 public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCompatButton implements PronounceRightAnswerButtonView {
@@ -48,7 +49,7 @@ public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCom
 
     @AfterInject
     public void init() {
-        PronounceRightAnswerButtonInteractor interactor = new PronounceRightAnswerButtonInteractor(speaker);
+        PronounceRightAnswerButtonInteractor interactor = new PronounceRightAnswerButtonInteractor();
         presenter = new PronounceRightAnswerButtonPresenter(interactor, this);
     }
 
@@ -82,5 +83,11 @@ public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCom
     @Override
     public void onAnswerHasBeenRevealed() {
         eventBus.post(new AnswerHasBeenRevealedEM());
+    }
+
+    @Override
+    @UiThread
+    public void onPronounceRightAnswer(String text) {
+        speaker.speak(text);
     }
 }

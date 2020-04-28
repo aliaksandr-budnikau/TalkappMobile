@@ -1,10 +1,11 @@
 package talkapp.org.talkappmobile.activity;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -22,21 +23,22 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.activity.presenter.AddingNewWordSetPresenter;
-import talkapp.org.talkappmobile.activity.presenter.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.activity.view.AddingNewWordSetView;
-import talkapp.org.talkappmobile.activity.view.PracticeWordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.PracticeWordSetVocabularyPresenter;
 import talkapp.org.talkappmobile.service.impl.LocalCacheIsEmptyException;
+import talkapp.org.talkappmobile.view.AddingNewWordSetView;
+import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 
@@ -44,8 +46,8 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 public class PracticeWordSetVocabularyFragment extends Fragment implements PracticeWordSetVocabularyView, WordSetVocabularyView.OnItemViewInteractionListener,
         WordSetVocabularyItemAlertDialog.OnDialogInteractionListener, AddingNewWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
-    @Bean
-    PresenterFactory presenterFactory;
+
+    PresenterFactory presenterFactory = new PresenterFactory();
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean
@@ -96,9 +98,9 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactory.create((PracticeWordSetVocabularyView) this);
+        presenter = presenterFactory.create((PracticeWordSetVocabularyView) this, getContext());
         presenter.initialise(wordSet);
-        addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this);
+        addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this, getContext());
     }
 
     @Override

@@ -5,9 +5,10 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -27,17 +28,17 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.interactor.MainActivityDefaultFragmentInteractor;
-import talkapp.org.talkappmobile.activity.presenter.MainActivityDefaultFragmentPresenter;
-import talkapp.org.talkappmobile.activity.view.MainActivityDefaultFragmentView;
+import talkapp.org.talkappmobile.component.WordSetQRImporter;
+import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
+import talkapp.org.talkappmobile.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.component.WordSetQRImporter;
+import talkapp.org.talkappmobile.presenter.MainActivityDefaultFragmentPresenter;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
-import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
+import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;

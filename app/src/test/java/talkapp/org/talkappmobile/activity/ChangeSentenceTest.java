@@ -27,11 +27,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.custom.presenter.OriginalTextTextViewPresenter;
-import talkapp.org.talkappmobile.activity.custom.view.OriginalTextTextViewView;
+import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
+import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;

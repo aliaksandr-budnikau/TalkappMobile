@@ -4,18 +4,19 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
@@ -29,14 +30,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.activity.presenter.MainActivityPresenter;
-import talkapp.org.talkappmobile.activity.view.MainActivityView;
+import talkapp.org.talkappmobile.component.WordSetQRImporter;
+import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.component.WordSetQRImporter;
-import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
+import talkapp.org.talkappmobile.presenter.MainActivityPresenter;
+import talkapp.org.talkappmobile.view.MainActivityView;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
 import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION_CLASS_MAPPING;
@@ -44,8 +46,7 @@ import static talkapp.org.talkappmobile.activity.WordSetsListFragment.REPETITION
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements MainActivityView {
-    @Bean
-    PresenterFactory presenterFactory;
+    PresenterFactory presenterFactory = new PresenterFactory();
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
     @ViewById(R.id.toolbar)

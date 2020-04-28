@@ -3,10 +3,11 @@ package talkapp.org.talkappmobile.activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -29,20 +30,20 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.activity.interactor.WordSetsListInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.RepetitionWordSetsListInteractor;
-import talkapp.org.talkappmobile.activity.interactor.impl.StudyingWordSetsListInteractor;
-import talkapp.org.talkappmobile.activity.presenter.WordSetsListPresenter;
-import talkapp.org.talkappmobile.activity.view.WordSetsListView;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
+import talkapp.org.talkappmobile.interactor.WordSetsListInteractor;
+import talkapp.org.talkappmobile.interactor.impl.RepetitionWordSetsListInteractor;
+import talkapp.org.talkappmobile.interactor.impl.StudyingWordSetsListInteractor;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.presenter.WordSetsListPresenter;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.impl.ServiceFactoryBean;
+import talkapp.org.talkappmobile.view.WordSetsListView;
 import talkapp.org.talkappmobile.widget.adapter.filterable.AbstractFilter;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 import talkapp.org.talkappmobile.widget.adapter.filterable.OnItemClickListener;
