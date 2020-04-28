@@ -97,7 +97,7 @@ public class ChangeSentenceTest {
 
         PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
 
-        new BeanFactory(serviceFactory, presenterFactory);
+        new BeanFactory(presenterFactory);
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         wordSet = createWordSet(-1, "age");

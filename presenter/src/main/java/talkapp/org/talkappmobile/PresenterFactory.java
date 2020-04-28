@@ -40,6 +40,7 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.service.WordTranslationService;
@@ -60,6 +61,10 @@ public class PresenterFactory {
 
     public PresenterFactory(ServiceFactory serviceFactory) {
         this.serviceFactory = serviceFactory;
+    }
+
+    public PresenterFactory(Context context) {
+        serviceFactory = ServiceFactoryProvider.get(context);
     }
 
     public IPracticeWordSetPresenter create(PracticeWordSetView view, boolean repetitionMode) {

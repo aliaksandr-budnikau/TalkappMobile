@@ -84,7 +84,7 @@ public class MainActivityTest {
 
         PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
 
-        new BeanFactory(serviceFactory, presenterFactory);
+        new BeanFactory(presenterFactory);
 
         applicationVersion = mock(TextView.class);
         userExp = mock(TextView.class);

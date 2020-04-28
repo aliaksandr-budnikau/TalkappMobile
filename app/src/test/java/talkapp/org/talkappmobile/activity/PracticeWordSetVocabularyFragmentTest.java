@@ -74,7 +74,7 @@ public class PracticeWordSetVocabularyFragmentTest {
 
         PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
 
-        new BeanFactory(serviceFactory, presenterFactory);
+        new BeanFactory(presenterFactory);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));

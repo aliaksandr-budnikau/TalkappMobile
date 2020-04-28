@@ -89,7 +89,7 @@ public class CapitalLetterInNewWordTest {
 
         presenterFactory = new PresenterFactory(serviceFactory);
 
-        new BeanFactory(serviceFactory, presenterFactory);
+        new BeanFactory(presenterFactory);
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);

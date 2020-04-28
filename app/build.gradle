@@ -41,15 +41,16 @@ android {
 
 dependencies {
     implementation project(path: ":model")
-    implementation project(path: ":repository_api")
-    implementation project(path: ":service")
-    implementation project(path: ":service_api")
     implementation project(path: ":presenter")
+    implementation project(path: ":service_api")
+    runtimeOnly project(path: ":service")
 
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    implementation 'org.codehaus.jackson:jackson-mapper-asl:1.5.0'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'com.google.zxing:core:3.4.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
@@ -68,6 +69,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation project(path: ":entity")
     testImplementation project(path: ":repository")
+    testImplementation project(path: ":repository_api")
     testImplementation project(path: ":service")
     testImplementation project(path: ":presenter")
     testImplementation 'org.mockito:mockito-core:2.21.0'

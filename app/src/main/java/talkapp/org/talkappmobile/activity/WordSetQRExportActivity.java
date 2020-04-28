@@ -3,8 +3,6 @@ package talkapp.org.talkappmobile.activity;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -18,7 +16,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import talkapp.org.talkappmobile.R;
@@ -46,7 +46,7 @@ public class WordSetQRExportActivity extends BaseActivity {
         String text = null;
         try {
             text = mapper.writeValueAsString(qrObject);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();

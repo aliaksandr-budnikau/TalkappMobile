@@ -3,8 +3,6 @@ package talkapp.org.talkappmobile.component.impl;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import talkapp.org.talkappmobile.presenter.ExceptionHandlerPresenter;
-import talkapp.org.talkappmobile.service.InternetConnectionLostException;
-import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
 
 public class ExceptionHandler implements UncaughtExceptionHandler {
 
@@ -17,13 +15,7 @@ public class ExceptionHandler implements UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         Throwable cause = getCause(e);
-        if (cause instanceof InternetConnectionLostException) {
-            presenter.handleInternetConnectionLostException(t, e, cause);
-        } else if (cause instanceof LocalCacheIsEmptyException) {
-            presenter.handleLocalCacheIsEmptyException(t, e, cause);
-        } else {
-            presenter.handleUncaughtException(t, e, cause);
-        }
+        presenter.handleUncaughtException(t, e, cause);
     }
 
     private Throwable getCause(Throwable e) {

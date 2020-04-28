@@ -53,7 +53,7 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
     }
 
     public void handleUncaughtException(Thread t, Throwable e, Throwable cause) {
-        interactor.handleUncaughtException(this, e);
+        interactor.handleUncaughtException(this, t, e, cause);
     }
 
     public void handleLocalCacheIsEmptyException(Thread t, Throwable e, Throwable cause) {

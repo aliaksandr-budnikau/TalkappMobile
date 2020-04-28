@@ -37,7 +37,6 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.PracticeWordSetVocabularyPresenter;
-import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -125,7 +124,7 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     }
 
     @Override
-    public void onLocalCacheIsEmptyException(LocalCacheIsEmptyException e) {
+    public void onLocalCacheIsEmptyException(RuntimeException e) {
         FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.finish();
