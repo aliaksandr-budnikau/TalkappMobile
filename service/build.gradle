@@ -25,13 +25,15 @@ android {
 }
 
 dependencies {
+    implementation project(path: ":model")
+    implementation project(path: ":repository_api")
+    runtimeOnly project(path: ":repository")
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api 'com.squareup.retrofit2:retrofit:2.3.0'
     api 'com.squareup.retrofit2:converter-jackson:2.3.0'
     api 'com.squareup.retrofit2:converter-scalars:2.3.0'
-
-    implementation project(path: ":repository_api")
-    runtimeOnly project(path: ":repository")
 
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.apache.commons:commons-collections4:4.0'

@@ -25,8 +25,11 @@ android {
 }
 
 dependencies {
+    implementation project(path: ":model")
     implementation project(path: ":repository_api")
     implementation project(path: ":entity")
+
+
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'org.apache.commons:commons-lang3:3.5'

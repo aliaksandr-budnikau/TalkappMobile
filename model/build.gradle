@@ -1,10 +1,9 @@
 apply plugin: 'java-library'
 
 dependencies {
-    implementation project(path: ":model")
-
-
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'com.j256.ormlite:ormlite-android:5.1'
 }
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
