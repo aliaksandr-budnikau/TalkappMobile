@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.activity.view.impl.ExceptionHandlerViewBean;
 import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandler;
 import talkapp.org.talkappmobile.presenter.ExceptionHandlerPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 
 @EBean

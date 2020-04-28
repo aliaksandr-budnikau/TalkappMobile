@@ -4,19 +4,20 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnAddingNewWordSetListener;
-import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
-public class AddingNewWordSetPresenter implements OnAddingNewWordSetListener {
+public class AddingNewWordSetPresenterImpl implements OnAddingNewWordSetListener, AddingNewWordSetPresenter {
     private final AddingNewWordSetInteractor interactor;
     private final AddingNewWordSetView view;
 
-    public AddingNewWordSetPresenter(AddingNewWordSetView view, AddingNewWordSetInteractor interactor) {
+    public AddingNewWordSetPresenterImpl(AddingNewWordSetView view, AddingNewWordSetInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
+    @Override
     public void initialize() {
         interactor.initialize(this);
     }
@@ -46,14 +47,17 @@ public class AddingNewWordSetPresenter implements OnAddingNewWordSetListener {
         view.onPhraseTranslationInputWasValidatedSuccessfully(newPhrase, newTranslation);
     }
 
+    @Override
     public void submitNewWordSet(List<WordTranslation> translations) {
         interactor.submitNewWordSet(translations, this);
     }
 
+    @Override
     public void saveChangedDraft(List<WordTranslation> vocabulary) {
         interactor.saveChangedDraft(vocabulary);
     }
 
+    @Override
     public void savePhraseTranslationInputOnPopup(String newPhrase, String newTranslation) {
         interactor.savePhraseTranslationInputOnPopup(newPhrase, newTranslation, this);
     }

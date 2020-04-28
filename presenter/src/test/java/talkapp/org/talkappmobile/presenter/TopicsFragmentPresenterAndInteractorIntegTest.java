@@ -68,7 +68,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
 
     @Test
     public void test() {
-        TopicsFragmentPresenter presenter = new TopicsFragmentPresenter(view, topicsFragmentInteractor);
+        TopicsFragmentPresenter presenter = new TopicsFragmentPresenterImpl(view, topicsFragmentInteractor);
         presenter.initialize();
         ArgumentCaptor<List<Topic>> topicsCaptor = forClass(List.class);
         verify(view).setTopics(topicsCaptor.capture());

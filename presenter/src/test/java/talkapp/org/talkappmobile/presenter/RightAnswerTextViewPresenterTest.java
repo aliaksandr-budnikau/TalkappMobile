@@ -26,7 +26,7 @@ public class RightAnswerTextViewPresenterTest {
     @Before
     public void init() {
         RightAnswerTextViewInteractor interactor = new RightAnswerTextViewInteractor(new TextUtilsImpl());
-        presenter = new RightAnswerTextViewPresenter(interactor, view);
+        presenter = new RightAnswerTextViewPresenterImpl(interactor, view);
         Sentence sentence = new Sentence();
         sentence.setText("dsd");
         String wordAsString = "dsfds54e3whggfdA";

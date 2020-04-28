@@ -1,26 +1,25 @@
 package talkapp.org.talkappmobile.presenter;
 
-import talkapp.org.talkappmobile.model.RepetitionClass;
-import talkapp.org.talkappmobile.model.Task;
-import talkapp.org.talkappmobile.model.WordSet;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.MainActivityDefaultFragmentInteractor;
 import talkapp.org.talkappmobile.listener.OnMainActivityDefaultFragmentListener;
+import talkapp.org.talkappmobile.model.RepetitionClass;
+import talkapp.org.talkappmobile.model.Task;
+import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
 
-public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefaultFragmentListener {
+public class MainActivityDefaultFragmentPresenterImpl implements OnMainActivityDefaultFragmentListener, MainActivityDefaultFragmentPresenter {
     private final MainActivityDefaultFragmentView view;
     private final MainActivityDefaultFragmentInteractor interactor;
 
-    public MainActivityDefaultFragmentPresenter(MainActivityDefaultFragmentView view, MainActivityDefaultFragmentInteractor interactor) {
+    public MainActivityDefaultFragmentPresenterImpl(MainActivityDefaultFragmentView view, MainActivityDefaultFragmentInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
-
+    @Override
     public void init() {
         interactor.initWordsForRepetition(this);
     }
@@ -55,6 +54,7 @@ public class MainActivityDefaultFragmentPresenter implements OnMainActivityDefau
         view.onNewYourWordSetTaskClicked();
     }
 
+    @Override
     public void findTasks() {
         interactor.findTasks(this);
     }

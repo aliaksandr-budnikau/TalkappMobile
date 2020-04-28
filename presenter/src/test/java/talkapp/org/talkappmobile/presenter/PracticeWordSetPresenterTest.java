@@ -22,11 +22,11 @@ public class PracticeWordSetPresenterTest {
     private StudyingPracticeWordSetInteractor interactor;
     @Mock
     private PracticeWordSetViewStrategy viewStrategy;
-    private PracticeWordSetPresenter presenter;
+    private PracticeWordSetPresenterImpl presenter;
 
     @Before
     public void setUp() {
-        presenter = new PracticeWordSetPresenter(interactor, viewStrategy);
+        presenter = new PracticeWordSetPresenterImpl(interactor, viewStrategy);
     }
 
     @Test

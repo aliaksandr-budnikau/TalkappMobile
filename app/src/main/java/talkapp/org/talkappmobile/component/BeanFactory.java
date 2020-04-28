@@ -2,7 +2,8 @@ package talkapp.org.talkappmobile.component;
 
 import android.content.Context;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
 
 public class BeanFactory {
     private static PresenterFactory presenterFactory;
@@ -13,7 +14,7 @@ public class BeanFactory {
 
     public static PresenterFactory presenterFactory(Context context) {
         if (presenterFactory == null) {
-            presenterFactory = new PresenterFactory(context);
+            presenterFactory = PresenterFactoryProvider.get(context);
         }
         return presenterFactory;
     }

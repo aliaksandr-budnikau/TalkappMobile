@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;

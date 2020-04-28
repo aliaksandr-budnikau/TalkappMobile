@@ -14,12 +14,12 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashSet;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.repository.WordTranslationRepository;
@@ -82,7 +82,7 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         wordSet.setStatus(FIRST_CYCLE);
 
         serviceFactory.getWordSetExperienceRepository().save(wordSet);
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), false);
         practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));

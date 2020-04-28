@@ -1,4 +1,4 @@
-package talkapp.org.talkappmobile.presenter.decorator;
+package talkapp.org.talkappmobile.presenter;
 
 import java.util.List;
 

@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -68,7 +67,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         eventBus = mock(EventBus.class);
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
         addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }

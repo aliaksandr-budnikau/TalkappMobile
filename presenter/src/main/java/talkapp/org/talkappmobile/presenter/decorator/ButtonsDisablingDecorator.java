@@ -5,6 +5,7 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator {

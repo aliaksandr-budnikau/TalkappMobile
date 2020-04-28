@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;

@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
@@ -35,7 +34,9 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.LoggerImpl;
@@ -87,7 +88,7 @@ public class CapitalLetterInNewWordTest {
         };
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        presenterFactory = new PresenterFactory(serviceFactory);
+        presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);

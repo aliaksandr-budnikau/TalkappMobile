@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -76,7 +77,8 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @AfterInject
     public void init() {
-        presenter = new OriginalTextTextViewPresenter(this);
+        presenter = BeanFactory.presenterFactory(getContext()).create(this);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

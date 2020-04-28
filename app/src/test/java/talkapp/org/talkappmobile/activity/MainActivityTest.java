@@ -21,11 +21,12 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
@@ -82,7 +83,7 @@ public class MainActivityTest {
 
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
 

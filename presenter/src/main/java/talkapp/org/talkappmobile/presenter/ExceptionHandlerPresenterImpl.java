@@ -9,15 +9,16 @@ import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.listener.ExceptionHandlerListner;
 import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 
-public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
+public class ExceptionHandlerPresenterImpl implements ExceptionHandlerListner, ExceptionHandlerPresenter {
     private final ExceptionHandlerInteractor interactor;
     private final ExceptionHandlerView view;
 
-    public ExceptionHandlerPresenter(ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
+    public ExceptionHandlerPresenterImpl(ExceptionHandlerView view, ExceptionHandlerInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
+    @Override
     public void handleInternetConnectionLostException(Thread t, Throwable e, Throwable cause) {
         interactor.handleInternetConnectionLostException(this);
     }
@@ -52,10 +53,12 @@ public class ExceptionHandlerPresenter implements ExceptionHandlerListner {
         view.showToastMessage("You need internet connection to preload this task.");
     }
 
+    @Override
     public void handleUncaughtException(Thread t, Throwable e, Throwable cause) {
         interactor.handleUncaughtException(this, t, e, cause);
     }
 
+    @Override
     public void handleLocalCacheIsEmptyException(Thread t, Throwable e, Throwable cause) {
         interactor.handleLocalCacheIsEmptyException(this);
     }

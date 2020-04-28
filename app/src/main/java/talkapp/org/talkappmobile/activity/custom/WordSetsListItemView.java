@@ -13,8 +13,9 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.interactor.WordSetsListItemViewInteractor;
+import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.WordSetsListItemViewPresenter;
 import talkapp.org.talkappmobile.view.WordSetsListItemViewView;
 
@@ -49,8 +50,8 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
 
     @AfterViews
     public void init() {
-        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor();
-        presenter = new WordSetsListItemViewPresenter(interactor, this);
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getContext());
+        presenter = presenterFactory.create(this);
     }
 
     public void setModel(WordSet wordSet) {

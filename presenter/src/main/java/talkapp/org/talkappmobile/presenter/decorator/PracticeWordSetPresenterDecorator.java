@@ -6,6 +6,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 
 class PracticeWordSetPresenterDecorator implements IPracticeWordSetPresenter {
     private final IPracticeWordSetPresenter presenter;

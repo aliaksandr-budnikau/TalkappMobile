@@ -55,7 +55,7 @@ import talkapp.org.talkappmobile.events.WordSetPracticeFinishedEM;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.app.Activity.RESULT_OK;

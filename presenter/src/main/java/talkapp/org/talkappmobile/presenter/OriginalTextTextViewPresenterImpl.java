@@ -11,12 +11,12 @@ import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 
-public class OriginalTextTextViewPresenter {
+public class OriginalTextTextViewPresenterImpl implements OriginalTextTextViewPresenter {
     private Sentence sentence;
     private OriginalTextTextViewView view;
     private boolean locked;
 
-    public OriginalTextTextViewPresenter(OriginalTextTextViewView view) {
+    public OriginalTextTextViewPresenterImpl(OriginalTextTextViewView view) {
         this.view = view;
     }
 

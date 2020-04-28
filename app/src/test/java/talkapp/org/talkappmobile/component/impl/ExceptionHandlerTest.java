@@ -16,7 +16,7 @@ import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
-import talkapp.org.talkappmobile.presenter.ExceptionHandlerPresenter;
+import talkapp.org.talkappmobile.presenter.ExceptionHandlerPresenterImpl;
 import talkapp.org.talkappmobile.repository.TopicRepositoryImpl;
 import talkapp.org.talkappmobile.service.CachedTopicServiceDecorator;
 import talkapp.org.talkappmobile.service.DataServer;
@@ -68,7 +68,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_ConnectException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenterImpl(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(ConnectException.class);
@@ -88,7 +88,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_SocketTimeoutException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenterImpl(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(SocketTimeoutException.class);
@@ -109,7 +109,7 @@ public class ExceptionHandlerTest {
     @Test
     public void test_RuntimeException() throws IOException {
         ExceptionHandlerView view = mock(ExceptionHandlerView.class);
-        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenter(view, interactor));
+        Thread.UncaughtExceptionHandler exceptionHandler = new ExceptionHandler(new ExceptionHandlerPresenterImpl(view, interactor));
 
         Call call = mock(Call.class);
         when(call.execute()).thenThrow(RuntimeException.class);

@@ -4,19 +4,21 @@ import talkapp.org.talkappmobile.interactor.MainActivityInteractor;
 import talkapp.org.talkappmobile.listener.OnMainActivityListener;
 import talkapp.org.talkappmobile.view.MainActivityView;
 
-public class MainActivityPresenter implements OnMainActivityListener {
+public class MainActivityPresenterImpl implements OnMainActivityListener, MainActivityPresenter {
     private final MainActivityView view;
     private final MainActivityInteractor interactor;
 
-    public MainActivityPresenter(MainActivityView view, MainActivityInteractor interactor) {
+    public MainActivityPresenterImpl(MainActivityView view, MainActivityInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
+    @Override
     public void checkServerAvailability() {
         interactor.checkServerAvailability();
     }
 
+    @Override
     public void initAppVersion() {
         interactor.initAppVersion(this);
     }
@@ -26,6 +28,7 @@ public class MainActivityPresenter implements OnMainActivityListener {
         view.setAppVersion("v" + packageName);
     }
 
+    @Override
     public void initYourExp() {
         interactor.initYourExp(this);
     }

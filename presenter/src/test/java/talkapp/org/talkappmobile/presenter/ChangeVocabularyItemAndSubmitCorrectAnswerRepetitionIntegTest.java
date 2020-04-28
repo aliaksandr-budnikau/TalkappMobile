@@ -17,14 +17,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -130,7 +130,7 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(0);
         wordSet.setStatus(WordSetProgressStatus.FINISHED);
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), true);
         practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));

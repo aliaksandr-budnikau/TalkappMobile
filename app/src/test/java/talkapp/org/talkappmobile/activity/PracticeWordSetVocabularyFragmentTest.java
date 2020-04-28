@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
@@ -32,6 +31,8 @@ import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -72,7 +73,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         };
         ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
 

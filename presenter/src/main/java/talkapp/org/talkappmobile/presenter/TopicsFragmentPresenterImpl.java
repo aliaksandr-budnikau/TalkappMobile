@@ -4,19 +4,19 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.listener.OnTopicsFragmentPresenterListener;
-import talkapp.org.talkappmobile.view.TopicsFragmentView;
 import talkapp.org.talkappmobile.model.Topic;
+import talkapp.org.talkappmobile.view.TopicsFragmentView;
 
-public class TopicsFragmentPresenter implements OnTopicsFragmentPresenterListener {
+public class TopicsFragmentPresenterImpl implements OnTopicsFragmentPresenterListener, TopicsFragmentPresenter {
     private final TopicsFragmentView view;
     private final TopicsFragmentInteractor interactor;
 
-    public TopicsFragmentPresenter(TopicsFragmentView view, TopicsFragmentInteractor interactor) {
+    public TopicsFragmentPresenterImpl(TopicsFragmentView view, TopicsFragmentInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
-
+    @Override
     public void initialize() {
         try {
             view.onInitializeBeginning();
@@ -26,6 +26,7 @@ public class TopicsFragmentPresenter implements OnTopicsFragmentPresenterListene
         }
     }
 
+    @Override
     public void onTopicClick(Topic topic) {
         interactor.peekTopic(topic, this);
     }

@@ -3,7 +3,6 @@ package talkapp.org.talkappmobile.activity.custom;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.text.Spanned;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
@@ -18,7 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
@@ -67,7 +66,7 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
     }
 
     @Override
-    public void turnAnswerToLink(Spanned value) {
+    public void turnAnswerToLink(String value) {
         this.setText(value);
     }
 

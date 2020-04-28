@@ -58,7 +58,7 @@ import static org.mockito.Mockito.verify;
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends PresenterAndInteractorIntegTest {
     private PracticeWordSetView view;
-    private PracticeWordSetPresenter presenter;
+    private PracticeWordSetPresenterImpl presenter;
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
     private Context context;
@@ -193,7 +193,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
         PracticeWordSetViewStrategy firstCycleViewStrategy = new PracticeWordSetViewStrategy(view);
-        presenter = new PracticeWordSetPresenter(new StrategySwitcherDecorator(interactor, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
+        presenter = new PracticeWordSetPresenterImpl(new StrategySwitcherDecorator(interactor, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService()), firstCycleViewStrategy);
     }
 
     @Test

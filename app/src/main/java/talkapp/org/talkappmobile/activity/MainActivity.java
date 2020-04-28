@@ -3,6 +3,8 @@ package talkapp.org.talkappmobile.activity;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +40,7 @@ import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.presenter.MainActivityPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.MainActivityView;
 
 import static talkapp.org.talkappmobile.activity.FragmentFactory.createWordSetsListFragment;
@@ -145,7 +148,15 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @Background
     public void initPresenter() {
-        presenter = BeanFactory.presenterFactory(getApplicationContext()).create(this, getApplicationContext());
+        PackageManager manager = getApplicationContext().getPackageManager();
+        PackageInfo info;
+        try {
+            info = manager.getPackageInfo("talkapp.org.talkappmobile", 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getApplicationContext());
+        presenter = presenterFactory.create(this, info.versionName);
         presenter.checkServerAvailability();
         presenter.initAppVersion();
         presenter.initYourExp();

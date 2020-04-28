@@ -27,7 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -44,6 +45,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.LoggerImpl;
@@ -95,7 +97,7 @@ public class ChangeSentenceTest {
         };
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
 
@@ -123,7 +125,7 @@ public class ChangeSentenceTest {
         EventBus eventBus = testHelper.getEventBusMock();
         Whitebox.setInternalState(practiceWordSetFragment, "eventBus", eventBus);
 
-        originalTextTextViewPresenter = new OriginalTextTextViewPresenter(mock(OriginalTextTextViewView.class));
+        originalTextTextViewPresenter = new OriginalTextTextViewPresenterImpl(mock(OriginalTextTextViewView.class));
     }
 
     private WordSet createWordSet(int id, WordSetProgressStatus status, String... words) {

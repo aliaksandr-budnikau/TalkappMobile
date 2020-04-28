@@ -22,7 +22,7 @@ public class TopicsFragmentPresenterTest {
     @Test
     public void initialize_ordinaryCase() {
         // when
-        TopicsFragmentPresenter presenter = new TopicsFragmentPresenter(view, interactor);
+        TopicsFragmentPresenterImpl presenter = new TopicsFragmentPresenterImpl(view, interactor);
         presenter.initialize();
 
         // then
@@ -34,7 +34,7 @@ public class TopicsFragmentPresenterTest {
     @Test(expected = RuntimeException.class)
     public void initialize_ordinaryException() {
         // when
-        TopicsFragmentPresenter presenter = new TopicsFragmentPresenter(view, interactor);
+        TopicsFragmentPresenterImpl presenter = new TopicsFragmentPresenterImpl(view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
             presenter.initialize();

@@ -16,7 +16,6 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -59,7 +58,7 @@ public class AddingNewWordSetPresenterIntegTest {
             }
         };
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
-        PresenterFactory presenterFactory = new PresenterFactory(serviceFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
         addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }

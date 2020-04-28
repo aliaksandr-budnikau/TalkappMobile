@@ -32,7 +32,7 @@ public class WordSetsListPresenterTest {
         topic.setId(topicId);
 
         // when
-        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
+        WordSetsListPresenter presenter = new WordSetsListPresenterImpl(topic, view, interactor);
         presenter.initialize();
 
         // then
@@ -49,7 +49,7 @@ public class WordSetsListPresenterTest {
         topic.setId(topicId);
 
         // when
-        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
+        WordSetsListPresenterImpl presenter = new WordSetsListPresenterImpl(topic, view, interactor);
         presenter.initialize();
 
         // then
@@ -66,7 +66,7 @@ public class WordSetsListPresenterTest {
         topic.setId(topicId);
 
         // when
-        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, interactor);
+        WordSetsListPresenterImpl presenter = new WordSetsListPresenterImpl(topic, view, interactor);
         doThrow(new RuntimeException()).when(view).onInitializeBeginning();
         try {
             presenter.initialize();

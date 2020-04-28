@@ -85,7 +85,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
 
     @Test
     public void test_withoutTopic() throws SQLException, JsonProcessingException {
-        WordSetsListPresenter presenter = new WordSetsListPresenter(null, view, studyingWordSetsInteractor);
+        WordSetsListPresenter presenter = new WordSetsListPresenterImpl(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture(), (RepetitionClass) isNull());
@@ -123,7 +123,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     public void test_withTopic() throws SQLException, JsonProcessingException {
         Topic topic = new Topic();
         topic.setId(1);
-        WordSetsListPresenter presenter = new WordSetsListPresenter(topic, view, studyingWordSetsInteractor);
+        WordSetsListPresenter presenter = new WordSetsListPresenterImpl(topic, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
         verify(view).onWordSetsInitialized(setsCaptor.capture(), (RepetitionClass) isNull());

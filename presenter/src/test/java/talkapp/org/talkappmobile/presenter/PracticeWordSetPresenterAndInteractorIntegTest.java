@@ -15,13 +15,11 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashSet;
 
-import talkapp.org.talkappmobile.PresenterFactory;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
@@ -75,7 +73,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
 
-        presenterFactory = new PresenterFactory(serviceFactory);
+        presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         serviceFactory.getWordSetExperienceRepository().getWordSets(null);
     }

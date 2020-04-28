@@ -4,28 +4,29 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.listener.OnWordSetsListListener;
-import talkapp.org.talkappmobile.view.WordSetsListView;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.view.WordSetsListView;
 
-public class WordSetsListPresenter implements OnWordSetsListListener {
+public class WordSetsListPresenterImpl implements OnWordSetsListListener, WordSetsListPresenter {
     private final Topic topic;
     private final WordSetsListView view;
     private final WordSetsListInteractor interactor;
 
-    public WordSetsListPresenter(Topic topic, WordSetsListView view, WordSetsListInteractor interactor) {
+    public WordSetsListPresenterImpl(Topic topic, WordSetsListView view, WordSetsListInteractor interactor) {
         this.topic = topic;
         this.view = view;
         this.interactor = interactor;
     }
 
+    @Override
     public void initialize() {
         wrapWithTryFinally(new Runnable() {
             @Override
             public void run() {
-                interactor.initializeWordSets(topic, WordSetsListPresenter.this);
+                interactor.initializeWordSets(topic, WordSetsListPresenterImpl.this);
             }
         });
     }
@@ -69,14 +70,17 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetNotRemoved();
     }
 
+    @Override
     public void itemClick(WordSet wordSet, int clickedItemNumber) {
         interactor.itemClick(topic, wordSet, clickedItemNumber, this);
     }
 
+    @Override
     public void resetExperienceClick(WordSet wordSet, int clickedItemNumber) {
         interactor.resetExperienceClick(wordSet, clickedItemNumber, this);
     }
 
+    @Override
     public void itemLongClick(WordSet wordSet, int clickedItemNumber) {
         interactor.itemLongClick(wordSet, clickedItemNumber, this);
     }
@@ -111,19 +115,22 @@ public class WordSetsListPresenter implements OnWordSetsListListener {
         view.onWordSetIsNotAvailableYet(availableInHours);
     }
 
+    @Override
     public void deleteWordSetClick(WordSet wordSet, int clickedItemNumber) {
         interactor.deleteWordSetClick(wordSet, clickedItemNumber, this);
     }
 
+    @Override
     public void refresh() {
         wrapWithTryFinally(new Runnable() {
             @Override
             public void run() {
-                interactor.refreshWordSets(topic, WordSetsListPresenter.this);
+                interactor.refreshWordSets(topic, WordSetsListPresenterImpl.this);
             }
         });
     }
 
+    @Override
     public void prepareWordSetDraftForQRCode(int wordSetId) {
         interactor.prepareWordSetDraftForQRCode(wordSetId, this);
     }

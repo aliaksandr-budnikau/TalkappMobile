@@ -41,9 +41,9 @@ android {
 
 dependencies {
     implementation project(path: ":model")
-    implementation project(path: ":presenter")
+    implementation project(path: ":presenter_api")
     implementation project(path: ":service_api")
-    runtimeOnly project(path: ":service")
+    runtimeOnly project(path: ":presenter")
 
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {

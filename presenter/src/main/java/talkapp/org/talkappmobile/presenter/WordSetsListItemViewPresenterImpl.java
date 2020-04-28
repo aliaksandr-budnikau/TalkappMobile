@@ -5,28 +5,32 @@ import talkapp.org.talkappmobile.listener.OnWordSetsListItemViewListener;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.view.WordSetsListItemViewView;
 
-public class WordSetsListItemViewPresenter implements OnWordSetsListItemViewListener {
+public class WordSetsListItemViewPresenterImpl implements OnWordSetsListItemViewListener, WordSetsListItemViewPresenter {
     private final WordSetsListItemViewView view;
     private final WordSetsListItemViewInteractor interactor;
     private WordSet wordSet;
 
-    public WordSetsListItemViewPresenter(WordSetsListItemViewInteractor interactor, WordSetsListItemViewView view) {
+    public WordSetsListItemViewPresenterImpl(WordSetsListItemViewInteractor interactor, WordSetsListItemViewView view) {
         this.interactor = interactor;
         this.view = view;
     }
 
+    @Override
     public void setModel(WordSet wordSet) {
         this.wordSet = wordSet;
     }
 
+    @Override
     public void refreshModel() {
         interactor.prepareModel(wordSet, this);
     }
 
+    @Override
     public void hideProgress() {
         view.hideProgressBar();
     }
 
+    @Override
     public void showProgress() {
         view.showProgressBar();
     }

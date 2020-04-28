@@ -9,16 +9,17 @@ import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
-public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVocabularyListener {
+public class PracticeWordSetVocabularyPresenterImpl implements OnPracticeWordSetVocabularyListener, PracticeWordSetVocabularyPresenter {
 
     private final PracticeWordSetVocabularyView view;
     private final PracticeWordSetVocabularyInteractor interactor;
 
-    public PracticeWordSetVocabularyPresenter(PracticeWordSetVocabularyView view, PracticeWordSetVocabularyInteractor interactor) {
+    public PracticeWordSetVocabularyPresenterImpl(PracticeWordSetVocabularyView view, PracticeWordSetVocabularyInteractor interactor) {
         this.view = view;
         this.interactor = interactor;
     }
 
+    @Override
     public void initialise(WordSet wordSet) {
         try {
             view.onInitializeBeginning();
@@ -45,6 +46,7 @@ public class PracticeWordSetVocabularyPresenter implements OnPracticeWordSetVoca
         view.onUpdateCustomWordSetFinished();
     }
 
+    @Override
     public void updateCustomWordSet(int editedItemPosition, WordTranslation wordTranslation) {
         try {
             view.onInitializeBeginning();

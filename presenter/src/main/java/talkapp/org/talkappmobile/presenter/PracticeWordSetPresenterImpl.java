@@ -8,13 +8,12 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.presenter.decorator.IPracticeWordSetPresenter;
 
-public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
+public class PracticeWordSetPresenterImpl implements OnPracticeWordSetListener, IPracticeWordSetPresenter {
     private final PracticeWordSetInteractor interactor;
     private final PracticeWordSetViewStrategy viewStrategy;
 
-    public PracticeWordSetPresenter(PracticeWordSetInteractor interactor,
+    public PracticeWordSetPresenterImpl(PracticeWordSetInteractor interactor,
                                     PracticeWordSetViewStrategy viewStrategy) {
         this.interactor = interactor;
         this.viewStrategy = viewStrategy;
@@ -30,6 +29,7 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         viewStrategy.onSentencesFound(sentence, word);
     }
 
+    @Override
     public void refreshSentence() {
         interactor.resetSentenceState(this);
     }
@@ -125,17 +125,20 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         viewStrategy.onSentencesFound();
     }
 
+    @Override
     public void gotRecognitionResult(List<String> result) {
         Sentence currentSentence = interactor.getCurrentSentence();
         viewStrategy.onGotRecognitionResult(currentSentence, result);
     }
 
+    @Override
     public void initialise(WordSet wordSet) {
         interactor.saveCurrentWordSet(wordSet);
         interactor.initialiseExperience(this);
         interactor.initialiseWordsSequence(this);
     }
 
+    @Override
     public void nextButtonClick() {
         Word2Tokens word = interactor.peekAnyNewWordByWordSetId();
         if (word == null) {
@@ -144,10 +147,12 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         interactor.initialiseSentence(word, this);
     }
 
+    @Override
     public Sentence getCurrentSentence() {
         return interactor.getCurrentSentence();
     }
 
+    @Override
     public void checkAnswerButtonClick(final String answer) {
         boolean result = interactor.checkAnswer(answer, this);
         if (result) {
@@ -155,41 +160,51 @@ public class PracticeWordSetPresenter implements OnPracticeWordSetListener, IPra
         }
     }
 
+    @Override
     public void checkRightAnswerCommandRecognized() {
         Sentence currentSentence = interactor.getCurrentSentence();
         checkAnswerButtonClick(currentSentence.getText());
     }
 
+    @Override
     public void changeSentence() {
         interactor.changeSentence(this);
     }
 
+    @Override
     public void changeSentence(List<Sentence> sentences, Word2Tokens currentWord) {
         interactor.changeSentence(currentWord, sentences, this);
     }
 
+    @Override
     public void scoreSentence(SentenceContentScore score, Sentence sentence) {
         interactor.scoreSentence(sentence, score, this);
     }
 
+    @Override
     public void markAnswerHasBeenSeen() {
         interactor.markAnswerHasBeenSeen();
     }
 
+    @Override
     public void disableButtonsDuringPronunciation() {
     }
 
+    @Override
     public void enableButtonsAfterPronunciation() {
     }
 
+    @Override
     public void findSentencesForChange(Word2Tokens currentWord) {
         interactor.findSentencesForChange(currentWord, this);
     }
 
+    @Override
     public void prepareOriginalTextClickEM() {
         interactor.prepareOriginalTextClickEM(this);
     }
 
+    @Override
     public void refreshCurrentWord() {
         interactor.refreshSentence(this);
     }
