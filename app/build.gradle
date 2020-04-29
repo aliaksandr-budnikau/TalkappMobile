@@ -66,7 +66,6 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     testImplementation 'junit:junit:4.12'
-    testImplementation project(path: ":entity")
     testImplementation project(path: ":repository")
     testImplementation project(path: ":repository_api")
     testImplementation project(path: ":service")
