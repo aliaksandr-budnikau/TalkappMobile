@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.content.Context;
-
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -16,17 +14,17 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
+import talkapp.org.talkappmobile.RepositoryModule;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentCaptor.forClass;
@@ -37,26 +35,14 @@ import static org.mockito.Mockito.verify;
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class AddingNewWordSetPresenterIntegTest {
 
-    private RepositoryFactoryImpl repositoryFactory;
+    private RepositoryModule repositoryFactory;
     private AddingNewWordSetPresenter addingNewWordSetPresenter;
     private AddingNewWordSetView addingNewWordSetViewMock;
     private ServiceFactory serviceFactory;
 
     @Before
     public void setUp() throws Exception {
-        Context context = mock(Context.class);
-        repositoryFactory = new RepositoryFactoryImpl(context) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);

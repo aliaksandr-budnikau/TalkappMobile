@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.dao.WordSetDao;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
@@ -19,6 +21,7 @@ public class WordSetRepositoryImpl implements WordSetRepository {
     private final NewWordSetDraftDao newWordSetDraftDao;
     private int wordSetSize = 12;
 
+    @Inject
     public WordSetRepositoryImpl(WordSetDao wordSetDao, NewWordSetDraftDao newWordSetDraftDao, ObjectMapper mapper) {
         this.wordSetDao = wordSetDao;
         this.newWordSetDraftDao = newWordSetDraftDao;

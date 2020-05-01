@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.service.impl;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -18,7 +16,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
@@ -33,7 +30,6 @@ import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressServiceImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static talkapp.org.talkappmobile.model.RepetitionClass.LEARNED;
@@ -51,19 +47,7 @@ public class WordRepetitionProgressServiceImplIntegTest {
 
     @Before
     public void setUp() throws Exception {
-        repositoryFactory = new RepositoryFactoryImpl(Mockito.mock(Context.class)) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-
-        };
+        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         SentenceDao sentenceDao = Mockito.mock(SentenceDao.class);
         mapper = new ObjectMapper();
         WordSetRepository wordSetRepository = repositoryFactory.getWordSetRepository();

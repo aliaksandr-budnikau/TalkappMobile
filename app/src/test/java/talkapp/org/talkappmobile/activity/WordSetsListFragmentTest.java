@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TabHost;
 
@@ -25,7 +24,6 @@ import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -37,7 +35,6 @@ import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -61,24 +58,12 @@ public class WordSetsListFragmentTest {
     private EventBus eventBus;
     private FilterableAdapter adapter;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() throws SQLException {
         testHelper = new TestHelper();
 
-        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsRecyclerView.class))).thenReturn(mock(WaitingForProgressBarManager.class));

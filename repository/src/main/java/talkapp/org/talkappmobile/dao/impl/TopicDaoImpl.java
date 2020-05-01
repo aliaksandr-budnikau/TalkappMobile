@@ -1,21 +1,31 @@
 package talkapp.org.talkappmobile.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.support.ConnectionSource;
-
-import talkapp.org.talkappmobile.dao.TopicDao;
-import talkapp.org.talkappmobile.mappings.TopicMapping;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TopicDaoImpl extends BaseDaoImpl<TopicMapping, Integer> implements TopicDao {
+import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
+import talkapp.org.talkappmobile.dao.TopicDao;
+import talkapp.org.talkappmobile.mappings.TopicMapping;
+
+public class TopicDaoImpl implements TopicDao {
+
+    private final BaseDaoImpl<TopicMapping, Integer> dao;
     private List<TopicMapping> topics = new LinkedList<>();
 
-    public TopicDaoImpl(ConnectionSource connectionSource, Class<TopicMapping> dataClass) throws SQLException {
-        super(connectionSource, dataClass);
+    @Inject
+    public TopicDaoImpl(DatabaseHelper databaseHelper) {
+        try {
+            dao = new BaseDaoImpl<TopicMapping, Integer>(databaseHelper.getConnectionSource(), TopicMapping.class) {
+            };
+            dao.initialize();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -25,7 +35,7 @@ public class TopicDaoImpl extends BaseDaoImpl<TopicMapping, Integer> implements 
         }
         List<TopicMapping> mappings = null;
         try {
-            mappings = this.queryForAll();
+            mappings = dao.queryForAll();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -40,7 +50,7 @@ public class TopicDaoImpl extends BaseDaoImpl<TopicMapping, Integer> implements 
         }
         for (TopicMapping mapping : mappings) {
             try {
-                super.createOrUpdate(mapping);
+                dao.createOrUpdate(mapping);
             } catch (SQLException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

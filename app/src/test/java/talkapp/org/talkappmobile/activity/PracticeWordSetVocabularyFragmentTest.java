@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.content.Context;
 import android.view.View;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -25,7 +24,6 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFac
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.component.BeanFactory;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -39,7 +37,6 @@ import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -59,18 +56,7 @@ public class PracticeWordSetVocabularyFragmentTest {
 
     @Before
     public void setUp() {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);

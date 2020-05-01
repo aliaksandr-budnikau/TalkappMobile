@@ -11,8 +11,5 @@ public interface RepositoryFactory {
 
     SentenceRepository getSentenceRepository();
 
-    @Deprecated
-    MigrationService getMigrationService();
-
     TopicRepository getTopicRepository();
 }

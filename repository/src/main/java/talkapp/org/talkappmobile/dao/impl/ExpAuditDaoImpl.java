@@ -2,28 +2,39 @@ package talkapp.org.talkappmobile.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 
 import static talkapp.org.talkappmobile.mappings.ExpAuditMapping.ACTIVITY_TYPE_FN;
 import static talkapp.org.talkappmobile.mappings.ExpAuditMapping.DATE_FN;
 
-public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> implements ExpAuditDao {
+public class ExpAuditDaoImpl implements ExpAuditDao {
 
-    public ExpAuditDaoImpl(ConnectionSource connectionSource, Class<ExpAuditMapping> dataClass) throws SQLException {
-        super(connectionSource, dataClass);
+    private final BaseDaoImpl<ExpAuditMapping, Integer> dao;
+
+    @Inject
+    public ExpAuditDaoImpl(DatabaseHelper databaseHelper) {
+        try {
+            dao = new BaseDaoImpl<ExpAuditMapping, Integer>(databaseHelper.getConnectionSource(), ExpAuditMapping.class) {
+            };
+            dao.initialize();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<ExpAuditMapping> findAll() {
         try {
-            return this.queryForAll();
+            return dao.queryForAll();
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -32,7 +43,7 @@ public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> imple
     @Override
     public void save(ExpAuditMapping mapping) {
         try {
-            this.createOrUpdate(mapping);
+            dao.createOrUpdate(mapping);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -41,12 +52,12 @@ public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> imple
     @Override
     public ExpAuditMapping findByDateAndActivityType(Date today, String type) {
         try {
-            PreparedQuery<ExpAuditMapping> prepare = queryBuilder()
+            PreparedQuery<ExpAuditMapping> prepare = dao.queryBuilder()
                     .where()
                     .eq(DATE_FN, today)
                     .and()
                     .eq(ACTIVITY_TYPE_FN, type).prepare();
-            return this.queryForFirst(prepare);
+            return dao.queryForFirst(prepare);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -55,7 +66,7 @@ public class ExpAuditDaoImpl extends BaseDaoImpl<ExpAuditMapping, Integer> imple
     @Override
     public List<ExpAuditMapping> findAllByType(String type) {
         try {
-            return queryBuilder()
+            return dao.queryBuilder()
                     .orderBy(DATE_FN, true)
                     .where()
                     .eq(ACTIVITY_TYPE_FN, type).query();

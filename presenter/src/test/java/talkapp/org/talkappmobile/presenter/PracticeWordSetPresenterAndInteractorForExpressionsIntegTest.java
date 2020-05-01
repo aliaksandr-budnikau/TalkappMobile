@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -33,7 +32,6 @@ import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -64,18 +62,7 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
         LoggerImpl logger = new LoggerImpl();
         ObjectMapper mapper = new ObjectMapper();
 
-        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();

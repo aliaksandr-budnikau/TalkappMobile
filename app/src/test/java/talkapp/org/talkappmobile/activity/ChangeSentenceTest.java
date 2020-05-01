@@ -1,6 +1,5 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -27,13 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.BuildConfig;
-import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.component.BeanFactory;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
@@ -45,6 +41,8 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
+import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
@@ -55,7 +53,6 @@ import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -83,18 +80,8 @@ public class ChangeSentenceTest {
         LoggerImpl logger = new LoggerImpl();
         ObjectMapper mapper = new ObjectMapper();
         testHelper = new TestHelper();
-        repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
-            private DatabaseHelper helper;
+        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
 
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);

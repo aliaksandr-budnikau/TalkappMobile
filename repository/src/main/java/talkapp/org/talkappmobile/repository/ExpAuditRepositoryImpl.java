@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpActivityType;
@@ -13,6 +15,7 @@ public class ExpAuditRepositoryImpl implements ExpAuditRepository {
     private final ExpAuditDao expAuditDao;
     private final ExpAuditMapper expAuditMapper;
 
+    @Inject
     public ExpAuditRepositoryImpl(ExpAuditDao expAuditDao) {
         this.expAuditDao = expAuditDao;
         this.expAuditMapper = new ExpAuditMapper();

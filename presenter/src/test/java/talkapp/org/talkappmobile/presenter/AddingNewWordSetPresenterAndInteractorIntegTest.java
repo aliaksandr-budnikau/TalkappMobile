@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.google.common.eventbus.EventBus;
@@ -20,7 +18,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
@@ -31,7 +28,6 @@ import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -51,19 +47,8 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
     @Before
     public void setUp() {
-        Context context = mock(Context.class);
-        repositoryFactory = new RepositoryFactoryImpl(context) {
-            private DatabaseHelper helper;
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
 
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         eventBus = mock(EventBus.class);

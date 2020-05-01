@@ -23,16 +23,15 @@ import java.sql.SQLException;
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.BeanFactory;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -68,18 +67,7 @@ public class MainActivityTest {
         eventBus = mock(EventBus.class);
         Whitebox.setInternalState(mainActivity, "eventBus", eventBus);
 
-        RepositoryFactoryImpl repositoryFactory = new RepositoryFactoryImpl(mock(Context.class)) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
 
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 

@@ -19,12 +19,6 @@ import talkapp.org.talkappmobile.dao.impl.SentenceDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordRepetitionProgressDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordSetDaoImpl;
 import talkapp.org.talkappmobile.dao.impl.WordTranslationDaoImpl;
-import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
-import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
-import talkapp.org.talkappmobile.mappings.SentenceMapping;
-import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
-import talkapp.org.talkappmobile.mappings.WordSetMapping;
-import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 
@@ -44,42 +38,42 @@ public class DaoHelper {
 
     public synchronized WordRepetitionProgressDao getWordRepetitionProgressDao() throws SQLException {
         if (repetitionProgressDao == null) {
-            repetitionProgressDao = new WordRepetitionProgressDaoImpl(databaseHelper.getConnectionSource(), WordRepetitionProgressMapping.class);
+            repetitionProgressDao = new WordRepetitionProgressDaoImpl(databaseHelper);
         }
         return repetitionProgressDao;
     }
 
     public synchronized WordTranslationDao getWordTranslationDao() throws SQLException {
         if (wordTranslationDao == null) {
-            wordTranslationDao = new WordTranslationDaoImpl(databaseHelper.getConnectionSource(), WordTranslationMapping.class);
+            wordTranslationDao = new WordTranslationDaoImpl(databaseHelper);
         }
         return wordTranslationDao;
     }
 
     public synchronized SentenceDao getSentenceDao() throws SQLException {
         if (sentenceDao == null) {
-            sentenceDao = new SentenceDaoImpl(databaseHelper.getConnectionSource(), SentenceMapping.class);
+            sentenceDao = new SentenceDaoImpl(databaseHelper);
         }
         return sentenceDao;
     }
 
     public synchronized WordSetDao getWordSetDao() throws SQLException {
         if (wordSetDao == null) {
-            wordSetDao = new WordSetDaoImpl(databaseHelper.getConnectionSource(), WordSetMapping.class);
+            wordSetDao = new WordSetDaoImpl(databaseHelper);
         }
         return wordSetDao;
     }
 
     public synchronized NewWordSetDraftDao getNewWordSetDraftDao() throws SQLException {
         if (newWordSetDraftDao == null) {
-            newWordSetDraftDao = new NewWordSetDraftDaoImpl(databaseHelper.getConnectionSource(), NewWordSetDraftMapping.class);
+            newWordSetDraftDao = new NewWordSetDraftDaoImpl(databaseHelper);
         }
         return newWordSetDraftDao;
     }
 
     public synchronized ExpAuditDao getExpAuditDao() throws SQLException {
         if (expAuditDao == null) {
-            expAuditDao = new ExpAuditDaoImpl(databaseHelper.getConnectionSource(), ExpAuditMapping.class);
+            expAuditDao = new ExpAuditDaoImpl(databaseHelper);
         }
         return expAuditDao;
     }

@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.interactor.impl.RepetitionPracticeWordSetInteractor;
 import talkapp.org.talkappmobile.interactor.impl.StrategySwitcherDecorator;
@@ -43,7 +42,6 @@ import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static java.util.Collections.shuffle;
 import static org.junit.Assert.assertEquals;
@@ -73,18 +71,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
 
         LoggerImpl logger = new LoggerImpl();
 
-        repositoryFactory = new RepositoryFactoryImpl(context) {
-            private DatabaseHelper helper;
-
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
+        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(), new RefereeServiceImpl(new EqualityScorerImpl()),

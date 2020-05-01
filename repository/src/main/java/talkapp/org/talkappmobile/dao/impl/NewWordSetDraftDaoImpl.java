@@ -1,23 +1,34 @@
 package talkapp.org.talkappmobile.dao.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
-import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 
+import javax.inject.Inject;
+
+import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.NewWordSetDraftDao;
 import talkapp.org.talkappmobile.mappings.NewWordSetDraftMapping;
 
-public class NewWordSetDraftDaoImpl extends BaseDaoImpl<NewWordSetDraftMapping, Integer> implements NewWordSetDraftDao {
+public class NewWordSetDraftDaoImpl implements NewWordSetDraftDao {
 
-    public NewWordSetDraftDaoImpl(ConnectionSource connectionSource, Class<NewWordSetDraftMapping> dataClass) throws SQLException {
-        super(connectionSource, dataClass);
+    private final BaseDaoImpl<NewWordSetDraftMapping, Integer> dao;
+
+    @Inject
+    public NewWordSetDraftDaoImpl(DatabaseHelper databaseHelper) {
+        try {
+            dao = new BaseDaoImpl<NewWordSetDraftMapping, Integer>(databaseHelper.getConnectionSource(), NewWordSetDraftMapping.class) {
+            };
+            dao.initialize();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public NewWordSetDraftMapping getNewWordSetDraftById(int id) {
         try {
-            return this.queryForId(id);
+            return dao.queryForId(id);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -26,7 +37,7 @@ public class NewWordSetDraftDaoImpl extends BaseDaoImpl<NewWordSetDraftMapping, 
     @Override
     public void createNewOrUpdate(NewWordSetDraftMapping mapping) {
         try {
-            this.createOrUpdate(mapping);
+            dao.createOrUpdate(mapping);
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

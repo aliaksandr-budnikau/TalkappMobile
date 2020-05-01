@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.SentenceDao;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.repository.SentenceRepository;
 
 import static java.util.Collections.singletonList;
 
@@ -17,6 +18,7 @@ public class SentenceRepositoryImpl implements SentenceRepository {
     private final SentenceDao sentenceDao;
     private final SentenceMapper sentenceMapper;
 
+    @Inject
     public SentenceRepositoryImpl(SentenceDao sentenceDao, ObjectMapper mapper) {
         this.sentenceDao = sentenceDao;
         this.sentenceMapper = new SentenceMapper(mapper);

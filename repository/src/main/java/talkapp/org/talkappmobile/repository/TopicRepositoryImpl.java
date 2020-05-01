@@ -4,14 +4,16 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.TopicDao;
 import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.repository.TopicRepository;
 
 public class TopicRepositoryImpl implements TopicRepository {
     private final TopicDao topicDao;
 
+    @Inject
     public TopicRepositoryImpl(TopicDao topicDao) {
         this.topicDao = topicDao;
     }

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.WordRepetitionProgressDao;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
@@ -20,6 +22,7 @@ public class WordRepetitionProgressRepositoryImpl implements WordRepetitionProgr
     private final SentenceMapper sentenceMapper;
     private final ObjectMapper mapper;
 
+    @Inject
     public WordRepetitionProgressRepositoryImpl(WordRepetitionProgressDao progressDao, ObjectMapper mapper) {
         this.progressDao = progressDao;
         this.sentenceMapper = new SentenceMapper(mapper);

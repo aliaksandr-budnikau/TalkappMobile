@@ -17,14 +17,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -33,7 +30,6 @@ import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -49,18 +45,8 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
     @Before
     public void setUp() {
         final Context context = mock(Context.class);
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(context) {
-            private DatabaseHelper helper;
+        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
 
-            @Override
-            protected DatabaseHelper databaseHelper() {
-                if (helper != null) {
-                    return helper;
-                }
-                helper = getHelper(RuntimeEnvironment.application, DatabaseHelper.class);
-                return helper;
-            }
-        };
         ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         wordSet = new WordSet();

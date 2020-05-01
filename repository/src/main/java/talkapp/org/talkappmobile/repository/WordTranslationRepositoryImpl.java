@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -15,6 +17,7 @@ public class WordTranslationRepositoryImpl implements WordTranslationRepository 
     private final WordTranslationDao translationDao;
     private final WordTranslationMapper wordTranslationMapper;
 
+    @Inject
     public WordTranslationRepositoryImpl(WordTranslationDao translationDao) {
         this.translationDao = translationDao;
         this.wordTranslationMapper = new WordTranslationMapper();

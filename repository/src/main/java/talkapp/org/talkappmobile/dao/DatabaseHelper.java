@@ -20,7 +20,6 @@ import talkapp.org.talkappmobile.mappings.TopicMapping;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
-import talkapp.org.talkappmobile.repository.MigrationService;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -29,7 +28,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "talkapp.db";
     private static final int DATABASE_VERSION = 52;
     private Map<Integer, List<String>> changes = new LinkedHashMap<>();
-    private MigrationService migrationService;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,17 +88,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             List<String> sqls = entry.getValue();
             if (sqls == null || sqls.isEmpty()) {
-                migrationService.migrate(entry.getKey());
+                //migrationService.migrate(entry.getKey());
                 continue;
             }
             for (String sql : sqls) {
                 db.execSQL(sql);
             }
-            migrationService.migrate(entry.getKey());
+            //migrationService.migrate(entry.getKey());
         }
-    }
-
-    public void setMigrationService(MigrationService migrationService) {
-        this.migrationService = migrationService;
     }
 }
