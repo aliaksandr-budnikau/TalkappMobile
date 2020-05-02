@@ -8,13 +8,18 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.EqualityScorer;
 
 public class EqualityScorerImpl implements EqualityScorer {
 
     public static final String REPLACEMENT = " ";
     public static final String REGEX = "[^A-Za-z0-9 ]";
+
+    @Inject
+    public EqualityScorerImpl() {
+    }
 
     @Override
     public int score(String expected, String actual, Word2Tokens currentWord) {

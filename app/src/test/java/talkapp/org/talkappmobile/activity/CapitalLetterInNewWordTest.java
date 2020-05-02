@@ -36,8 +36,6 @@ import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -70,14 +68,12 @@ public class CapitalLetterInNewWordTest {
 
     @Before
     public void setup() {
-        LoggerImpl logger = new LoggerImpl();
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
-        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        serviceFactory.getWordSetService().getWordSets(null);
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
@@ -183,7 +179,7 @@ public class CapitalLetterInNewWordTest {
         } catch (NullPointerException e) {
         }
 
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());
 
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSet", wordSet);
@@ -194,7 +190,7 @@ public class CapitalLetterInNewWordTest {
 
         WordSet wordSet = Whitebox.getInternalState(practiceWordSetFragment, "wordSet");
 
-        assertEquals(serviceFactory.getWordSetExperienceRepository().getCustomWordSetsStartsSince(), wordSet.getId());
+        assertEquals(serviceFactory.getWordSetService().getCustomWordSetsStartsSince(), wordSet.getId());
         for (Word2Tokens word : wordSet.getWords()) {
             assertEquals(wordSet.getId(), word.getSourceWordSetId().intValue());
         }

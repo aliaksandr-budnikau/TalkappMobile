@@ -2,11 +2,15 @@ package talkapp.org.talkappmobile.service;
 
 import android.util.Log;
 
-import talkapp.org.talkappmobile.service.Logger;
+import javax.inject.Inject;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class LoggerImpl implements Logger {
+
+    @Inject
+    public LoggerImpl() {
+    }
 
     @Override
     public void i(String tag, String message, Object... args) {

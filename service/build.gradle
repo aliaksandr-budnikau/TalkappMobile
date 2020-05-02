@@ -30,6 +30,8 @@ dependencies {
     implementation project(path: ":service_api")
     runtimeOnly project(path: ":repository")
 
+    implementation 'com.google.dagger:dagger:2.4'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api 'com.squareup.retrofit2:retrofit:2.3.0'

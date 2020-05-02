@@ -1,7 +1,6 @@
 package talkapp.org.talkappmobile.presenter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -22,9 +21,6 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.repository.WordSetMapper;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.WordSetsListView;
@@ -48,19 +44,13 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     private WordSetsListView view;
     private StudyingWordSetsListInteractor studyingWordSetsInteractor;
     private ServiceFactory serviceFactory;
-    private WordSetMapper wordSetMapper;
-    private ObjectMapper mapper;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
         view = mock(WordSetsListView.class);
 
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
-        studyingWordSetsInteractor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordRepetitionProgressService());
-        mapper = new ObjectMapper();
-        wordSetMapper = new WordSetMapper(mapper);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        studyingWordSetsInteractor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetService(), serviceFactory.getWordRepetitionProgressService());
     }
 
     @After
@@ -69,7 +59,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     }
 
     @Test
-    public void test_withoutTopic() throws SQLException, JsonProcessingException {
+    public void test_withoutTopic() {
         WordSetsListPresenter presenter = new WordSetsListPresenterImpl(null, view, studyingWordSetsInteractor);
         presenter.initialize();
         ArgumentCaptor<List<WordSet>> setsCaptor = forClass(List.class);
@@ -88,7 +78,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         wordSetMapping.setTopicId("34");
         wordSetMapping.setWords(Collections.<Word2Tokens>emptyList());
         wordSets.get(0).setStatus(FINISHED);
-        serviceFactory.getWordSetExperienceRepository().save(wordSetMapping);
+        serviceFactory.getWordSetService().save(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         verify(view, times(0)).onWordSetNotFinished(null, wordSets.get(0));
@@ -126,7 +116,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
         wordSetMapping.setTopicId("34");
         wordSetMapping.setWords(Collections.<Word2Tokens>emptyList());
         wordSets.get(0).setStatus(FINISHED);
-        serviceFactory.getWordSetExperienceRepository().save(wordSetMapping);
+        serviceFactory.getWordSetService().save(wordSetMapping);
         presenter.itemClick(wordSets.get(0), clickedItemNumber);
         verify(view).onWordSetFinished(wordSets.get(0), clickedItemNumber);
         verify(view, times(0)).onWordSetNotFinished(topic, wordSets.get(0));

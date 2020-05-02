@@ -31,8 +31,6 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
@@ -56,8 +54,7 @@ public class PracticeWordSetVocabularyFragmentTest {
 
     @Before
     public void setUp() {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
@@ -86,7 +83,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
         exercise.setWordIndex(ageWordSetWords.indexOf(age));
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet ageWordSet = new WordSet();
         ageWordSet.setId(ageWordSetId);
@@ -94,7 +91,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         ageWordSet.setWords(new LinkedList<>(ageWordSetWords));
         ageWordSet.setTopicId("topicId");
         ageWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(ageWordSet);
+        serviceFactory.getWordSetService().save(ageWordSet);
 
         int anniversaryWordSetId = id + 2;
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
@@ -105,7 +102,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
         exercise.setWordIndex(anniversaryWordSetWords.indexOf(anniversary));
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet anniversaryWordSet = new WordSet();
         anniversaryWordSet.setId(anniversaryWordSetId);
@@ -113,7 +110,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         anniversaryWordSet.setWords(new LinkedList<>(anniversaryWordSetWords));
         anniversaryWordSet.setTopicId("topicId");
         anniversaryWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(anniversaryWordSet);
+        serviceFactory.getWordSetService().save(anniversaryWordSet);
 
         int birthWordSetId = id + 3;
         Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
@@ -124,7 +121,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
         exercise.setWordIndex(birthWordSetWords.indexOf(birth));
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet birthWordSet = new WordSet();
         birthWordSet.setId(birthWordSetId);
@@ -132,7 +129,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         birthWordSet.setWords(new LinkedList<>(birthWordSetWords));
         birthWordSet.setTopicId("topicId");
         birthWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(birthWordSet);
+        serviceFactory.getWordSetService().save(birthWordSet);
 
         wordSet.setWords(new LinkedList<>(asList(age, anniversary, birth)));
         wordSet.setTopicId("topicId");
@@ -146,7 +143,7 @@ public class PracticeWordSetVocabularyFragmentTest {
             wordTranslation.setWord(word.getWord());
             wordTranslation.setTranslation(word.getWord());
             wordTranslation.setLanguage("russian");
-            repositoryFactory.getWordTranslationRepository().createNewOrUpdate(asList(wordTranslation));
+            serviceFactory.getWordTranslationService().createNewOrUpdate(asList(wordTranslation));
         }
     }
 

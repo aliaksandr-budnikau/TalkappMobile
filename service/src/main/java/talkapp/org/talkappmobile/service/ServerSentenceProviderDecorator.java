@@ -8,7 +8,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Collections.emptyList;
 
-class ServerSentenceProviderDecorator extends SentenceProviderDecorator {
+public class ServerSentenceProviderDecorator extends SentenceProviderDecorator {
     public static final int WORDS_NUMBER = 6;
     private final DataServer server;
 

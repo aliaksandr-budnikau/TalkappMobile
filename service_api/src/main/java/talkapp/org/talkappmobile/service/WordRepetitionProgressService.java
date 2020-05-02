@@ -4,6 +4,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
+import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public interface WordRepetitionProgressService {
@@ -35,4 +36,10 @@ public interface WordRepetitionProgressService {
     List<WordSet> findWordSetOfDifficultWords();
 
     void updateSentenceIds(Word2Tokens newWord2Token, Word2Tokens oldWord2Token);
+
+    List<WordRepetitionProgress> findByWordIndexAndByWordSetIdAndByStatus(int wordIndex, int wordSetId, String status);
+
+    void createNewOrUpdate(WordRepetitionProgress exercise);
+
+    List<WordRepetitionProgress> findAll();
 }

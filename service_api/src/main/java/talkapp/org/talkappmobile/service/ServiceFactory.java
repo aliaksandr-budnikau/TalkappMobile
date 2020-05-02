@@ -5,7 +5,7 @@ public interface ServiceFactory {
 
     Logger getLogger();
 
-    WordSetService getWordSetExperienceRepository();
+    WordSetService getWordSetService();
 
     WordRepetitionProgressService getWordRepetitionProgressService();
 

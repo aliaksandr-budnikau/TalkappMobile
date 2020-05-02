@@ -21,4 +21,8 @@ public interface WordTranslationService {
     WordTranslation findByWordAndLanguage(String word, String language);
 
     WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word);
+
+    WordTranslation findByWordAndByLanguage(String word, String language);
+
+    void createNewOrUpdate(List<WordTranslation> list);
 }

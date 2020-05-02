@@ -83,7 +83,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
+        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetService(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
         return new PracticeWordSetVocabularyPresenterImpl(view, interactor);
     }
 
@@ -101,7 +101,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public AddingNewWordSetPresenter create(AddingNewWordSetView view) {
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
         AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService, serviceFactory.getDataServer());
         return new AddingNewWordSetPresenterImpl(view, addingNewWordSetInteractor);
@@ -109,7 +109,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public WordSetsListPresenter create(WordSetsListView view, boolean repetitionMode, RepetitionClass repetitionClass, Topic topic) {
-        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetExperienceRepository(), serviceFactory.getWordRepetitionProgressService());
+        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetService(), serviceFactory.getWordRepetitionProgressService());
         if (repetitionMode) {
             interactor = new RepetitionWordSetsListInteractor(serviceFactory.getWordRepetitionProgressService(), repetitionClass == null ? RepetitionClass.NEW : repetitionClass);
         }
@@ -147,7 +147,7 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public WordSetQRImporterBeanPresenter create(WordSetQRImporterView view) {
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
         return new WordSetQRImporterBeanPresenterImpl(view, new WordSetQRImporterBeanInteractor(wordSetService, wordTranslationService));
     }

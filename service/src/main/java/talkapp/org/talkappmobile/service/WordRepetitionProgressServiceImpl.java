@@ -14,6 +14,8 @@ import java.util.NavigableMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -23,7 +25,6 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
-import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
 import static java.lang.Math.log;
 import static java.lang.Math.max;
@@ -38,6 +39,7 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
     private final WordRepetitionProgressRepository progressRepository;
     private int wordSetSize = 12;
 
+    @Inject
     public WordRepetitionProgressServiceImpl(WordRepetitionProgressRepository progressRepository, WordSetRepository wordSetRepository, SentenceRepository sentenceRepository) {
         this.progressRepository = progressRepository;
         this.wordSetRepository = wordSetRepository;
@@ -269,6 +271,21 @@ public class WordRepetitionProgressServiceImpl implements WordRepetitionProgress
         }
         exercise.setSentenceIds(sentenceIds);
         progressRepository.createNewOrUpdate(exercise);
+    }
+
+    @Override
+    public List<WordRepetitionProgress> findByWordIndexAndByWordSetIdAndByStatus(int wordIndex, int wordSetId, String status) {
+        return progressRepository.findByWordIndexAndByWordSetIdAndByStatus(wordIndex, wordSetId, status);
+    }
+
+    @Override
+    public void createNewOrUpdate(WordRepetitionProgress exercise) {
+        progressRepository.createNewOrUpdate(exercise);
+    }
+
+    @Override
+    public List<WordRepetitionProgress> findAll() {
+        return progressRepository.findAll();
     }
 
     private void sortByForgettingAndRepetitionCounters(List<WordRepetitionProgress> words) {

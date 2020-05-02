@@ -17,8 +17,6 @@ import java.sql.SQLException;
 import talkapp.org.talkappmobile.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.BuildConfig;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 
@@ -32,8 +30,7 @@ public class AddingNewWordSetInteractorTest {
 
     @Before
     public void setUp() throws Exception {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
         interactor = new AddingNewWordSetInteractor(null, serviceFactory.getWordTranslationService(), serviceFactory.getDataServer());
     }
 

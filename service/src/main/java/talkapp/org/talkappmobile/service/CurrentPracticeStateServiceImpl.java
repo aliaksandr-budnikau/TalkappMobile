@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
 
 public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateService {
@@ -23,6 +24,7 @@ public class CurrentPracticeStateServiceImpl implements CurrentPracticeStateServ
     private List<WordSource> finishedWords = new LinkedList<>();
     private List<WordSource> wordsSources = new LinkedList<>();
 
+    @Inject
     public CurrentPracticeStateServiceImpl(WordSetRepository wordSetRepository) {
         this.wordSetRepository = wordSetRepository;
     }

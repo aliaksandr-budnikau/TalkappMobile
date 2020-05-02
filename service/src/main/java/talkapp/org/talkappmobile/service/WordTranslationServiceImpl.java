@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -20,6 +22,7 @@ public class WordTranslationServiceImpl implements WordTranslationService {
     private final WordTranslationRepository wordTranslationRepository;
     private final WordSetRepository wordSetRepository;
 
+    @Inject
     public WordTranslationServiceImpl(DataServer server, WordTranslationRepository wordTranslationRepository, WordSetRepository wordSetRepository) {
         this.server = server;
         this.wordTranslationRepository = wordTranslationRepository;
@@ -137,5 +140,15 @@ public class WordTranslationServiceImpl implements WordTranslationService {
     @Override
     public WordTranslation findWordTranslationsByWordAndByLanguage(String language, String word) {
         return server.findWordTranslationsByWordAndByLanguage(language, word);
+    }
+
+    @Override
+    public WordTranslation findByWordAndByLanguage(String word, String language) {
+        return wordTranslationRepository.findByWordAndByLanguage(word, language);
+    }
+
+    @Override
+    public void createNewOrUpdate(List<WordTranslation> list) {
+        wordTranslationRepository.createNewOrUpdate(list);
     }
 }

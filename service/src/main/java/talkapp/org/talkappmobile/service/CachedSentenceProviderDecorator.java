@@ -4,10 +4,9 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
-import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 
-class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
+public class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
     private final SentenceRepository sentenceRepository;
 
     public CachedSentenceProviderDecorator(SentenceProvider provider, SentenceRepository sentenceRepository) {

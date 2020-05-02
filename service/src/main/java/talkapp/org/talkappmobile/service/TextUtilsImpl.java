@@ -9,7 +9,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import talkapp.org.talkappmobile.service.TextUtils;
+import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 
@@ -42,6 +42,7 @@ public class TextUtilsImpl implements TextUtils {
     private final Set<String> punctuationMarks;
     private final String placeholder;
 
+    @Inject
     public TextUtilsImpl() {
         this.placeholder = PLACEHOLDER;
         this.words = new HashSet<>(asList(WORDS));

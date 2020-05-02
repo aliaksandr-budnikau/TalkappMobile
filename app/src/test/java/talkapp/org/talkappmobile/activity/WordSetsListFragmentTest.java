@@ -28,8 +28,6 @@ import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.widget.adapter.filterable.FilterableAdapter;
@@ -63,8 +61,7 @@ public class WordSetsListFragmentTest {
     public void setup() throws SQLException {
         testHelper = new TestHelper();
 
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(PhraseSetsRecyclerView.class))).thenReturn(mock(WaitingForProgressBarManager.class));
         eventBus = testHelper.getEventBusMock();
@@ -105,7 +102,7 @@ public class WordSetsListFragmentTest {
         checkWord2Tokens(wordSet, words);
         assertFalse(em.isRepetitionMode());
 
-        List<WordSet> allWordSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        List<WordSet> allWordSets = serviceFactory.getWordSetService().getWordSets(null);
         for (WordSet set : allWordSets) {
             checkWord2Tokens(set, set.getWords());
         }

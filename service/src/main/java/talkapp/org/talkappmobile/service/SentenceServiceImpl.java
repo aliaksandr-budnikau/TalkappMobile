@@ -3,15 +3,16 @@ package talkapp.org.talkappmobile.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.Sentence;
-import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
-import talkapp.org.talkappmobile.service.SentenceService;
 
 public class SentenceServiceImpl implements SentenceService {
     private final DataServer server;
     private final SentenceRepository sentenceRepository;
 
+    @Inject
     public SentenceServiceImpl(DataServer server, SentenceRepository sentenceRepository) {
         this.server = server;
         this.sentenceRepository = sentenceRepository;

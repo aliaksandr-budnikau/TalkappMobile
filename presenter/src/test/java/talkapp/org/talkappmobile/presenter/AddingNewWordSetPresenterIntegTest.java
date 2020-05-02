@@ -14,11 +14,9 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+import talkapp.org.talkappmobile.RepositoryModule;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.RepositoryModule;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -42,8 +40,7 @@ public class AddingNewWordSetPresenterIntegTest {
 
     @Before
     public void setUp() throws Exception {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
         addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
@@ -69,7 +66,7 @@ public class AddingNewWordSetPresenterIntegTest {
 
     @Test
     public void testHandleAddingNewWordSetFragmentReadyEM_DraftExistsButEmpty() throws SQLException {
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         LinkedList<WordTranslation> words = new LinkedList<>();
         for (int i = 0; i < 12; i++) {
             words.add(new WordTranslation());
@@ -97,7 +94,7 @@ public class AddingNewWordSetPresenterIntegTest {
             words.add(new WordTranslation());
         }
 
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         wordSetService.save(new NewWordSetDraft(words));
 
         // when

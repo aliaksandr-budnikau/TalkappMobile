@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -32,8 +30,6 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.EqualityScorerImpl;
 import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.RefereeServiceImpl;
@@ -59,20 +55,15 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
     private PracticeWordSetPresenterImpl presenter;
     private WordSet wordSet;
     private PracticeWordSetInteractor interactor;
-    private Context context;
     private RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() throws SQLException {
         view = mock(PracticeWordSetView.class);
-        context = mock(Context.class);
-
         LoggerImpl logger = new LoggerImpl();
 
-        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(serviceFactory.getSentenceService(), new RefereeServiceImpl(new EqualityScorerImpl()),
                 logger, serviceFactory.getWordRepetitionProgressService(), serviceFactory.getSentenceProvider(), serviceFactory.getCurrentPracticeStateService());
@@ -103,7 +94,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         Word2Tokens age = new Word2Tokens("age", "age", ageWordSetId);
         List<Word2Tokens> ageWordSetWords = asList(age, new Word2Tokens(), new Word2Tokens());
         int wordIndexAge = ageWordSetWords.indexOf(age);
-        List<WordRepetitionProgress> ageProgress = repositoryFactory.getWordRepetitionProgressRepository().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAge, ageWordSetId, name);
+        List<WordRepetitionProgress> ageProgress = serviceFactory.getWordRepetitionProgressService().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAge, ageWordSetId, name);
         WordRepetitionProgress exercise;
         if (ageProgress.isEmpty()) {
             exercise = new WordRepetitionProgress();
@@ -115,7 +106,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(ageWordSetId);
         exercise.setWordIndex(wordIndexAge);
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet ageWordSet = new WordSet();
         ageWordSet.setId(ageWordSetId);
@@ -123,13 +114,13 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         ageWordSet.setWords(new LinkedList<>(ageWordSetWords));
         ageWordSet.setTopicId("topicId");
         ageWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(ageWordSet);
+        serviceFactory.getWordSetService().save(ageWordSet);
 
         int anniversaryWordSetId = id + 2;
         Word2Tokens anniversary = new Word2Tokens("anniversary", "anniversary", anniversaryWordSetId);
         List<Word2Tokens> anniversaryWordSetWords = asList(new Word2Tokens(), anniversary, new Word2Tokens());
         int wordIndexAnniversary = anniversaryWordSetWords.indexOf(anniversary);
-        List<WordRepetitionProgress> anniversaryProgress = repositoryFactory.getWordRepetitionProgressRepository().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAnniversary, anniversaryWordSetId, name);
+        List<WordRepetitionProgress> anniversaryProgress = serviceFactory.getWordRepetitionProgressService().findByWordIndexAndByWordSetIdAndByStatus(wordIndexAnniversary, anniversaryWordSetId, name);
         if (anniversaryProgress.isEmpty()) {
             exercise = new WordRepetitionProgress();
         } else {
@@ -140,7 +131,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(anniversaryWordSetId);
         exercise.setWordIndex(wordIndexAnniversary);
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet anniversaryWordSet = new WordSet();
         anniversaryWordSet.setId(anniversaryWordSetId);
@@ -148,13 +139,13 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         anniversaryWordSet.setWords(new LinkedList<>(anniversaryWordSetWords));
         anniversaryWordSet.setTopicId("topicId");
         anniversaryWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(anniversaryWordSet);
+        serviceFactory.getWordSetService().save(anniversaryWordSet);
 
         int birthWordSetId = id + 3;
         Word2Tokens birth = new Word2Tokens("birth", "birth", birthWordSetId);
         List<Word2Tokens> birthWordSetWords = asList(new Word2Tokens(), new Word2Tokens(), birth);
         int wordIndexBirth = birthWordSetWords.indexOf(birth);
-        List<WordRepetitionProgress> birthProgress = repositoryFactory.getWordRepetitionProgressRepository().findByWordIndexAndByWordSetIdAndByStatus(wordIndexBirth, birthWordSetId, name);
+        List<WordRepetitionProgress> birthProgress = serviceFactory.getWordRepetitionProgressService().findByWordIndexAndByWordSetIdAndByStatus(wordIndexBirth, birthWordSetId, name);
         if (birthProgress.isEmpty()) {
             exercise = new WordRepetitionProgress();
         } else {
@@ -165,7 +156,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         exercise.setUpdatedDate(new Date());
         exercise.setWordSetId(birthWordSetId);
         exercise.setWordIndex(wordIndexBirth);
-        repositoryFactory.getWordRepetitionProgressRepository().createNewOrUpdate(exercise);
+        serviceFactory.getWordRepetitionProgressService().createNewOrUpdate(exercise);
 
         WordSet birthWordSet = new WordSet();
         birthWordSet.setId(birthWordSetId);
@@ -173,7 +164,7 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         birthWordSet.setWords(new LinkedList<>(birthWordSetWords));
         birthWordSet.setTopicId("topicId");
         birthWordSet.setTrainingExperience(0);
-        serviceFactory.getWordSetExperienceRepository().save(birthWordSet);
+        serviceFactory.getWordSetService().save(birthWordSet);
 
         wordSet.setWords(new LinkedList<>(asList(age, anniversary, birth)));
         wordSet.setTopicId("topicId");
@@ -285,10 +276,10 @@ public class PracticeWordSetRepetitionPresenterAndInteractorIntegTest extends Pr
         verify(view).onUpdateUserExp(1);
         reset(view);
 
-        for (WordRepetitionProgress progressMapping : repositoryFactory.getWordRepetitionProgressRepository().findAll()) {
+        for (WordRepetitionProgress progressMapping : serviceFactory.getWordRepetitionProgressService().findAll()) {
             assertEquals(1, progressMapping.getRepetitionCounter());
         }
-        assertEquals(3, repositoryFactory.getWordRepetitionProgressRepository().findAll().size());
+        assertEquals(3, serviceFactory.getWordRepetitionProgressService().findAll().size());
     }
 
     @Test

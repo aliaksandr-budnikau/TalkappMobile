@@ -13,8 +13,6 @@ import org.robolectric.annotation.Config;
 import java.util.List;
 
 import talkapp.org.talkappmobile.model.ExpAudit;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
@@ -32,8 +30,7 @@ public class UserExpServiceImplIntegTest {
 
     @Before
     public void setUp() throws Exception {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
     }
 
     @After

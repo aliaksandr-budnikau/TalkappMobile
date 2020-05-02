@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,9 +43,6 @@ import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
@@ -73,22 +69,18 @@ public class ChangeSentenceTest {
     private TextView answerTextMock;
     private TestHelper testHelper;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
-        LoggerImpl logger = new LoggerImpl();
-        ObjectMapper mapper = new ObjectMapper();
         testHelper = new TestHelper();
-        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
 
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
 
-        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        serviceFactory.getWordSetService().getWordSets(null);
         wordSet = createWordSet(-1, "age");
         practiceWordSetFragment = new PracticeWordSetFragment();
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
@@ -130,7 +122,7 @@ public class ChangeSentenceTest {
         wordSet.setTopicId("topicId");
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
-        serviceFactory.getWordSetExperienceRepository().save(wordSet);
+        serviceFactory.getWordSetService().save(wordSet);
         return wordSet;
     }
 
@@ -341,7 +333,7 @@ public class ChangeSentenceTest {
         //
         // TEST OF SENTENCES CYCLICAL MOVEMENT FIRST STAGE
         //
-        repositoryFactory.getWordRepetitionProgressRepository().cleanByWordSetId(-1);
+        serviceFactory.getWordRepetitionProgressService().cleanByWordSetId(-1);
         reset(eventBus);
 
         wordSet = createWordSet(-1, "birth", "anniversary");

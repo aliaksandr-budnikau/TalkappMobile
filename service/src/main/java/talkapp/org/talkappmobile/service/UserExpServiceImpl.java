@@ -7,15 +7,17 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.repository.ExpAuditRepository;
-import talkapp.org.talkappmobile.service.UserExpService;
 
 public class UserExpServiceImpl implements UserExpService {
     public static final int AMOUNT = 10;
     private final ExpAuditRepository expAuditRepository;
 
+    @Inject
     public UserExpServiceImpl(ExpAuditRepository expAuditRepository) {
         this.expAuditRepository = expAuditRepository;
     }

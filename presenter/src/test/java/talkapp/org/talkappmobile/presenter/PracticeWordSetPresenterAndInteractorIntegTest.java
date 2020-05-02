@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.content.Context;
-
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -19,10 +17,7 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.LoggerImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
@@ -44,26 +39,20 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
     private PracticeWordSetView view;
     private IPracticeWordSetPresenter presenter;
     private WordSet wordSet;
-    private Context context;
     private CurrentPracticeStateService currentPracticeStateService;
     private PresenterFactory presenterFactory;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void setup() {
         view = mock(PracticeWordSetView.class);
-        context = mock(Context.class);
-        LoggerImpl logger = new LoggerImpl();
 
-
-        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
 
         presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
-        serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        serviceFactory.getWordSetService().getWordSets(null);
     }
 
     @After
@@ -92,7 +81,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
         wordSet.setTrainingExperience(trainingExperience);
         wordSet.setStatus(status);
 
-        serviceFactory.getWordSetExperienceRepository().save(wordSet);
+        serviceFactory.getWordSetService().save(wordSet);
         presenter = presenterFactory.create(view, false);
     }
 
@@ -681,7 +670,7 @@ public class PracticeWordSetPresenterAndInteractorIntegTest extends PresenterAnd
             presenter.checkAnswerButtonClick(sentence.getText());
             presenter.nextButtonClick();
             presenter.changeSentence();
-            WordSet wordSetFromDB = repositoryFactory.getWordSetRepository().findById(this.wordSet.getId());
+            WordSet wordSetFromDB = serviceFactory.getWordSetService().findById(this.wordSet.getId());
             assertEquals(wordSet.getRepetitionClass(), wordSetFromDB.getRepetitionClass());
             assertEquals(wordSet.getStatus(), wordSetFromDB.getStatus());
             assertEquals(wordSet.getId(), wordSetFromDB.getId());

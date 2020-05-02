@@ -15,8 +15,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.interactor.TopicsFragmentInteractor;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.TopicsFragmentView;
@@ -39,9 +37,7 @@ public class TopicsFragmentPresenterAndInteractorIntegTest extends PresenterAndI
     public void setup() {
         view = mock(TopicsFragmentView.class);
 
-
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         topicsFragmentInteractor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
     }

@@ -21,7 +21,6 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
@@ -47,9 +46,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
 
     @Before
     public void setUp() {
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         eventBus = mock(EventBus.class);
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
@@ -157,7 +154,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(4964), wordSet.getTop());
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
         wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());
@@ -212,7 +209,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(2).getWord(), wordSet.getWords().get(2).getTokens());
 
         assertEquals(new Integer(1656), wordSet.getTop());
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
         reset(eventBus);
 
@@ -331,7 +328,7 @@ public class AddingNewWordSetPresenterAndInteractorIntegTest {
         assertEquals(wordSet.getWords().get(10).getWord(), wordSet.getWords().get(10).getTokens());
 
         assertEquals(new Integer(7900), wordSet.getTop());
-        WordSetService wordSetService = serviceFactory.getWordSetExperienceRepository();
+        WordSetService wordSetService = serviceFactory.getWordSetService();
         assertEquals(wordSetService.getCustomWordSetsStartsSince(), wordSet.getId());
 
         wordSet = wordSetService.findById(wordSetService.getCustomWordSetsStartsSince());

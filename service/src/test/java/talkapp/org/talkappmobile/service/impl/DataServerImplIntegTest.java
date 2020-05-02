@@ -22,8 +22,6 @@ import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.GitHubRestClient;
 import talkapp.org.talkappmobile.service.RequestExecutor;
@@ -47,19 +45,14 @@ public class DataServerImplIntegTest {
     private RequestExecutor requestExecutor;
     private WordSetService wordSetService;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
 
     @Before
     public void init() {
         gitHubRestClient = Mockito.mock(GitHubRestClient.class);
         requestExecutor = Mockito.mock(RequestExecutor.class);
 
-        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
-        ServiceFactoryImpl bean = (ServiceFactoryImpl) serviceFactory;
-        bean.setGitHubRestClient(gitHubRestClient);
-        bean.setRequestExecutor(requestExecutor);
-        wordSetService = serviceFactory.getWordSetExperienceRepository();
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        wordSetService = serviceFactory.getWordSetService();
     }
 
     @After
@@ -85,7 +78,7 @@ public class DataServerImplIntegTest {
         wordSetMapping2.setTopicId("22");
         wordSetMapping2.setWords(asList(new Word2Tokens("22", "22", null)));
         List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
+        serviceFactory.getWordSetService().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
         wordSet1.setId(1);
@@ -136,7 +129,7 @@ public class DataServerImplIntegTest {
         wordSetMapping2.setTopicId("22");
         wordSetMapping2.setWords(asList(new Word2Tokens("22", "22", null)));
         List<WordSet> wordSetsMappingsWithProgress = asList(wordSetMapping1, wordSetMapping2);
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(wordSetsMappingsWithProgress);
+        serviceFactory.getWordSetService().saveWordSets(wordSetsMappingsWithProgress);
 
         WordSet wordSet1 = new WordSet();
         wordSet1.setId(1);

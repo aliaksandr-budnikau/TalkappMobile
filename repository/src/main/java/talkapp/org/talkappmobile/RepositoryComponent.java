@@ -9,7 +9,7 @@ import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 
 @Singleton
-@Component(modules = {RepositoryModule.class, BindModule.class})
+@Component(modules = {RepositoryModule.class, RepositoryBindModule.class})
 public interface RepositoryComponent {
 
     DatabaseHelper databaseHelper();

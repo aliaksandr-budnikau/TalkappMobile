@@ -4,12 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import retrofit2.Call;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.service.DataServer;
 
 import static java.util.Collections.emptyList;
 
@@ -18,6 +19,7 @@ public class DataServerImpl implements DataServer {
     private final SentenceRestClient sentenceRestClient;
     private final GitHubRestClient gitHubRestClient;
 
+    @Inject
     public DataServerImpl(SentenceRestClient sentenceRestClient, GitHubRestClient gitHubRestClient, RequestExecutor requestExecutor) {
         this.requestExecutor = requestExecutor;
         this.sentenceRestClient = sentenceRestClient;

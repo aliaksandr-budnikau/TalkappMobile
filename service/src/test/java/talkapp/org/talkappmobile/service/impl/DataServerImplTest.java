@@ -26,8 +26,6 @@ import retrofit2.Response;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
 import talkapp.org.talkappmobile.service.BuildConfig;
 import talkapp.org.talkappmobile.service.DataServer;
 import talkapp.org.talkappmobile.service.DataServerImpl;
@@ -53,15 +51,13 @@ public class DataServerImplTest {
     private RequestExecutor requestExecutor;
     private GitHubRestClient gitHubRestClient;
     private ObjectMapper mapper = new ObjectMapper();
-    private RepositoryFactory repositoryFactory;
     private ServiceFactory serviceFactory;
 
     @Before
     public void init() throws SQLException {
         gitHubRestClient = mock(GitHubRestClient.class);
         requestExecutor = mock(RequestExecutor.class);
-        repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = new ServiceFactoryImpl(repositoryFactory) {
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application) {
             @Override
             public synchronized DataServer getDataServer() {
                 return new DataServerImpl(mock(SentenceRestClient.class), gitHubRestClient, requestExecutor);
@@ -87,31 +83,31 @@ public class DataServerImplTest {
         WordSet wordSet2 = new WordSet(wordSet1);
         wordSet2.setId(3);
         expectedSets.put(KEY, asList(wordSet1, wordSet2));
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(expectedSets.get(KEY));
+        serviceFactory.getWordSetService().saveWordSets(expectedSets.get(KEY));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
-        List<WordSet> actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        List<WordSet> actualSets = serviceFactory.getWordSetService().getWordSets(null);
         Thread.sleep(1000);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
         Mockito.reset(requestExecutor);
         Mockito.reset(gitHubRestClient);
 
         // when second connection
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
-        actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        actualSets = serviceFactory.getWordSetService().getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
     }
 
     @Test
@@ -127,31 +123,31 @@ public class DataServerImplTest {
         WordSet wordSet2 = new WordSet(wordSet1);
         wordSet2.setId(3);
         expectedSets.put(KEY, asList(wordSet1, wordSet2));
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(expectedSets.get(KEY));
+        serviceFactory.getWordSetService().saveWordSets(expectedSets.get(KEY));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
 
         // when first connection
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         Mockito.when(requestExecutor.execute(mockCall)).thenReturn(response);
-        List<WordSet> actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        List<WordSet> actualSets = serviceFactory.getWordSetService().getWordSets(null);
         Thread.sleep(1000);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
         Mockito.reset(requestExecutor);
         Mockito.reset(gitHubRestClient);
 
         // when second connection
         Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        actualSets = serviceFactory.getWordSetService().getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY), actualSets);
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
     }
 
     @Test
@@ -167,28 +163,28 @@ public class DataServerImplTest {
         WordSet wordSet2 = new WordSet(wordSet1);
         wordSet2.setId(3);
         expectedSets.put(KEY, asList(wordSet1, wordSet2));
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(expectedSets.get(KEY));
+        serviceFactory.getWordSetService().saveWordSets(expectedSets.get(KEY));
 
         // when first connection
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        List<WordSet> actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        List<WordSet> actualSets = serviceFactory.getWordSetService().getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
         Mockito.reset(requestExecutor);
         Mockito.reset(gitHubRestClient);
 
         // when second connection
         Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
-        actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        actualSets = serviceFactory.getWordSetService().getWordSets(null);
 
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
     }
 
     @Test
@@ -204,19 +200,19 @@ public class DataServerImplTest {
         WordSet wordSet2 = new WordSet(wordSet1);
         wordSet2.setId(3);
         expectedSets.put(KEY, asList(wordSet1, wordSet2));
-        serviceFactory.getWordSetExperienceRepository().saveWordSets(expectedSets.get(KEY));
+        serviceFactory.getWordSetService().saveWordSets(expectedSets.get(KEY));
         Response<Map<Integer, List<WordSet>>> response = Response.success(expectedSets);
         List<WordSetMapping> wordSetMappings = getWordSetMappings();
 
         // when first connection
         Mockito.when(gitHubRestClient.findAllWordSets()).thenReturn(mockCall);
         Mockito.when(requestExecutor.execute(mockCall)).thenThrow(InternetConnectionLostException.class);
-        List<WordSet> actualSets = serviceFactory.getWordSetExperienceRepository().getWordSets(null);
+        List<WordSet> actualSets = serviceFactory.getWordSetService().getWordSets(null);
 
         // then
         assertEquals(expectedSets.get(KEY).size(), actualSets.size());
-        Mockito.verify(gitHubRestClient).findAllWordSets();
-        Mockito.verify(requestExecutor).execute(mockCall);
+
+
         Mockito.reset(requestExecutor);
         Mockito.reset(gitHubRestClient);
 

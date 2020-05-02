@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile.presenter;
 
-import android.content.Context;
-
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.junit.After;
@@ -17,11 +15,9 @@ import java.util.HashSet;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryImpl;
-import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.service.ServiceFactory;
 import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -45,15 +41,11 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
     private IPracticeWordSetPresenter practiceWordSetPresenter;
     private PracticeWordSetVocabularyPresenter practiceWordSetVocabularyPresenter;
     private WordSet wordSet;
-    private WordTranslationRepository wordTranslationRepository;
+    private ServiceFactory serviceFactory;
 
     @Before
     public void setUp() {
-        final Context context = mock(Context.class);
-        RepositoryFactory repositoryFactory = new RepositoryFactoryImpl(RuntimeEnvironment.application);
-
-        wordTranslationRepository = repositoryFactory.getWordTranslationRepository();
-        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
 
         wordSet = new WordSet();
         wordSet.setId(-1);
@@ -67,7 +59,7 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         wordSet.setTrainingExperience(0);
         wordSet.setStatus(FIRST_CYCLE);
 
-        serviceFactory.getWordSetExperienceRepository().save(wordSet);
+        serviceFactory.getWordSetService().save(wordSet);
         PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), false);
@@ -102,15 +94,16 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         }
         assertTrue(words.contains(ACE));
         assertEquals(1, words.size());
-
-        assertNull(wordTranslationRepository.findByWordAndByLanguage(AGE, RUSSIAN));
-        assertNull(wordTranslationRepository.findByWordAndByLanguage(ANNIVERSARY, RUSSIAN));
-        assertNull(wordTranslationRepository.findByWordAndByLanguage(BIRTH, RUSSIAN));
-        assertNotNull(wordTranslationRepository.findByWordAndByLanguage(ACE, RUSSIAN));
+        WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
+        assertNull(wordTranslationService.findByWordAndByLanguage(AGE, RUSSIAN));
+        assertNull(wordTranslationService.findByWordAndByLanguage(ANNIVERSARY, RUSSIAN));
+        assertNull(wordTranslationService.findByWordAndByLanguage(BIRTH, RUSSIAN));
+        assertNotNull(wordTranslationService.findByWordAndByLanguage(ACE, RUSSIAN));
     }
 
     private WordTranslation getWordTranslation(String word, String language, String newWord, String translation) {
-        WordTranslation wordTranslation = wordTranslationRepository.findByWordAndByLanguage(word, language);
+        WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
+        WordTranslation wordTranslation = wordTranslationService.findByWordAndByLanguage(word, language);
         wordTranslation.setWord(newWord);
         wordTranslation.setTokens(newWord);
         wordTranslation.setLanguage(RUSSIAN);

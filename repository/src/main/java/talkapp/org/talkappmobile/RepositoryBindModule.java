@@ -30,7 +30,7 @@ import talkapp.org.talkappmobile.repository.WordTranslationRepository;
 import talkapp.org.talkappmobile.repository.WordTranslationRepositoryImpl;
 
 @Module
-public abstract class BindModule {
+public abstract class RepositoryBindModule {
 
     @Binds
     abstract ExpAuditRepository bindExpAuditRepository(ExpAuditRepositoryImpl target);
