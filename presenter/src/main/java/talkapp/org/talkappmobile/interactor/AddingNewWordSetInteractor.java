@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordWithTranslation;
@@ -22,6 +24,7 @@ public class AddingNewWordSetInteractor {
     private final WordTranslationService wordTranslationService;
     private final DataServer dataServer;
 
+    @Inject
     public AddingNewWordSetInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService, DataServer dataServer) {
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;

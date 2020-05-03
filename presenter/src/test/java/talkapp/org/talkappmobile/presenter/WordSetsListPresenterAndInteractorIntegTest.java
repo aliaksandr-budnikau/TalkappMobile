@@ -22,7 +22,7 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.view.WordSetsListView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -49,7 +49,7 @@ public class WordSetsListPresenterAndInteractorIntegTest extends PresenterAndInt
     public void setup() {
         view = mock(WordSetsListView.class);
 
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        serviceFactory = ServiceFactoryProvider.createNew(RuntimeEnvironment.application);
         studyingWordSetsInteractor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetService(), serviceFactory.getWordRepetitionProgressService());
     }
 

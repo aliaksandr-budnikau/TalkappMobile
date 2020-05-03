@@ -22,7 +22,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -51,10 +51,10 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
     public void setup() throws SQLException {
         view = mock(PracticeWordSetView.class);
 
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        presenterFactory = new PresenterFactoryImpl(RuntimeEnvironment.application);
+        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
-        presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         serviceFactory.getWordSetService().getWordSets(null);
 

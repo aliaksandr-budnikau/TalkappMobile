@@ -3,6 +3,8 @@ package talkapp.org.talkappmobile.interactor.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.interactor.WordSetsListInteractor;
 import talkapp.org.talkappmobile.listener.OnWordSetsListListener;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
@@ -20,6 +22,7 @@ public class StudyingWordSetsListInteractor implements WordSetsListInteractor {
     private final WordRepetitionProgressService exerciseService;
     private final WordTranslationService wordTranslationService;
 
+    @Inject
     public StudyingWordSetsListInteractor(WordTranslationService wordTranslationService, WordSetService wordSetService, WordRepetitionProgressService exerciseService) {
         this.wordTranslationService = wordTranslationService;
         this.wordSetService = wordSetService;

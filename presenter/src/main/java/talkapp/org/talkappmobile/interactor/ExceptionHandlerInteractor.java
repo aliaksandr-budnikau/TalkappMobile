@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.interactor;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.ExceptionHandlerListner;
 import talkapp.org.talkappmobile.service.InternetConnectionLostException;
 import talkapp.org.talkappmobile.service.LocalCacheIsEmptyException;
@@ -10,6 +12,7 @@ public class ExceptionHandlerInteractor {
 
     private final Logger logger;
 
+    @Inject
     public ExceptionHandlerInteractor(Logger logger) {
         this.logger = logger;
     }

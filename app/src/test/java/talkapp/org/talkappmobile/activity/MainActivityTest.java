@@ -25,9 +25,9 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -53,6 +53,10 @@ public class MainActivityTest {
 
     @Before
     public void setup() throws SQLException {
+        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+
+        new BeanFactory(presenterFactory);
+
         packageManager = mock(PackageManager.class);
         mainActivity = new MainActivity() {
             @Override
@@ -65,11 +69,7 @@ public class MainActivityTest {
         eventBus = mock(EventBus.class);
         Whitebox.setInternalState(mainActivity, "eventBus", eventBus);
 
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
-
-        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
-
-        new BeanFactory(presenterFactory);
+        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
         applicationVersion = mock(TextView.class);
         userExp = mock(TextView.class);

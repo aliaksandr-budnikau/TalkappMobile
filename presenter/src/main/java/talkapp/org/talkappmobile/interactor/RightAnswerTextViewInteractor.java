@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.OnRightAnswerTextViewListener;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
@@ -16,6 +18,7 @@ import static java.util.Arrays.asList;
 public class RightAnswerTextViewInteractor {
     private final TextUtils textUtils;
 
+    @Inject
     public RightAnswerTextViewInteractor(TextUtils textUtils) {
         this.textUtils = textUtils;
     }

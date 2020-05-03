@@ -30,9 +30,9 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
@@ -48,17 +48,18 @@ public class PracticeWordSetVocabularyFragmentTest {
     private WordSet wordSet;
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         OpenHelperManager.releaseHelper();
     }
 
     @Before
     public void setUp() {
-        ServiceFactory serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
-
-        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
+        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
         new BeanFactory(presenterFactory);
+
+        ServiceFactory serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));

@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetVocabularyListener;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
@@ -22,6 +24,7 @@ public class PracticeWordSetVocabularyInteractor {
     private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService wordRepetitionProgressService;
 
+    @Inject
     public PracticeWordSetVocabularyInteractor(WordSetService wordSetService, WordTranslationService wordTranslationService, WordRepetitionProgressService wordRepetitionProgressService, CurrentPracticeStateService currentPracticeStateService) {
         this.wordSetService = wordSetService;
         this.wordTranslationService = wordTranslationService;

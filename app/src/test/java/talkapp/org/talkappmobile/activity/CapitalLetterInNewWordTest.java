@@ -34,10 +34,10 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.service.WordSetService;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -68,9 +68,9 @@ public class CapitalLetterInNewWordTest {
 
     @Before
     public void setup() {
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
-        presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
         serviceFactory.getWordSetService().getWordSets(null);

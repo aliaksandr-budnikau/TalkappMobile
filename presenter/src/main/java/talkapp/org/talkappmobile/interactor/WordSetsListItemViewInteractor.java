@@ -4,12 +4,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.OnWordSetsListItemViewListener;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 
 public class WordSetsListItemViewInteractor {
 
+    @Inject
     public WordSetsListItemViewInteractor() {
     }
 

@@ -2,6 +2,11 @@ package talkapp.org.talkappmobile.presenter;
 
 import android.content.Context;
 
+import javax.inject.Inject;
+
+import talkapp.org.talkappmobile.DaggerPresenterComponent;
+import talkapp.org.talkappmobile.PresenterComponent;
+import talkapp.org.talkappmobile.PresenterModule;
 import talkapp.org.talkappmobile.interactor.AddingNewWordSetInteractor;
 import talkapp.org.talkappmobile.interactor.ExceptionHandlerInteractor;
 import talkapp.org.talkappmobile.interactor.MainActivityDefaultFragmentInteractor;
@@ -26,13 +31,9 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.presenter.decorator.ButtonsDisablingDecorator;
 import talkapp.org.talkappmobile.presenter.decorator.PleaseWaitProgressBarDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
-import talkapp.org.talkappmobile.service.RefereeService;
-import talkapp.org.talkappmobile.service.SentenceService;
-import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.TopicService;
+import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
-import talkapp.org.talkappmobile.service.WordSetService;
-import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
@@ -49,30 +50,54 @@ import talkapp.org.talkappmobile.view.WordSetsListItemViewView;
 import talkapp.org.talkappmobile.view.WordSetsListView;
 
 public class PresenterFactoryImpl implements PresenterFactory {
-    private final ServiceFactory serviceFactory;
+    @Inject
+    CurrentPracticeStateService currentPracticeStateService;
+    @Inject
+    WordRepetitionProgressService wordRepetitionProgressService;
+    @Inject
+    UserExpService userExpService;
+    @Inject
+    TopicService topicService;
 
-    public PresenterFactoryImpl(ServiceFactory serviceFactory) {
-        this.serviceFactory = serviceFactory;
-    }
+    @Inject
+    StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor;
+    @Inject
+    RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor;
+    @Inject
+    PracticeWordSetVocabularyInteractor practiceWordSetVocabularyInteractor;
+    @Inject
+    StatisticActivityInteractor statisticActivityInteractor;
+    @Inject
+    AddingNewWordSetInteractor addingNewWordSetInteractor;
+    @Inject
+    TopicsFragmentInteractor topicsFragmentInteractor;
+    @Inject
+    StudyingWordSetsListInteractor studyingWordSetsListInteractor;
+    @Inject
+    RightAnswerTextViewInteractor rightAnswerTextViewInteractor;
+    @Inject
+    ExceptionHandlerInteractor exceptionHandlerInteractor;
+    @Inject
+    WordSetQRImporterBeanInteractor wordSetQRImporterBeanInteractor;
+    @Inject
+    WordSetsListItemViewInteractor wordSetsListItemViewInteractor;
+    @Inject
+    PronounceRightAnswerButtonInteractor pronounceRightAnswerButtonInteractor;
 
     public PresenterFactoryImpl(Context context) {
-        serviceFactory = ServiceFactoryProvider.get(context);
+        PresenterComponent component = DaggerPresenterComponent.builder()
+                .presenterModule(new PresenterModule(context)).build();
+        component.inject(this);
     }
 
     @Override
     public IPracticeWordSetPresenter create(PracticeWordSetView view, boolean repetitionMode) {
-        WordRepetitionProgressService progressService = serviceFactory.getWordRepetitionProgressService();
-        SentenceService sentenceService = serviceFactory.getSentenceService();
-        RefereeService refereeService = serviceFactory.getRefereeService();
         PracticeWordSetViewStrategy viewStrategy = new PracticeWordSetViewStrategy(view);
-        CurrentPracticeStateService stateService = serviceFactory.getCurrentPracticeStateService();
-        StudyingPracticeWordSetInteractor studyingPracticeWordSetInteractor = new StudyingPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), stateService, progressService, serviceFactory.getSentenceProvider());
-        StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, progressService, stateService);
-        PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
+        StrategySwitcherDecorator strategySwitcherDecorator = new StrategySwitcherDecorator(studyingPracticeWordSetInteractor, wordRepetitionProgressService, currentPracticeStateService);
+        PracticeWordSetInteractor interactor = new UserExperienceDecorator(strategySwitcherDecorator, userExpService, currentPracticeStateService, wordRepetitionProgressService);
         if (repetitionMode) {
-            RepetitionPracticeWordSetInteractor repetitionPracticeWordSetInteractor = new RepetitionPracticeWordSetInteractor(sentenceService, refereeService, serviceFactory.getLogger(), progressService, serviceFactory.getSentenceProvider(), stateService);
-            strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, progressService, stateService);
-            interactor = new UserExperienceDecorator(strategySwitcherDecorator, serviceFactory.getUserExpService(), stateService, serviceFactory.getWordRepetitionProgressService());
+            strategySwitcherDecorator = new StrategySwitcherDecorator(repetitionPracticeWordSetInteractor, wordRepetitionProgressService, currentPracticeStateService);
+            interactor = new UserExperienceDecorator(strategySwitcherDecorator, userExpService, currentPracticeStateService, wordRepetitionProgressService);
         }
         IPracticeWordSetPresenter presenter = new PracticeWordSetPresenterImpl(interactor, viewStrategy);
 
@@ -83,54 +108,47 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public PracticeWordSetVocabularyPresenter create(PracticeWordSetVocabularyView view) {
-        PracticeWordSetVocabularyInteractor interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetService(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
-        return new PracticeWordSetVocabularyPresenterImpl(view, interactor);
+        return new PracticeWordSetVocabularyPresenterImpl(view, practiceWordSetVocabularyInteractor);
     }
 
     @Override
     public MainActivityPresenter create(MainActivityView view, String versionName) {
-        MainActivityInteractor interactor = new MainActivityInteractor(serviceFactory.getTopicService(), serviceFactory.getUserExpService(), versionName);
+        MainActivityInteractor interactor = new MainActivityInteractor(topicService, userExpService, versionName);
         return new MainActivityPresenterImpl(view, interactor);
     }
 
     @Override
     public StatisticActivityPresenter create(StatisticActivityView view) {
-        StatisticActivityInteractor interactor = new StatisticActivityInteractor(serviceFactory.getUserExpService());
-        return new StatisticActivityPresenterImpl(view, interactor);
+        return new StatisticActivityPresenterImpl(view, statisticActivityInteractor);
     }
 
     @Override
     public AddingNewWordSetPresenter create(AddingNewWordSetView view) {
-        WordSetService wordSetService = serviceFactory.getWordSetService();
-        WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
-        AddingNewWordSetInteractor addingNewWordSetInteractor = new AddingNewWordSetInteractor(wordSetService, wordTranslationService, serviceFactory.getDataServer());
         return new AddingNewWordSetPresenterImpl(view, addingNewWordSetInteractor);
     }
 
     @Override
     public WordSetsListPresenter create(WordSetsListView view, boolean repetitionMode, RepetitionClass repetitionClass, Topic topic) {
-        WordSetsListInteractor interactor = new StudyingWordSetsListInteractor(serviceFactory.getWordTranslationService(), serviceFactory.getWordSetService(), serviceFactory.getWordRepetitionProgressService());
+        WordSetsListInteractor interactor = studyingWordSetsListInteractor;
         if (repetitionMode) {
-            interactor = new RepetitionWordSetsListInteractor(serviceFactory.getWordRepetitionProgressService(), repetitionClass == null ? RepetitionClass.NEW : repetitionClass);
+            interactor = new RepetitionWordSetsListInteractor(wordRepetitionProgressService, repetitionClass == null ? RepetitionClass.NEW : repetitionClass);
         }
         return new WordSetsListPresenterImpl(topic, view, interactor);
     }
 
     @Override
     public TopicsFragmentPresenter create(TopicsFragmentView view) {
-        TopicsFragmentInteractor interactor = new TopicsFragmentInteractor(serviceFactory.getTopicService());
-        return new TopicsFragmentPresenterImpl(view, interactor);
+        return new TopicsFragmentPresenterImpl(view, topicsFragmentInteractor);
     }
 
     @Override
     public RightAnswerTextViewPresenter create(RightAnswerTextViewView view) {
-        RightAnswerTextViewInteractor interacto = new RightAnswerTextViewInteractor(serviceFactory.getTextUtils());
-        return new RightAnswerTextViewPresenterImpl(interacto, view);
+        return new RightAnswerTextViewPresenterImpl(rightAnswerTextViewInteractor, view);
     }
 
     @Override
     public MainActivityDefaultFragmentPresenter create(MainActivityDefaultFragmentView view, String wordSetsRepetitionTitle, String wordSetsRepetitionDescription, String wordSetsLearningTitle, String wordSetsLearningDescription, String wordSetsAddNewTitle, String wordSetsAddNewDescription, String wordSetsExtraRepetitionTitle, String wordSetsExtraRepetitionDescription) {
-        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(serviceFactory.getWordRepetitionProgressService(),
+        MainActivityDefaultFragmentInteractor interactor = new MainActivityDefaultFragmentInteractor(wordRepetitionProgressService,
                 wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,
@@ -140,28 +158,23 @@ public class PresenterFactoryImpl implements PresenterFactory {
     }
 
     @Override
-    public ExceptionHandlerPresenter create(ExceptionHandlerView exceptionHandlerView) {
-        ExceptionHandlerInteractor interactor = new ExceptionHandlerInteractor(serviceFactory.getLogger());
-        return new ExceptionHandlerPresenterImpl(exceptionHandlerView, interactor);
+    public ExceptionHandlerPresenter create(ExceptionHandlerView view) {
+        return new ExceptionHandlerPresenterImpl(view, exceptionHandlerInteractor);
     }
 
     @Override
     public WordSetQRImporterBeanPresenter create(WordSetQRImporterView view) {
-        WordSetService wordSetService = serviceFactory.getWordSetService();
-        WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
-        return new WordSetQRImporterBeanPresenterImpl(view, new WordSetQRImporterBeanInteractor(wordSetService, wordTranslationService));
+        return new WordSetQRImporterBeanPresenterImpl(view, wordSetQRImporterBeanInteractor);
     }
 
     @Override
     public WordSetsListItemViewPresenter create(WordSetsListItemViewView view) {
-        WordSetsListItemViewInteractor interactor = new WordSetsListItemViewInteractor();
-        return new WordSetsListItemViewPresenterImpl(interactor, view);
+        return new WordSetsListItemViewPresenterImpl(wordSetsListItemViewInteractor, view);
     }
 
     @Override
     public PronounceRightAnswerButtonPresenter create(PronounceRightAnswerButtonView view) {
-        PronounceRightAnswerButtonInteractor interactor = new PronounceRightAnswerButtonInteractor();
-        return new PronounceRightAnswerButtonPresenterImpl(interactor, view);
+        return new PronounceRightAnswerButtonPresenterImpl(pronounceRightAnswerButtonInteractor, view);
     }
 
     @Override

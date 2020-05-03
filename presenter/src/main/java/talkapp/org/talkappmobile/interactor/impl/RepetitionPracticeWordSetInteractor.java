@@ -1,5 +1,7 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.Sentence;
@@ -16,6 +18,7 @@ public class RepetitionPracticeWordSetInteractor extends AbstractPracticeWordSet
     private final WordRepetitionProgressService exerciseService;
     private final CurrentPracticeStateService currentPracticeStateService;
 
+    @Inject
     public RepetitionPracticeWordSetInteractor(
             SentenceService sentenceService,
             RefereeService refereeService,

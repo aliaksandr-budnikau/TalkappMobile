@@ -18,7 +18,7 @@ import talkapp.org.talkappmobile.listener.OnAddingNewWordSetListener;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.BuildConfig;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
@@ -30,7 +30,7 @@ public class AddingNewWordSetInteractorTest {
 
     @Before
     public void setUp() throws Exception {
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        serviceFactory = ServiceFactoryProvider.createNew(RuntimeEnvironment.application);
         interactor = new AddingNewWordSetInteractor(null, serviceFactory.getWordTranslationService(), serviceFactory.getDataServer());
     }
 

@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import talkapp.org.talkappmobile.listener.OnStatisticActivityListener;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
@@ -14,6 +16,7 @@ import talkapp.org.talkappmobile.service.UserExpService;
 public class StatisticActivityInteractor {
     private final UserExpService userExpService;
 
+    @Inject
     public StatisticActivityInteractor(UserExpService userExpService) {
         this.userExpService = userExpService;
     }

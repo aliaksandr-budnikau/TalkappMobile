@@ -16,7 +16,7 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.service.WordTranslationService;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
@@ -45,7 +45,12 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
 
     @Before
     public void setUp() {
-        serviceFactory = new ServiceFactoryImpl(RuntimeEnvironment.application);
+        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+
+        practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), false);
+        practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));
+
+        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
         wordSet = new WordSet();
         wordSet.setId(-1);
@@ -60,11 +65,6 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         wordSet.setStatus(FIRST_CYCLE);
 
         serviceFactory.getWordSetService().save(wordSet);
-        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
-
-        practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), false);
-        practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));
-
     }
 
     @Test
