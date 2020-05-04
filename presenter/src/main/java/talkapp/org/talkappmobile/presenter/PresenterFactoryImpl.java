@@ -31,6 +31,8 @@ import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.presenter.decorator.ButtonsDisablingDecorator;
 import talkapp.org.talkappmobile.presenter.decorator.PleaseWaitProgressBarDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
+import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
@@ -85,8 +87,12 @@ public class PresenterFactoryImpl implements PresenterFactory {
     PronounceRightAnswerButtonInteractor pronounceRightAnswerButtonInteractor;
 
     public PresenterFactoryImpl(Context context) {
+        this(ServiceFactoryProvider.get(context));
+    }
+
+    public PresenterFactoryImpl(ServiceFactory serviceFactory) {
         PresenterComponent component = DaggerPresenterComponent.builder()
-                .presenterModule(new PresenterModule(context)).build();
+                .presenterModule(new PresenterModule(serviceFactory)).build();
         component.inject(this);
     }
 

@@ -18,8 +18,10 @@ import talkapp.org.talkappmobile.interactor.PracticeWordSetVocabularyInteractor;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -42,7 +44,8 @@ public class PracticeWordSetVocabularyPresenterAndInteractorIntegTest extends Pr
     public void setup() {
         view = mock(PracticeWordSetVocabularyView.class);
 
-        serviceFactory = ServiceFactoryProvider.createNew(RuntimeEnvironment.application);
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
 
         interactor = new PracticeWordSetVocabularyInteractor(serviceFactory.getWordSetService(), serviceFactory.getWordTranslationService(), serviceFactory.getWordRepetitionProgressService(), serviceFactory.getCurrentPracticeStateService());
     }

@@ -20,8 +20,11 @@ import talkapp.org.talkappmobile.model.TextToken;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
@@ -51,8 +54,9 @@ public class PracticeWordSetPresenterAndInteractorForExpressionsIntegTest extend
     public void setup() throws SQLException {
         view = mock(PracticeWordSetView.class);
 
-        presenterFactory = new PresenterFactoryImpl(RuntimeEnvironment.application);
-        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         currentPracticeStateService = serviceFactory.getCurrentPracticeStateService();
 

@@ -14,7 +14,7 @@ public class BeanFactory {
 
     public static PresenterFactory presenterFactory(Context context) {
         if (presenterFactory == null) {
-            presenterFactory = PresenterFactoryProvider.getOrCreateNew(context);
+            presenterFactory = PresenterFactoryProvider.get(context);
         }
         return presenterFactory;
     }

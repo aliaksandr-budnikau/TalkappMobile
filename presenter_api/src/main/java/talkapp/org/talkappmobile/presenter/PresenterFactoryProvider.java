@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import static java.lang.Class.forName;
 
 public class PresenterFactoryProvider {
-    public static <T> PresenterFactory getOrCreateNew(T context) {
+    public static <T> PresenterFactory get(T context) {
         try {
             String contextClassFullName = "android.content.Context";
             Class<?> contextClass = forName(contextClassFullName);

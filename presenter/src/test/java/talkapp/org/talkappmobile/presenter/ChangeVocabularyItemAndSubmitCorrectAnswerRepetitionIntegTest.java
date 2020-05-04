@@ -20,8 +20,10 @@ import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -40,11 +42,13 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerRepetitionIntegTest {
 
     @Before
     public void setUp() {
-        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
+
         practiceWordSetPresenter = presenterFactory.create(mock(PracticeWordSetView.class), true);
         practiceWordSetVocabularyPresenter = presenterFactory.create(mock(PracticeWordSetVocabularyView.class));
-
-        ServiceFactory serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
 
         wordSet = new WordSet();
         wordSet.setId(1000000 + 1);

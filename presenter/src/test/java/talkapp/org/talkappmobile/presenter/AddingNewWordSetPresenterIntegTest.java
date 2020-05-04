@@ -14,11 +14,12 @@ import org.robolectric.annotation.Config;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.RepositoryModule;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
@@ -33,15 +34,16 @@ import static org.mockito.Mockito.verify;
 @Config(constants = BuildConfig.class, sdk = {LOLLIPOP}, packageName = "talkapp.org.talkappmobile.dao.impl")
 public class AddingNewWordSetPresenterIntegTest {
 
-    private RepositoryModule repositoryFactory;
     private AddingNewWordSetPresenter addingNewWordSetPresenter;
     private AddingNewWordSetView addingNewWordSetViewMock;
     private ServiceFactory serviceFactory;
 
     @Before
     public void setUp() throws Exception {
-        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
-        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
+
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
         addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }

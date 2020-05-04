@@ -42,9 +42,11 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.view.OriginalTextTextViewView;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
@@ -74,9 +76,9 @@ public class ChangeSentenceTest {
     public void setup() {
         testHelper = new TestHelper();
 
-        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
-        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
-
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
 
         new BeanFactory(presenterFactory);
 

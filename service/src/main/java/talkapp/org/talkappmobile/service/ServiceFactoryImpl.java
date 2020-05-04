@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import talkapp.org.talkappmobile.DaggerServiceComponent;
 import talkapp.org.talkappmobile.ServiceComponent;
 import talkapp.org.talkappmobile.ServiceModule;
+import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 
 public class ServiceFactoryImpl implements ServiceFactory {
 
@@ -38,8 +40,12 @@ public class ServiceFactoryImpl implements ServiceFactory {
     Logger logger;
 
     public ServiceFactoryImpl(Context context) {
+        this(RepositoryFactoryProvider.get(context));
+    }
+
+    public ServiceFactoryImpl(RepositoryFactory repositoryFactory) {
         ServiceComponent component = DaggerServiceComponent.builder()
-                .serviceModule(new ServiceModule(context))
+                .serviceModule(new ServiceModule(repositoryFactory))
                 .build();
         component.inject(this);
     }

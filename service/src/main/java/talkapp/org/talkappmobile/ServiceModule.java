@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile;
 
-import android.content.Context;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +14,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import talkapp.org.talkappmobile.repository.ExpAuditRepository;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
-import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 import talkapp.org.talkappmobile.repository.TopicRepository;
 import talkapp.org.talkappmobile.repository.WordRepetitionProgressRepository;
@@ -41,22 +38,16 @@ public class ServiceModule {
     public static final int TIMEOUT = 50;
     public static final String SERVER_URL = "http://192.168.0.101:8080";
     public static final String GIT_HUB_URL = "https://raw.githubusercontent.com";
-    private final Context context;
+    private final RepositoryFactory repositoryFactory;
 
-    public ServiceModule(Context context) {
-        this.context = context;
+    public ServiceModule(RepositoryFactory repositoryFactory) {
+        this.repositoryFactory = repositoryFactory;
     }
 
     @Provides
     @Singleton
-    public Context context() {
-        return context;
-    }
-
-    @Provides
-    @Singleton
-    public RepositoryFactory repositoryFactory(Context context) {
-        return RepositoryFactoryProvider.get(context);
+    public RepositoryFactory repositoryFactory() {
+        return repositoryFactory;
     }
 
     @Provides

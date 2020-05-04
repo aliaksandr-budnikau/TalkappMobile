@@ -21,8 +21,9 @@ import java.util.List;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
+import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
+import talkapp.org.talkappmobile.service.ServiceFactoryImpl;
 import talkapp.org.talkappmobile.service.WordSetService;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 
@@ -40,15 +41,15 @@ import static talkapp.org.talkappmobile.service.WordTranslationServiceImpl.RUSSI
 public class AddingNewWordSetPresenterAndInteractorIntegTest {
     private EventBus eventBus;
     private ServiceFactory serviceFactory;
-    private RepositoryFactory repositoryFactory;
     private AddingNewWordSetView addingNewWordSetViewMock;
     private AddingNewWordSetPresenter addingNewWordSetPresenter;
 
     @Before
     public void setUp() {
         eventBus = mock(EventBus.class);
-        PresenterFactory presenterFactory = PresenterFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
-        serviceFactory = ServiceFactoryProvider.getOrCreateNew(RuntimeEnvironment.application);
+        RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
+        serviceFactory = new ServiceFactoryImpl(repositoryFactory);
+        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
         addingNewWordSetViewMock = mock(AddingNewWordSetView.class);
         addingNewWordSetPresenter = presenterFactory.create(addingNewWordSetViewMock);
     }

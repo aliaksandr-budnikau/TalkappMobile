@@ -1,7 +1,5 @@
 package talkapp.org.talkappmobile;
 
-import android.content.Context;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +12,6 @@ import talkapp.org.talkappmobile.service.RefereeService;
 import talkapp.org.talkappmobile.service.SentenceProvider;
 import talkapp.org.talkappmobile.service.SentenceService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
-import talkapp.org.talkappmobile.service.ServiceFactoryProvider;
 import talkapp.org.talkappmobile.service.TextUtils;
 import talkapp.org.talkappmobile.service.TopicService;
 import talkapp.org.talkappmobile.service.UserExpService;
@@ -24,22 +21,16 @@ import talkapp.org.talkappmobile.service.WordTranslationService;
 
 @Module
 public class PresenterModule {
-    private final Context context;
+    private final ServiceFactory serviceFactory;
 
-    public PresenterModule(Context context) {
-        this.context = context;
+    public PresenterModule(ServiceFactory serviceFactory) {
+        this.serviceFactory = serviceFactory;
     }
 
     @Provides
     @Singleton
-    public Context context() {
-        return context;
-    }
-
-    @Provides
-    @Singleton
-    public ServiceFactory serviceFactory(Context context) {
-        return new ServiceFactoryProvider().createNew(context);
+    public ServiceFactory serviceFactory() {
+        return serviceFactory;
     }
 
     @Provides
