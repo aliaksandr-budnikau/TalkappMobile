@@ -22,10 +22,9 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -57,9 +56,10 @@ public class MainActivityTest {
     public void setup() throws SQLException {
         RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
-        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
+        PresenterFactory presenterFactory = new talkapp.org.talkappmobile.presenter.PresenterFactoryImpl(serviceFactory);
 
-        new BeanFactory(presenterFactory);
+        PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
+        presenterFactoryProvider.setPresenterFactory(presenterFactory);
 
         packageManager = mock(PackageManager.class);
         mainActivity = new MainActivity() {
@@ -72,6 +72,7 @@ public class MainActivityTest {
         };
         eventBus = mock(EventBus.class);
         Whitebox.setInternalState(mainActivity, "eventBus", eventBus);
+        Whitebox.setInternalState(mainActivity, "presenterFactoryProvider", presenterFactoryProvider);
 
         applicationVersion = mock(TextView.class);
         userExp = mock(TextView.class);

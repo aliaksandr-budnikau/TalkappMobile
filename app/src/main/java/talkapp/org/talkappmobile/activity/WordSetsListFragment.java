@@ -31,7 +31,7 @@ import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
@@ -70,6 +70,8 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @EventBusGreenRobot
     EventBus eventBus;
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.wordSetsListView)
     PhraseSetsRecyclerView phraseSetsRecyclerView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -108,7 +110,7 @@ public class WordSetsListFragment extends Fragment implements WordSetsListView, 
 
     @Background
     public void initPresenter() {
-        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        PresenterFactory presenterFactory = presenterFactoryProvider.get();
         presenter = presenterFactory.create(this, repetitionMode, repetitionClass, topic);
         presenter.initialize();
     }

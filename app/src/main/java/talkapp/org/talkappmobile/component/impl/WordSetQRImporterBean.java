@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.res.StringRes;
@@ -15,15 +16,15 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.AddingNewWordSetFragment_;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordTranslation;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.WordSetQRImporterBeanPresenter;
 import talkapp.org.talkappmobile.view.WordSetQRImporterView;
 
@@ -32,6 +33,8 @@ import static android.app.Activity.RESULT_OK;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class WordSetQRImporterBean implements WordSetQRImporter, WordSetQRImporterView {
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @RootContext
     Context context;
     @StringRes(R.string.adding_new_word_set_by_qrc_finished_successfully)
@@ -71,7 +74,7 @@ public class WordSetQRImporterBean implements WordSetQRImporter, WordSetQRImport
                 }
                 NewWordSetDraft wordSetDraft = assembleDraft(draft);
 
-                PresenterFactory presenterFactory = BeanFactory.presenterFactory(context);
+                PresenterFactory presenterFactory = presenterFactoryProvider.get();
                 WordSetQRImporterBeanPresenter presenter = presenterFactory.create(this);
 
                 presenter.saveWordSetDraft(wordSetDraft);

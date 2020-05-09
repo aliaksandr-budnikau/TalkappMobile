@@ -28,7 +28,7 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;
@@ -42,7 +42,6 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenter;
 import talkapp.org.talkappmobile.presenter.OriginalTextTextViewPresenterImpl;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
-import talkapp.org.talkappmobile.presenter.PresenterFactoryImpl;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -78,9 +77,10 @@ public class ChangeSentenceTest {
 
         RepositoryFactory repositoryFactory = RepositoryFactoryProvider.get(RuntimeEnvironment.application);
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
-        PresenterFactory presenterFactory = new PresenterFactoryImpl(serviceFactory);
+        PresenterFactory presenterFactory = new talkapp.org.talkappmobile.presenter.PresenterFactoryImpl(serviceFactory);
 
-        new BeanFactory(presenterFactory);
+        PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
+        presenterFactoryProvider.setPresenterFactory(presenterFactory);
 
         serviceFactory.getWordSetService().getWordSets(null);
         wordSet = createWordSet(-1, "age");
@@ -91,6 +91,7 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
+        Whitebox.setInternalState(practiceWordSetFragment, "presenterFactoryProvider", presenterFactoryProvider);
         answerTextMock = mock(TextView.class);
         Whitebox.setInternalState(practiceWordSetFragment, "answerText", answerTextMock);
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetProgress", mock(ProgressBar.class));

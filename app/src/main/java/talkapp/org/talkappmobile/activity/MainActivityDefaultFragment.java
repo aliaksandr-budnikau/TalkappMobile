@@ -24,12 +24,12 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.BeanFactory;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
@@ -53,6 +53,8 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.tasksListView)
     TasksListView tasksListView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -89,7 +91,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @AfterViews
     public void init() {
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getActivity());
+        PresenterFactory presenterFactory = presenterFactoryProvider.get();
         presenter = presenterFactory.create(this, wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,

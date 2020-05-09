@@ -20,6 +20,7 @@ import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -35,7 +36,7 @@ import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 import talkapp.org.talkappmobile.presenter.StatisticActivityPresenter;
@@ -54,6 +55,8 @@ import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 public class StatisticActivity extends AppCompatActivity implements StatisticActivityView {
 
 
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -81,7 +84,7 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
 
     @AfterViews
     public void init() {
-        presenter = BeanFactory.presenterFactory(getApplicationContext()).create(this);
+        presenter = presenterFactoryProvider.get().create(this);
         formBarChart();
         tabHost.setup();
         //Tab 1

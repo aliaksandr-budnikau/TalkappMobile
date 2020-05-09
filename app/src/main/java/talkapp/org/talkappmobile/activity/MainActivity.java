@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
@@ -52,6 +52,8 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.toolbar)
     Toolbar toolbar;
     @ViewById(R.id.drawer_layout)
@@ -155,7 +157,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getApplicationContext());
+        PresenterFactory presenterFactory = presenterFactoryProvider.get();
         presenter = presenterFactory.create(this, info.versionName);
         presenter.checkServerAvailability();
         presenter.initAppVersion();

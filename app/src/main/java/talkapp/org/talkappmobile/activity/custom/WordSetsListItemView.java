@@ -7,13 +7,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.StringRes;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.WordSetsListItemViewPresenter;
@@ -21,6 +22,9 @@ import talkapp.org.talkappmobile.view.WordSetsListItemViewView;
 
 @EViewGroup(R.layout.row_word_sets_list)
 public class WordSetsListItemView extends RelativeLayout implements WordSetsListItemViewView {
+
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
 
     @ViewById(R.id.wordSetRow)
     TextView wordSetRow;
@@ -50,7 +54,7 @@ public class WordSetsListItemView extends RelativeLayout implements WordSetsList
 
     @AfterViews
     public void init() {
-        PresenterFactory presenterFactory = BeanFactory.presenterFactory(getContext());
+        PresenterFactory presenterFactory = presenterFactoryProvider.get();
         presenter = presenterFactory.create(this);
     }
 

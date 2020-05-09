@@ -26,7 +26,7 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.component.BeanFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
@@ -43,6 +43,8 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     Speaker speaker;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
+    @Bean
+    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.wordSetVocabularyView)
     WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -73,7 +75,7 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @Background
     public void initPresenter() {
-        presenter = BeanFactory.presenterFactory(getActivity()).create(this);
+        presenter = presenterFactoryProvider.get().create(this);
         presenter.initialize();
     }
 
