@@ -66,7 +66,7 @@ import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED
 public class PracticeWordSetFragment extends Fragment implements PracticeWordSetView {
     public static final String WORD_SET_MAPPING = "wordSet";
     public static final String REPETITION_MODE_MAPPING = "repetitionMode";
-    private static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
+    public static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean

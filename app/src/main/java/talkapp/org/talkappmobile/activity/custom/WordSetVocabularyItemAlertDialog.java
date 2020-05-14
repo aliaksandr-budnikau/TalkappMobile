@@ -58,6 +58,7 @@ public class WordSetVocabularyItemAlertDialog {
         layout.addView(messageForPhraseBox);
 
         phraseBox = new EditText(context);
+        phraseBox.setId(R.id.addEditDialogPhraseBox);
         phraseBox.setHint(popupPhraseHint);
         phraseBox.setText(isEmpty(origPhrase) ? "" : origPhrase);
         phraseBox.setPadding(LEFT_PADDING_INPUTS, 0, 0, BOTTOM_PADDING_INPUTS);
@@ -69,6 +70,7 @@ public class WordSetVocabularyItemAlertDialog {
         layout.addView(messageForTranslationBox);
 
         translationBox = new EditText(context);
+        translationBox.setId(R.id.addEditDialogTranslationBox);
         translationBox.setHint(popupTranslationHint);
         translationBox.setText(isEmpty(origTranslation) ? "" : origTranslation);
         translationBox.setPadding(LEFT_PADDING_INPUTS, 0, 0, BOTTOM_PADDING_INPUTS);

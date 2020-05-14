@@ -79,14 +79,14 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         presenter.initialize();
     }
 
+    @Background
+    public void submitNewWordSet(List<WordTranslation> vocabulary) {
+        presenter.submitNewWordSet(vocabulary);
+    }
+
     @Click(R.id.buttonSubmit)
     public void onButtonSubmitClick() {
-        try {
-            waitingForProgressBarManager.showProgressBar();
-            presenter.submitNewWordSet(wordSetVocabularyView.getVocabulary());
-        } finally {
-            waitingForProgressBarManager.hideProgressBar();
-        }
+        submitNewWordSet(wordSetVocabularyView.getVocabulary());
     }
 
     private void startWordSetActivity(WordSet wordSet) {
@@ -168,13 +168,18 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @UiThread
     public void onNewWordSetDraftLoaded(WordTranslation[] words) {
-        wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
-        wordSetVocabularyView.setOnItemViewInteractionListener(this);
+        if (wordSetVocabularyView != null) {
+            wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(words));
+            wordSetVocabularyView.setOnItemViewInteractionListener(this);
+        }
     }
 
     @Override
     @UiThread
     public void onNewWordSuccessfullySubmitted(WordSet wordSet) {
+        if (wordSetVocabularyView == null) {
+            return;
+        }
         wordSetVocabularyView.resetVocabulary();
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
         wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
@@ -209,5 +214,17 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
         eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
+    }
+
+    @Override
+    @UiThread
+    public void showPleaseWaitProgressBar() {
+        waitingForProgressBarManager.showProgressBar();
+    }
+
+    @Override
+    @UiThread
+    public void hidePleaseWaitProgressBar() {
+        waitingForProgressBarManager.hideProgressBar();
     }
 }

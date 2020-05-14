@@ -13,4 +13,8 @@ public interface AddingNewWordSetView {
     void onNewWordTranslationWasNotFound();
 
     void onPhraseTranslationInputWasValidatedSuccessfully(String newPhrase, String newTranslation);
+
+    void showPleaseWaitProgressBar();
+
+    void hidePleaseWaitProgressBar();
 }

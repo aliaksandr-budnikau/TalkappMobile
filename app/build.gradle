@@ -29,6 +29,7 @@ android {
         exclude 'META-INF/license.txt'
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/ASL2.0'
     }
     testOptions {
         unitTests.returnDefaultValues = true
@@ -76,4 +77,15 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:3.5'
     annotationProcessor 'org.androidannotations:androidannotations:4.6.0'
     annotationProcessor 'com.tmtron:green-annotations:1.0.2'
+
+    androidTestImplementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestAnnotationProcessor 'com.tmtron:green-annotations:1.0.2'
+    androidTestAnnotationProcessor 'org.androidannotations:androidannotations:4.6.0'
+    androidTestImplementation 'org.androidannotations:androidannotations-api:4.6.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation 'com.tmtron:green-annotations-api:1.0.2'
+    androidTestImplementation 'org.greenrobot:eventbus:3.0.0'
 }

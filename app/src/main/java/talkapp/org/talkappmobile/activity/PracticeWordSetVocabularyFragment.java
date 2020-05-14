@@ -23,7 +23,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -37,6 +36,7 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.PracticeWordSetVocabularyPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.AddingNewWordSetView;
 import talkapp.org.talkappmobile.view.PracticeWordSetVocabularyView;
 
@@ -222,5 +222,17 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
         presenter.updateCustomWordSet(editedItemPosition, editedItem);
+    }
+
+    @Override
+    @UiThread
+    public void showPleaseWaitProgressBar() {
+        waitingForProgressBarManager.showProgressBar();
+    }
+
+    @Override
+    @UiThread
+    public void hidePleaseWaitProgressBar() {
+        waitingForProgressBarManager.hideProgressBar();
     }
 }

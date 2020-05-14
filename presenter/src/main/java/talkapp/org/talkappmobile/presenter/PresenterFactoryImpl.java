@@ -29,6 +29,7 @@ import talkapp.org.talkappmobile.interactor.impl.UserExperienceDecorator;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.presenter.decorator.ButtonsDisablingDecorator;
+import talkapp.org.talkappmobile.presenter.decorator.PleaseWaitProgressBarAddingNewWordSetPresenterDecorator;
 import talkapp.org.talkappmobile.presenter.decorator.PleaseWaitProgressBarDecorator;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.ServiceFactory;
@@ -130,7 +131,8 @@ public class PresenterFactoryImpl implements PresenterFactory {
 
     @Override
     public AddingNewWordSetPresenter create(AddingNewWordSetView view) {
-        return new AddingNewWordSetPresenterImpl(view, addingNewWordSetInteractor);
+        AddingNewWordSetPresenterImpl presenter = new AddingNewWordSetPresenterImpl(view, addingNewWordSetInteractor);
+        return new PleaseWaitProgressBarAddingNewWordSetPresenterDecorator(presenter, view);
     }
 
     @Override
