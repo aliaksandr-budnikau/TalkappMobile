@@ -3,23 +3,26 @@ package talkapp.org.talkappmobile.service;
 import java.util.List;
 import java.util.Map;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 
 import static java.util.Collections.emptyList;
 
-public class ServerSentenceProviderDecorator extends SentenceProviderDecorator {
+public class ServerSentenceProviderDecorator implements SentenceProvider {
     public static final int WORDS_NUMBER = 6;
     private final DataServer server;
+    @Delegate(excludes = ExcludedMethods.class)
+    private final SentenceProvider provider;
 
     public ServerSentenceProviderDecorator(SentenceProvider provider, DataServer server) {
-        super(provider);
+        this.provider = provider;
         this.server = server;
     }
 
     @Override
     public List<Sentence> find(Word2Tokens word) {
-        List<Sentence> sentences = super.find(word);
+        List<Sentence> sentences = provider.find(word);
         if (!sentences.isEmpty()) {
             return sentences;
         }
@@ -34,5 +37,9 @@ public class ServerSentenceProviderDecorator extends SentenceProviderDecorator {
             return emptyList();
         }
         return sentences;
+    }
+
+    private interface ExcludedMethods {
+        List<Sentence> find(Word2Tokens word);
     }
 }

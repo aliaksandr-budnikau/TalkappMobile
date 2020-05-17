@@ -2,16 +2,18 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
-import talkapp.org.talkappmobile.service.WordSetService;
 
-public class CachedWordSetServiceDecorator extends WordSetServiceDecorator {
+public class CachedWordSetServiceDecorator implements WordSetService {
     private final WordSetRepository wordSetRepository;
+    @Delegate(excludes = ExcludedMethods.class)
+    private final WordSetService service;
 
-    public CachedWordSetServiceDecorator(WordSetRepository wordSetRepository, WordSetService wordSetService) {
-        super(wordSetService);
+    public CachedWordSetServiceDecorator(WordSetRepository wordSetRepository, WordSetService service) {
+        this.service = service;
         this.wordSetRepository = wordSetRepository;
     }
 
@@ -19,12 +21,12 @@ public class CachedWordSetServiceDecorator extends WordSetServiceDecorator {
     public List<WordSet> getWordSets(Topic topic) {
         List<WordSet> wordSets = null;
         try {
-            wordSets = super.getWordSets(topic);
+            wordSets = service.getWordSets(topic);
         } catch (InternetConnectionLostException e) {
             return getWordSetsFromDB(topic);
         }
         if (!wordSets.isEmpty()) {
-            super.saveWordSets(wordSets);
+            service.saveWordSets(wordSets);
         }
         return getWordSetsFromDB(topic);
     }
@@ -35,5 +37,9 @@ public class CachedWordSetServiceDecorator extends WordSetServiceDecorator {
         } else {
             return wordSetRepository.findAllByTopicId(topic.getId());
         }
+    }
+
+    private interface ExcludedMethods {
+        List<WordSet> getWordSets(Topic topic);
     }
 }

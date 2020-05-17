@@ -2,15 +2,18 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 
-public class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
+public class CachedSentenceProviderDecorator implements SentenceProvider {
     private final SentenceRepository sentenceRepository;
+    @Delegate(excludes = ExcludedMethods.class)
+    private final SentenceProvider provider;
 
     public CachedSentenceProviderDecorator(SentenceProvider provider, SentenceRepository sentenceRepository) {
-        super(provider);
+        this.provider = provider;
         this.sentenceRepository = sentenceRepository;
     }
 
@@ -18,12 +21,12 @@ public class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
     public List<Sentence> find(Word2Tokens word) {
         List<Sentence> sentences;
         try {
-            sentences = super.find(word);
+            sentences = provider.find(word);
         } catch (InternetConnectionLostException e) {
-            return super.getFromDB(word);
+            return provider.getFromDB(word);
         }
         if (sentences == null || sentences.isEmpty()) {
-            return super.getFromDB(word);
+            return provider.getFromDB(word);
         }
         for (Sentence sentence : sentences) {
             if (wasAlreadySaved(sentence)) {
@@ -36,5 +39,9 @@ public class CachedSentenceProviderDecorator extends SentenceProviderDecorator {
 
     private boolean wasAlreadySaved(Sentence sentence) {
         return sentenceRepository.findById(sentence.getId()) != null;
+    }
+
+    private interface ExcludedMethods {
+        List<Sentence> find(Word2Tokens word);
     }
 }

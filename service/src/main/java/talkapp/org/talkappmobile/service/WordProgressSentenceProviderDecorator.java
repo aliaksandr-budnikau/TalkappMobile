@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
@@ -18,19 +19,21 @@ import talkapp.org.talkappmobile.repository.WordSetRepository;
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
-public class WordProgressSentenceProviderDecorator extends SentenceProviderDecorator {
+public class WordProgressSentenceProviderDecorator implements SentenceProvider {
     private final WordRepetitionProgressRepository progressRepository;
     private final WordSetRepository wordSetRepository;
+    @Delegate(excludes = ExcludedMethods.class)
+    private final SentenceProvider provider;
 
     public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetRepository wordSetRepository, WordRepetitionProgressRepository progressRepository) {
-        super(provider);
+        this.provider = provider;
         this.wordSetRepository = wordSetRepository;
         this.progressRepository = progressRepository;
     }
 
     @Override
     public List<Sentence> find(Word2Tokens word) {
-        List<Sentence> sentences = super.find(word);
+        List<Sentence> sentences = provider.find(word);
         orderByScore(sentences);
         sentences = selectSentences(sentences);
         save(word, sentences);
@@ -101,5 +104,9 @@ public class WordProgressSentenceProviderDecorator extends SentenceProviderDecor
         }
 
         return badSentences;
+    }
+
+    private interface ExcludedMethods {
+        List<Sentence> find(Word2Tokens word);
     }
 }
