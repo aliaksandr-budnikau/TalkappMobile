@@ -9,100 +9,101 @@ import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
-public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDecorator {
+public class PleaseWaitProgressBarDecorator implements IPracticeWordSetPresenter {
     private final PracticeWordSetView view;
+    private final IPracticeWordSetPresenter presenter;
 
     public PleaseWaitProgressBarDecorator(IPracticeWordSetPresenter presenter, PracticeWordSetView view) {
-        super(presenter);
+        this.presenter = presenter;
         this.view = view;
     }
 
     @Override
     public void nextButtonClick() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.nextButtonClick();
+                presenter.nextButtonClick();
             }
         }.execute();
     }
 
     @Override
     public void initialise(final WordSet wordSet) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.initialise(wordSet);
+                presenter.initialise(wordSet);
             }
         }.execute();
     }
 
     @Override
     public void prepareOriginalTextClickEM() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.prepareOriginalTextClickEM();
+                presenter.prepareOriginalTextClickEM();
             }
         }.execute();
     }
 
     @Override
     public void disableButtonsDuringPronunciation() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.disableButtonsDuringPronunciation();
+                presenter.disableButtonsDuringPronunciation();
             }
         }.execute();
     }
 
     @Override
     public void refreshCurrentWord() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.refreshCurrentWord();
+                presenter.refreshCurrentWord();
             }
         }.execute();
     }
 
     @Override
     public void enableButtonsAfterPronunciation() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.enableButtonsAfterPronunciation();
+                presenter.enableButtonsAfterPronunciation();
             }
         }.execute();
     }
 
     @Override
     public void checkRightAnswerCommandRecognized() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.checkRightAnswerCommandRecognized();
+                presenter.checkRightAnswerCommandRecognized();
             }
         }.execute();
     }
 
     @Override
     public void checkAnswerButtonClick(final String answer) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.checkAnswerButtonClick(answer);
+                presenter.checkAnswerButtonClick(answer);
             }
         }.execute();
     }
 
     @Override
     public void gotRecognitionResult(final List<String> suggestedWords) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.gotRecognitionResult(suggestedWords);
+                presenter.gotRecognitionResult(suggestedWords);
             }
         }.execute();
     }
@@ -110,58 +111,68 @@ public class PleaseWaitProgressBarDecorator extends PracticeWordSetPresenterDeco
 
     @Override
     public void scoreSentence(final SentenceContentScore score, final Sentence sentence) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.scoreSentence(score, sentence);
+                presenter.scoreSentence(score, sentence);
             }
         }.execute();
     }
 
     @Override
     public void findSentencesForChange(final Word2Tokens word) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.findSentencesForChange(word);
+                presenter.findSentencesForChange(word);
             }
         }.execute();
     }
 
     @Override
     public void refreshSentence() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.refreshSentence();
+                presenter.refreshSentence();
             }
         }.execute();
     }
 
     @Override
     public void changeSentence(final List<Sentence> sentences, final Word2Tokens word) {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.changeSentence(sentences, word);
+                presenter.changeSentence(sentences, word);
             }
         }.execute();
     }
 
     @Override
     public void markAnswerHasBeenSeen() {
-        new SuperClassWrapper(view) {
+        new PresenterWrapper(view) {
             @Override
             void doSuperMethod() {
-                PleaseWaitProgressBarDecorator.super.markAnswerHasBeenSeen();
+                presenter.markAnswerHasBeenSeen();
             }
         }.execute();
     }
 
-    private abstract static class SuperClassWrapper {
+    @Override
+    public Sentence getCurrentSentence() {
+        return presenter.getCurrentSentence();
+    }
+
+    @Override
+    public void changeSentence() {
+        presenter.changeSentence();
+    }
+
+    private abstract static class PresenterWrapper {
         private final PracticeWordSetView view;
 
-        SuperClassWrapper(PracticeWordSetView view) {
+        PresenterWrapper(PracticeWordSetView view) {
             this.view = view;
         }
 

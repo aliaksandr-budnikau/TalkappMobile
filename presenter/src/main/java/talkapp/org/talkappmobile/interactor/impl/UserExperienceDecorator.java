@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
 import talkapp.org.talkappmobile.model.ExpActivityType;
@@ -10,16 +11,18 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
-public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator {
+public class UserExperienceDecorator implements PracticeWordSetInteractor {
     private final UserExpService userExpService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService progressService;
+    @Delegate(excludes = ExcludedMethods.class)
+    private final PracticeWordSetInteractor interactor;
 
     public UserExperienceDecorator(PracticeWordSetInteractor interactor,
                                    UserExpService userExpService,
                                    CurrentPracticeStateService currentPracticeStateService,
                                    WordRepetitionProgressService progressService) {
-        super(interactor);
+        this.interactor = interactor;
         this.userExpService = userExpService;
         this.currentPracticeStateService = currentPracticeStateService;
         this.progressService = progressService;
@@ -27,7 +30,7 @@ public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator 
 
     @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {
-        boolean result = super.checkAnswer(answer, listener);
+        boolean result = interactor.checkAnswer(answer, listener);
         if (!result) {
             return false;
         }
@@ -42,5 +45,9 @@ public class UserExperienceDecorator extends PracticeWordSetInteractorDecorator 
         }
         listener.onUpdateUserExp(expScore);
         return true;
+    }
+
+    private interface ExcludedMethods {
+        boolean checkAnswer(String answer, OnPracticeWordSetListener listener);
     }
 }

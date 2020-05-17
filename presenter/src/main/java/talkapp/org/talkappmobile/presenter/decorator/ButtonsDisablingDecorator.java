@@ -2,17 +2,21 @@ package talkapp.org.talkappmobile.presenter.decorator;
 
 import java.util.List;
 
+import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
-public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator {
+public class ButtonsDisablingDecorator implements IPracticeWordSetPresenter {
     private final PracticeWordSetView view;
 
+    @Delegate(excludes = ExcludedMethods.class)
+    private final IPracticeWordSetPresenter presenter;
+
     public ButtonsDisablingDecorator(IPracticeWordSetPresenter presenter, PracticeWordSetView view) {
-        super(presenter);
+        this.presenter = presenter;
         this.view = view;
     }
 
@@ -22,7 +26,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableNextButton(false);
-            super.nextButtonClick();
+            presenter.nextButtonClick();
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);
@@ -36,7 +40,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
         view.setEnableVoiceRecButton(false);
         view.setEnableCheckButton(false);
         view.setEnableNextButton(false);
-        super.disableButtonsDuringPronunciation();
+        presenter.disableButtonsDuringPronunciation();
     }
 
     @Override
@@ -45,7 +49,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableNextButton(false);
-            super.refreshCurrentWord();
+            presenter.refreshCurrentWord();
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);
@@ -59,7 +63,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
         view.setEnableVoiceRecButton(true);
         view.setEnableCheckButton(true);
         view.setEnableNextButton(true);
-        super.enableButtonsAfterPronunciation();
+        presenter.enableButtonsAfterPronunciation();
     }
 
     @Override
@@ -68,7 +72,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableCheckButton(false);
-            super.checkRightAnswerCommandRecognized();
+            presenter.checkRightAnswerCommandRecognized();
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);
@@ -82,7 +86,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
             view.setEnableRightAnswerTextView(false);
             view.setEnablePronounceRightAnswerButton(false);
             view.setEnableCheckButton(false);
-            super.checkAnswerButtonClick(answer);
+            presenter.checkAnswerButtonClick(answer);
         } finally {
             view.setEnableRightAnswerTextView(true);
             view.setEnablePronounceRightAnswerButton(true);
@@ -95,7 +99,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
         try {
             view.setEnableCheckButton(false);
             view.setEnableNextButton(false);
-            super.scoreSentence(score, sentence);
+            presenter.scoreSentence(score, sentence);
         } finally {
             view.setEnableCheckButton(true);
             view.setEnableNextButton(true);
@@ -107,7 +111,7 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
         try {
             view.setEnableCheckButton(false);
             view.setEnableNextButton(false);
-            super.changeSentence(sentences, word);
+            presenter.changeSentence(sentences, word);
         } finally {
             view.setEnableCheckButton(true);
             view.setEnableNextButton(true);
@@ -119,10 +123,30 @@ public class ButtonsDisablingDecorator extends PracticeWordSetPresenterDecorator
         try {
             view.setEnableCheckButton(false);
             view.setEnableNextButton(false);
-            super.changeSentence();
+            presenter.changeSentence();
         } finally {
             view.setEnableCheckButton(true);
             view.setEnableNextButton(true);
         }
+    }
+
+    private interface ExcludedMethods {
+        void changeSentence();
+
+        void changeSentence(List<Sentence> sentences, Word2Tokens word);
+
+        void scoreSentence(SentenceContentScore score, Sentence sentence);
+
+        void checkAnswerButtonClick(String answer);
+
+        void checkRightAnswerCommandRecognized();
+
+        void enableButtonsAfterPronunciation();
+
+        void refreshCurrentWord();
+
+        void disableButtonsDuringPronunciation();
+
+        void nextButtonClick();
     }
 }
