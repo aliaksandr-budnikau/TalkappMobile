@@ -47,7 +47,6 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
 import static talkapp.org.talkappmobile.activity.PracticeWordSetFragment.CHEAT_SEND_WRITE_ANSWER;
@@ -114,12 +113,10 @@ public class AddingWordSetsTest {
         mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
         addWords(originalWordsList);
         onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
-        sleep(5000);
         onView(withId(R.id.pagerTabStrip)).check(matches(isDisplayed())).perform(swipeLeft());
 
         int iteration_number = 24;
         for (int i = 0; i < iteration_number; i++) {
-            sleep(2500);
             onView(withId(R.id.word_set_practise_form)).check(matches(isDisplayed())).perform(swipeUp());
             onView(withId(R.id.answerText)).perform(clearText(), typeText(CHEAT_SEND_WRITE_ANSWER));
             Espresso.closeSoftKeyboard();
@@ -152,12 +149,9 @@ public class AddingWordSetsTest {
 
         mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
         for (int i = 0; i < 2; i++) {
-            sleep(3000);
             addWords(originalWordsList);
             onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
-            sleep(5000);
             pressBack();
-            sleep(1000);
         }
     }
 
@@ -192,7 +186,6 @@ public class AddingWordSetsTest {
                     .inRoot(isDialog())
                     .check(matches(isDisplayed()))
                     .perform(click());
-            sleep(300);
 
             onView(withId(R.id.wordSetVocabularyView)).check(matches(isDisplayed()))
                     .perform(actionOnItemAtPosition(i, swipeUp()));

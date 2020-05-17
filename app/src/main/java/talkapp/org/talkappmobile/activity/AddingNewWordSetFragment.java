@@ -30,7 +30,6 @@ import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialo
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
-import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
@@ -97,7 +96,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
 
     @Override
     public void onPause() {
-        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
         super.onPause();
     }
 
@@ -182,7 +180,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         wordSetVocabularyView.resetVocabulary();
         List<WordTranslation> vocabulary = wordSetVocabularyView.getVocabulary();
         wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
-        eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
 
         startWordSetActivity(wordSet);
     }
@@ -208,7 +205,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         wordSetVocabularyView.submitItemChange(editVocabularyItemAlertDialog.getPhraseBoxText(), editVocabularyItemAlertDialog.getTranslationBoxText());
         editVocabularyItemAlertDialog.cancel();
         editVocabularyItemAlertDialog.dismiss();
-        eventBus.post(new NewWordSetDraftWasChangedEM(wordSetVocabularyView.getVocabulary()));
     }
 
     @Override

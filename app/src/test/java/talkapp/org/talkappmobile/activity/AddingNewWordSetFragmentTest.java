@@ -12,7 +12,6 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
 
@@ -43,11 +42,6 @@ public class AddingNewWordSetFragmentTest {
         for (WordTranslation translation : translations) {
             assertNull(translation.getWord());
             assertNull(translation.getTranslation());
-        }
-        NewWordSetDraftWasChangedEM draftWasChangedEM = testHelper.getEM(NewWordSetDraftWasChangedEM.class);
-        List<WordTranslation> words = draftWasChangedEM.getWordTranslations();
-        for (WordTranslation word : words) {
-            assertNull(word);
         }
     }
 }
