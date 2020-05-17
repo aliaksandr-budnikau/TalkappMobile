@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -19,17 +20,12 @@ import talkapp.org.talkappmobile.repository.WordSetRepository;
 import static java.util.Collections.shuffle;
 import static talkapp.org.talkappmobile.model.SentenceContentScore.POOR;
 
+@RequiredArgsConstructor
 public class WordProgressSentenceProviderDecorator implements SentenceProvider {
-    private final WordRepetitionProgressRepository progressRepository;
-    private final WordSetRepository wordSetRepository;
     @Delegate(excludes = ExcludedMethods.class)
     private final SentenceProvider provider;
-
-    public WordProgressSentenceProviderDecorator(SentenceProvider provider, WordSetRepository wordSetRepository, WordRepetitionProgressRepository progressRepository) {
-        this.provider = provider;
-        this.wordSetRepository = wordSetRepository;
-        this.progressRepository = progressRepository;
-    }
+    private final WordSetRepository wordSetRepository;
+    private final WordRepetitionProgressRepository progressRepository;
 
     @Override
     public List<Sentence> find(Word2Tokens word) {

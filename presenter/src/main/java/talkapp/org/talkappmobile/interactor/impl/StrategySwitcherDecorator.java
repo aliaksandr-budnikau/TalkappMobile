@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
@@ -8,17 +9,12 @@ import talkapp.org.talkappmobile.model.WordSetProgressStatus;
 import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
+@RequiredArgsConstructor
 public class StrategySwitcherDecorator implements PracticeWordSetInteractor {
-    private final WordRepetitionProgressService progressService;
-    private final CurrentPracticeStateService currentPracticeStateService;
     @Delegate(excludes = ExcludedMethods.class)
     private final PracticeWordSetInteractor interactor;
-
-    public StrategySwitcherDecorator(PracticeWordSetInteractor interactor, WordRepetitionProgressService progressService, CurrentPracticeStateService currentPracticeStateService) {
-        this.interactor = interactor;
-        this.progressService = progressService;
-        this.currentPracticeStateService = currentPracticeStateService;
-    }
+    private final WordRepetitionProgressService progressService;
+    private final CurrentPracticeStateService currentPracticeStateService;
 
     @Override
     public void initialiseExperience(OnPracticeWordSetListener listener) {

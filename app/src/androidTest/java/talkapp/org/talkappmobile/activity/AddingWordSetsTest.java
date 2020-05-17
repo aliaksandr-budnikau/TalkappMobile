@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.View;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
@@ -11,10 +12,12 @@ import androidx.test.espresso.action.CoordinatesProvider;
 import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Tap;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,12 +29,15 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
+import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -48,7 +54,7 @@ import static talkapp.org.talkappmobile.activity.PracticeWordSetFragment.CHEAT_S
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CapitalLetterInNewWordTest {
+public class AddingWordSetsTest {
 
     public static final String ADDING_NEW_WORD_SET_FRAGMENT = "AddingNewWordSetFragment";
     @Rule
@@ -56,7 +62,7 @@ public class CapitalLetterInNewWordTest {
 
     private List<String> originalWordsList;
     private List<String> wordsToBeDisplayed;
-    private String targetPhrasalVerb;
+    private CountingIdlingResource countingIdlingResource;
 
     private static ViewAction clickXY(final int x, final int y) {
         return new GeneralClickAction(
@@ -82,7 +88,7 @@ public class CapitalLetterInNewWordTest {
     public void setup() {
         mainActivityRule = new ActivityTestRule<>(MainActivity_.class);
 
-        targetPhrasalVerb = "look for";
+        String targetPhrasalVerb = "look for";
         originalWordsList = asList("solemn", "grip", "wink", "adoption", "Voluntary", targetPhrasalVerb + "|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
 
@@ -96,13 +102,16 @@ public class CapitalLetterInNewWordTest {
                 wordsToBeDisplayed.add(split[1]);
             }
         }
+        countingIdlingResource = new CountingIdlingResource("countingIdlingResource");
+        IdlingRegistry instance = IdlingRegistry.getInstance();
+        instance.register(countingIdlingResource);
     }
 
     @Test
     public void testCapitalLetterInNewWord() throws InterruptedException {
         MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
-        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_(), ADDING_NEW_WORD_SET_FRAGMENT).commit();
+        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
         addWords(originalWordsList);
         onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
         sleep(5000);
@@ -136,7 +145,35 @@ public class CapitalLetterInNewWordTest {
         assertTrue(wordsToBeDisplayed.isEmpty());
     }
 
+
+    @Test
+    public void testAddingOfTwoWordsets() throws InterruptedException {
+        MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
+
+        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
+        for (int i = 0; i < 2; i++) {
+            sleep(3000);
+            addWords(originalWordsList);
+            onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
+            sleep(5000);
+            pressBack();
+            sleep(1000);
+        }
+    }
+
+    private AddingNewWordSetFragment_ createAddingNewWordSetFragment(MainActivity_ mainActivity) {
+        AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
+        AddingNewWordSetPresenter presenter = mainActivity.getPresenterFactoryProvider().get().create(fragment);
+        IdleResourceAddingNewWordSetPresenterDecorator decorator = new IdleResourceAddingNewWordSetPresenterDecorator(presenter, countingIdlingResource);
+        fragment.setPresenter(decorator);
+        return fragment;
+    }
+
     private void addWords(List<String> wordsList) throws InterruptedException {
+        onView(withId(R.id.mainForm)).check(matches(isDisplayed()))
+                .perform(swipeDown());
+        onView(withId(R.id.mainForm)).check(matches(isDisplayed()))
+                .perform(swipeDown());
         for (int i = 0; i < wordsList.size(); i++) {
             onView(withId(R.id.wordSetVocabularyView)).perform(actionOnItemAtPosition(i, swipeLeft()));
 
@@ -160,5 +197,10 @@ public class CapitalLetterInNewWordTest {
             onView(withId(R.id.wordSetVocabularyView)).check(matches(isDisplayed()))
                     .perform(actionOnItemAtPosition(i, swipeUp()));
         }
+    }
+
+    @After
+    public void tearDown() {
+        IdlingRegistry.getInstance().unregister(countingIdlingResource);
     }
 }

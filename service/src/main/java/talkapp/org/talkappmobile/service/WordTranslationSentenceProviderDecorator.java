@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.TextToken;
@@ -18,15 +19,11 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
+@RequiredArgsConstructor
 public class WordTranslationSentenceProviderDecorator implements SentenceProvider {
-    private final WordTranslationRepository wordTranslationRepository;
     @Delegate(excludes = ExcludedMethods.class)
     private final SentenceProvider provider;
-
-    public WordTranslationSentenceProviderDecorator(SentenceProvider provider, WordTranslationRepository wordTranslationRepository) {
-        this.provider = provider;
-        this.wordTranslationRepository = wordTranslationRepository;
-    }
+    private final WordTranslationRepository wordTranslationRepository;
 
     @Override
     public List<Sentence> find(Word2Tokens word) {

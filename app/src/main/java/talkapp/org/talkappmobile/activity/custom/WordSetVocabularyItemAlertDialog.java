@@ -16,7 +16,7 @@ import talkapp.org.talkappmobile.R;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-@EBean(scope = EBean.Scope.Singleton)
+@EBean(scope = EBean.Scope.Default)
 public class WordSetVocabularyItemAlertDialog {
     public static final int LEFT_PADDING_LABELS = 50;
     public static final int LEFT_PADDING_INPUTS = 10;

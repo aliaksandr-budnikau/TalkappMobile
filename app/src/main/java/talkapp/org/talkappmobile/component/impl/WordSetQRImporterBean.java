@@ -80,7 +80,10 @@ public class WordSetQRImporterBean implements WordSetQRImporter, WordSetQRImport
                 presenter.saveWordSetDraft(wordSetDraft);
 
                 Toast.makeText(activity, addingFinishedSuccessfullyMessage, Toast.LENGTH_LONG).show();
-                activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
+
+                AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
+                fragment.setPresenter(presenterFactoryProvider.get().create(fragment));
+                activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
             }
             if (resultCode == RESULT_CANCELED) {
                 //handle cancel

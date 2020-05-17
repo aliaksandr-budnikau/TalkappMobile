@@ -2,20 +2,17 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.repository.WordSetRepository;
 
+@RequiredArgsConstructor
 public class CachedWordSetServiceDecorator implements WordSetService {
     private final WordSetRepository wordSetRepository;
     @Delegate(excludes = ExcludedMethods.class)
     private final WordSetService service;
-
-    public CachedWordSetServiceDecorator(WordSetRepository wordSetRepository, WordSetService service) {
-        this.service = service;
-        this.wordSetRepository = wordSetRepository;
-    }
 
     @Override
     public List<WordSet> getWordSets(Topic topic) {

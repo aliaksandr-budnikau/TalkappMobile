@@ -2,20 +2,17 @@ package talkapp.org.talkappmobile.service;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
 
+@RequiredArgsConstructor
 public class CachedSentenceProviderDecorator implements SentenceProvider {
-    private final SentenceRepository sentenceRepository;
     @Delegate(excludes = ExcludedMethods.class)
     private final SentenceProvider provider;
-
-    public CachedSentenceProviderDecorator(SentenceProvider provider, SentenceRepository sentenceRepository) {
-        this.provider = provider;
-        this.sentenceRepository = sentenceRepository;
-    }
+    private final SentenceRepository sentenceRepository;
 
     @Override
     public List<Sentence> find(Word2Tokens word) {

@@ -2,6 +2,7 @@ package talkapp.org.talkappmobile.presenter.decorator;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.SentenceContentScore;
@@ -9,16 +10,11 @@ import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 import talkapp.org.talkappmobile.view.PracticeWordSetView;
 
+@RequiredArgsConstructor
 public class ButtonsDisablingDecorator implements IPracticeWordSetPresenter {
-    private final PracticeWordSetView view;
-
     @Delegate(excludes = ExcludedMethods.class)
     private final IPracticeWordSetPresenter presenter;
-
-    public ButtonsDisablingDecorator(IPracticeWordSetPresenter presenter, PracticeWordSetView view) {
-        this.presenter = presenter;
-        this.view = view;
-    }
+    private final PracticeWordSetView view;
 
     @Override
     public void nextButtonClick() {

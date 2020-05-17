@@ -1,5 +1,6 @@
 package talkapp.org.talkappmobile.interactor.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import talkapp.org.talkappmobile.interactor.PracticeWordSetInteractor;
 import talkapp.org.talkappmobile.listener.OnPracticeWordSetListener;
@@ -11,22 +12,13 @@ import talkapp.org.talkappmobile.service.CurrentPracticeStateService;
 import talkapp.org.talkappmobile.service.UserExpService;
 import talkapp.org.talkappmobile.service.WordRepetitionProgressService;
 
+@RequiredArgsConstructor
 public class UserExperienceDecorator implements PracticeWordSetInteractor {
+    @Delegate(excludes = ExcludedMethods.class)
+    private final PracticeWordSetInteractor interactor;
     private final UserExpService userExpService;
     private final CurrentPracticeStateService currentPracticeStateService;
     private final WordRepetitionProgressService progressService;
-    @Delegate(excludes = ExcludedMethods.class)
-    private final PracticeWordSetInteractor interactor;
-
-    public UserExperienceDecorator(PracticeWordSetInteractor interactor,
-                                   UserExpService userExpService,
-                                   CurrentPracticeStateService currentPracticeStateService,
-                                   WordRepetitionProgressService progressService) {
-        this.interactor = interactor;
-        this.userExpService = userExpService;
-        this.currentPracticeStateService = currentPracticeStateService;
-        this.progressService = progressService;
-    }
 
     @Override
     public boolean checkAnswer(String answer, OnPracticeWordSetListener listener) {

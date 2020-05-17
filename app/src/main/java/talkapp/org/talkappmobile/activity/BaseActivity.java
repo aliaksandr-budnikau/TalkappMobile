@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import lombok.Getter;
 import talkapp.org.talkappmobile.activity.view.impl.ExceptionHandlerViewBean;
 import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.impl.ExceptionHandler;
@@ -19,6 +20,7 @@ import talkapp.org.talkappmobile.view.ExceptionHandlerView;
 public class BaseActivity extends AppCompatActivity {
     @Bean(ExceptionHandlerViewBean.class)
     ExceptionHandlerView exceptionHandlerView;
+    @Getter
     @Bean
     PresenterFactoryProvider presenterFactoryProvider;
 

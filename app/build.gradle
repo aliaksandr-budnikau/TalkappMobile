@@ -46,9 +46,8 @@ dependencies {
     runtimeOnly project(path: ":presenter")
 
 
-    androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     implementation 'org.codehaus.jackson:jackson-mapper-asl:1.5.0'
     implementation 'com.j256.ormlite:ormlite-android:5.1'
@@ -78,14 +77,17 @@ dependencies {
     annotationProcessor 'org.androidannotations:androidannotations:4.6.0'
     annotationProcessor 'com.tmtron:green-annotations:1.0.2'
 
+    androidTestCompileOnly 'org.projectlombok:lombok:1.18.12'
+    androidTestAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
     androidTestImplementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestAnnotationProcessor 'com.tmtron:green-annotations:1.0.2'
     androidTestAnnotationProcessor 'org.androidannotations:androidannotations:4.6.0'
     androidTestImplementation 'org.androidannotations:androidannotations-api:4.6.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
     androidTestImplementation 'com.tmtron:green-annotations-api:1.0.2'
     androidTestImplementation 'org.greenrobot:eventbus:3.0.0'
 }

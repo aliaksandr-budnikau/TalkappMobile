@@ -24,12 +24,11 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
+import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
@@ -37,7 +36,9 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
+import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.MainActivityDefaultFragmentPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -144,7 +145,11 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
                 .setItems((new String[]{optionAddNewWordSet, optionAddNewWordSetByQRC, optionOpenCustomWordSets}), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
+
+                            AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
+                            AddingNewWordSetPresenter presenter = presenterFactoryProvider.get().create(fragment);
+                            fragment.setPresenter(presenter);
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         } else if (which == 1) {
                             wordSetQRImporter.startScanActivity(getActivity());
                         } else if (which == 2) {

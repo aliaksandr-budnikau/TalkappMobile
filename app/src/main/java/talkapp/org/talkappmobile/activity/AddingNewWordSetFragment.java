@@ -1,10 +1,11 @@
 package talkapp.org.talkappmobile.activity;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
@@ -21,12 +22,12 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import lombok.Setter;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.NewWordSetDraftWasChangedEM;
@@ -43,8 +44,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     Speaker speaker;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.wordSetVocabularyView)
     WordSetVocabularyView wordSetVocabularyView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -63,19 +62,19 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
     String warningSentencesNotFound;
-    AddingNewWordSetPresenter presenter;
+    @Setter
+    private AddingNewWordSetPresenter presenter;
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
     @AfterViews
     public void init() {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
-        initPresenter();
+        initPresenter(presenter);
     }
 
     @Background
-    public void initPresenter() {
-        presenter = presenterFactoryProvider.get().create(this);
+    public void initPresenter(@NonNull AddingNewWordSetPresenter presenter) {
         presenter.initialize();
     }
 
@@ -185,10 +184,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
         wordSetVocabularyView.setAdapter(new WordSetVocabularyView.VocabularyAdapter(vocabulary.toArray(new WordTranslation[0])));
         eventBus.post(new NewWordSetDraftWasChangedEM(vocabulary));
 
-        Activity activity = this.getActivity();
-        if (activity != null) {
-            activity.recreate();
-        }
         startWordSetActivity(wordSet);
     }
 
