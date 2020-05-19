@@ -23,7 +23,6 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordRepetitionProgress;
 import talkapp.org.talkappmobile.model.WordSet;

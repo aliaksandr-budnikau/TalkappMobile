@@ -45,6 +45,8 @@ dependencies {
     implementation project(path: ":presenter_api")
     runtimeOnly project(path: ":presenter")
 
+    implementation 'com.google.dagger:dagger:2.4'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'

@@ -35,7 +35,6 @@ import java.util.List;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
@@ -69,8 +68,6 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
     public static final String CHEAT_SEND_WRITE_ANSWER = "LLCLPCLL";
     @Bean
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.originalText)
     TextView originalText;
     @ViewById(R.id.rightAnswer)
@@ -132,7 +129,8 @@ public class PracticeWordSetFragment extends Fragment implements PracticeWordSet
 
     @Background
     public void initPresenter() {
-        presenter = presenterFactoryProvider.get().create(this, repetitionMode);
+        BaseActivity activity = (BaseActivity) getActivity();
+        presenter = activity.getPresenterFactory().create(this, repetitionMode);
         presenter.initialise(wordSet);
         presenter.nextButtonClick();
     }

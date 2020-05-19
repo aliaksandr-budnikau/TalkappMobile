@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyItemAlertDialog;
 import talkapp.org.talkappmobile.activity.custom.WordSetVocabularyView;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.UpdateCustomWordSetFinishedEM;
@@ -51,8 +50,6 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean
     WordSetVocabularyItemAlertDialog editVocabularyItemAlertDialog;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @EventBusGreenRobot
     EventBus eventBus;
     @Bean(SpeakerBean.class)
@@ -100,7 +97,8 @@ public class PracticeWordSetVocabularyFragment extends Fragment implements Pract
 
     @Background
     public void initPresenter() {
-        PresenterFactory presenterFactory = presenterFactoryProvider.get();
+        BaseActivity activity = (BaseActivity) getActivity();
+        PresenterFactory presenterFactory = activity.getPresenterFactory();
         presenter = presenterFactory.create((PracticeWordSetVocabularyView) this);
         presenter.initialise(wordSet);
         addingNewWordSetPresenter = presenterFactory.create((AddingNewWordSetView) this);

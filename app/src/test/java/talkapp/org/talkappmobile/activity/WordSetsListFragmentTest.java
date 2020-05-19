@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.PhraseSetsRecyclerView;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.OpenWordSetForStudyingEM;
 import talkapp.org.talkappmobile.events.ParentScreenOutdatedEM;
 import talkapp.org.talkappmobile.model.Word2Tokens;

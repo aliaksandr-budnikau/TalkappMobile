@@ -22,9 +22,9 @@ import java.sql.SQLException;
 
 import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.presenter.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.repository.RepositoryFactory;
 import talkapp.org.talkappmobile.repository.RepositoryFactoryProvider;
 import talkapp.org.talkappmobile.service.ServiceFactory;

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.res.StringRes;
@@ -18,13 +17,12 @@ import java.util.LinkedList;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.AddingNewWordSetFragment_;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
+import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.NewWordSetDraftQRObject;
 import talkapp.org.talkappmobile.model.WordAndTranslationQRObject;
 import talkapp.org.talkappmobile.model.WordTranslation;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.WordSetQRImporterBeanPresenter;
 import talkapp.org.talkappmobile.view.WordSetQRImporterView;
 
@@ -33,8 +31,6 @@ import static android.app.Activity.RESULT_OK;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class WordSetQRImporterBean implements WordSetQRImporter, WordSetQRImporterView {
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @RootContext
     Context context;
     @StringRes(R.string.adding_new_word_set_by_qrc_finished_successfully)
@@ -74,16 +70,14 @@ public class WordSetQRImporterBean implements WordSetQRImporter, WordSetQRImport
                 }
                 NewWordSetDraft wordSetDraft = assembleDraft(draft);
 
-                PresenterFactory presenterFactory = presenterFactoryProvider.get();
-                WordSetQRImporterBeanPresenter presenter = presenterFactory.create(this);
+                BaseActivity baseActivity = (BaseActivity) context;
+                WordSetQRImporterBeanPresenter presenter = baseActivity.getPresenterFactory().create(this);
 
                 presenter.saveWordSetDraft(wordSetDraft);
 
                 Toast.makeText(activity, addingFinishedSuccessfullyMessage, Toast.LENGTH_LONG).show();
 
-                AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
-                fragment.setPresenter(presenterFactoryProvider.get().create(fragment));
-                activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+                activity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
             }
             if (resultCode == RESULT_CANCELED) {
                 //handle cancel

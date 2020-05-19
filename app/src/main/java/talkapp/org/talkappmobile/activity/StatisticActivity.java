@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -20,7 +18,6 @@ import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -36,7 +33,6 @@ import java.util.Date;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.model.ExpAuditMonthly;
 import talkapp.org.talkappmobile.presenter.StatisticActivityPresenter;
@@ -52,11 +48,9 @@ import static talkapp.org.talkappmobile.activity.StatisticActivity.Tab.TOTAL;
 import static talkapp.org.talkappmobile.model.ExpActivityType.WORD_SET_PRACTICE;
 
 @EActivity(R.layout.activity_statistic)
-public class StatisticActivity extends AppCompatActivity implements StatisticActivityView {
+public class StatisticActivity extends BaseActivity implements StatisticActivityView {
 
 
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -84,7 +78,7 @@ public class StatisticActivity extends AppCompatActivity implements StatisticAct
 
     @AfterViews
     public void init() {
-        presenter = presenterFactoryProvider.get().create(this);
+        presenter = getPresenterFactory().create(this);
         formBarChart();
         tabHost.setup();
         //Tab 1

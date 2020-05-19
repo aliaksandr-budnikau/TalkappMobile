@@ -11,15 +11,13 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.UiThread;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
+import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -32,8 +30,6 @@ import talkapp.org.talkappmobile.view.RightAnswerTextViewView;
 @EView
 public class RightAnswerTextView extends AppCompatTextView implements RightAnswerTextViewView {
 
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @EventBusGreenRobot
     EventBus eventBus;
 
@@ -53,8 +49,8 @@ public class RightAnswerTextView extends AppCompatTextView implements RightAnswe
 
     @AfterInject
     public void init() {
-        PresenterFactory presenterFactory = presenterFactoryProvider.get();
-        presenter = presenterFactory.create(this);
+        BaseActivity activity = (BaseActivity) getContext();
+        presenter = activity.getPresenterFactory().create(this);
     }
 
     @Override

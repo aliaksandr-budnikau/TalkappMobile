@@ -16,7 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
+import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.component.Speaker;
 import talkapp.org.talkappmobile.component.impl.SpeakerBean;
 import talkapp.org.talkappmobile.events.AnswerHasBeenRevealedEM;
@@ -24,7 +24,6 @@ import talkapp.org.talkappmobile.events.AnswerPronunciationStartedEM;
 import talkapp.org.talkappmobile.events.AnswerPronunciationStoppedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.presenter.PronounceRightAnswerButtonPresenter;
 import talkapp.org.talkappmobile.view.PronounceRightAnswerButtonView;
 
@@ -32,8 +31,6 @@ import talkapp.org.talkappmobile.view.PronounceRightAnswerButtonView;
 public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCompatButton implements PronounceRightAnswerButtonView {
     @Bean(SpeakerBean.class)
     Speaker speaker;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @EventBusGreenRobot
     EventBus eventBus;
     PronounceRightAnswerButtonPresenter presenter;
@@ -52,8 +49,8 @@ public class PronounceRightAnswerButton extends androidx.appcompat.widget.AppCom
 
     @AfterInject
     public void init() {
-        PresenterFactory presenterFactory = presenterFactoryProvider.get();
-        presenter = presenterFactory.create(this);
+        BaseActivity activity = (BaseActivity) getContext();
+        presenter = activity.getPresenterFactory().create(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

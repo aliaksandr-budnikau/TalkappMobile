@@ -28,7 +28,6 @@ import talkapp.org.talkappmobile.BuildConfig;
 import talkapp.org.talkappmobile.TestHelper;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
 import talkapp.org.talkappmobile.events.SentenceWasPickedForChangeEM;

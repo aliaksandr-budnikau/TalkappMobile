@@ -26,10 +26,11 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.BeanModule;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.OriginalTextTextView;
 import talkapp.org.talkappmobile.activity.custom.RightAnswerTextView;
-import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
+import talkapp.org.talkappmobile.presenter.PresenterFactory;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -102,15 +103,18 @@ public class AddingWordSetsTest {
             }
         }
         countingIdlingResource = new CountingIdlingResource("countingIdlingResource");
-        IdlingRegistry instance = IdlingRegistry.getInstance();
-        instance.register(countingIdlingResource);
+        BeanModule beanModule = BeanModule.getInstance();
+        PresenterFactory origPresenterFactory = beanModule.presenterFactory();
+        beanModule.setPresenterFactory(new IdleResourcePresenterFactoryDecorator(origPresenterFactory, countingIdlingResource));
+        
+        IdlingRegistry.getInstance().register(countingIdlingResource);
     }
 
     @Test
     public void testCapitalLetterInNewWord() throws InterruptedException {
         MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
-        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
+        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_(), ADDING_NEW_WORD_SET_FRAGMENT).commit();
         addWords(originalWordsList);
         onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
         onView(withId(R.id.pagerTabStrip)).check(matches(isDisplayed())).perform(swipeLeft());
@@ -147,20 +151,12 @@ public class AddingWordSetsTest {
     public void testAddingOfTwoWordsets() throws InterruptedException {
         MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
-        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, createAddingNewWordSetFragment(mainActivity), ADDING_NEW_WORD_SET_FRAGMENT).commit();
+        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_(), ADDING_NEW_WORD_SET_FRAGMENT).commit();
         for (int i = 0; i < 2; i++) {
             addWords(originalWordsList);
             onView(withId(R.id.buttonSubmit)).perform(scrollTo(), click());
             pressBack();
         }
-    }
-
-    private AddingNewWordSetFragment_ createAddingNewWordSetFragment(MainActivity_ mainActivity) {
-        AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
-        AddingNewWordSetPresenter presenter = mainActivity.getPresenterFactoryProvider().get().create(fragment);
-        IdleResourceAddingNewWordSetPresenterDecorator decorator = new IdleResourceAddingNewWordSetPresenterDecorator(presenter, countingIdlingResource);
-        fragment.setPresenter(decorator);
-        return fragment;
     }
 
     private void addWords(List<String> wordsList) throws InterruptedException {

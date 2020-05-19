@@ -26,9 +26,7 @@ import java.util.List;
 
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.TasksListView;
-import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
 import talkapp.org.talkappmobile.component.WordSetQRImporter;
 import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.TasksListLoadedEM;
@@ -36,9 +34,7 @@ import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Task;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.WordSet;
-import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.MainActivityDefaultFragmentPresenter;
-import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.MainActivityDefaultFragmentView;
 
 import static org.androidannotations.annotations.IgnoreWhen.State.VIEW_DESTROYED;
@@ -54,8 +50,6 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory;
     @Bean(WordSetQRImporterBean.class)
     WordSetQRImporter wordSetQRImporter;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
     @ViewById(R.id.tasksListView)
     TasksListView tasksListView;
     @ViewById(R.id.please_wait_progress_bar)
@@ -85,15 +79,12 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
     @StringRes(R.string.word_set_task_add_new_description)
     String wordSetsAddNewDescription;
 
-    private WaitingForProgressBarManager waitingForProgressBarManager;
-
     private MainActivityDefaultFragmentPresenter presenter;
 
     @AfterViews
     public void init() {
-        waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(progressBarView, wordSetVocabularyView);
-        PresenterFactory presenterFactory = presenterFactoryProvider.get();
-        presenter = presenterFactory.create(this, wordSetsRepetitionTitle, wordSetsRepetitionDescription,
+        BaseActivity activity = (BaseActivity) getActivity();
+        presenter = activity.getPresenterFactory().create(this, wordSetsRepetitionTitle, wordSetsRepetitionDescription,
                 wordSetsLearningTitle, wordSetsLearningDescription,
                 wordSetsAddNewTitle, wordSetsAddNewDescription,
                 wordSetsExtraRepetitionTitle, wordSetsExtraRepetitionDescription);
@@ -146,10 +137,7 @@ public class MainActivityDefaultFragment extends Fragment implements MainActivit
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
 
-                            AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
-                            AddingNewWordSetPresenter presenter = presenterFactoryProvider.get().create(fragment);
-                            fragment.setPresenter(presenter);
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
                         } else if (which == 1) {
                             wordSetQRImporter.startScanActivity(getActivity());
                         } else if (which == 2) {

@@ -22,7 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import lombok.Setter;
 import talkapp.org.talkappmobile.R;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManager;
 import talkapp.org.talkappmobile.activity.custom.WaitingForProgressBarManagerFactory;
@@ -61,7 +60,6 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     String warningTranslationNotFound;
     @StringRes(R.string.adding_new_word_set_fragment_warning_sentences_not_found)
     String warningSentencesNotFound;
-    @Setter
     private AddingNewWordSetPresenter presenter;
     private WaitingForProgressBarManager waitingForProgressBarManager;
 
@@ -69,6 +67,8 @@ public class AddingNewWordSetFragment extends Fragment implements WordSetVocabul
     public void init() {
         editVocabularyItemAlertDialog.setOnDialogInteractionListener(this);
         waitingForProgressBarManager = waitingForProgressBarManagerFactory.get(pleaseWaitProgressBar, mainForm);
+        BaseActivity activity = (BaseActivity) getActivity();
+        presenter = activity.getPresenterFactory().create(this);
         initPresenter(presenter);
     }
 

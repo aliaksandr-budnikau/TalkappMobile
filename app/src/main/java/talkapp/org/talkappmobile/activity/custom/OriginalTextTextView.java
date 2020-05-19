@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.tmtron.greenannotations.EventBusGreenRobot;
 
 import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EView;
 import org.androidannotations.annotations.res.StringRes;
 import org.greenrobot.eventbus.EventBus;
@@ -25,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import talkapp.org.talkappmobile.R;
-import talkapp.org.talkappmobile.component.PresenterFactoryProvider;
+import talkapp.org.talkappmobile.activity.BaseActivity;
 import talkapp.org.talkappmobile.events.ChangeSentenceOptionPickedEM;
 import talkapp.org.talkappmobile.events.ExerciseGotAnsweredEM;
 import talkapp.org.talkappmobile.events.NewSentenceEM;
@@ -46,8 +45,6 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @EventBusGreenRobot
     EventBus eventBus;
-    @Bean
-    PresenterFactoryProvider presenterFactoryProvider;
 
     @StringRes(R.string.sentences_for_change_dialog_title)
     String sentencesForChangeDialogTitle;
@@ -80,7 +77,8 @@ public class OriginalTextTextView extends AppCompatTextView implements OriginalT
 
     @AfterInject
     public void init() {
-        presenter = presenterFactoryProvider.get().create(this);
+        BaseActivity activity = (BaseActivity) getContext();
+        presenter = activity.getPresenterFactory().create(this);
 
     }
 

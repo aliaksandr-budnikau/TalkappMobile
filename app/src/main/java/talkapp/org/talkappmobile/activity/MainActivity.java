@@ -38,7 +38,6 @@ import talkapp.org.talkappmobile.component.impl.WordSetQRImporterBean;
 import talkapp.org.talkappmobile.events.UserExpUpdatedEM;
 import talkapp.org.talkappmobile.model.RepetitionClass;
 import talkapp.org.talkappmobile.model.Topic;
-import talkapp.org.talkappmobile.presenter.AddingNewWordSetPresenter;
 import talkapp.org.talkappmobile.presenter.MainActivityPresenter;
 import talkapp.org.talkappmobile.presenter.PresenterFactory;
 import talkapp.org.talkappmobile.view.MainActivityView;
@@ -116,10 +115,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
                             .setItems((new String[]{optionAddNewWordSet, optionAddNewWordSetByQRC, optionOpenCustomWordSets, optionOpenWordSet, optionOpenWordSetsByTopics}), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (which == 0) {
-                                        AddingNewWordSetFragment_ fragment = new AddingNewWordSetFragment_();
-                                        AddingNewWordSetPresenter presenter = presenterFactoryProvider.get().create(fragment);
-                                        fragment.setPresenter(presenter);
-                                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                                        fragmentManager.beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_()).commit();
                                     } else if (which == 1) {
                                         wordSetQRImporter.startScanActivity(MainActivity.this);
                                     } else if (which == 2) {
@@ -158,7 +154,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        PresenterFactory presenterFactory = presenterFactoryProvider.get();
+        PresenterFactory presenterFactory = getPresenterFactory();
         presenter = presenterFactory.create(this, info.versionName);
         presenter.checkServerAvailability();
         presenter.initAppVersion();
