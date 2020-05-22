@@ -78,9 +78,9 @@ public class ChangeSentenceTest {
         serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         PresenterFactory presenterFactory = new talkapp.org.talkappmobile.presenter.PresenterFactoryImpl(serviceFactory);
 
-        PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
+        /*PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
         presenterFactoryProvider.setPresenterFactory(presenterFactory);
-
+*/
         serviceFactory.getWordSetService().getWordSets(null);
         wordSet = createWordSet(-1, "age");
         practiceWordSetFragment = new PracticeWordSetFragment();
@@ -90,7 +90,7 @@ public class ChangeSentenceTest {
         Whitebox.setInternalState(practiceWordSetFragment, "wordSet", wordSet);
         Whitebox.setInternalState(practiceWordSetFragment, "originalText", mock(TextView.class));
         Whitebox.setInternalState(practiceWordSetFragment, "rightAnswer", mock(TextView.class));
-        Whitebox.setInternalState(practiceWordSetFragment, "presenterFactoryProvider", presenterFactoryProvider);
+        //Whitebox.setInternalState(practiceWordSetFragment, "presenterFactoryProvider", presenterFactoryProvider);
         answerTextMock = mock(TextView.class);
         Whitebox.setInternalState(practiceWordSetFragment, "answerText", answerTextMock);
         Whitebox.setInternalState(practiceWordSetFragment, "wordSetProgress", mock(ProgressBar.class));

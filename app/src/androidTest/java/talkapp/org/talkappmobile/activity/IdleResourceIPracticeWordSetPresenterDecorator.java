@@ -4,6 +4,7 @@ import androidx.test.espresso.idling.CountingIdlingResource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
+import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.presenter.IPracticeWordSetPresenter;
 
@@ -43,7 +44,20 @@ public class IdleResourceIPracticeWordSetPresenterDecorator implements IPractice
         }
     }
 
+    @Override
+    public void findSentencesForChange(Word2Tokens word) {
+        try {
+            resource.increment();
+            presenter.findSentencesForChange(word);
+        } finally {
+            resource.decrement();
+        }
+    }
+
     private interface ExcludedModule {
+
+        void findSentencesForChange(Word2Tokens word);
+
         void nextButtonClick();
 
         void initialise(WordSet wordSet);

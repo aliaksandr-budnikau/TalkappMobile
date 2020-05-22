@@ -58,8 +58,8 @@ public class PracticeWordSetVocabularyFragmentTest {
         ServiceFactory serviceFactory = new ServiceFactoryImpl(repositoryFactory);
         PresenterFactory presenterFactory = new talkapp.org.talkappmobile.presenter.PresenterFactoryImpl(serviceFactory);
 
-        PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
-        presenterFactoryProvider.setPresenterFactory(presenterFactory);
+//        PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
+  //      presenterFactoryProvider.setPresenterFactory(presenterFactory);
 
         WaitingForProgressBarManagerFactory waitingForProgressBarManagerFactory = mock(WaitingForProgressBarManagerFactory.class);
         when(waitingForProgressBarManagerFactory.get(any(View.class), any(View.class))).thenReturn(mock(WaitingForProgressBarManager.class));
@@ -70,7 +70,7 @@ public class PracticeWordSetVocabularyFragmentTest {
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "editVocabularyItemAlertDialog", mock(WordSetVocabularyItemAlertDialog.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "wordSetVocabularyView", mock(WordSetVocabularyView.class));
         Whitebox.setInternalState(practiceWordSetVocabularyFragment, "progressBarView", mock(View.class));
-        Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactoryProvider", presenterFactoryProvider);
+      //  Whitebox.setInternalState(practiceWordSetVocabularyFragment, "presenterFactoryProvider", presenterFactoryProvider);
 
         int id = 0;
         wordSet = new WordSet();

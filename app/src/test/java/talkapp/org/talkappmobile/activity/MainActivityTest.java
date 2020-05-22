@@ -59,7 +59,7 @@ public class MainActivityTest {
         PresenterFactory presenterFactory = new talkapp.org.talkappmobile.presenter.PresenterFactoryImpl(serviceFactory);
 
         PresenterFactoryProvider presenterFactoryProvider = new PresenterFactoryProvider();
-        presenterFactoryProvider.setPresenterFactory(presenterFactory);
+//        presenterFactoryProvider.setPresenterFactory(presenterFactory);
 
         packageManager = mock(PackageManager.class);
         mainActivity = new MainActivity() {

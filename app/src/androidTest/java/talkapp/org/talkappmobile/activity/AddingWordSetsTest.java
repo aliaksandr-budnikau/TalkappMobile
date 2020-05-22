@@ -6,12 +6,7 @@ import android.view.View;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.action.CoordinatesProvider;
-import androidx.test.espresso.action.GeneralClickAction;
-import androidx.test.espresso.action.Press;
-import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -50,6 +45,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertTrue;
+import static talkapp.org.talkappmobile.activity.ActionUtils.clickXY;
 import static talkapp.org.talkappmobile.activity.PracticeWordSetFragment.CHEAT_SEND_WRITE_ANSWER;
 
 @RunWith(AndroidJUnit4.class)
@@ -57,32 +53,12 @@ import static talkapp.org.talkappmobile.activity.PracticeWordSetFragment.CHEAT_S
 public class AddingWordSetsTest {
 
     public static final String ADDING_NEW_WORD_SET_FRAGMENT = "AddingNewWordSetFragment";
+    public static final String WORD_SETS_LIST_FRAGMENT = "WordSetsListFragment";
     @Rule
     public ActivityTestRule<MainActivity_> mainActivityRule;
 
     private List<String> originalWordsList;
-    private List<String> wordsToBeDisplayed;
     private CountingIdlingResource countingIdlingResource;
-
-    private static ViewAction clickXY(final int x, final int y) {
-        return new GeneralClickAction(
-                Tap.SINGLE,
-                new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-
-                        final int[] screenPos = new int[2];
-                        view.getLocationOnScreen(screenPos);
-
-                        final float screenX = screenPos[0] + x;
-                        final float screenY = screenPos[1] + y;
-                        float[] coordinates = {screenX, screenY};
-
-                        return coordinates;
-                    }
-                },
-                Press.FINGER);
-    }
 
     @Before
     public void setup() {
@@ -92,7 +68,17 @@ public class AddingWordSetsTest {
         originalWordsList = asList("solemn", "grip", "wink", "adoption", "Voluntary", targetPhrasalVerb + "|искать", "preamble",
                 "conquer", "adore", "deplete", "cease", "ratification");
 
-        wordsToBeDisplayed = new ArrayList<>();
+        countingIdlingResource = new CountingIdlingResource("countingIdlingResource");
+        BeanModule beanModule = BeanModule.getInstance();
+        PresenterFactory origPresenterFactory = beanModule.presenterFactory();
+        beanModule.setPresenterFactory(new IdleResourcePresenterFactoryDecorator(origPresenterFactory, countingIdlingResource));
+
+        IdlingRegistry.getInstance().register(countingIdlingResource);
+    }
+
+    @Test
+    public void testCapitalLetterInNewWord() {
+        final ArrayList<String> wordsToBeDisplayed = new ArrayList<>();
         for (String word : originalWordsList) {
             String[] split = word.split("\\|");
             if (split.length == 2) {
@@ -102,16 +88,7 @@ public class AddingWordSetsTest {
                 wordsToBeDisplayed.add(split[1]);
             }
         }
-        countingIdlingResource = new CountingIdlingResource("countingIdlingResource");
-        BeanModule beanModule = BeanModule.getInstance();
-        PresenterFactory origPresenterFactory = beanModule.presenterFactory();
-        beanModule.setPresenterFactory(new IdleResourcePresenterFactoryDecorator(origPresenterFactory, countingIdlingResource));
-        
-        IdlingRegistry.getInstance().register(countingIdlingResource);
-    }
 
-    @Test
-    public void testCapitalLetterInNewWord() throws InterruptedException {
         MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
         mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_(), ADDING_NEW_WORD_SET_FRAGMENT).commit();
@@ -145,10 +122,47 @@ public class AddingWordSetsTest {
         }
         assertTrue(wordsToBeDisplayed.isEmpty());
     }
+/*
+    @Test
+    public void testChangeOtherSentences() throws InterruptedException {
+        MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
+        mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new WordSetsListFragment_(), WORD_SETS_LIST_FRAGMENT).commit();
+        onView(withId(R.id.wordSetsListView))
+                .perform(actionOnItemAtPosition(0, click()));
+
+        onView(withId(R.id.pagerTabStrip)).check(matches(isDisplayed())).perform(swipeLeft());
+
+        int iteration_number = 12;
+        for (int i = 0; i < iteration_number; i++) {
+            onView(withId(R.id.originalText)).check(matches(isDisplayed())).perform(click());
+
+            onView(withText(R.string.another_sentence_option))
+                    .inRoot(isDialog())
+                    .check(matches(isDisplayed()))
+                    .perform(click());
+            try {
+                onView(withText("Подмигнуть."))
+                        .check(matches(isDisplayed()));
+            } catch (NoMatchingViewException e) {
+                pressBack();
+                onView(withId(R.id.word_set_practise_form)).check(matches(isDisplayed())).perform(swipeUp());
+                onView(withId(R.id.answerText)).perform(clearText(), typeText(CHEAT_SEND_WRITE_ANSWER));
+                Espresso.closeSoftKeyboard();
+                onView(withId(R.id.checkButton)).perform(click());
+                onView(withId(R.id.nextButton)).check(matches(isDisplayed())).perform(click());
+                continue;
+            }
+            break;
+        }
+        onData(anything()).inAdapterView(anything<View>()).atPosition(0).perform(click());
+        onData(anything()).inAdapterView(withClassName(is("ListView"))).atPosition(0).perform(click());
+        onView(withTagValue(containsString(ListView.c))).perform(scrollToPosition(10));
+        Thread.sleep(5000);
+    }*/
 
     @Test
-    public void testAddingOfTwoWordsets() throws InterruptedException {
+    public void testAddingOfTwoWordSets() {
         MainActivity_ mainActivity = mainActivityRule.launchActivity(new Intent());
 
         mainActivity.getFragmentManager().beginTransaction().replace(R.id.content_frame, new AddingNewWordSetFragment_(), ADDING_NEW_WORD_SET_FRAGMENT).commit();
@@ -159,7 +173,7 @@ public class AddingWordSetsTest {
         }
     }
 
-    private void addWords(List<String> wordsList) throws InterruptedException {
+    private void addWords(List<String> wordsList) {
         onView(withId(R.id.mainForm)).check(matches(isDisplayed()))
                 .perform(swipeDown());
         onView(withId(R.id.mainForm)).check(matches(isDisplayed()))
