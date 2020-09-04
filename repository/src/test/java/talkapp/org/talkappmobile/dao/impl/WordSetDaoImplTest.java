@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import talkapp.org.talkappmobile.DaoHelper;
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
 import talkapp.org.talkappmobile.repository.BuildConfig;
 
@@ -232,8 +233,8 @@ public class WordSetDaoImplTest {
         assertEquals(FINISHED.name(), exp.getStatus());
     }
 
-    @Test
+    @Test(expected = ObjectNotFoundException.class)
     public void findById_ordinaryCaseNothingFound() {
-        assertNull(experienceDao.findById(1));
+        experienceDao.findById(1);
     }
 }

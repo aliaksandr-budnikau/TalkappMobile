@@ -41,9 +41,6 @@ public class WordSetRepositoryImpl implements WordSetRepository {
     @Override
     public WordSet findById(int wordSetId) {
         WordSetMapping mapping = wordSetDao.findById(wordSetId);
-        if (mapping == null) {
-            return null;
-        }
         return wordSetMapper.toDto(mapping);
     }
 

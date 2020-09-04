@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.model.NewWordSetDraft;
 import talkapp.org.talkappmobile.model.Topic;
 import talkapp.org.talkappmobile.model.Word2Tokens;
@@ -151,10 +152,13 @@ public class WordSetServiceImpl implements WordSetService {
         for (WordSet newSet : incomingSets) {
             HashSet<Word2Tokens> setOfWords = new HashSet<>(newSet.getWords());
             newSet.setWords(new LinkedList<>(setOfWords));
-            WordSet old = wordSetRepository.findById(newSet.getId());
-            if (old != null) {
+            WordSet old;
+            try {
+                old = wordSetRepository.findById(newSet.getId());
                 newSet.setStatus(old.getStatus());
                 newSet.setTrainingExperience(old.getTrainingExperience());
+            } catch (ObjectNotFoundException ignored) {
+
             }
             wordSets.add(newSet);
         }

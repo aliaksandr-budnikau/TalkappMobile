@@ -14,8 +14,11 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordSetDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.WordRepetitionProgressMapping;
 import talkapp.org.talkappmobile.mappings.WordSetMapping;
+
+import static java.lang.String.format;
 
 public class WordSetDaoImpl implements WordSetDao {
 
@@ -77,7 +80,7 @@ public class WordSetDaoImpl implements WordSetDao {
                 return wordSetMapping;
             }
         }
-        return null;
+        throw new ObjectNotFoundException(format("WordSet with id '%s' was not found", id));
     }
 
     @Override
