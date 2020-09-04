@@ -10,8 +10,10 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.WordTranslationDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.WordTranslationMapping;
 
+import static java.lang.String.format;
 import static talkapp.org.talkappmobile.mappings.WordTranslationMapping.WORD_FN;
 
 public class WordTranslationDaoImpl implements WordTranslationDao {
@@ -37,7 +39,11 @@ public class WordTranslationDaoImpl implements WordTranslationDao {
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        return mappings.isEmpty() ? null : mappings.get(0);
+        if (mappings.isEmpty()) {
+            throw new ObjectNotFoundException(format("WordTranslation word '%s' language '%s' was not found", word, language));
+        } else {
+            return mappings.get(0);
+        }
     }
 
     @Override

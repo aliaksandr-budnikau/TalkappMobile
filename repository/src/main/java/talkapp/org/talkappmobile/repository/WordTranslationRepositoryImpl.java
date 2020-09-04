@@ -26,9 +26,6 @@ public class WordTranslationRepositoryImpl implements WordTranslationRepository 
     @Override
     public WordTranslation findByWordAndByLanguage(String word, String russian) {
         WordTranslationMapping mapping = translationDao.findByWordAndByLanguage(word, russian);
-        if (mapping == null) {
-            return null;
-        }
         return wordTranslationMapper.toDto(mapping);
     }
 

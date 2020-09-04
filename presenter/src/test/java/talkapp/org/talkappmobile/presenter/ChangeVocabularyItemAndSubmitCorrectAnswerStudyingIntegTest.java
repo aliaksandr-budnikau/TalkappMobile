@@ -12,6 +12,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashSet;
 
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.model.WordSet;
 import talkapp.org.talkappmobile.model.WordTranslation;
@@ -27,8 +28,8 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static talkapp.org.talkappmobile.model.WordSetProgressStatus.FIRST_CYCLE;
 
@@ -98,9 +99,24 @@ public class ChangeVocabularyItemAndSubmitCorrectAnswerStudyingIntegTest {
         assertTrue(words.contains(ACE));
         assertEquals(1, words.size());
         WordTranslationService wordTranslationService = serviceFactory.getWordTranslationService();
-        assertNull(wordTranslationService.findByWordAndByLanguage(AGE, RUSSIAN));
-        assertNull(wordTranslationService.findByWordAndByLanguage(ANNIVERSARY, RUSSIAN));
-        assertNull(wordTranslationService.findByWordAndByLanguage(BIRTH, RUSSIAN));
+        try {
+            wordTranslationService.findByWordAndByLanguage(AGE, RUSSIAN);
+            fail();
+        } catch (ObjectNotFoundException ignored) {
+
+        }
+        try {
+            wordTranslationService.findByWordAndByLanguage(ANNIVERSARY, RUSSIAN);
+            fail();
+        } catch (ObjectNotFoundException ignored) {
+
+        }
+        try {
+            wordTranslationService.findByWordAndByLanguage(BIRTH, RUSSIAN);
+            fail();
+        } catch (ObjectNotFoundException ignored) {
+
+        }
         assertNotNull(wordTranslationService.findByWordAndByLanguage(ACE, RUSSIAN));
     }
 
