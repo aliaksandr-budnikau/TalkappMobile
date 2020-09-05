@@ -11,8 +11,10 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 
+import static java.lang.String.format;
 import static talkapp.org.talkappmobile.mappings.ExpAuditMapping.ACTIVITY_TYPE_FN;
 import static talkapp.org.talkappmobile.mappings.ExpAuditMapping.DATE_FN;
 
@@ -57,7 +59,11 @@ public class ExpAuditDaoImpl implements ExpAuditDao {
                     .eq(DATE_FN, today)
                     .and()
                     .eq(ACTIVITY_TYPE_FN, type).prepare();
-            return dao.queryForFirst(prepare);
+            ExpAuditMapping mapping = dao.queryForFirst(prepare);
+            if (mapping == null) {
+                throw new ObjectNotFoundException(format("ExpAudit date '%s' type '%s' was not found", today, type));
+            }
+            return mapping;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

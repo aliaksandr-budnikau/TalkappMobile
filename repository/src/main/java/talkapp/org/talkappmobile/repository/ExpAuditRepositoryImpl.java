@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.dao.ExpAuditDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.ExpAuditMapping;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
@@ -33,16 +34,15 @@ public class ExpAuditRepositoryImpl implements ExpAuditRepository {
     @Override
     public ExpAudit findByDateAndActivityType(Date date, ExpActivityType activityType) {
         ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(date, activityType.name());
-        if (mapping == null) {
-            return null;
-        }
         return expAuditMapper.toDto(mapping);
     }
 
     @Override
     public void createNewOrUpdate(ExpAudit expAudit) {
-        ExpAuditMapping mapping = expAuditDao.findByDateAndActivityType(expAudit.getDate(), expAudit.getActivityType().name());
-        if (mapping == null) {
+        ExpAuditMapping mapping;
+        try {
+            mapping = expAuditDao.findByDateAndActivityType(expAudit.getDate(), expAudit.getActivityType().name());
+        } catch (ObjectNotFoundException e) {
             expAuditDao.save(expAuditMapper.toMapping(expAudit));
             return;
         }

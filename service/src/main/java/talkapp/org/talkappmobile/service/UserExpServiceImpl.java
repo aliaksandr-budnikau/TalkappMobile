@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.model.ExpActivityType;
 import talkapp.org.talkappmobile.model.ExpAudit;
 import talkapp.org.talkappmobile.repository.ExpAuditRepository;
@@ -30,11 +31,12 @@ public class UserExpServiceImpl implements UserExpService {
     @Override
     public double increaseForRepetition(int repetitionCounter, ExpActivityType type) {
         Date today = new Date();
-        ExpAudit expAudit = expAuditRepository.findByDateAndActivityType(today, type);
-        if (expAudit == null) {
-            expAudit = new ExpAudit(today, repetitionCounter, type);
-        } else {
+        ExpAudit expAudit;
+        try {
+            expAudit = expAuditRepository.findByDateAndActivityType(today, type);
             expAudit.increaseExpScore(repetitionCounter);
+        } catch (ObjectNotFoundException e) {
+            expAudit = new ExpAudit(today, repetitionCounter, type);
         }
         expAuditRepository.createNewOrUpdate(expAudit);
         return repetitionCounter;
