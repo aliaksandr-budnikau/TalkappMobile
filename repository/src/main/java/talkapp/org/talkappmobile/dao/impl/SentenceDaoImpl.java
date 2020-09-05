@@ -12,8 +12,10 @@ import javax.inject.Inject;
 
 import talkapp.org.talkappmobile.dao.DatabaseHelper;
 import talkapp.org.talkappmobile.dao.SentenceDao;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.mappings.SentenceMapping;
 
+import static java.lang.String.format;
 import static talkapp.org.talkappmobile.mappings.SentenceMapping.ID_FN;
 
 public class SentenceDaoImpl implements SentenceDao {
@@ -89,18 +91,13 @@ public class SentenceDaoImpl implements SentenceDao {
     }
 
     @Override
-    public int deleteById(String id) {
-        try {
-            return dao.deleteById(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    @Override
     public SentenceMapping findById(String id) {
         try {
-            return dao.queryForId(id);
+            SentenceMapping mapping = dao.queryForId(id);
+            if (mapping == null) {
+                throw new ObjectNotFoundException(format("Sentence id '%s' was not found", id));
+            }
+            return mapping;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }

@@ -3,6 +3,7 @@ package talkapp.org.talkappmobile.service;
 import java.util.List;
 
 import lombok.experimental.Delegate;
+import talkapp.org.talkappmobile.exceptions.ObjectNotFoundException;
 import talkapp.org.talkappmobile.model.Sentence;
 import talkapp.org.talkappmobile.model.Word2Tokens;
 import talkapp.org.talkappmobile.repository.SentenceRepository;
@@ -38,7 +39,12 @@ public class CachedSentenceProviderDecorator implements SentenceProvider {
     }
 
     private boolean wasAlreadySaved(Sentence sentence) {
-        return sentenceRepository.findById(sentence.getId()) != null;
+        try {
+            sentenceRepository.findById(sentence.getId());
+            return true;
+        } catch (ObjectNotFoundException ignored) {
+            return false;
+        }
     }
 
     private interface ExcludedMethods {

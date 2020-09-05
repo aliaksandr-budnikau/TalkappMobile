@@ -33,9 +33,6 @@ public class SentenceRepositoryImpl implements SentenceRepository {
     @Override
     public Sentence findById(String id) {
         SentenceMapping mapping = sentenceDao.findById(id);
-        if (mapping == null) {
-            return null;
-        }
         return sentenceMapper.toDto(mapping);
     }
 
