@@ -71,11 +71,6 @@ public class WordSetRepositoryImpl implements WordSetRepository {
     @Override
     public NewWordSetDraft getNewWordSetDraft() {
         NewWordSetDraftMapping mapping = newWordSetDraftDao.getNewWordSetDraftById(1);
-        if (mapping == null) {
-            mapping = new NewWordSetDraftMapping();
-            mapping.setWords("");
-            return wordSetMapper.toDto(mapping);
-        }
         return wordSetMapper.toDto(mapping);
     }
 

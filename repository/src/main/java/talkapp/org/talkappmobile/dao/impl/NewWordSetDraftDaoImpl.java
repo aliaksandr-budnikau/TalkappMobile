@@ -28,7 +28,12 @@ public class NewWordSetDraftDaoImpl implements NewWordSetDraftDao {
     @Override
     public NewWordSetDraftMapping getNewWordSetDraftById(int id) {
         try {
-            return dao.queryForId(id);
+            NewWordSetDraftMapping mapping = dao.queryForId(id);
+            if (mapping == null) {
+                mapping = new NewWordSetDraftMapping();
+                mapping.setWords("");
+            }
+            return mapping;
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
